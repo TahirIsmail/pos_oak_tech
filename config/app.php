@@ -247,7 +247,7 @@ return [
 
     'display_time_format' => 'h:i A',
 
-    'deactivate_link' => 'https://api.appsthing.com/api/product/deactivate',
+    'deactivate_link' => 'https://api.OAK.com/api/product/deactivate',
 
     'installation_helper_link' => '/server_check.php'
 ];
