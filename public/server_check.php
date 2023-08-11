@@ -108,7 +108,7 @@ License: For each use you must have a valid license purchased only from above li
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <title>Appsthing Server Requirement Checker</title>
+        <title>OAK TECHNOLOGY</title>
 
         <link rel="icon" type="image/png" sizes="32x32" href="images/favicon_32_32.png">
         <link rel="apple-touch-icon" href="images/logo_apple_touch_icon.png"/>  
