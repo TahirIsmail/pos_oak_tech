@@ -16,7 +16,7 @@ class app_setting_seeder extends Seeder
     {
         SettingAppModel::firstOrCreate(
             [
-                'company_name' => 'OAK POS',
+                'company_name' => 'OAK TECHNOLOGY',
                 'app_date_time_format' => 'd-m-Y H:i',
                 'app_date_format' => 'd-m-Y',
                 'company_logo' => '',

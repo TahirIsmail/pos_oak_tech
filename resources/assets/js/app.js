@@ -25,6 +25,7 @@ import { i18n, language, messages } from './localization.js';
 
 import VueCookies from 'vue-cookies';
 
+
 var VueScrollTo = require('vue-scrollto');
  
 Vue.use(VueScrollTo);

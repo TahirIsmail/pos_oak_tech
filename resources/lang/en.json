@@ -73,6 +73,7 @@
         "restaurant_table" : "Table",
         "month": "Month",
         "month_raw": "Month",
+        "Income vs Expense": "Income vs Expense",
         "income": "Income",
         "expense": "Expense",
         "sales": "Sales",

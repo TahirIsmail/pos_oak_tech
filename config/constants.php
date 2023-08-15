@@ -10,7 +10,7 @@ return [
             'upload_path' => 'storage/profile/'
         ],
         'company' => [
-            'app_title' => 'OAK POS',
+            'app_title' => 'OAK TECHNOLOGY',
             'company_logo_default' => '/images/logo_word_mark.svg',
             'invoice_logo_default' => '/images/logo_invoice_print.png',
             'navbar_logo_default' => '/images/logo.png',
