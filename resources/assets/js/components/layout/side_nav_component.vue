@@ -20,7 +20,9 @@
             <a
               href="/dashboard"
               class="module-child-text text-truncate"
-              >Dashboard</a
+              >
+              <i class="fa fa-angle-double-right ml-4"></i> 
+              Dashboard</a
             >
           </li>
         </ul>
@@ -36,43 +38,46 @@
             Orders</span
           ></a
         >
-        <!-- <ul id="menu1" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu1" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/purchase_orders"  
               class="module-child-text text-truncate"
-              >Purchase Orders</a
+              >
+              <i class="fa fa-angle-double-right ml-4"></i> 
+               Purchase Orders</a
             >  
           </li>
           <li class="module-child">
             <a
               href="/invoices"
               class="module-child-text text-truncate"
-              >Invoices</a
+              >
+              <i class="fa fa-angle-double-right ml-4"></i> Invoices</a
             >
           </li>
           <li class="module-child">
             <a
               href="/orders"
               class="module-child-text text-truncate"
-              >Orders</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Orders</a
             >
           </li>
           <li class="module-child">
             <a
               href="/quotations"
               class="module-child-text text-truncate"
-              >Quotations</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Quotations</a
             >
           </li>
           <li class="module-child">
             <a
               href="/transactions"
               class="module-child-text text-truncate"
-              >Transactions</a
+              > <i class="fa fa-angle-double-right ml-4"></i> </i>Transactions</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a
@@ -85,29 +90,29 @@
             Management
           </span></a
         >
-        <!-- <ul id="menu2" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu2" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/users"
               class="module-child-text text-truncate"
-              >Users</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Users</a
             >
           </li>
           <li class="module-child">
             <a
               href="/customers"
               class="module-child-text text-truncate"
-              >Customers</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Customers</a
             >
           </li>
           <li class="module-child">
             <a
               href="/roles"
               class="module-child-text text-truncate"
-              >Roles</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Roles</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a
@@ -120,22 +125,22 @@
             Management</span
           ></a
         >
-        <!-- <ul id="menu3" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu3" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/suppliers"
               class="module-child-text text-truncate"
-              >Suppliers</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Suppliers</a
             >
           </li>
           <li class="module-child">
             <a
               href="/suppliers_performance"
               class="module-child-text text-truncate"
-              >Suppliers Performance</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Suppliers Performance</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a
@@ -147,50 +152,50 @@
             ><i class="main-menu-icon fas fa-cubes"></i> Stock Management</span
           ></a
         >
-        <!-- <ul id="menu4" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu4" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/products"
               class="module-child-text text-truncate"
-              >Products</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Products</a
             >
           </li>
           <li class="module-child">
             <a
               href="/categories"
               class="module-child-text text-truncate"
-              >Categories</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Categories</a
             >
           </li>
           <li class="module-child">
             <a
               href="/stock_transfers"
               class="module-child-text text-truncate"
-              >Stock Transfer</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Stock Transfer</a
             >
           </li>
           <li class="module-child">
             <a
               href="/stock_returns"
               class="module-child-text text-truncate"
-              >Stock Return</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Stock Return</a
             >
           </li>
           <li class="module-child">
             <a
               href="/generate_barcode"
               class="module-child-text text-truncate"
-              >Product Label</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Product Label</a
             >
           </li>
           <li class="module-child">
             <a
               href="/addon_groups"
               class="module-child-text text-truncate"
-              >Add-on Groups</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Add-on Groups</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
@@ -198,7 +203,7 @@
             ><i class="main-menu-icon fas fa-cubes"></i> HR Management</span
           ></a
         >
-        <!---->
+        
       </li>
       <li class="module">
         <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
@@ -206,7 +211,7 @@
             ><i class="main-menu-icon fas fa-cubes"></i> Complaint System</span
           ></a
         >
-        <!---->
+        
       </li>
       <li class="module">
         <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
@@ -215,7 +220,7 @@
             Workshop/Repairing</span
           ></a
         >
-        <!---->
+        
       </li>
       <li class="module">
         <a
@@ -227,15 +232,15 @@
             ><i class="main-menu-icon fas fa-calendar-alt"></i> Calendar</span
           ></a
         >
-        <!-- <ul id="menu8" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu8" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/calendar"
               class="module-child-text text-truncate"
-              >Calendar</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Calendar</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a
@@ -248,50 +253,50 @@
             Management</span
           ></a
         >
-        <!-- <ul id="menu9" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu9" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/download_reports"
               class="module-child-text text-truncate"
-              >Download Reports</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Download Reports</a
             >
           </li>
           <li class="module-child">
             <a
               href="/best_seller_report"
               class="module-child-text text-truncate"
-              >Best Seller Report</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Best Seller Report</a
             >
           </li>
           <li class="module-child">
             <a
               href="/day_wise_sale_report"
               class="module-child-text text-truncate"
-              >Day Wise Sale Report</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Day Wise Sale Report</a
             >
           </li>
           <li class="module-child">
             <a
               href="/catgeory_report"
               class="module-child-text text-truncate"
-              >Category Report</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Category Report</a
             >
           </li>
           <li class="module-child">
             <a
               href="/product_quantity_alert"
               class="module-child-text text-truncate"
-              >Stock Quantity Alert</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Stock Quantity Alert</a
             >
           </li>
           <li class="module-child">
             <a
               href="/store_stock_chart"
               class="module-child-text text-truncate"
-              >Store Stock Chart</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Store Stock Chart</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a
@@ -303,15 +308,15 @@
             ><i class="main-menu-icon fas fa-bell"></i> Notification</span
           ></a
         >
-        <!-- <ul id="menu10" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu10" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/notifications"
               class="module-child-text text-truncate"
-              >Notifications</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Notifications</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a
@@ -324,22 +329,22 @@
             Data</span
           ></a
         >
-        <!-- <ul id="menu11" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu11" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/import_data"
               class="module-child-text text-truncate"
-              >Import Data</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Import Data</a
             >
           </li>
           <li class="module-child">
             <a
               href="/update_data"
               class="module-child-text text-truncate"
-              >Upload &amp; Update Data</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Upload &amp; Update Data</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
       <li class="module">
         <a
@@ -351,71 +356,71 @@
             ><i class="main-menu-icon fas fa-cog"></i> Settings</span
           ></a
         >
-        <!-- <ul id="menu12" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu12" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/stores"
               class="module-child-text text-truncate"
-              >Stores</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Stores</a
             >
           </li>
           <li class="module-child">
             <a
               href="/payment_methods"
               class="module-child-text text-truncate"
-              >Payment Methods</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Payment Methods</a
             >
           </li>
           <li class="module-child">
             <a
               href="/billing_counters"
               class="module-child-text text-truncate"
-              >Billing Counters</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Billing Counters</a
             >
           </li>
           <li class="module-child">
             <a
               href="/email_setting"
               class="module-child-text text-truncate"
-              >Email Settings</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Email Settings</a
             >
           </li>
           <li class="module-child">
             <a
               href="/sms_settings"
               class="module-child-text text-truncate"
-              >SMS Settings</a
+              > <i class="fa fa-angle-double-right ml-4"></i> SMS Settings</a
             >
           </li>
           <li class="module-child">
             <a
               href="/sms_templates"
               class="module-child-text text-truncate"
-              >SMS Templates</a
+              > <i class="fa fa-angle-double-right ml-4"></i> SMS Templates</a
             >
           </li>
           <li class="module-child">
             <a
               href="/variant_options"
               class="module-child-text text-truncate"
-              >Variant Options</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Variant Options</a
             >
           </li>
           <li class="module-child">
             <a
               href="/printers"
               class="module-child-text text-truncate"
-              >Printers</a
+              > <i class="fa fa-angle-double-right ml-4"></i> Printers</a
             >
           </li>
           <li class="module-child">
             <a
               href="/app_setting"
               class="module-child-text text-truncate"
-              >App Settings</a
+              > <i class="fa fa-angle-double-right ml-4"></i> App Settings</a
             >
           </li>
-        </ul> -->
+        </ul>
       </li>
     </ul>
   </div>
