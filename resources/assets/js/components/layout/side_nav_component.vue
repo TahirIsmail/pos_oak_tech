@@ -217,6 +217,18 @@
         >
         <!---->
       </li>
+
+      <li class="module">
+        <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
+          ><span class="module-parent-text text-truncate"
+            ><i class="main-menu-icon fas fa-cubes"></i>
+           Project Management</span
+          ></a
+        >
+        <!---->
+      </li>
+
+
       <li class="module">
         <a
           href="#menu8"
