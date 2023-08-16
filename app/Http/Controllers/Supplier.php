@@ -22,6 +22,15 @@ class Supplier extends Controller
         return view('supplier.suppliers', $data);
     }
 
+    public function suppliers_performance(Request $request){
+        //check access
+        $data['menu_key'] = 'MM_SUPPLIER';
+        $data['sub_menu_key'] = 'SM_SUPPLIERS';
+        check_access(array($data['menu_key'],$data['sub_menu_key']));
+        
+        return view('supplier.suppliers_performance', $data);
+    }
+
     //This is the function that loads the add/edit page
     public function add_supplier($slack = null){
         //check access

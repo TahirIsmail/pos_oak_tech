@@ -17,16 +17,16 @@ class users_table_seeder extends Seeder
      */
     public function run()
     {
-        $hashed_password = Hash::make("administrator");
+        $hashed_password = Hash::make("password");
         $base_controller = new Controller;
 
         UserModel::updateOrCreate(
-            ['email' => 'admin@appsthing.com'],
+            ['email' => 'admin@admin.com'],
             [
                 'slack' => $base_controller->generate_slack("users"),
                 'user_code' => 'SA',
-                'fullname' => "Appsthing Admin",
-                'email' => 'admin@appsthing.com',
+                'fullname' => "OAK Admin",
+                'email' => 'admin@admin.com',
                 'password' => $hashed_password,
                 'phone' => '0000000000',
                 'role_id' => 1, 
