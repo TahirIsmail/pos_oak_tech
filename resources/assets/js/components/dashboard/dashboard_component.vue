@@ -695,7 +695,7 @@
         </div>
       </div>
 
-      <div class="d-flex flex-wrap">
+      <!-- <div class="d-flex flex-wrap">
         <div class="mr-auto">
           <div class="d-flex mb-2">
             <div>
@@ -703,9 +703,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="d-flex flex-wrap mb-4">
+      <!-- <div class="d-flex flex-wrap mb-4">
         <div class="col-md-12">
           <div class="row">
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3">
@@ -721,16 +721,7 @@
                     </span>
                   </div>
 
-                  <!-- <div class="progress mt-2 w-100 progress-height">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      v-bind:style="{ width: target.income_width }"
-                      v-bind:aria-valuenow="revenue_value.raw"
-                      aria-valuemin="0"
-                      v-bind:aria-valuemax="target.income"
-                    ></div>
-                  </div> -->
+                 
                 </div>
               </div>
             </div>
@@ -817,7 +808,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="d-flex flex-wrap mb-4">
       

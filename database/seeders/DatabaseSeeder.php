@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            sample_values_seeder::class
+            // sample_values_seeder::class
         ]);
     }
 }
