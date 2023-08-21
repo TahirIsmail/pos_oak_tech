@@ -67,6 +67,8 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/suppliers_performance', "Supplier@suppliers_performance")->name('suppliers_performance');
     Route::get('/supplier/{slack}', "Supplier@detail")->name('supplier');
     Route::get('/add_supplier', "Supplier@add_supplier")->name('add_supplier');
+    Route::get('/add_supplier_performa', "Supplier@add_supplier_performa")->name('add_supplier_performa');
+
     Route::get('/edit_supplier/{slack?}', "Supplier@add_supplier")->name('edit_supplier');
 
     //tax code

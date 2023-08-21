@@ -10,7 +10,7 @@
             </div>
             <div class="">
                 @if (check_access(array('A_ADD_SUPPLIER'), true))
-                    <a href="{{ route('add_supplier')}}" role="button" class="btn btn-primary">{{ __("New Supplier") }}</a>
+                    <a href="{{ route('add_supplier_performa')}}" role="button" class="btn btn-primary">{{ __("Add Supplier Performa") }}</a>
                 @endif
             </div>
         </div>
@@ -21,8 +21,9 @@
                     <tr>
                         <th>{{ __("Supplier Name") }}</th>
                         <th>{{ __("Supplier Code") }}</th>
-                        <th>{{ __("Status") }}</th>
-                        <th>{{ __("Created On") }}</th>
+                        <th>{{ __("Orders") }}</th>
+                        <th>{{ __("Description") }}</th>
+                        <th>{{ __("Rating") }}</th>
                         <th>{{ __("Updated On") }}</th>
                         <th>{{ __("Created By") }}</th>
                         <th>{{ __("Action") }}</th>
@@ -44,8 +45,8 @@
     <script src="{{ asset('js/pages/suppliers.js') }}"></script>
     <script>
         'use strict';
-        var suppliers = new Suppliers();
-        suppliers.load_listing_table();
-        console.log(load_listing_table());
+        //var suppliers = new Suppliers();
+        //suppliers.load_listing_table();
+        //console.info(suppliers.load_listing_table());
     </script>
 @endpush
