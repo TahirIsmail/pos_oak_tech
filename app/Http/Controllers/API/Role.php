@@ -73,6 +73,7 @@ class Role extends Controller
             })
 
             ->get();
+            // dd($query);
 
             $roles = RoleResource::collection($query);
            
