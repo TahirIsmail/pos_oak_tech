@@ -88,12 +88,14 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //supplier
     Route::post('/suppliers', 'API\Supplier@index');
+    Route::post('/suppliers_performance', 'API\Supplier@suppliers_performance');
     Route::post('/add_supplier', 'API\Supplier@store');
     Route::post('/update_supplier/{slack}', 'API\Supplier@update');
     Route::post('/load_suppliers', 'API\Supplier@load_supplier_list');
     Route::post('/supplier/{slack}', 'API\Supplier@show');
     Route::post('/supplier_list', 'API\Supplier@list');
     Route::post('/delete_supplier/{slack}', 'API\Supplier@destroy');
+    Route::post('/submit_supplier_performance', 'API\Supplier@submit_supplier_performance');
 
     //product
     Route::post('/products', 'API\Product@index');

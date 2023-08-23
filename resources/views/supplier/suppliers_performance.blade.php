@@ -16,17 +16,13 @@
         </div>
 
         <div class="table-responsive">
-            <table id="listing-table" class="table display nowrap w-100">
+            <table id="listing_performance_table" class="table display nowrap w-100">
                 <thead>
                     <tr>
                         <th>{{ __("Supplier Name") }}</th>
-                        <th>{{ __("Supplier Code") }}</th>
-                        <th>{{ __("Orders") }}</th>
-                        <th>{{ __("Description") }}</th>
-                        <th>{{ __("Rating") }}</th>
-                        <th>{{ __("Updated On") }}</th>
-                        <th>{{ __("Created By") }}</th>
-                        <th>{{ __("Action") }}</th>
+                        <th>{{ __("Deliver Timeline") }}</th>
+                        <th>{{ __("Product Quality") }}</th>
+                        <th>{{ __("Responsiveness") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,8 +41,9 @@
     <script src="{{ asset('js/pages/suppliers.js') }}"></script>
     <script>
         'use strict';
-        //var suppliers = new Suppliers();
-        //suppliers.load_listing_table();
+        var suppliers = new Suppliers();
+
+        suppliers.load_suppliers_performance_listing_table();
         //console.info(suppliers.load_listing_table());
     </script>
 @endpush

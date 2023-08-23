@@ -14,7 +14,7 @@ class CreateStoresTable extends Migration
     public function up()
     {
         Schema::create('stores', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('slack', 30)->unique();
             $table->string('store_code', 30)->unique();
             $table->string('name', 250);
@@ -45,6 +45,6 @@ class CreateStoresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store');
+        Schema::dropIfExists('stores');
     }
 }

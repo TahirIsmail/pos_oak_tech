@@ -183,6 +183,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\MailServiceProvider::class,
         App\Providers\AppSettingServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
     ],
 

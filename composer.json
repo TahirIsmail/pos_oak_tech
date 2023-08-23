@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4|^8.0",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.4",
         "firebase/php-jwt": "^5.0",
@@ -24,7 +24,8 @@
         "pusher/pusher-php-server": "^7.2",
         "razorpay/razorpay": "^2.6",
         "stripe/stripe-php": "^7.27",
-        "twilio/sdk": "^6.6"
+        "twilio/sdk": "^6.6",
+        "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers\API;
 
-use Exception;
-use Validator;
-
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Support\Facades\Config;
-
-use App\Http\Resources\SupplierResource;
-
 use App\Http\Resources\Collections\SupplierCollection;
-
+use App\Http\Resources\SupplierResource;
 use App\Models\Supplier as SupplierModel;
+use App\Models\SupplierPerformance;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use DataTables;
+
+use Validator;
 
 class Supplier extends Controller
 {
@@ -30,61 +28,61 @@ class Supplier extends Controller
         try {
 
             $data['action_key'] = 'A_VIEW_SUPPLIER_LISTING';
-            if(check_access(array($data['action_key']), true) == false){
+            if (check_access(array($data['action_key']), true) == false) {
                 $response = $this->no_access_response_for_listing_table();
                 return $response;
             }
-            
+
             $item_array = array();
 
             $draw = $request->draw;
             $limit = $request->length;
             $offset = $request->start;
-            
+
             $order_by = $request->order[0]["column"];
             $order_direction = $request->order[0]["dir"];
-            $order_by_column =  $request->columns[$order_by]['name'];
+            $order_by_column = $request->columns[$order_by]['name'];
 
             $filter_string = $request->search['value'];
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
-            
+
             $query = SupplierModel::select('suppliers.*', 'master_status.label as status_label', 'master_status.color as status_color', 'user_created.fullname')
-            ->take($limit)
-            ->skip($offset)
-            ->statusJoin()
-            ->createdUser()
+                ->take($limit)
+                ->skip($offset)
+                ->statusJoin()
+                ->createdUser()
 
-            ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
-                $query->orderBy($order_by_column, $order_direction);
-            }, function ($query) {
-                $query->orderBy('created_at', 'desc');
-            })
+                ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
+                    $query->orderBy($order_by_column, $order_direction);
+                }, function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                })
 
-            ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
-                $query->where(function ($query) use ($filter_string, $filter_columns){
-                    foreach($filter_columns as $filter_column){
-                        $query->orWhere($filter_column, 'like', '%'.$filter_string.'%');
-                    }
-                });
-            })
+                ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
+                    $query->where(function ($query) use ($filter_string, $filter_columns) {
+                        foreach ($filter_columns as $filter_column) {
+                            $query->orWhere($filter_column, 'like', '%' . $filter_string . '%');
+                        }
+                    });
+                })
 
-            ->get();
+                ->get();
 
             $suppliers = SupplierResource::collection($query);
-           
+
             $total_count = SupplierModel::select("id")->get()->count();
 
             $item_array = [];
-            foreach($suppliers as $key => $supplier){
+            foreach ($suppliers as $key => $supplier) {
 
                 $supplier = $supplier->toArray($request);
 
                 $item_array[$key][] = Str::limit($supplier['name'], 50);
                 $item_array[$key][] = $supplier['supplier_code'];
-                $item_array[$key][] = (isset($supplier['status']['label']))?view('common.status', ['status_data' => ['label' => $supplier['status']['label'], "color" => $supplier['status']['color']]])->render():'-';
+                $item_array[$key][] = (isset($supplier['status']['label'])) ? view('common.status', ['status_data' => ['label' => $supplier['status']['label'], "color" => $supplier['status']['color']]])->render() : '-';
                 $item_array[$key][] = $supplier['created_at_label'];
                 $item_array[$key][] = $supplier['updated_at_label'];
-                $item_array[$key][] = (isset($supplier['created_by']) && isset($supplier['created_by']['fullname']))?$supplier['created_by']['fullname']:'-';
+                $item_array[$key][] = (isset($supplier['created_by']) && isset($supplier['created_by']['fullname'])) ? $supplier['created_by']['fullname'] : '-';
                 $item_array[$key][] = view('supplier.layouts.supplier_actions', array('supplier' => $supplier))->render();
             }
 
@@ -92,18 +90,29 @@ class Supplier extends Controller
                 'draw' => $draw,
                 'recordsTotal' => $total_count,
                 'recordsFiltered' => $total_count,
-                'data' => $item_array
+                'data' => $item_array,
             ];
-            
+
             return response()->json($response);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
+    }
+
+    public function suppliers_performance(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $data = SupplierPerformance::select(['supplier_id', 'delivery_timeline', 'product_quality', 'responsiveness'])->get();
+            
+            return datatables()->of($data)->toJson();
+        }
+
     }
 
     /**
@@ -113,7 +122,7 @@ class Supplier extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -126,21 +135,21 @@ class Supplier extends Controller
     {
         try {
 
-            if(!check_access(['A_ADD_SUPPLIER'], true)){
+            if (!check_access(['A_ADD_SUPPLIER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $this->validate_request($request);
 
             $supplier_data_exists = SupplierModel::select('id')
-            ->where('name', '=', trim($request->supplier_name))
-            ->first();
+                ->where('name', '=', trim($request->supplier_name))
+                ->first();
             if (!empty($supplier_data_exists)) {
                 throw new Exception("Supplier already exists", 400);
             }
 
             DB::beginTransaction();
-            
+
             $supplier = [
                 "slack" => $this->generate_slack("suppliers"),
                 "store_id" => $request->logged_user_store_id,
@@ -151,34 +160,34 @@ class Supplier extends Controller
                 "email" => $request->email,
                 "pincode" => $request->pincode,
                 "status" => $request->status,
-                "created_by" => $request->logged_user_id
+                "created_by" => $request->logged_user_id,
             ];
-            
+
             $supplier_id = SupplierModel::create($supplier)->id;
 
             $code_start_config = Config::get('constants.unique_code_start.supplier');
-            $code_start = (isset($code_start_config))?$code_start_config:100;
-            
+            $code_start = (isset($code_start_config)) ? $code_start_config : 100;
+
             $supplier_code = [
-                "supplier_code" => "SUP".($code_start+$supplier_id)
+                "supplier_code" => "SUP" . ($code_start + $supplier_id),
             ];
             SupplierModel::where('id', $supplier_id)
-            ->update($supplier_code);
+                ->update($supplier_code);
 
             DB::commit();
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Supplier created successfully", 
-                    "data"    => $supplier['slack']
+                    "message" => "Supplier created successfully",
+                    "data" => $supplier['slack'],
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -191,34 +200,34 @@ class Supplier extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($slack)
-    { 
+    {
         try {
 
-            if(!check_access(['A_DETAIL_SUPPLIER'], true)){
+            if (!check_access(['A_DETAIL_SUPPLIER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $item = SupplierModel::select('*')
-            ->where('slack', $slack)
-            ->first();
+                ->where('slack', $slack)
+                ->first();
 
             $item_data = new SupplierResource($item);
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Supplier loaded successfully", 
-                    "data"    => $item_data
+                    "message" => "Supplier loaded successfully",
+                    "data" => $item_data,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
-        }  
+        }
     }
 
     /**
@@ -227,29 +236,28 @@ class Supplier extends Controller
      * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function list(Request $request)
-    {
+    public function list(Request $request) {
         try {
 
-            if(!check_access(['A_VIEW_SUPPLIER_LISTING'], true)){
+            if (!check_access(['A_VIEW_SUPPLIER_LISTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $list = new SupplierCollection(SupplierModel::select('*')
-            ->orderBy('created_at', 'desc')->paginate());
+                    ->orderBy('created_at', 'desc')->paginate());
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Suppliers loaded successfully", 
-                    "data"    => $list
+                    "message" => "Suppliers loaded successfully",
+                    "data" => $list,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -266,18 +274,18 @@ class Supplier extends Controller
     {
         try {
 
-            if(!check_access(['A_EDIT_SUPPLIER'], true)){
+            if (!check_access(['A_EDIT_SUPPLIER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $this->validate_request($request);
 
             $supplier_data_exists = SupplierModel::select('id')
-            ->where([
-                ['slack', '!=', $slack],
-                ['name', '=', trim($request->supplier_name)],
-            ])
-            ->first();
+                ->where([
+                    ['slack', '!=', $slack],
+                    ['name', '=', trim($request->supplier_name)],
+                ])
+                ->first();
             if (!empty($supplier_data_exists)) {
                 throw new Exception("Supplier already exists", 400);
             }
@@ -291,26 +299,26 @@ class Supplier extends Controller
                 "email" => $request->email,
                 "pincode" => $request->pincode,
                 "status" => $request->status,
-                "updated_by" => $request->logged_user_id
+                "updated_by" => $request->logged_user_id,
             ];
 
             $action_response = SupplierModel::where('slack', $slack)
-            ->update($supplier);
+                ->update($supplier);
 
             DB::commit();
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Supplier updated successfully", 
-                    "data"    => $slack
+                    "message" => "Supplier updated successfully",
+                    "data" => $slack,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -324,8 +332,8 @@ class Supplier extends Controller
      */
     public function destroy(Request $request, $slack)
     {
-        try{
-            if(!check_access(['A_DELETE_SUPPLIER'], true)){
+        try {
+            if (!check_access(['A_DELETE_SUPPLIER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
@@ -334,7 +342,7 @@ class Supplier extends Controller
                 throw new Exception("Invalid supplier provided", 400);
             }
             $supplier_id = $supplier_detail->id;
-            
+
             DB::beginTransaction();
 
             SupplierModel::where('id', $supplier_id)->delete();
@@ -345,17 +353,17 @@ class Supplier extends Controller
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Supplier deleted successfully", 
+                    "message" => "Supplier deleted successfully",
                     "data" => $slack,
-                    "link" => $forward_link
+                    "link" => $forward_link,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -365,27 +373,27 @@ class Supplier extends Controller
     {
         try {
             $keywords = $request->keywords;
-            
-            $supplier_data = SupplierModel::select('slack',DB::raw("CONCAT(supplier_code,' - ',name) as label"))
-            ->where(function($query) use ($keywords){
-                $query->where('name', 'like', $keywords.'%')
-                ->orWhere('supplier_code', 'like', $keywords.'%');
-            })
-            ->active()
-            ->get();
-            
+
+            $supplier_data = SupplierModel::select('slack', DB::raw("CONCAT(supplier_code,' - ',name) as label"))
+                ->where(function ($query) use ($keywords) {
+                    $query->where('name', 'like', $keywords . '%')
+                        ->orWhere('supplier_code', 'like', $keywords . '%');
+                })
+                ->active()
+                ->get();
+
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Suppliers loaded successfully", 
-                    "data"    => $supplier_data
+                    "message" => "Suppliers loaded successfully",
+                    "data" => $supplier_data,
                 ), 'SUCCESS'
             ));
-            
-        }catch(Exception $e){
+
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -402,8 +410,66 @@ class Supplier extends Controller
             'status' => $this->get_validation_rules("status", true),
         ]);
         $validation_status = $validator->fails();
-        if($validation_status){
+        if ($validation_status) {
             throw new Exception($validator->errors());
         }
+    }
+
+    public function submit_supplier_performance(Request $request)
+    {
+
+        try {
+
+            $supplier_performance = [
+                "supplier_id" => $request->name,
+                "store_id" => $request->logged_user_store_id,
+                "status" => $request->status,
+                "address" => $request->address,
+                "delivery_timeline" => $request->DeliveryTimeline,
+                "rating_delivery_timeline" => $request->Rating_DeliveryTimeline,
+
+                "product_quality" => $request->ProductQuality,
+                "rating_product_quality" => $request->Rating_ProductQuality,
+
+                "responsiveness" => $request->Responsiveness,
+                "rating_responsiveness" => $request->Rating_Responsiveness,
+            ];
+
+            if (!$request->has('id')) {
+                $supplier_performance = SupplierPerformance::create($supplier_performance);
+                if ($supplier_performance) {
+                    return response()->json($this->generate_response(
+                        array(
+                            "message" => "Supplier Performance Submit successfully",
+                            "data" => $supplier_performance,
+                            'msg' => 'success',
+                        ), 'SUCCESS'
+                    ));
+                }
+            } else {
+                $conditions = [
+                    "id" => $request->id,
+                ];
+                $supplier_performance = SupplierPerformance::updateOrInsert($conditions, $supplier_performance);
+                if ($supplier_performance) {
+                    return response()->json($this->generate_response(
+                        array(
+                            "message" => "Supplier Performance Update successfully",
+                            "data" => $supplier_performance,
+                            'msg' => 'success',
+                        ), 'SUCCESS'
+                    ));
+                }
+            }
+
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+
     }
 }

@@ -31,6 +31,24 @@ class Supplier extends Controller
         return view('supplier.suppliers_performance', $data);
     }
 
+    public function add_supplier_performa($slack = null){
+        $data['menu_key'] = 'MM_SUPPLIER';
+        $data['sub_menu_key'] = 'SM_SUPPLIERS_PERFORMANCE';
+        $data['action_key'] = ($slack == null)?'A_ADD_SUPPLIER_PERFORMA':'A_EDIT_SUPPLIER_PERFORMA';
+        check_access(array($data['action_key']));
+
+        $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('SUPPLIER_STATUS')->active()->sortValueAsc()->get();
+
+        $data['suppliers'] = SupplierModel::all();
+
+        // dd($data['suppliers']);
+        
+        return view('supplier.add_supplier_performance', $data);
+        
+    }
+
+    
+
     //This is the function that loads the add/edit page
     public function add_supplier($slack = null){
         //check access
