@@ -108,9 +108,19 @@ class Supplier extends Controller
     {
 
         if ($request->ajax()) {
-            $data = SupplierPerformance::select(['supplier_id', 'delivery_timeline', 'product_quality', 'responsiveness'])->get();
+            $data = SupplierPerformance::with('store', 'supplier')->get();
             
-            return datatables()->of($data)->toJson();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('supplier_id', function ($row) {                    
+                    $output = $row['supplier']['name'];
+                    return $output;
+                })
+                ->addColumn('supplier_id', function ($row) {                    
+                   return view('suppliers_rating.delivery_timeline', $row);
+                })
+                ->rawColumns(['supplier_id', 'delivery_timeline'])
+                ->make(true);
         }
 
     }
@@ -421,13 +431,13 @@ class Supplier extends Controller
         try {
 
             $supplier_performance = [
+                "slack" => $this->generate_slack("supplier_performances"),
                 "supplier_id" => $request->name,
                 "store_id" => $request->logged_user_store_id,
                 "status" => $request->status,
                 "address" => $request->address,
                 "delivery_timeline" => $request->DeliveryTimeline,
                 "rating_delivery_timeline" => $request->Rating_DeliveryTimeline,
-
                 "product_quality" => $request->ProductQuality,
                 "rating_product_quality" => $request->Rating_ProductQuality,
 

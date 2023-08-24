@@ -19,6 +19,7 @@
             <table id="listing_performance_table" class="table display nowrap w-100">
                 <thead>
                     <tr>
+                        <th>{{ __("#") }}</th>
                         <th>{{ __("Supplier Name") }}</th>
                         <th>{{ __("Deliver Timeline") }}</th>
                         <th>{{ __("Product Quality") }}</th>

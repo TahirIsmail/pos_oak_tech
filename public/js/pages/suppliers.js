@@ -40,6 +40,9 @@ class Suppliers{
             
             
             columns: [
+                {
+                    data: 'id'
+                },
                
                 {
                     data: 'supplier_id'
@@ -57,7 +60,7 @@ class Suppliers{
                
             ],
             order: [
-                [1, 'asc']
+                [1, 'desc']
             ]
         })
     }
