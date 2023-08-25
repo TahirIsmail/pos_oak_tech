@@ -24,6 +24,7 @@
                         <th>{{ __("Deliver Timeline") }}</th>
                         <th>{{ __("Product Quality") }}</th>
                         <th>{{ __("Responsiveness") }}</th>
+                        <th>{{ __("Action") }}</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -106,6 +106,11 @@ class Supplier extends Controller
 
     public function suppliers_performance(Request $request)
     {
+        $data['action_key'] = 'A_VIEW_SUPPLIER_PERFORMANCE_LISTING';
+        if (check_access(array($data['action_key']), true) == false) {
+            $response = $this->no_access_response_for_listing_table();
+            return $response;
+        }
 
         if ($request->ajax()) {
             $data = SupplierPerformance::with('store', 'supplier')->get();
@@ -116,10 +121,23 @@ class Supplier extends Controller
                     $output = $row['supplier']['name'];
                     return $output;
                 })
-                ->addColumn('supplier_id', function ($row) {                    
-                   return view('suppliers_rating.delivery_timeline', $row);
+                ->addColumn('delivery_timeline', function ($row) {       
+                    $data['row'] = $row;             
+                   return view('suppliers_rating.delivery_timeline', $data);
                 })
-                ->rawColumns(['supplier_id', 'delivery_timeline'])
+                ->addColumn('product_quality', function ($row) {       
+                    $data['row'] = $row;             
+                   return view('suppliers_rating.product_quality', $data);
+                })
+                ->addColumn('responsiveness', function ($row) {
+                    $data['row'] = $row;             
+                   return view('suppliers_rating.responsiveness', $data);
+                })
+                ->addColumn('action', function ($row) {
+                    $data['supplier'] = $row;          
+                    return view('supplier.layouts.supplier_performance_action', $data)->render();
+                })
+                ->rawColumns(['supplier_id', 'delivery_timeline', 'product_quality', 'responsiveness', 'action'])
                 ->make(true);
         }
 
@@ -379,6 +397,45 @@ class Supplier extends Controller
         }
     }
 
+    public function destroy_supplier_performance(Request $request, $slack)
+    {
+        try {
+            if (!check_access(['A_DELETE_SUPPLIER_PERFORMANCE'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            $supplier_detail = SupplierPerformance::select('id')->where('slack', $slack)->first();
+            if (empty($supplier_detail)) {
+                throw new Exception("Invalid supplier provided", 400);
+            }
+            $supplier_id = $supplier_detail->id;
+
+            DB::beginTransaction();
+
+            SupplierPerformance::where('id', $supplier_id)->delete();
+
+            DB::commit();
+
+            $forward_link = route('suppliers_performance');
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Supplier Performance deleted successfully",
+                    "data" => $slack,
+                    "link" => $forward_link,
+                ), 'SUCCESS'
+            ));
+
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
     public function load_supplier_list(Request $request)
     {
         try {
@@ -425,27 +482,31 @@ class Supplier extends Controller
         }
     }
 
-    public function submit_supplier_performance(Request $request)
+    public function submit_supplier_performance(Request $request, $slack = null)
     {
 
         try {
 
-            $supplier_performance = [
-                "slack" => $this->generate_slack("supplier_performances"),
-                "supplier_id" => $request->name,
-                "store_id" => $request->logged_user_store_id,
-                "status" => $request->status,
-                "address" => $request->address,
-                "delivery_timeline" => $request->DeliveryTimeline,
-                "rating_delivery_timeline" => $request->Rating_DeliveryTimeline,
-                "product_quality" => $request->ProductQuality,
-                "rating_product_quality" => $request->Rating_ProductQuality,
+            if (!check_access(['A_ADD_SUPPLIER_PERFORMANCE'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
 
-                "responsiveness" => $request->Responsiveness,
-                "rating_responsiveness" => $request->Rating_Responsiveness,
-            ];
 
-            if (!$request->has('id')) {
+            if ($slack == null) {
+                $supplier_performance = [
+                    "slack" => $this->generate_slack("supplier_performances"),
+                    "supplier_id" => $request->name,
+                    "store_id" => $request->logged_user_store_id,
+                    "status" => $request->status,
+                    "address" => $request->address,
+                    "delivery_timeline" => $request->DeliveryTimeline,
+                    "rating_delivery_timeline" => $request->Rating_DeliveryTimeline,
+                    "product_quality" => $request->ProductQuality,
+                    "rating_product_quality" => $request->Rating_ProductQuality,
+    
+                    "responsiveness" => $request->Responsiveness,
+                    "rating_responsiveness" => $request->Rating_Responsiveness,
+                ];
                 $supplier_performance = SupplierPerformance::create($supplier_performance);
                 if ($supplier_performance) {
                     return response()->json($this->generate_response(
@@ -457,8 +518,20 @@ class Supplier extends Controller
                     ));
                 }
             } else {
+                $supplier_performance = [                  
+                    "supplier_id" => $request->name,
+                    "store_id" => $request->logged_user_store_id,
+                    "status" => $request->status,
+                    "address" => $request->address,
+                    "delivery_timeline" => $request->DeliveryTimeline,
+                    "rating_delivery_timeline" => $request->Rating_DeliveryTimeline,
+                    "product_quality" => $request->ProductQuality,
+                    "rating_product_quality" => $request->Rating_ProductQuality,    
+                    "responsiveness" => $request->Responsiveness,
+                    "rating_responsiveness" => $request->Rating_Responsiveness,
+                ];
                 $conditions = [
-                    "id" => $request->id,
+                    "slack" => $slack,
                 ];
                 $supplier_performance = SupplierPerformance::updateOrInsert($conditions, $supplier_performance);
                 if ($supplier_performance) {

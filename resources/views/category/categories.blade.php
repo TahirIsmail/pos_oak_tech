@@ -21,7 +21,6 @@
                     <tr>
                         <th>{{ __("Category Name") }}</th>
                         <th>{{ __("Category Code") }}</th>
-                        <th>{{ __("Show on POS Screen") }}</th>
                         <th>{{ __("Show on QR Menu") }}</th>
                         <th>{{ __("Status") }}</th>
                         <th>{{ __("Created On") }}</th>

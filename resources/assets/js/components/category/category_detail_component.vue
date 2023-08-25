@@ -39,7 +39,7 @@
                     <p>{{ category.label }}</p>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="label">{{ $t("Show on POS Screen") }}</label>
+                    <label for="label">{{ $t("Show on Screen") }}</label>
                     <p>{{ display_on_pos_screen}}</p>
                 </div>
                 <div class="form-group col-md-3">

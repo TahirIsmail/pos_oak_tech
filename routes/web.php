@@ -66,10 +66,12 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/suppliers', "Supplier@index")->name('suppliers');
     Route::get('/suppliers_performance', "Supplier@suppliers_performance")->name('suppliers_performance');
     Route::get('/supplier/{slack}', "Supplier@detail")->name('supplier');
+    Route::get('/view_supplier_performance/{slack}', "Supplier@view_supplier_performance")->name('view_supplier_performance');
     Route::get('/add_supplier', "Supplier@add_supplier")->name('add_supplier');
     Route::get('/add_supplier_performa', "Supplier@add_supplier_performa")->name('add_supplier_performa');
 
     Route::get('/edit_supplier/{slack?}', "Supplier@add_supplier")->name('edit_supplier');
+    Route::get('/edit_supplier_performance/{slack?}', "Supplier@add_supplier_performa")->name('edit_supplier_performance');
 
     //tax code
     Route::get('/tax_codes', "Taxcode@index")->name('tax_codes');

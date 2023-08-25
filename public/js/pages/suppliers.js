@@ -55,6 +55,9 @@ class Suppliers{
                 },
                 {
                     data: 'responsiveness'
+                },  
+                {
+                    data: 'action'
                 },                
                 
                

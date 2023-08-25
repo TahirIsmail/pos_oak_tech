@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\SubCategory;
 use App\Models\Scopes\StoreScope;
 
 class Category extends Model
 {
     protected $table = 'category';
-    protected $hidden = ['id', 'store_id'];
+    protected $hidden = ['store_id'];
     protected $fillable = ['slack', 'store_id', 'category_code', 'label', 'description', 'display_on_pos_screen', 'display_on_qr_menu', 'status', 'created_by', 'updated_by'];
 
     protected static function boot()
@@ -88,5 +88,12 @@ class Category extends Model
 
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
+    }
+
+
+
+    public function subcategories()
+    {
+        return $this->hasMany(SubCategory::class, 'category_id');
     }
 }

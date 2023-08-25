@@ -88,6 +88,7 @@ Vue.component('productbarcodecomponent', require('./components/product/product_b
 
 Vue.component('addsuppliercomponent', require('./components/supplier/add_supplier_component.vue').default);
 Vue.component('supplierdetailcomponent', require('./components/supplier/supplier_detail_component.vue').default);
+Vue.component('supplierperformancedetailcomponent', require('./components/supplier/supplier_performance_detail_component.vue').default);
 
 Vue.component('addsupplierperformancecomponent', require('./components/supplier/add_supplier_performance_component.vue').default);
 

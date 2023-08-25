@@ -95,7 +95,13 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/supplier/{slack}', 'API\Supplier@show');
     Route::post('/supplier_list', 'API\Supplier@list');
     Route::post('/delete_supplier/{slack}', 'API\Supplier@destroy');
+
+    Route::post('/delete_supplier_performance/{slack}', 'API\Supplier@destroy_supplier_performance');
+
+
+
     Route::post('/submit_supplier_performance', 'API\Supplier@submit_supplier_performance');
+    Route::post('/update_supplier_performance/{slack}', 'API\Supplier@submit_supplier_performance');
 
     //product
     Route::post('/products', 'API\Product@index');
