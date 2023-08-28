@@ -285,7 +285,7 @@ class Category extends Controller
             if(!check_access(['A_EDIT_CATEGORY'], true)){
                 throw new Exception("Invalid request", 400);
             }
-
+            $subCategories = explode(',', $request->input('sub_categories')[0]);
             $checkCategoryCode = CategoryModel::where('slack', $slack)->get()->toArray();
             if($checkCategoryCode[0]['category_code'] == $request->category_name){
 
@@ -310,8 +310,7 @@ class Category extends Controller
             $category = [
                 "label" => Str::title($request->category_name),
                 "category_code" => $request->category_code,
-                "description" => $request->description,
-                "display_on_pos_screen" => (isset($request->display_on_pos_screen))?$request->display_on_pos_screen:0,
+                "description" => $request->description,               
                 "display_on_qr_menu" => (isset($request->display_on_qr_menu))?$request->display_on_qr_menu:0,
                 "status" => $request->status,
                 'updated_by' => $request->logged_user_id
@@ -319,6 +318,20 @@ class Category extends Controller
 
             $action_response = CategoryModel::where('slack', $slack)
             ->update($category);
+
+           
+
+            if($request->input('sub_categories')[0] != null){
+                if($action_response){
+                    foreach($subCategories as $scategory){
+                        $subCategory = [
+                            'category_id' => $action_response,
+                            'sub_category_name' => $scategory
+                        ];
+                        SubCategory::create($subCategory);
+                    }
+                }
+            }
 
             DB::commit();
 
@@ -383,6 +396,72 @@ class Category extends Controller
             ));
         }
     }
+
+    public function delete_subcategory(Request $request){
+        try {
+
+            if(!check_access(['A_ADD_CATEGORY'], true)){
+                throw new Exception("Invalid request", 400);
+            }
+
+            $id = $request->input('id');
+            $del = SubCategory::find($id)->delete();
+
+            if($del){
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => 'Sub Category Deleted Successfully',
+                        "status_code" => '200',
+                        'id' => $id
+                    )
+                ));
+            }
+            else{
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => 'Some Error Occured',
+                        "status_code" => '201',
+                        
+                    )
+                ));
+            }
+    
+        
+       
+
+        }
+        catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+        
+    }
+
+    public function update_subcategory(Request $request)
+{
+    $id = $request->input('id');
+    $newName = $request->input('sub_category_name');
+
+    // dd($request->all());
+
+    // Find the subcategory by ID and update the name
+    $subcategory = SubCategory::findOrFail($id);
+    $subcategory->sub_category_name = $newName;
+    $subcategory->save();
+    return response()->json($this->generate_response(
+        array(
+            "message" => 'Subcategory updated successfully',
+            "status_code" => 200
+        )
+    ));
+
+   
+}
+
 
     public function validate_request($request)
     {

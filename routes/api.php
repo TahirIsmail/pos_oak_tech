@@ -85,6 +85,8 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/category/{slack}', 'API\Category@show');
     Route::post('/category_list', 'API\Category@list');
     Route::post('/delete_category/{slack}', 'API\Category@destroy');
+    Route::post('/delete_subcategory', 'API\Category@delete_subcategory');
+    Route::post('/update_subcategory', 'API\Category@update_subcategory');
 
     //supplier
     Route::post('/suppliers', 'API\Supplier@index');
