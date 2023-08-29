@@ -20,10 +20,6 @@ class CreateProductsTable extends Migration
             $table->string('product_code', 30);
             $table->string('name', 250);
             $table->text('description')->nullable();
-            $table->foreignId('sub_category_id')
-                ->constrained('sub_categories')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
             $table->integer('supplier_id');
             $table->integer('tax_code_id');
             $table->integer('discount_code_id')->nullable();

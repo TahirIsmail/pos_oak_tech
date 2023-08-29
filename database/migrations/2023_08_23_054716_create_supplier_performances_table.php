@@ -16,10 +16,8 @@ class CreateSupplierPerformancesTable extends Migration
         Schema::create('supplier_performances', function (Blueprint $table) {
             $table->id();
             $table->string('slack', 30)->unique();
-            $table->unsignedInteger('store_id');
-            $table->foreign('store_id')->references('id')->on('stores')->onUpdate('cascade')->onDelete('cascade');
-            $table->unsignedInteger('supplier_id');
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onUpdate('cascade')->onDelete('cascade');
+
+
             $table->tinyInteger('status');
             $table->string('address')->nullable();
             $table->string('delivery_timeline', 150)->nullable();
@@ -28,6 +26,14 @@ class CreateSupplierPerformancesTable extends Migration
             $table->integer('rating_product_quality')->nullable(); // Corrected 'int' to 'integer'
             $table->string('responsiveness', 150)->nullable();
             $table->integer('rating_responsiveness')->nullable();
+            $table->foreignId('store_id')
+                ->constrained('stores')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreignId('supplier_id')
+                ->constrained('suppliers')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
