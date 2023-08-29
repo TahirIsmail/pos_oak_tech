@@ -266,11 +266,7 @@ export default {
       this.editModalVisible = true;
     },
     updateSubcategory() {
-      // Assuming you have the edited subcategory name and subcategory ID
-      const updatedData = {
-        id: this.editingSubcategory.id,
-        sub_category_name: this.editedSubcategoryName
-      };
+      // Assuming you have the edited subcategory name and subcategory ID     
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
             formData.append(
