@@ -115,7 +115,9 @@
             </td>
         </tr>
     </table>
-
+    <div class="invoice-head center">
+        <h2>GST INVOICE</h2>
+    </div>
 
     <div class="mb-1rem">
         <table class="w-100 product-table mb-1rem">
@@ -216,8 +218,26 @@
             <pre>{{ $data->terms }}</pre>
         </div>
     @endif
+    <div class="col6 bold">
+        <h3>Recieved By:</h3>
+        <hr>
+        
+            <div><h3>Name:</h3><div><hr></div></div>
+            
+        
+        
+        
+            
+            <div><h3>Signature:</h3><div><hr></div></div>
+           
+        
+        
+    </div>
+    
 
-    <div class='center'>
+        
+    
+    <div class='col12 center'>
         <div class='display-block'>Thank You!</div>
     </div>
 
