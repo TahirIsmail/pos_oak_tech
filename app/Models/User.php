@@ -8,8 +8,8 @@ use Carbon\Carbon;
 class User extends Model
 {
     protected $table = 'users';
-    protected $hidden = ['id', 'password', 'role_id'];
-    protected $fillable = ['slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'created_by', 'updated_by'];
+    protected $hidden = [ 'password', 'role_id'];
+    protected $fillable = ['id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'created_by', 'updated_by'];
 
     public function scopeActive($query){
         return $query->where('users.status', 1);
@@ -93,5 +93,8 @@ class User extends Model
     
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
+    }
+    public function products(){
+        return $this->belongsTo('App\Models\Product', 'created_by', 'id');
     }
 }

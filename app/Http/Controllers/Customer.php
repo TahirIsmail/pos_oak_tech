@@ -63,8 +63,11 @@ class Customer extends Controller
         $customer_data = new CustomerResource($customer);
         
         $data['customer_data'] = $customer_data;
+       
 
         $data['delete_access'] = check_access(['A_DELETE_CUSTOMER'], true);
+
+     
 
         return view('customer.customer_detail', $data);
     }

@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="created_by">{{ $t("Created By") }}</label>
-                    <p>{{ (customer.created_by == null)?'-':customer.created_by['fullname']+' ('+customer.created_by['customer_code']+')' }}</p>
+                    <p>{{ (customer.created_by == null)?'-':customer.created_by['fullname']+' ()' }}</p>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="updated_by">{{ $t("Updated By") }}</label>

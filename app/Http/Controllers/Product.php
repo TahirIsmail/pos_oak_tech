@@ -76,7 +76,8 @@ class Product extends Controller
 
         $data['suppliers'] = SupplierModel::select('slack', 'supplier_code', 'name')->sortNameAsc()->active()->get();
 
-        $data['categories'] = CategoryModel::select('slack', 'category_code', 'label')->sortLabelAsc()->active()->get();
+        $data['categories'] = CategoryModel::with('subcategories')->sortLabelAsc()->active()->get()->toArray();
+        // dd($data['categories']);
 
         $data['taxcodes'] = TaxcodeModel::select('slack', 'tax_code', 'label', 'tax_type', 'total_tax_percentage')->sortLabelAsc()->active()->get();
 
@@ -91,7 +92,7 @@ class Product extends Controller
         $data['product_data'] = null;
         if(isset($slack)){
             
-            $product = ProductModel::where('products.slack', '=', $slack)->first();
+            $product = ProductModel::with('subcategory', 'User', 'updatedUser')->where('products.slack', '=', $slack)->first();
             if (empty($product)) {
                 abort(404);
             }
@@ -99,6 +100,7 @@ class Product extends Controller
             $product_data = new ProductResource($product);
 
             $data['product_data'] = $product_data;
+            // dd($data['product_data']);
         }
 
         $data['is_taxcode_inclusive'] = isset($product_data->tax_code)?(($product_data->tax_code['tax_type'] == 'INCLUSIVE')?true:false):false;
@@ -114,15 +116,19 @@ class Product extends Controller
         $data['action_key'] = 'A_DETAIL_PRODUCT';
         check_access([$data['action_key']]);
 
-        $product = ProductModel::where('products.slack', '=', $slack)->first();
+        $product = ProductModel::with('subcategory.category','User', 'updatedUser')->where('products.slack', '=', $slack)->first();
+        // dd($product);
         
         if (empty($product)) {
             abort(404);
         }
 
         $product_data = new ProductResource($product);
+
+        
         
         $data['product_data'] = $product_data;
+        // dd($data['product_data']);
 
         $data['delete_access'] = check_access(['A_DELETE_PRODUCT'], true);
 

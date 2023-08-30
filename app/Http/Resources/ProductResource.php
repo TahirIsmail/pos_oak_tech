@@ -63,7 +63,7 @@ class ProductResource extends JsonResource
             'purchase_amount_excluding_tax' => $this->purchase_amount_excluding_tax,
             'sale_amount_excluding_tax' => $this->sale_amount_excluding_tax,
             'sale_amount_including_tax' => $this->sale_amount_including_tax,
-            'category' => new CategoryResource($this->category),
+            'category' => $this->subcategory,
             'supplier' => new SupplierResource($this->supplier),
             'tax_code' => new TaxcodeResource($this->tax_code),
             'discount_code' => new DiscountcodeResource($this->discount_code),
@@ -83,8 +83,8 @@ class ProductResource extends JsonResource
             'detail_link' => (check_access(['A_DETAIL_PRODUCT'], true))?route('product', ['slack' => $this->slack]):'',
             'created_at_label' => $this->parseDate($this->created_at),
             'updated_at_label' => $this->parseDate($this->updated_at),
-            'created_by' => new UserResource($this->createdUser),
-            'updated_by' => new UserResource($this->updatedUser)
+            'created_by' => $this->User,
+            'updated_by' => $this->updatedUser
         ];
     }
 }

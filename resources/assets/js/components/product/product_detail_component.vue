@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="phone">{{ $t("Category") }}</label>
-                    <p v-if="(product.category!=null)">{{ product.category.label }} ({{product.category.category_code}})</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
+                    <p v-if="(product.category!= null)">{{ product.category.category.label }} ({{product.category.sub_category_name}})</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="created_by">{{ $t("Created By") }}</label>
@@ -316,6 +316,7 @@
         data(){
             return{
                 product : this.product_data,
+                subcategory: this.product_data.subcategory,
                 images : (this.product_data == null)?[]:this.product_data.images,
                 processing: false,
                 delete_processing: false,

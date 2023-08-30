@@ -12,8 +12,8 @@ use App\Models\Scopes\StoreScope;
 class Product extends Model
 {
     protected $table = 'products';
-    protected $hidden = ['id', 'store_id'];
-    protected $fillable = ['slack', 'store_id', 'product_code', 'name', 'description', 'category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
+    protected $hidden = ['store_id'];
+    protected $fillable = ['id', 'slack', 'store_id', 'product_code', 'name', 'description', 'sub_category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
 
     protected static function boot()
     {
@@ -36,11 +36,11 @@ class Product extends Model
         });
     }
 
-    public function scopeCategoryJoin($query){
-        return $query->leftJoin('category', function ($join) {
-            $join->on('category.id', '=', 'products.category_id');
-        });
-    }
+    // public function scopeCategoryJoin($query){
+    //     return $query->leftJoin('category', function ($join) {
+    //         $join->on('category.id', '=', 'products.category_id');
+    //     });
+    // }
 
     public function scopeSupplierJoin($query){
         return $query->leftJoin('suppliers', function ($join) {
@@ -60,9 +60,9 @@ class Product extends Model
         });
     }
 
-    public function scopeCategoryActive($query){
-        return $query->where('category.status', 1);
-    }
+    // public function scopeCategoryActive($query){
+    //     return $query->where('category.status', 1);
+    // }
 
     public function scopeSupplierActive($query){
         return $query->where('suppliers.status', 1);
@@ -139,8 +139,8 @@ class Product extends Model
 
     /* For view files */
 
-    public function createdUser(){
-        return $this->hasOne('App\Models\User', 'id', 'created_by')->select(['slack', 'fullname', 'email', 'user_code']);
+    public function User(){
+        return $this->hasOne('App\Models\User', 'id', 'created_by');
     }
 
     public function updatedUser(){
@@ -155,9 +155,9 @@ class Product extends Model
         return $this->hasOne('App\Models\Supplier', 'id', 'supplier_id');
     }
 
-    public function category(){
-        return $this->hasOne('App\Models\Category', 'id', 'category_id');
-    }
+    // public function category(){
+    //     return $this->hasOne('App\Models\Category', 'id', 'category_id');
+    // }
 
     public function tax_code(){
         return $this->hasOne('App\Models\Taxcode', 'id', 'tax_code_id')->withoutGlobalScopes();
@@ -217,7 +217,7 @@ class Product extends Model
 
     public function subcategory()
     {
-        return $this->belongsTo(SubCategory::class);
+        return $this->belongsTo(SubCategory::class, 'sub_category_id', 'id');
     }
 
     

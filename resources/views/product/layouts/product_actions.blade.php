@@ -4,7 +4,7 @@
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown">
         @if (check_access(array('A_DETAIL_PRODUCT'), true))
-            <a href="{{ $product['detail_link'] }}" class="dropdown-item">{{ __("View") }}</a>
+            <a href="product/{{ $product['slack'] }}" class="dropdown-item">{{ __("View") }}</a>
         @endif
         @if (check_access(array('A_EDIT_PRODUCT'), true))
             <a href="edit_product/{{ $product['slack'] }}" class="dropdown-item">{{ __("Edit") }}</a>
