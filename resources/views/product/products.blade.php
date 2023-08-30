@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="form-row mb-1">
+        {{-- <div class="form-row mb-1">
             <div class="form-group col-md-3">
                 <label for="product_type_filter">{{ __("Filter Product") }}</label>
                 <select name="product_type_filter" id="product_type_filter" class="form-control form-control-custom custom-select">
@@ -27,10 +27,10 @@
                     @endif
                 </select>
             </div>
-        </div>
+        </div> --}}
 
         <div class="table-responsive">
-            <table id="listing-table" class="table display nowrap w-100">
+            <table id="listing-table" class="table nowrap">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -43,6 +43,7 @@
                         <th>{{ __("Quantity") }}</th>
                         <th>{{ __("Amount") }}</th>
                         <th>{{ __("Status") }}</th>
+                        <th>{{ __("Product Status") }}</th>
                         <th>{{ __("Created On") }}</th>
                         <th>{{ __("Updated On") }}</th>
                         <th>{{ __("Created By") }}</th>
@@ -66,19 +67,19 @@
     <script>
         'use strict';
         var products = new Products();
-        products.load_listing_table();
+        products.load_listing_table().val();
 
-        $(document).on('change', '#product_type_filter', function(){
-            var product_type = $(this).val();
-            event = new CustomEvent("product_type_filter", { "detail": product_type });
-            document.dispatchEvent(event);
-        });
-
-        $(document).ready(function(){
-            var product_type = $('#product_type_filter').val();
-            console.log(product_type);
-            event = new CustomEvent("product_type_filter", { "detail": product_type });
-            document.dispatchEvent(event);
-        });
+        // $(document).on('change', '#product_type_filter', function(){
+        //     var product_type = $(this).val();
+        //     products.load_listing_table(product_type);
+        //     event = new CustomEvent("product_type_filter", { "detail": product_type });
+        //     document.dispatchEvent(event);
+        // });
+        // $(document).ready(function(){
+        //     var product_type = $('#product_type_filter').val();
+        //     event = new CustomEvent("product_type_filter", { "detail": product_type });
+        //     document.dispatchEvent(event);
+        // });
+      
     </script>
 @endpush

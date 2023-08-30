@@ -50,10 +50,14 @@ class Products{
 
     load_listing_table(){
         "use strict";
+     
         var table = $('#listing-table').DataTable({
-           
+            destroy: true,
             processing: true,
             serverSide: true,
+           
+            "scrollX": true,
+            
             ajax: {
                 url: '/api/products',
                 type : 'POST',
@@ -62,6 +66,7 @@ class Products{
             },           
             
             columns: [
+               
                 {
                     data: 'id'
                 },
@@ -92,6 +97,9 @@ class Products{
                 },
                 {
                     data: 'status'
+                },
+                {
+                    data: 'product_status'
                 },
                 {
                     data: 'created_at'

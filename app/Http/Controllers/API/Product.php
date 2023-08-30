@@ -98,12 +98,24 @@ class Product extends Controller
                             return 'InActive';
                         }
                     })
+                    ->addColumn('product_status', function ($row) {
+                        if($row['is_addon_product'] == 1){
+                            return '<span class="btn btn-primary rounded text-white">Addon Product</span>';
+
+                        }
+                        else if($row['is_addon_product'] == 0 && $row['is_ingredient'] == 0) {
+                            return '<span class="btn btn-info rounded text-white">Billing Product</span>';
+                        }
+                        else{
+                            
+                        }
+                    })
                   
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;          
                         return view('product.layouts.product_actions', $data)->render();
                     })
-                    ->rawColumns(['supplier_id', 'sub_category_id' , 'tax_code_id','discount_code_id', 'status', 'created_by', 'action'])
+                    ->rawColumns(['supplier_id', 'sub_category_id' , 'tax_code_id','discount_code_id', 'status', 'product_status', 'created_by', 'action'])
                     ->make(true);
             }
 
