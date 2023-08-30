@@ -10,8 +10,8 @@ use App\Models\Scopes\StoreScope;
 class Supplier extends Model
 {
     protected $table = 'suppliers';
-    protected $hidden = ['id'];
-    protected $fillable = ['slack', 'store_id', 'supplier_code', 'name', 'email', 'phone', 'address', 'pincode', 'status', 'created_by', 'updated_by'];
+    // protected $hidden = ['id'];
+    protected $fillable = ['id', 'slack', 'store_id', 'supplier_code', 'name', 'email', 'phone', 'address', 'pincode', 'status', 'created_by', 'updated_by'];
 
     protected static function boot()
     {
@@ -21,6 +21,10 @@ class Supplier extends Model
     
     public function scopeActive($query){
         return $query->where('status', 1);
+    }
+    public function supplierPerformances()
+    {
+        return $this->hasMany(SupplierPerformance::class, 'supplier_id');
     }
 
     public function scopeStatusJoin($query){

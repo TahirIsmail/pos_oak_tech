@@ -26,8 +26,8 @@
             version: String
         },
         mounted() {
-            console.info('Designed and Developed by 🅰🅿🅿🆂🆃🅷🅸🅽🅶');
-            console.info('https://codecanyon.net/item/appsthing-pos-multiple-store-point-of-sale-billing-and-inventory-management-application/25742626');
+            console.info('Designed and Developed by Oxbridge Digital');
+            console.info('https://www.oxbridgedigital.com/');
             this.listen_events();
         },
         methods: {

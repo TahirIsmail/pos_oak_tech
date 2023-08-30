@@ -12,16 +12,15 @@ class Categories{
             columns: [
                 { name: 'category.label' },
                 { name: 'category.category_code' },
-                { name: 'category.display_on_pos_screen' },
                 { name: 'category.display_on_qr_menu' },
                 { name: 'master_status.label' },
                 { name: 'category.created_at' },
                 { name: 'category.updated_at' },
-                { name: 'user_created.fullname' }
+                { name: 'user_created.fullname'}
             ],
-            order: [[ 5, "desc" ]],
+            order: [[ 4, "desc" ]],
             columnDefs: [
-                { "orderable": false, "targets": [8] }
+                { "orderable": false, "targets": [7] }
             ]
         });
     }

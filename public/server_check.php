@@ -1,7 +1,7 @@
 <?php 
 
     /**
-    * @author Appsthing
+    * @author OAK
     * @version 4
     */
 
@@ -95,12 +95,12 @@
 
 <!DOCTYPE html>
 <!--
-Author: Appsthing
-Product Name: Appsthing POS 
+Author: OAK
+Product Name: OAK POS 
 Product Version: 6.0
-Purchase: https://codecanyon.net/item/appsthing-pos-multiple-store-point-of-sale-billing-and-inventory-management-application/25742626
-Website: https://www.appsthing.com
-Contact: appsthing@gmail.com
+Purchase: https://codecanyon.net/item/OAK-pos-multiple-store-point-of-sale-billing-and-inventory-management-application/25742626
+Website: https://www.OAK.com
+Contact: OAK@gmail.com
 License: For each use you must have a valid license purchased only from above link in order to legally use the application.
 -->
 <html lang="en">
@@ -126,7 +126,7 @@ License: For each use you must have a valid license purchased only from above li
                     <span class="text-headline">Server Requirements Checker & Installation Helper</span>
                 </div>
                 <div class="d-flex justify-content-center mb-4">
-                    <span class="">This script will check if your server meets the requirements for running Appsthing POS application</span>
+                    <span class="">This script will check if your server meets the requirements for running OAK POS application</span>
                 </div>
 
                 <hr>
@@ -409,7 +409,7 @@ License: For each use you must have a valid license purchased only from above li
                     <small class="text-muted">Laravel Version <?php echo $laravel_version; ?></small>
                 </div>
                 <div class="d-flex justify-content-center mb-5 pb-2">
-                    Powered by&nbsp;<a href="https://www.appsthing.com">appsthing.com</a>
+                    Powered by&nbsp;<a href="https://www.OAK.com">OAK.com</a>
                 </div>
 
             </div>

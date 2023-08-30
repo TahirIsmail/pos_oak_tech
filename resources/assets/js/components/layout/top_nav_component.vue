@@ -5,7 +5,7 @@
             <div class="container-fluid p-0">
                 
                 <a class="navbar-brand" href="/">
-                    <img :src="navbar_logo" class="d-inline-block align-top top-nav-logo  ml-lg-1 ml-sm-4" alt="appsthing"/>
+                    <img :src="navbar_logo" class="d-inline-block align-top top-nav-logo  ml-lg-1 ml-sm-4" alt="OAK"/>
                 </a>
 
                 <div id="menu-toggle" class="menu-toggler mr-auto" v-if="hide_toggler === false">
@@ -30,7 +30,7 @@
 
                     <ul class="navbar-nav ml-auto mt-lg-0 pt-1" v-if="user_slack != ''">
 
-                        <li class="nav-item text-right pl-md-4 pl-lg-4 pl-xl-4" v-if="quick_link_array != null && quick_link_array.length>0">
+                        <!-- <li class="nav-item text-right pl-md-4 pl-lg-4 pl-xl-4" v-if="quick_link_array != null && quick_link_array.length>0">
                             <div class="dropdown">
                                 <a href="#" class="nav-link quick-link dropdown-toggle text-bold" id="quicklink_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bolt"></i>
@@ -39,15 +39,15 @@
                                     <a class="dropdown-item" v-for="(quick_link, index) in quick_link_array" v-bind:key="index" :href="quick_link.route">{{ $t(quick_link.label) }}</a>
                                 </div>
                             </div>
-                        </li>
+                        </li> -->
 
-                        <li class="nav-item text-right pl-md-4 pl-lg-4 pl-xl-4">
+                        <!-- <li class="nav-item text-right pl-md-4 pl-lg-4 pl-xl-4">
                             <a href="/search" class="nav-link nav-link-dark text-bold"><i class="fas fa-search search-icon"></i> {{ $t("Search") }}</a>
-                        </li>
+                        </li> -->
 
-                        <li class="nav-item text-right pl-md-4 pl-lg-4 pl-xl-4" v-if="new_order_access == true">
+                        <!-- <li class="nav-item text-right pl-md-4 pl-lg-4 pl-xl-4" v-if="new_order_access == true">
                             <a :href="new_order_link" class="nav-link nav-link-dark text-bold">+ {{ $t("New Order") }}</a>
-                        </li>
+                        </li> -->
 
                         <li class="nav-item text-right pl-md-4 pl-lg-4 pl-xl-4">
                             <notificationcomponent :unread_notifications="unread_notifications_data" :all_notifications_link="all_notifications_link_data"></notificationcomponent>

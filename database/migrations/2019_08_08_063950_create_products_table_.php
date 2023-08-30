@@ -20,16 +20,35 @@ class CreateProductsTable extends Migration
             $table->string('product_code', 30);
             $table->string('name', 250);
             $table->text('description')->nullable();
-            $table->integer('category_id');
+            $table->foreignId('sub_category_id')
+                ->constrained('sub_categories')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->integer('supplier_id');
-            $table->integer('tax_code_id');
-            $table->integer('discount_code_id')->nullable();
+            // $table->integer('tax_code_id');
+            $table->foreignId('tax_code_id')
+            ->constrained('tax_codes')
+            ->onUpdate('cascade');
+
+            // $table->integer('discount_code_id')->nullable();
+            $table->foreignId('discount_code_id')
+            ->constrained('discount_codes')
+            ->onUpdate('cascade');
+
+
+
             $table->decimal('quantity', 8, 2)->default(0);
             $table->decimal('purchase_amount_excluding_tax', 13, 2);
             $table->decimal('sale_amount_excluding_tax', 13, 2);
             $table->tinyInteger('status')->default(0);
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
+            $table->foreignId('created_by')
+            ->constrained('users')
+            ->onUpdate('cascade');
+            // $table->integer('created_by')->nullable();
+            // $table->integer('updated_by')->nullable();
+            $table->foreignId('updated_by')
+            ->constrained('users')
+            ->onUpdate('cascade')->nullable();
             $table->timestamps();
             $table->index(['status', 'store_id', 'product_code']);
         });

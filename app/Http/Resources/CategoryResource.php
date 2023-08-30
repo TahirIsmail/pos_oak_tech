@@ -17,9 +17,9 @@ class CategoryResource extends JsonResource
         return [
             'slack' => $this->slack,
             'category_code' => $this->category_code,
+            'subcategories' => $this->subcategories,
             'label' => $this->label,
             'description' => $this->description,
-            'display_on_pos_screen' => $this->display_on_pos_screen,
             'display_on_qr_menu' => $this->display_on_qr_menu,
             'status' => new MasterStatusResource($this->status_data),
             'detail_link' => (check_access(['A_DETAIL_CATEGORY'], true))?route('category', ['slack' => $this->slack]):'',

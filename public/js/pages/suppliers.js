@@ -23,4 +23,47 @@ class Suppliers{
             ]
         });
     }
+    load_suppliers_performance_listing_table(){
+        "use strict";
+        var table = $('#listing_performance_table').DataTable({
+           
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/api/suppliers_performance',
+                type : 'POST',
+                data : {
+                    access_token : window.settings.access_token
+                }               
+            },
+            
+            
+            columns: [
+                {
+                    data: 'id'
+                },
+               
+                {
+                    data: 'supplier_id'
+                },
+                {
+                    data: 'delivery_timeline'
+                },
+                {
+                    data: 'product_quality'
+                },
+                {
+                    data: 'responsiveness'
+                },  
+                {
+                    data: 'action'
+                },                
+                
+               
+            ],
+            order: [
+                [1, 'desc']
+            ]
+        })
+    }
 }

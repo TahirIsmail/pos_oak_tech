@@ -20,60 +20,12 @@
             <a
               href="/dashboard"
               class="module-child-text text-truncate"
-              >Dashboard</a
+              >--> Dashboard</a
             >
           </li>
         </ul>
       </li>
-      <li class="module">
-        <a
-          href="#menu1"
-          data-toggle="collapse"
-          aria-expanded="false"
-          class="module-parent dropdown-toggle"
-          ><span class="module-parent-text text-truncate"
-            ><i class="main-menu-icon fas fa-shopping-cart"></i> Sales &amp;
-            Orders</span
-          ></a
-        >
-        <!-- <ul id="menu1" aria-expanded="false" class="collapse list-unstyled">
-          <li class="module-child">
-            <a
-              href="/purchase_orders"  
-              class="module-child-text text-truncate"
-              >Purchase Orders</a
-            >  
-          </li>
-          <li class="module-child">
-            <a
-              href="/invoices"
-              class="module-child-text text-truncate"
-              >Invoices</a
-            >
-          </li>
-          <li class="module-child">
-            <a
-              href="/orders"
-              class="module-child-text text-truncate"
-              >Orders</a
-            >
-          </li>
-          <li class="module-child">
-            <a
-              href="/quotations"
-              class="module-child-text text-truncate"
-              >Quotations</a
-            >
-          </li>
-          <li class="module-child">
-            <a
-              href="/transactions"
-              class="module-child-text text-truncate"
-              >Transactions</a
-            >
-          </li>
-        </ul> -->
-      </li>
+      
       <li class="module">
         <a
           href="#menu2"
@@ -85,29 +37,46 @@
             Management
           </span></a
         >
-        <!-- <ul id="menu2" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu2" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/users"
               class="module-child-text text-truncate"
-              >Users</a
+              >--> Users</a
             >
           </li>
-          <li class="module-child">
-            <a
-              href="/customers"
-              class="module-child-text text-truncate"
-              >Customers</a
-            >
-          </li>
+          
           <li class="module-child">
             <a
               href="/roles"
               class="module-child-text text-truncate"
-              >Roles</a
+              >--> Roles</a
             >
           </li>
-        </ul> -->
+        </ul>
+      </li>
+      <li class="module">
+        <a
+          href="#menu101"
+          data-toggle="collapse"
+          aria-expanded="false"
+          class="module-parent dropdown-toggle"
+          ><span class="module-parent-text text-truncate"
+            ><i class="main-menu-icon fas fa-user-astronaut"></i> Customer
+            Management
+          </span></a
+        >
+        <ul id="menu101" aria-expanded="false" class="collapse list-unstyled">
+         
+          <li class="module-child">
+            <a
+              href="/customers"
+              class="module-child-text text-truncate"
+              >--> Customers</a
+            >
+          </li>
+          
+        </ul>
       </li>
       <li class="module">
         <a
@@ -120,22 +89,30 @@
             Management</span
           ></a
         >
-        <!-- <ul id="menu3" aria-expanded="false" class="collapse list-unstyled">
+        <ul id="menu3" aria-expanded="false" class="collapse list-unstyled">
           <li class="module-child">
             <a
               href="/suppliers"
               class="module-child-text text-truncate"
-              >Suppliers</a
+              > --> Suppliers</a
             >
           </li>
           <li class="module-child">
             <a
               href="/suppliers_performance"
               class="module-child-text text-truncate"
-              >Suppliers Performance</a
+              > --> Suppliers Performance</a
             >
           </li>
-        </ul> -->
+        </ul>
+      </li>
+      <li class="module">
+        <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
+          ><span class="module-parent-text text-truncate"
+            ><i class="main-menu-icon fas fa-cubes"></i> HR Management</span
+          ></a
+        >
+        <!---->
       </li>
       <li class="module">
         <a
@@ -193,13 +170,55 @@
         </ul> -->
       </li>
       <li class="module">
-        <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
+        <a
+          href="#menu1"
+          data-toggle="collapse"
+          aria-expanded="false"
+          class="module-parent dropdown-toggle"
           ><span class="module-parent-text text-truncate"
-            ><i class="main-menu-icon fas fa-cubes"></i> HR Management</span
+            ><i class="main-menu-icon fas fa-shopping-cart"></i> Sales &amp;
+            Orders</span
           ></a
         >
-        <!---->
+        <!-- <ul id="menu1" aria-expanded="false" class="collapse list-unstyled">
+          <li class="module-child">
+            <a
+              href="/purchase_orders"  
+              class="module-child-text text-truncate"
+              >Purchase Orders</a
+            >  
+          </li>
+          <li class="module-child">
+            <a
+              href="/invoices"
+              class="module-child-text text-truncate"
+              >Invoices</a
+            >
+          </li>
+          <li class="module-child">
+            <a
+              href="/orders"
+              class="module-child-text text-truncate"
+              >Orders</a
+            >
+          </li>
+          <li class="module-child">
+            <a
+              href="/quotations"
+              class="module-child-text text-truncate"
+              >Quotations</a
+            >
+          </li>
+          <li class="module-child">
+            <a
+              href="/transactions"
+              class="module-child-text text-truncate"
+              >Transactions</a
+            >
+          </li>
+        </ul> -->
       </li>
+      
       <li class="module">
         <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
           ><span class="module-parent-text text-truncate"
@@ -217,18 +236,6 @@
         >
         <!---->
       </li>
-
-      <li class="module">
-        <a href="#" data-toggle="" aria-expanded="false" class="module-parent"
-          ><span class="module-parent-text text-truncate"
-            ><i class="main-menu-icon fas fa-cubes"></i>
-           Project Management</span
-          ></a
-        >
-        <!---->
-      </li>
-
-
       <li class="module">
         <a
           href="#menu8"
@@ -434,22 +441,26 @@
 </template>
 
 <script>
-"use strict";
+  'use strict';
+  
+  export default {
+      data(){
+          return{
 
-export default {
-  data() {
-    return {};
-  },
-  props: {
-    menus: [Array, Object],
-    menu_key: String,
-    sub_menu_key: String,
-  },
-  computed: {
-    menu_sorted() {
-      return _.orderBy(this.menus, (o) => +o.sort_order, ["asc"]);
-    },
-  },
-  methods: {},
-};
+          }
+      },
+      props: {
+          menus: [Array, Object],
+          menu_key: String,
+          sub_menu_key: String,
+      },
+      computed: {
+          menu_sorted() {
+              return _.orderBy(this.menus, o => +o.sort_order, ['asc']);
+          },
+      },
+      methods: {
+         
+      }
+  }
 </script>

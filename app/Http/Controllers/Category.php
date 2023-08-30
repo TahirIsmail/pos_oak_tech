@@ -34,15 +34,15 @@ class Category extends Controller
 
         $data['category_data'] = null;
         if(isset($slack)){
-            $category = CategoryModel::where('slack', '=', $slack)->first();
+            $category = CategoryModel::with('subcategories')->where('slack', '=', $slack)->first();
             if (empty($category)) {
                 abort(404);
             }
-            
             $category_data = new CategoryResource($category);
+            // dd($category_data);
             $data['category_data'] = $category_data;
+            // $data['display_on_pos_screen'] = $data['category_data']['display_on_pos_screen'];
         }
-
         return view('category.add_category', $data);
     }
 

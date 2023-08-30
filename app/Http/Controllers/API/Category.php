@@ -16,6 +16,7 @@ use App\Http\Resources\CategoryResource;
 use App\Models\Category as CategoryModel;
 
 use App\Http\Resources\Collections\CategoryCollection;
+use App\Models\SubCategory;
 
 class Category extends Controller
 {
@@ -80,7 +81,6 @@ class Category extends Controller
 
                 $item_array[$key][] = $category['label'];
                 $item_array[$key][] = $category['category_code'];
-                $item_array[$key][] = ($category['display_on_pos_screen'] == 1)?'Yes':'No';
                 $item_array[$key][] = ($category['display_on_qr_menu'] == 1)?'Yes':'No';
                 $item_array[$key][] = (isset($category['status']['label']))?view('common.status', ['status_data' => ['label' => $category['status']['label'], "color" => $category['status']['color']]])->render():'-';
                 $item_array[$key][] = $category['created_at_label'];
@@ -131,7 +131,12 @@ class Category extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
+            
+
             $this->validate_request($request);
+            $subCategories = explode(',', $request->input('sub_categories')[0]);
+            
+           
 
             $category_data_exists = CategoryModel::select('id')
             ->where('label', '=', trim($request->category_name))
@@ -145,10 +150,9 @@ class Category extends Controller
             $category = [
                 "slack" => $this->generate_slack("category"),
                 "store_id" => $request->logged_user_store_id,
-                "category_code" => Str::random(6),
+                "category_code" => $request->category_code,
                 "label" => Str::title($request->category_name),
                 "description" => $request->description,
-                "display_on_pos_screen" => (isset($request->display_on_pos_screen))?$request->display_on_pos_screen:0,
                 "display_on_qr_menu" => (isset($request->display_on_qr_menu))?$request->display_on_qr_menu:0,
                 "status" => $request->status,
                 "created_by" => $request->logged_user_id
@@ -156,14 +160,26 @@ class Category extends Controller
             
             $category_id = CategoryModel::create($category)->id;
 
+           
+
             $code_start_config = Config::get('constants.unique_code_start.category');
             $code_start = (isset($code_start_config))?$code_start_config:100;
             
-            $category_code = [
-                "category_code" => "CAT".($code_start+$category_id)
-            ];
-            CategoryModel::where('id', $category_id)
-            ->update($category_code);
+            
+            // dd($request->category_code);
+            // CategoryModel::where('id', $category_id)
+            // ->update($request->category_code);
+            if($request->input('sub_categories')[0] != null){
+                if($category_id){
+                    foreach($subCategories as $scategory){
+                        $subCategory = [
+                            'category_id' => $category_id,
+                            'sub_category_name' => $scategory
+                        ];
+                        SubCategory::create($subCategory);
+                    }
+                }
+            }
 
             DB::commit();
 
@@ -269,8 +285,13 @@ class Category extends Controller
             if(!check_access(['A_EDIT_CATEGORY'], true)){
                 throw new Exception("Invalid request", 400);
             }
+            $subCategories = explode(',', $request->input('sub_categories')[0]);
+            $checkCategoryCode = CategoryModel::where('slack', $slack)->get()->toArray();
+            if($checkCategoryCode[0]['category_code'] == $request->category_name){
 
-            $this->validate_request($request);
+                $this->validate_request_update($request);
+
+            }
 
             $category_data_exists = CategoryModel::select('id')
             ->where([
@@ -278,6 +299,8 @@ class Category extends Controller
                 ['label', '=', trim($request->category_name)],
             ])
             ->first();
+            // dd($category_data_exists);
+
             if (!empty($category_data_exists)) {
                 throw new Exception("Category already exists", 400);
             }
@@ -286,8 +309,8 @@ class Category extends Controller
 
             $category = [
                 "label" => Str::title($request->category_name),
-                "description" => $request->description,
-                "display_on_pos_screen" => (isset($request->display_on_pos_screen))?$request->display_on_pos_screen:0,
+                "category_code" => $request->category_code,
+                "description" => $request->description,               
                 "display_on_qr_menu" => (isset($request->display_on_qr_menu))?$request->display_on_qr_menu:0,
                 "status" => $request->status,
                 'updated_by' => $request->logged_user_id
@@ -295,6 +318,20 @@ class Category extends Controller
 
             $action_response = CategoryModel::where('slack', $slack)
             ->update($category);
+
+           
+
+            if($request->input('sub_categories')[0] != null){
+                if($action_response){
+                    foreach($subCategories as $scategory){
+                        $subCategory = [
+                            'category_id' => $action_response,
+                            'sub_category_name' => $scategory
+                        ];
+                        SubCategory::create($subCategory);
+                    }
+                }
+            }
 
             DB::commit();
 
@@ -360,9 +397,88 @@ class Category extends Controller
         }
     }
 
+    public function delete_subcategory(Request $request){
+        try {
+
+            if(!check_access(['A_ADD_CATEGORY'], true)){
+                throw new Exception("Invalid request", 400);
+            }
+
+            $id = $request->input('id');
+            $del = SubCategory::find($id)->delete();
+
+            if($del){
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => 'Sub Category Deleted Successfully',
+                        "status_code" => '200',
+                        'id' => $id
+                    )
+                ));
+            }
+            else{
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => 'Some Error Occured',
+                        "status_code" => '201',
+                        
+                    )
+                ));
+            }
+    
+        
+       
+
+        }
+        catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+        
+    }
+
+    public function update_subcategory(Request $request)
+{
+    $id = $request->input('id');
+    $newName = $request->input('sub_category_name');
+
+    // dd($request->all());
+
+    // Find the subcategory by ID and update the name
+    $subcategory = SubCategory::findOrFail($id);
+    $subcategory->sub_category_name = $newName;
+    $subcategory->save();
+    return response()->json($this->generate_response(
+        array(
+            "message" => 'Subcategory updated successfully',
+            "status_code" => 200
+        )
+    ));
+
+   
+}
+
+
     public function validate_request($request)
     {
         $validator = Validator::make($request->all(), [
+            'category_code' => 'required|unique:category,category_code',
+            'category_name' => $this->get_validation_rules("name_label", true),
+            'status' => $this->get_validation_rules("status", true),
+        ]);
+        $validation_status = $validator->fails();
+        if($validation_status){
+            throw new Exception($validator->errors());
+        }
+    }
+    public function validate_request_update($request)
+    {
+        $validator = Validator::make($request->all(), [
+            
             'category_name' => $this->get_validation_rules("name_label", true),
             'status' => $this->get_validation_rules("status", true),
         ]);

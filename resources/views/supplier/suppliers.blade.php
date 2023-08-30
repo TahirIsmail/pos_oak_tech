@@ -16,7 +16,7 @@
         </div>
 
         <div class="table-responsive">
-            <table id="listing-table" class="table display nowrap w-100">
+            <table id="listing_performance_table" class="table display nowrap w-100">
                 <thead>
                     <tr>
                         <th>{{ __("Supplier Name") }}</th>
@@ -45,6 +45,6 @@
     <script>
         'use strict';
         var suppliers = new Suppliers();
-        suppliers.load_listing_table();
+        suppliers.load_suppliers_performance_listing_table();
     </script>
 @endpush

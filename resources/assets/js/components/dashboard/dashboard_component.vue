@@ -345,6 +345,64 @@
 
       <!-- total sale and puraches graphics respresentation  end  -->
 
+
+
+      <!-- total stock in and stock out   start -->
+ <div class="d-flex flex-wrap mb-4">
+        <div class="mr-auto">
+          <div class="d-flex mb-2">
+            <div>
+              <span class="text-subhead-bold">
+                {{ $t("TOTAL STOCK IN AND STOCK OUT") }}</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row">
+            <div
+              class="col-sm-12 col-md-12 col-lg-6 col-xl-6"
+              style="border-radius: 20px"
+            >
+              <div class="rounded custom-border-light">
+                <strong class="p-4">
+                  {{ $t("Total Stock In") }}
+                </strong>
+                <div class="chart_container">
+                  <canvas id="sale_stock_in_chart" class=""></canvas>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-sm-12 col-md-12 col-lg-6 col-xl-6"
+              style="border-radius: 20px"
+            >
+              <div class="rounded custom-border-light">
+                <strong class="p-4">
+                  {{ $t("Total Stock Out") }}
+                </strong>
+                <div class="chart_container">
+                  <canvas id="sale_stock_out_chart" class=""></canvas>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 " style="border-radius:20px;">
+                <div class="rounded custom-border-light">
+                  <strong class="p-4">
+                        {{ $t("Total Net Profits") }}
+                  </strong>
+                  <div class="chart_container">
+                    <canvas id="sale_purchase_chart2" class=""></canvas>
+                  </div>
+                </div>
+            </div>         -->
+          </div>
+        </div>
+      </div>
+
+
+      <!-- total stock in and stock out   end -->
+
       <div class="d-flex flex-wrap mb-4">
         <div class="mr-auto">
           <div class="d-flex mb-2">
@@ -505,6 +563,7 @@
           </div>
         </div>
       </div>
+
 
       <div class="d-flex flex-wrap mb-4" style="display: none !important">
         <div class="col-md-12">
@@ -1268,6 +1327,8 @@ export default {
     this.fire_requests();
     this.renderChart();
     this.renderChartForTotalSales();
+    this.renderChartForTotalStockIn();
+    this.renderChartForTotalStockOut();
     this.renderChartForTotalPurchase();
     // console.log(this.getRandomColor);
 
@@ -1297,6 +1358,86 @@ export default {
               borderColor: "rgba(75, 192, 192, 1)",
               borderWidth: 1,
               data: [10, 20, 15, 30],
+            },
+          ],
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  reverse: true,
+                },
+              },
+            ],
+          },
+        },
+      });
+    },
+
+     renderChartForTotalStockOut() {
+      const ctx = document
+        .getElementById("sale_stock_out_chart")
+        .getContext("2d");
+
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // Add the labels for each month
+          datasets: [
+            {
+              label: "Dataset Label",
+              backgroundColor: "rgba(75, 192, 192, 0.6)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+              data: [10, 20, 15, 30,10, 20, 15, 30,10, 20, 15, 30],
+            },
+          ],
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  reverse: true,
+                },
+              },
+            ],
+          },
+        },
+      });
+    },
+
+     renderChartForTotalStockIn() {
+      const ctx = document
+        .getElementById("sale_stock_in_chart")
+        .getContext("2d");
+
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // Add the labels for each month
+          datasets: [
+            {
+              label: "Dataset Label",
+              backgroundColor: "rgba(75, 192, 192, 0.6)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+              data: [10, 20, 15, 30,10, 20, 15, 30,10, 20, 15, 30],
             },
           ],
         },

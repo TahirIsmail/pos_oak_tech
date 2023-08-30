@@ -42,6 +42,7 @@ Vue.use(VueCookies);
 
 Validator.localize(language, dictionary[language]);
 
+Vue.config.devtools = true
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -87,6 +88,9 @@ Vue.component('productbarcodecomponent', require('./components/product/product_b
 
 Vue.component('addsuppliercomponent', require('./components/supplier/add_supplier_component.vue').default);
 Vue.component('supplierdetailcomponent', require('./components/supplier/supplier_detail_component.vue').default);
+Vue.component('supplierperformancedetailcomponent', require('./components/supplier/supplier_performance_detail_component.vue').default);
+
+Vue.component('addsupplierperformancecomponent', require('./components/supplier/add_supplier_performance_component.vue').default);
 
 Vue.component('addtaxcodecomponent', require('./components/tax_code/add_tax_code_component.vue').default);
 Vue.component('taxcodedetailcomponent', require('./components/tax_code/tax_code_detail_component.vue').default);

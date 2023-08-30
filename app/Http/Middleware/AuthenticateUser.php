@@ -48,8 +48,9 @@ class AuthenticateUser
             ->active()
             ->first();
 
+            
             if (!empty($user_exists)) {
-
+                
                 $request->logged_user_id        = $user_id;
                 $request->logged_user_slack     = $user_exists->slack;
                 $request->logged_user_role_id   = $user_exists->role_id;
@@ -60,8 +61,11 @@ class AuthenticateUser
                 
                 $user_stores = $this->get_available_stores($request, $user_id);
                 $selected_store = $this->check_store($request, $user_id);
-
+                
                 $language_array = $this->get_selected_languages($user_id);
+                // dd($language_array);
+
+
 
                 App::setLocale($language_array['language_code']);
                 

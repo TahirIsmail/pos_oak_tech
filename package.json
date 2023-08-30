@@ -20,6 +20,7 @@
         "@fullcalendar/list": "^5.4.0",
         "@fullcalendar/timegrid": "^5.4.0",
         "@fullcalendar/vue": "^5.4.0",
+        "@johmun/vue-tags-input": "^2.1.0",
         "axios": "^0.21",
         "bootstrap-sass": "^3.3.7",
         "chart.js": "^4.3.3",
