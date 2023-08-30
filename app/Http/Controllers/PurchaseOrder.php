@@ -126,7 +126,7 @@ class PurchaseOrder extends Controller
         $purchase_order_data = new PurchaseOrderResource($purchase_order);
 
         $print_logo_path = config("app.invoice_print_logo");
-       
+        
         $print_data = view('purchase_order.invoice.po_print', ['data' => json_encode($purchase_order_data), 'logo_path' => $print_logo_path])->render();
 
         $mpdf_config = [

@@ -2,6 +2,25 @@ body{
     font-family: 'Verdana';
     font-size: 12px;
 }
+.bg-black{
+    background-color: #000;
+}
+.color-white{
+    color: #fff;
+}
+.color-black{
+    color: #000;
+}
+.bg-white{
+    color: #fff;
+}
+#entity-details{
+    border-collapse: collapse;
+}
+.header-table  tr  td{
+    font-size:15px;
+    border: 1px solid #000;
+}
 
 .w-100{
     width: 100% !important;
@@ -9,6 +28,9 @@ body{
 
 .w-50{
     width: 50% !important;
+}
+.w-25{
+    width: 25% !important;
 }
 
 .small{
@@ -59,7 +81,9 @@ td{
 .right{
     text-align: right;
 }
-
+.left{
+    text-align: left;
+}
 .bold{
     font-weight: bold;
 }
@@ -92,7 +116,9 @@ td{
 .h-50px{
     height: 50px;
 }
-
+.h-100px{
+    height: 100px;
+}
 pre{
     font-family: 'Verdana';
 }
