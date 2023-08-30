@@ -33,6 +33,7 @@
             <table id="listing-table" class="table display nowrap w-100">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>{{ __("Product Code") }}</th>
                         <th>{{ __("Name") }}</th>
                         <th>{{ __("Supplier") }}</th>

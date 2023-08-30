@@ -75,4 +75,6 @@ class Taxcode extends Model
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
     }
+
+    
 }

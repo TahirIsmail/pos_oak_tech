@@ -9,9 +9,9 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
+use App\Models\SubCategory;
 use Illuminate\Support\Facades\Config;
-
+use DataTables;
 use App\Models\Product as ProductModel;
 use App\Models\Supplier as SupplierModel;
 use App\Models\Category as CategoryModel;
@@ -62,6 +62,54 @@ class Product extends Controller
                 return $response;
             }
 
+            if ($request->ajax()) {
+                $product_filter = (isset($request->product_filter))?$request->product_filter:'billing_products';
+
+
+                $data = ProductModel::with('supplier', 'subcategory', 'tax_code', 'discount_code', 'User')->get();
+                // dd($data);
+                
+                return Datatables::of($data)
+                    ->addIndexColumn()    
+                    
+                    ->addColumn('supplier_id', function ($row) {
+                        return $row['supplier']->name;
+                    })
+                    ->addColumn('sub_category_id', function ($row) {
+                        return $row['subcategory']->sub_category_name;
+                    })
+                    ->addColumn('tax_code_id', function ($row) {
+                        return ($row['tax_code']->label . ' - ' . $row['tax_code']->tax_code);
+                    })
+
+                    ->addColumn('discount_code_id', function ($row) {
+                        return ($row['discount_code']->label . ' - ' . $row['discount_code']->discount_code);
+                    })
+
+                    ->addColumn('created_by', function ($row) {
+                        return ($row['User']->fullname . ' - ' . $row['User']->user_code);
+                    })
+
+                    ->addColumn('status', function ($row) {
+                        if($row['status'] == 1){
+                            return 'Active';
+                        }
+                        else{
+                            return 'InActive';
+                        }
+                    })
+                  
+                    ->addColumn('action', function ($row) {
+                        $data['product'] = $row;          
+                        return view('product.layouts.product_actions', $data)->render();
+                    })
+                    ->rawColumns(['supplier_id', 'sub_category_id' , 'tax_code_id','discount_code_id', 'status', 'created_by', 'action'])
+                    ->make(true);
+            }
+
+
+
+
             $item_array = array();
 
             $product_filter = (isset($request->product_filter))?$request->product_filter:'billing_products';
@@ -77,11 +125,10 @@ class Product extends Controller
             $filter_string = $request->search['value'];
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
             
-            $query = ProductModel::select('products.*', 'master_status.label as status_label', 'master_status.color as status_color', 'suppliers.name as supplier_name', 'suppliers.status as supplier_status', 'category.label as category_label', 'category.status as category_status', 'tax_codes.tax_code as tax_code_label', 'tax_codes.status as tax_code_status', 'discount_codes.discount_code as discount_code_label', 'discount_codes.status as discount_code_status', 'user_created.fullname')
+            $query = ProductModel::with('subcategory')->select('products.*', 'master_status.label as status_label', 'master_status.color as status_color', 'suppliers.name as supplier_name', 'suppliers.status as supplier_status', 'category.label as category_label', 'category.status as category_status', 'tax_codes.tax_code as tax_code_label', 'tax_codes.status as tax_code_status', 'discount_codes.discount_code as discount_code_label', 'discount_codes.status as discount_code_status', 'user_created.fullname')
             ->take($limit)
             ->skip($offset)
             ->statusJoin()
-            ->categoryJoin()
             ->supplierJoin()
             ->taxcodeJoin()
             ->discountcodeJoin()
@@ -116,6 +163,8 @@ class Product extends Controller
             $count_query = $query;
 
             $query = $query->get();
+
+            // dd($query);
 
             $products = ProductResource::collection($query);
            
@@ -187,12 +236,15 @@ class Product extends Controller
 
             $this->validate_request($request);
 
+
             $product_data_exists = ProductModel::select('id')
             ->where('product_code', '=', trim($request->product_code))
             ->first();
             if (!empty($product_data_exists)) {
                 throw new Exception("Product code already assigned to a product", 400);
             }
+            
+
 
             $supplier_data = SupplierModel::select('id')
             ->where('slack', '=', trim($request->supplier))
@@ -202,14 +254,15 @@ class Product extends Controller
                 throw new Exception("Supplier not found or inactive in the system", 400);
             }
 
-            $category_data = CategoryModel::select('id')
-            ->where('slack', '=', trim($request->category))
-            //->active()
+            
+
+            $category_data = SubCategory::select('id')
+            ->where('id', '=', trim($request->category))
             ->first();
             if (empty($category_data)) {
                 throw new Exception("Category not found or inactive in the system", 400);
             }
-
+            // dd($category_data->id);
             $sale_price = 0;
             $sale_amount_including_tax = 0;
 
@@ -260,7 +313,7 @@ class Product extends Controller
                 "name" => $request->product_name,
                 "product_code" => strtoupper($request->product_code),
                 "description" => $request->description,
-                "category_id" => $category_data->id,
+                "sub_category_id" => $category_data->id,
                 "supplier_id" => $supplier_data->id,
                 "tax_code_id" => $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
@@ -448,9 +501,8 @@ class Product extends Controller
                 throw new Exception("Supplier not found or inactive in the system", 400);
             }
 
-            $category_data = CategoryModel::select('id')
-            ->where('slack', '=', trim($request->category))
-            //->active()
+            $category_data = SubCategory::select('id')
+            ->where('id', '=', trim($request->category))
             ->first();
             if (empty($category_data)) {
                 throw new Exception("Category not found or inactive in the system", 400);
@@ -496,7 +548,7 @@ class Product extends Controller
                 "name" => $request->product_name,
                 "product_code" => strtoupper($request->product_code),
                 "description" => $request->description,
-                "category_id" => $category_data->id,
+                "sub_category_id" => $category_data->id,
                 "supplier_id" => $supplier_data->id,
                 "tax_code_id" => $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
@@ -600,12 +652,10 @@ class Product extends Controller
             $product_category = $request->product_category;
             $customer_slack = $request->customer_slack;
 
-            $query = ProductModel::select('products.*')
-            ->categoryJoin()
+            $query = ProductModel::with('subcategory')->select('products.*')           
             ->supplierJoin()
             ->taxcodeJoin()
-            ->discountcodeJoin()
-            ->categoryActive()
+            ->discountcodeJoin()           
             ->supplierActive()
             ->taxcodeActive()
             ->quantityCheck()
@@ -807,12 +857,10 @@ class Product extends Controller
             $keywords = $request->keywords;
             $supplier_slack = $request->supplier;
 
-            $query = ProductModel::select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.purchase_amount_excluding_tax', 'tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
-            ->categoryJoin()
+            $query = ProductModel::with('subcategory')->select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.purchase_amount_excluding_tax', 'tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')           
             ->supplierJoin()
             ->taxcodeJoin()
             ->discountcodeJoin()
-            ->categoryActive()
             ->supplierActive()
             ->taxcodeActive()
             ->where('suppliers.slack', $supplier_slack)
@@ -846,12 +894,10 @@ class Product extends Controller
 
             $keywords = $request->keywords;
 
-            $query = ProductModel::select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.quantity')
-            ->categoryJoin()
+            $query = ProductModel::with('subcategory')->select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.quantity')          
             ->supplierJoin()
             ->taxcodeJoin()
             ->discountcodeJoin()
-            ->categoryActive()
             ->supplierActive()
             ->taxcodeActive()
             ->where(function($query) use ($keywords){
@@ -972,12 +1018,10 @@ class Product extends Controller
 
             $keywords = $request->keywords;
 
-            $query = ProductModel::select('products.*')
-            ->categoryJoin()
+            $query = ProductModel::with('subcategory')->select('products.*')
             ->supplierJoin()
             ->taxcodeJoin()
             ->discountcodeJoin()
-            ->categoryActive()
             ->supplierActive()
             ->taxcodeActive()
             ->quantityCheck()
@@ -1117,12 +1161,10 @@ class Product extends Controller
 
             $keywords = $request->keywords;
 
-            $query = ProductModel::select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.quantity', 'products.sale_amount_excluding_tax')
-            ->categoryJoin()
+            $query = ProductModel::with('subcategory')->select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.quantity', 'products.sale_amount_excluding_tax')
             ->supplierJoin()
             ->taxcodeJoin()
             ->discountcodeJoin()
-            ->categoryActive()
             ->supplierActive()
             ->taxcodeActive()
             ->addonProduct()
@@ -1301,12 +1343,11 @@ class Product extends Controller
             $keywords = $request->keywords;
             $current_product = (isset($request->current_product) && $request->current_product !='')?$request->current_product:'';
 
-            $query = ProductModel::select('products.*')
-            ->categoryJoin()
+            $query = ProductModel::with('subcategory')->select('products.*')
+           
             ->supplierJoin()
             ->taxcodeJoin()
             ->discountcodeJoin()
-            ->categoryActive()
             ->supplierActive()
             ->taxcodeActive()
             ->quantityCheck()

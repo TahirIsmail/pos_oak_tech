@@ -204,11 +204,11 @@
             <label for="category">{{ $t("Category") }}</label>
             <select
               name="category"
-              v-model="selectedCategory"
+              v-model="category"
               v-validate="'required'"
               class="form-control form-control-custom custom-select"
             >
-              <option :value="null" disabled selected>Select a Category</option>
+              <option selected disabled>Select a Category...</option>
               <optgroup
                 v-for="(cat, index) in categories"
                 :label="cat.label"
@@ -1004,6 +1004,7 @@ export default {
   components: { Multiselect },
   data() {
     return {
+      subcategory: this.product_data,
       server_errors: "",
       error_class: "",
       processing: false,
@@ -1031,7 +1032,7 @@ export default {
           ? ""
           : this.product_data.category == null
           ? ""
-          : this.product_data.category.slack,
+          : this.product_data.category.id,
       tax_code:
         this.product_data == null
           ? ""

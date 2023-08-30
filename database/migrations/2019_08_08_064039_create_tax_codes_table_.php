@@ -14,7 +14,7 @@ class CreateTaxCodesTable extends Migration
     public function up()
     {
         Schema::create('tax_codes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('slack', 30)->unique();
             $table->integer('store_id');
             $table->string('label', 250);
