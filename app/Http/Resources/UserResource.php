@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'status' => new MasterStatusResource($this->status_data),
             'profile_images' => $this->profile_image,
             'profile_image' => $profile_image,
+            'line_manager' => $this->manager,
             'init_pass' => $this->init_password,
             'detail_link' => (check_access(['A_DETAIL_USER'], true))?route('user', ['slack' => $this->slack]):'',
             'created_at_label' => $this->parseDate($this->created_at),

@@ -35,6 +35,16 @@
                         <input type="text" name="phone" v-model="phone" v-validate="'required|min:10|max:15'" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('phone') }">{{ errors.first('phone') }}</span> 
                     </div>
+                    <div class="form-group col-md-3">
+                        <label for="lastname">{{ $t("Line Manager") }}</label>
+                        <select name="line_manager" v-model="line_manager" v-validate="'required'" class="form-control form-control-custom custom-select">
+                            <option value="" selected disabled>Choose Line Manager..</option>
+                            <option v-for="(user, index) in users" v-bind:value="user.id" v-bind:key="index">
+                                {{ user.fullname }} ({{ user.user_code }})
+                            </option>
+                        </select>
+                        <span v-bind:class="{ 'error' : errors.has('role') }">{{ errors.first('role') }}</span> 
+                    </div>
                 </div>
 
 
@@ -157,11 +167,13 @@
                 fullname        : (this.user_data == null)?'':this.user_data.fullname,
                 phone           : (this.user_data == null)?'':this.user_data.phone,
                 role            : (this.user_data == null)?'':(this.user_data.role == null)?'':this.user_data.role.slack,
+                line_manager    : (this.user_data == null)?'':(this.user_data.line_manager == null)?'':this.user_data.line_manager.id,
                 status          : (this.user_data == null)?'':(this.user_data.status == null)?'':this.user_data.status.value,
                 stores_selected : (this.user_data == null)?[]:(this.user_data.selected_stores == null)?[]:this.user_data.selected_stores,
             }
         },
         props: {
+            users: Array,
             roles: Array,
             statuses: Array,
             stores: Array,
@@ -185,7 +197,7 @@
 
                         this.$on("submit",function () {
 
-                            this.processing = true;
+                            // this.processing = true;
                             var formData = new FormData();
 
                             formData.append("access_token", window.settings.access_token);
@@ -193,6 +205,7 @@
                             formData.append("email", (this.email == null)?'':this.email);
                             formData.append("phone", (this.phone == null)?'':this.phone);
                             formData.append("role", (this.role == null)?'':this.role);
+                            formData.append("line_manager", (this.line_manager == null)?'':this.line_manager);
                             formData.append("status", (this.status == null)?'':this.status);
                             formData.append("user_stores", this.stores_selected);
 

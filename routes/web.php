@@ -30,11 +30,17 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     //user
     Route::get('/users', "User@index")->name('users');
+    Route::get('/staff', "User@staff")->name('staff');
     Route::get('/user/{slack}', "User@detail")->name('user');
     Route::get('/add_user', "User@add_user")->name('add_user');
     Route::get('/edit_user/{slack?}', "User@add_user")->name('edit_user');
     Route::get('/profile/{slack}', "User@profile")->name('profile');
     Route::get('/edit_profile', "User@edit_profile")->name('edit_profile');
+
+
+    //leave
+    Route::get('/leave_type', "User@leave_type")->name('leave_type');
+    Route::get('/add/leave_type', "User@leaveType_store")->name('leaveType.store');
 
     //role
     Route::get('/roles', "Role@index")->name('roles');

@@ -9,7 +9,32 @@ class User extends Model
 {
     protected $table = 'users';
     protected $hidden = [ 'password', 'role_id'];
-    protected $fillable = ['id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'line_manager' , 'created_by', 'updated_by'];
+
+
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'line_manager');
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(User::class, 'line_manager');
+    }
+
+
+    public function leavesAsStaff()
+    {
+        return $this->hasMany(Leave::class, 'staff_id');
+    }
+
+    public function leavesAsLineManager()
+    {
+        return $this->hasMany(Leave::class, 'line_manager');
+    }
+
+
 
     public function scopeActive($query){
         return $query->where('users.status', 1);
