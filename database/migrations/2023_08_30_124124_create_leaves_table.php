@@ -15,6 +15,8 @@ class CreateLeavesTable extends Migration
     {
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
+            $table->integer('store_id');
+            $table->string('slack', 30)->unique();
             $table->foreignId('staff_id')
               ->nullable()
               ->constrained('users')
@@ -30,10 +32,12 @@ class CreateLeavesTable extends Migration
               $table->date('leave_from');
               $table->date('leave_to');
               $table->string('leave_days');
+              $table->string('leave_status')->default('Pending');
               $table->string('employee_remarks');
               $table->string('admin_remarks');
               $table->string('applied_by');
             $table->timestamps();
+            $table->index(['store_id']);
         });
     }
 

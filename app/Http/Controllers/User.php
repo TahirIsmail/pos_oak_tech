@@ -156,25 +156,6 @@ class User extends Controller
     }
 
 
-    // leave type && apply leaves and approve leaves of staff/user
-
-
-    public function leave_type(){
-        //check access
-        $data['menu_key'] = 'MM_HR';
-        $data['sub_menu_key'] = 'SM_LEAVE_TYPE';
-        check_access(array($data['menu_key'],$data['sub_menu_key']));
-
-        $leave_types = LeaveType::orderBy('id', 'desc')->get();
-        // dd($leave_type);
-        $data['leave_types'] = $leave_types;
-        
-        return view('leave.leave_types', $data);
-    }
-
-    public function leaveType_store(){
-        dd('kashif');
-    }
-
+   
     
 }

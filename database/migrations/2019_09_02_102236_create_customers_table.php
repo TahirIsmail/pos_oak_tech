@@ -15,7 +15,7 @@ class CreateCustomersTable extends Migration
     public function up()
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('slack', 30)->unique();
             $table->enum('customer_type', ['DEFAULT', 'CUSTOM', 'WALKIN']);
             $table->string('name', 250);

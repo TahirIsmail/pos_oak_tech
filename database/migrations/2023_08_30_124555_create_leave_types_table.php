@@ -15,8 +15,12 @@ class CreateLeaveTypesTable extends Migration
     {
         Schema::create('leave_types', function (Blueprint $table) {
             $table->id();
+            $table->integer('store_id');
+            $table->string('slack', 30)->unique();
             $table->string('type');
+            $table->string('status')->nullable();
             $table->timestamps();
+            $table->index(['store_id']);
         });
     }
 

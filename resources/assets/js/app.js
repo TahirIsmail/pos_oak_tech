@@ -202,6 +202,13 @@ Vue.component('addkitchendisplaycomponent', require('./components/kitchen_displa
 Vue.component('kitchendisplaydetailcomponent', require('./components/kitchen_display/kitchen_display_detail_component.vue').default);
 Vue.component('kitchendisplaycomponent', require('./components/kitchen/kitchen_display_component.vue').default);
 
+
+Vue.component('addleavetype', require('./components/leave/add_leave_type_component.vue').default);
+Vue.component('viewleavetype', require('./components/leave/view_leave_type_component.vue').default);
+Vue.component('addstaffleave', require('./components/leave/add_staff_leave_component.vue').default);
+
+
+
 const app = new Vue({
     el: '#app',
     i18n

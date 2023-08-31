@@ -105,6 +105,17 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/submit_supplier_performance', 'API\Supplier@submit_supplier_performance');
     Route::post('/update_supplier_performance/{slack}', 'API\Supplier@submit_supplier_performance');
 
+    // leave type and leaves 
+
+    Route::post('/add_leave_type', 'API\LeaveTypeController@store');
+    Route::post('/update_leave_type/{slack}', 'API\LeaveTypeController@store');
+    Route::post('/delete_leave_type/{slack}', 'API\LeaveTypeController@delete');
+
+
+    Route::post('/leaves_listing', 'API\LeaveTypeController@leaves_listing')->name('leaves_listing');
+
+   
+
     //product
     Route::post('/products', 'API\Product@index');
     Route::post('/add_product', 'API\Product@store')->name('add_product');
