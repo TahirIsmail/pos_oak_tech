@@ -8,11 +8,11 @@
             <div class="mr-auto">
                 <span class="text-title">{{ __("Users") }}</span>
             </div>
-            <div class="">
+            {{-- <div class="">
                 @if (check_access(array('A_ADD_USER'), true))
                     <a href="{{ route('add_user')}}" role="button" class="btn btn-primary">{{ __("New User") }}</a>
                 @endif
-            </div>
+            </div> --}}
         </div>
 
         <div class="table-responsive">

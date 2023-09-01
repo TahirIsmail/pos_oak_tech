@@ -149,7 +149,7 @@ class PurchaseOrder extends Controller
         $mpdf->SetHTMLFooter('<div class="footer">Page: {PAGENO}/{nb}</div>');
         $mpdf->WriteHTML($print_data);
         header('Content-Type: application/pdf');
-       
+        header('Content-Disposition: attachment; filename="purchaseorder.pdf"');
         $filename = 'purchase_order_'.$purchase_order_data['po_number'].'.pdf';
 
         Storage::disk('purchase_order')->delete(

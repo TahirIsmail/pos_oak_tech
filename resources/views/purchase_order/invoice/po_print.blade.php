@@ -128,6 +128,12 @@
             <tr>
                 <td>202300718</td></tr>
         </table>
+        <table class="w-100 mb-1rem h-100px">
+            <tr >
+                <td class="bg-black color-white left">Note To Suppliers</td></tr>
+            <tr>
+                <td>N/A</td></tr>
+        </table>
 
         <div class="mb-1rem">
             <table class="w-100 product-table mb-1rem">
@@ -200,6 +206,13 @@
                     </tr>
                 </tbody>
             </table>
+            <table class="w-100 mb-1rem h-100px">
+                <tr >
+                    <td class="bg-black color-white left">Total Amount without GST/PST/SST</td>
+                    <td class="bg-black color-white right"> {{ $data->total_order_amount }}</td>
+                </tr>
+              
+                </table>
             @if($data->currency_code != '')
             <div>
                 <small>All prices are in {{ $data->currency_name }} ({{ $data->currency_code }})</small>

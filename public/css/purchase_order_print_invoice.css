@@ -97,7 +97,8 @@ td{
 }
 
 .product-table th{
-    background: #ddd;
+    background: #000000;
+    color:#fff
 }
   
 .product-table, .product-table th, .product-table td {

@@ -4,4 +4,4 @@
     $is_superadmin = request()->is_super_admin;
 @endphp
 
-<ptopnavcomponent :user_slack="{{ json_encode($user_slack) }}" :logged_user_data="{{ json_encode($logged_user_data) }}" :navbar_logo="{{ json_encode($navbar_logo) }}" :quick_links="{{ json_encode($quick_links) }}" :hide_toggler="{{ json_encode(isset($hide_toggler)?true:false)}}" :is_superadmin="{{ json_encode($is_superadmin) }}"></ptopnavcomponent>
+<topnavcomponent :user_slack="{{ json_encode($user_slack) }}" :logged_user_data="{{ json_encode($logged_user_data) }}" :navbar_logo="{{ json_encode($navbar_logo) }}" :quick_links="{{ json_encode($quick_links) }}" :hide_toggler="{{ json_encode(isset($hide_toggler)?true:false)}}" :is_superadmin="{{ json_encode($is_superadmin) }}"></topnavcomponent>

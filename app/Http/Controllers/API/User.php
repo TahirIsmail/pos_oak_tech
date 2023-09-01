@@ -236,6 +236,9 @@ class User extends Controller
                 throw new Exception("Invalid role selected", 400);
             }
 
+            $line_manager = UserModel::select('id')->where('id', $request->line_manager)->first();
+            // dd($line_manager->id);
+
             $password = Str::random(6);
             $hashed_password = Hash::make($password);
 
@@ -250,10 +253,11 @@ class User extends Controller
                 "fullname" => $request->fullname,
                 "phone" => $request->phone,
                 "role_id" => $role_data->id,
+                "line_manager" => $line_manager->id,
                 "status" => $request->status,
                 "created_by" => $request->logged_user_id
             ];
-            
+            // dd($user);
             $user_id = UserModel::create($user)->id;
 
             $code_start_config = Config::get('constants.unique_code_start.user');
@@ -402,6 +406,7 @@ class User extends Controller
                 "fullname" => $request->fullname,
                 "phone" => $request->phone,
                 "role_id" => $role_data->id,
+                "line_manager" => $request->line_manager,
                 "status" => $request->status,
                 "updated_by" => $request->logged_user_id
             ];

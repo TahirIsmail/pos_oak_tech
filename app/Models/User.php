@@ -9,7 +9,32 @@ class User extends Model
 {
     protected $table = 'users';
     protected $hidden = [ 'password', 'role_id'];
-    protected $fillable = ['id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'line_manager' , 'created_by', 'updated_by'];
+
+
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'line_manager');
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(User::class, 'line_manager');
+    }
+
+
+    public function leavesAsStaff()
+    {
+        return $this->hasMany(Leave::class, 'staff_id');
+    }
+
+    public function leavesAsLineManager()
+    {
+        return $this->hasMany(Leave::class, 'line_manager');
+    }
+
+
 
     public function scopeActive($query){
         return $query->where('users.status', 1);
@@ -75,13 +100,7 @@ class User extends Model
 
     /* For view files */
 
-    public function createdUser(){
-        return $this->hasOne('App\Models\User', 'id', 'created_by')->select(['slack', 'fullname', 'email', 'user_code']);
-    }
-
-    public function updatedUser(){
-        return $this->hasOne('App\Models\User', 'id', 'updated_by')->select(['slack', 'fullname', 'email', 'user_code']);
-    }
+    
     
     public function status_data(){
         return $this->hasOne('App\Models\MasterStatus', 'value', 'status')->where('key', 'USER_STATUS');
@@ -90,6 +109,8 @@ class User extends Model
     public function role(){
         return $this->hasOne('App\Models\Role', 'id', 'role_id');
     }
+
+    
     
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
@@ -97,4 +118,5 @@ class User extends Model
     public function products(){
         return $this->belongsTo('App\Models\Product', 'created_by', 'id');
     }
+    
 }

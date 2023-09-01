@@ -30,11 +30,17 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     //user
     Route::get('/users', "User@index")->name('users');
+    Route::get('/staff', "User@staff")->name('staff');
     Route::get('/user/{slack}', "User@detail")->name('user');
     Route::get('/add_user', "User@add_user")->name('add_user');
     Route::get('/edit_user/{slack?}', "User@add_user")->name('edit_user');
     Route::get('/profile/{slack}', "User@profile")->name('profile');
     Route::get('/edit_profile', "User@edit_profile")->name('edit_profile');
+
+
+    //leave
+    Route::get('/leave_type', "User@leave_type")->name('leave_type');
+    Route::get('/add/leave_type', "User@leaveType_store")->name('leaveType.store');
 
     //role
     Route::get('/roles', "Role@index")->name('roles');
@@ -270,6 +276,10 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/kitchen_display/{slack}', "KitchenDisplay@detail")->name('kitchen_display');
     Route::get('/add_kitchen_display', "KitchenDisplay@add_kitchen_display")->name('add_kitchen_display');
     Route::get('/edit_kitchen_display/{slack?}', "KitchenDisplay@add_kitchen_display")->name('edit_kitchen_display');
+
+    //Complaints Modules
+    Route::get('/customer_complaints','ComplaintsController@index')->name('customer_complaints');
+    Route::get('/add_complaints', "Supplier@add_complaints")->name('add_complaints');
 });
 
 Route::get('/order_public/{slack}', "Order@detail_public_view")->name('order_public');
