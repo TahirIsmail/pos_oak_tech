@@ -206,6 +206,7 @@ Vue.component('kitchendisplaycomponent', require('./components/kitchen/kitchen_d
 Vue.component('addleavetype', require('./components/leave/add_leave_type_component.vue').default);
 Vue.component('viewleavetype', require('./components/leave/view_leave_type_component.vue').default);
 Vue.component('addstaffleave', require('./components/leave/add_staff_leave_component.vue').default);
+Vue.component('viewstaffleave', require('./components/leave/view_staff_leave_component.vue').default);
 
 
 

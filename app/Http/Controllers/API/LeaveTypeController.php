@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Collections\SupplierCollection;
 use App\Http\Resources\SupplierResource;
 use App\Models\Leave;
+use App\Models\User;
 use App\Models\LeaveType;
 use App\Models\Supplier as SupplierModel;
 use App\Models\SupplierPerformance;
@@ -201,17 +202,7 @@ class LeaveTypeController extends Controller
         }
     }
 
-    public function validate_request($request)
-    {
-        $validator = Validator::make($request->all(), [
-            'leave_type' => $this->get_validation_rules("leave_type", true),
 
-        ]);
-        $validation_status = $validator->fails();
-        if ($validation_status) {
-            throw new Exception($validator->errors());
-        }
-    }
 
 
     // leaves apply listing and view delete functions here 
@@ -254,6 +245,149 @@ class LeaveTypeController extends Controller
                 })
                 ->rawColumns(['staff_id', 'line_manager', 'leave_type_id', 'action'])
                 ->make(true);
+        }
+    }
+
+
+    public function add_staff_leave(Request $request, $slack = null)
+    {
+        try {
+
+            if (!check_access(['A_ADD_LEAVES'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            // dd($slack);
+
+            if ($slack == null) {
+
+                $this->validate_staff_leave_request($request);
+
+                $line_manager = User::where('id', $request->logged_user_id)->get()->toArray();
+
+                $startDate = new \DateTime($request->from_date);
+                $endDate = new \DateTime($request->from_to);
+
+                if ($startDate == $endDate) {
+                    $numberOfDays = 1; // Same date, so 1 day of leave
+                } else {
+                    $interval = $startDate->diff($endDate);
+                    $numberOfDays = $interval->days;
+                }
+
+
+                // dd($request->logged_user_id);
+               
+
+                DB::beginTransaction();
+
+                $leave = [
+
+                    "slack" => $this->generate_slack("leaves"),
+                    "store_id" => $request->logged_user_store_id,
+                    "staff_id" => $request->logged_user_id,
+                    "line_manager" => $line_manager[0]['line_manager'],
+                    "leave_type_id" => $request->leave_type,
+                    "leave_from" => $request->from_date,
+                    "leave_to" => $request->from_to,
+                    "leave_days" => $numberOfDays,
+                    "employee_remarks" => $request->reason,
+                    "leave_status" => 'Pending',
+                    "applied_by" => $request->logged_user_id
+                ];
+
+                $leave_type_id = Leave::create($leave)->id;
+
+
+                DB::commit();
+
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Staff Leave created successfully",
+                        "data" => $leave['slack'],
+                    ),
+                    'SUCCESS'
+                ));
+            }
+
+
+            else{
+
+                $this->validate_staff_leave_request($request);
+                $startDate = new \DateTime($request->from_date);
+                $endDate = new \DateTime($request->from_to);
+
+                if ($startDate == $endDate) {
+                    $numberOfDays = 1; // Same date, so 1 day of leave
+                } else {
+                    $interval = $startDate->diff($endDate);
+                    $numberOfDays = $interval->days;
+                }
+
+                $leave = [
+                    "leave_type_id" => $request->leave_type,
+                    "leave_from" => $request->from_date,
+                    "leave_to" => $request->from_to,
+                    "leave_days" => $numberOfDays,
+                    "employee_remarks" => $request->reason,
+                    "applied_by" => $request->logged_user_id
+                ];
+
+                $staff_leave = Leave::where('slack', $slack)
+                ->update($leave);
+
+                if($staff_leave){
+                    return response()->json($this->generate_response(
+                        array(
+                            "message" => "Staff Leave updated successfully",
+                            "data" => $leave,
+                        ),
+                        'SUCCESS'
+                    ));
+                }
+
+
+
+            }
+
+
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+
+
+    public function validate_request($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'leave_type' => $this->get_validation_rules("leave_type", true),
+
+        ]);
+        $validation_status = $validator->fails();
+        if ($validation_status) {
+            throw new Exception($validator->errors());
+        }
+    }
+
+
+    public function validate_staff_leave_request($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'apply_date' => $this->get_validation_rules("Apply Leave", true),
+            'from_date' => $this->get_validation_rules("from_date", true),
+            'from_to' => $this->get_validation_rules("from_to", true),
+            'leave_type' => $this->get_validation_rules("Leave Type", true),
+
+        ]);
+        $validation_status = $validator->fails();
+        if ($validation_status) {
+            throw new Exception($validator->errors());
         }
     }
 }

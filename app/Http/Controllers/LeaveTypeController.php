@@ -9,6 +9,7 @@ use App\Models\Role as RoleModel;
 use App\Models\User as UserModel;
 use App\Models\Store as StoreModel;
 use App\Models\UserStore as UserStoreModel;
+use App\Models\Leave;
 
 use App\Http\Resources\UserResource;
 use App\Http\Resources\StoreResource;
@@ -81,7 +82,7 @@ class LeaveTypeController extends Controller
     public function add_staff_leave(){
 
         $data['menu_key'] = 'MM_HR';
-        $data['sub_menu_key'] = 'SM_STAFF_LEAVE_TYPE';
+        $data['sub_menu_key'] = 'SM_STAFF_APPLY_LEAVE';
         $data['action_key'] = 'A_ADD_LEAVES';
         check_access(array($data['action_key']));
         $users = UserModel::orderBy('id', 'desc')->get();
@@ -91,9 +92,35 @@ class LeaveTypeController extends Controller
         $data['leave_types'] = $leave_types;
 
         return view('leaves.apply_staff_leave', $data);
-
-        // dd($users, $leave_types);
         
+    }
+
+    public function edit_staff_leave($slack){
+        $data['menu_key'] = 'MM_HR';
+        $data['sub_menu_key'] = 'SM_STAFF_APPLY_LEAVE';
+        $data['action_key'] = 'A_EDIT_LEAVES';
+        check_access(array($data['action_key']));
+
+        $staff_leave = Leave::with('staff', 'lineManager', 'leaveType')->where('slack', $slack)->first();
+        $leave_types = LeaveType::orderBy('id', 'desc')->get();
+        $users = UserModel::orderBy('id', 'desc')->get();
+        $data['users'] = $users;
+        $data['staff_leave'] = $staff_leave;
+        $data['leave_types'] = $leave_types;
+        return view('leaves.edit_staff_leave', $data);
+
+    }
+
+
+    public function view_staff_leave($slack){
+        $data['menu_key'] = 'MM_HR';
+        $data['sub_menu_key'] = 'SM_STAFF_APPLY_LEAVE';
+        $data['action_key'] = 'A_VIEW_LEAVES';
+        check_access(array($data['action_key']));
+        $staff_leave = Leave::with('staff', 'lineManager', 'leaveType')->where('slack', $slack)->first();
+        $data['staff_leave_data'] = $staff_leave;
+        $data['delete_access'] = check_access(['A_DELETE_LEAVES'], true);
+        return view('leaves.view_staff_leave', $data);
     }
 
 }

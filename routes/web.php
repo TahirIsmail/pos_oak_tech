@@ -47,8 +47,8 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     //staff leave routes
     Route::get('/leave_listing', "LeaveTypeController@staff_leaves_listing")->name('leave_listing');
     Route::get('/add_staff_leave', "LeaveTypeController@add_staff_leave")->name('add_staff_leave');
-    Route::get('/view_staff_leave/{slack}', "LeaveTypeController@view_staff_leave")->name('view_staff_leave');
     Route::get('/edit_staff_leave/{slack}', "LeaveTypeController@edit_staff_leave")->name('edit_staff_leave');
+    Route::get('/view_staff_leave/{slack}', "LeaveTypeController@view_staff_leave")->name('view_staff_leave');
 
     //role
     Route::get('/roles', "Role@index")->name('roles');

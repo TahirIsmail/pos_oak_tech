@@ -114,6 +114,9 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     Route::post('/leaves_listing', 'API\LeaveTypeController@leaves_listing')->name('leaves_listing');
 
+    Route::post('/add_staff_leave', 'API\LeaveTypeController@add_staff_leave')->name('add_staff_leave');
+    Route::post('/update_staff_leave/{slack}', 'API\LeaveTypeController@add_staff_leave')->name('update_staff_leave');
+
    
 
     //product
