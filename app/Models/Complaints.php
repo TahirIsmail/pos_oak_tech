@@ -12,7 +12,7 @@ class Complaints extends Model
     use HasFactory;
     protected $table = 'complaints';
     // protected $hidden = ['id'];
-    protected $fillable = ['id', 'slack', 'store_id', 'complaint_ref', 'complaint_status', 'descriptions', 'created_by', 'updated_by', 'complaint_by ', 'assigned_to', 'created_at', 'updated_at'];
+    protected $fillable = ['slack', 'store_id', 'complaint_ref', 'complaint_status', 'descriptions', 'created_by', 'updated_by', 'complaint_by ', 'assigned_to', 'created_at', 'updated_at'];
     protected static function boot()
     {
         parent::boot();

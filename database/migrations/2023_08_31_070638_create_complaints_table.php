@@ -22,7 +22,7 @@ class CreateComplaintsTable extends Migration
             $table->mediumText('descriptions')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
-            $table->unsignedBigInteger('complaint_by')->nullable();
+            $table->unsignedInteger('complaint_by')->nullable();
             $table->unsignedInteger('store_id')->nullable();
 
             $table->foreignId('assigned_to')

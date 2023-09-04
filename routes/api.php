@@ -400,5 +400,6 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //Customer Complaints
     Route::post('/customer_complaints', 'API\Complaints@index');
+    Route::post('/submit_customer_complaint','API\Complaints@store');
 
 });

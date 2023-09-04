@@ -279,7 +279,9 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     //Complaints Modules
     Route::get('/customer_complaints','ComplaintsController@index')->name('customer_complaints');
-    Route::get('/add_complaints', "Supplier@add_complaints")->name('add_complaints');
+    Route::get('/add_complaints', "ComplaintsController@add_complaints")->name('add_complaints');
+    Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
+
 });
 
 Route::get('/order_public/{slack}', "Order@detail_public_view")->name('order_public');

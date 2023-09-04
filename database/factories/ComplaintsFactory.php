@@ -20,7 +20,7 @@ class ComplaintsFactory extends Factory
     public function definition()
     {
         return [
-            'slack' => $this->faker->unique()->word,
+            'slack' => str_random(25),
             'complaint_ref' => $this->faker->randomNumber(),
             'descriptions' => $this->faker->paragraph,
             'store_id' => 1,

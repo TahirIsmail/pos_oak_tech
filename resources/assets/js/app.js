@@ -202,7 +202,7 @@ Vue.component('addkitchendisplaycomponent', require('./components/kitchen_displa
 Vue.component('kitchendisplaydetailcomponent', require('./components/kitchen_display/kitchen_display_detail_component.vue').default);
 Vue.component('kitchendisplaycomponent', require('./components/kitchen/kitchen_display_component.vue').default);
 
-
+Vue.component('add-customer-complaint-component', require('./components/complaint/add_customer_complaint_component.vue').default);
 const app = new Vue({
     el: '#app',
     i18n
