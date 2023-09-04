@@ -87,7 +87,7 @@ class LeaveTypeController extends Controller
         check_access(array($data['action_key']));
         $users = UserModel::orderBy('id', 'desc')->get();
         $leave_types = LeaveType::orderBy('id', 'desc')->get();
-
+        $data['staff_leave'] = null;
         $data['users'] = $users;
         $data['leave_types'] = $leave_types;
 
@@ -121,6 +121,26 @@ class LeaveTypeController extends Controller
         $data['staff_leave_data'] = $staff_leave;
         $data['delete_access'] = check_access(['A_DELETE_LEAVES'], true);
         return view('leaves.view_staff_leave', $data);
+    }
+
+
+    public function listing_staff_leaves(){
+        $data['menu_key'] = 'MM_HR';
+        $data['sub_menu_key'] = 'SM_STAFF_APPROVE_LEAVE_REQUEST';
+        check_access(array($data['menu_key'],$data['sub_menu_key']));
+
+        return view('approve_leave.listing', $data);
+    }
+
+    public function view_staff_approve_leaves($slack){
+        $data['menu_key'] = 'MM_HR';
+        $data['sub_menu_key'] = 'SM_STAFF_APPROVE_LEAVE_REQUEST';
+        $data['action_key'] = 'A_VIEW_APPROVE_LEAVES';
+        check_access(array($data['action_key']));
+        $staff_leave = Leave::with('staff', 'lineManager', 'leaveType')->where('slack', $slack)->first();
+        $data['staff_leave_data'] = $staff_leave;
+        $data['approve_access'] = check_access(['A_APPROVE_STAFF_LEAVES'], true);
+        return view('leaves.view_staff_approve_leave', $data);
     }
 
 }

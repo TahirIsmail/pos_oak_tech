@@ -208,6 +208,9 @@ Vue.component('viewleavetype', require('./components/leave/view_leave_type_compo
 Vue.component('addstaffleave', require('./components/leave/add_staff_leave_component.vue').default);
 Vue.component('viewstaffleave', require('./components/leave/view_staff_leave_component.vue').default);
 
+Vue.component('viewstaffapproveleave', require('./components/leave/view_staff_approve_leave_component.vue').default);
+
+Vue.component('staffattendancecomponent', require('./components/staff_attendance/staff_attendance_component.vue').default);
 
 
 const app = new Vue({

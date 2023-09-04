@@ -102,7 +102,7 @@
     export default {
         data(){
             return{
-                staff_leave_data: staff_leave_data,
+                staff_leave_data: this.staff_leave_data,
                 processing: false,
                 delete_processing: false,
                 show_modal: false,

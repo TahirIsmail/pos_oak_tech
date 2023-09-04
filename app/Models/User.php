@@ -34,6 +34,16 @@ class User extends Model
         return $this->hasMany(Leave::class, 'line_manager');
     }
 
+    public function approvedLeave()
+    {
+        return $this->hasMany(Leave::class, 'approved_by');
+    }
+
+    public function appliedBy()
+    {
+        return $this->hasMany(Leave::class, 'applied_by');
+    }
+
 
 
     public function scopeActive($query){

@@ -29,13 +29,21 @@ class CreateLeavesTable extends Migration
               ->nullable()
               ->constrained('leave_types')
               ->onDelete('set null');
+              $table->foreignId('approved_by')
+              ->nullable()
+              ->constrained('users')
+              ->onDelete('set null');              
+              $table->date('apply_date');
               $table->date('leave_from');
               $table->date('leave_to');
               $table->string('leave_days');
               $table->string('leave_status')->default('Pending');
               $table->string('employee_remarks');
               $table->string('admin_remarks');
-              $table->string('applied_by');
+              $table->foreignId('applied_by')
+              ->nullable()
+              ->constrained('users')
+              ->onDelete('set null');
             $table->timestamps();
             $table->index(['store_id']);
         });

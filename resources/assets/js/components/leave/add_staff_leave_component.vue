@@ -2,10 +2,11 @@
     <div class="row">
       <div class="col-md-12">
         <form @submit.prevent="submit_form" class="mb-3">
+       
           <div class="d-flex flex-wrap mb-4">
             <div class="mr-auto">
               <div>
-                <span class="text-title" v-if="leave_slack == ''">{{
+                <span class="text-title" v-if="leave_slack == '' ">{{
                   $t("Add Staff Leave")
                 }}</span>
                 <span class="text-title" v-else>{{
@@ -208,20 +209,18 @@
     components: { Multiselect },
     data() {
       return {
-        leave_slack: this.staff_leave.slack,
+        leave_slack: this.staff_leave == null ? "" : this.staff_leave.slack,
         leaveTypes: this.leave_types,
-        subcategory: this.product_data,
         server_errors: "",
         error_class: "",
         processing: false,
         modal: false,
         show_modal: false,
-        leave_type: this.staff_leave.leave_type ? this.staff_leave.leave_type.id : "",
-
-        apply_date: (this.staff_leave && this.staff_leave.apply_date) ? this.staff_leave.apply_leave : this.getCurrentDate(),
-        from_date: (this.staff_leave && this.staff_leave.leave_from) ? this.staff_leave.leave_from : '',
-        from_to: (this.staff_leave && this.staff_leave.leave_to) ? this.staff_leave.leave_to : '',
-        reason : (this.staff_leave && this.staff_leave.employee_remarks) ? this.staff_leave.employee_remarks : '',
+        leave_type: (this.staff_leave == null) ? "" : this.staff_leave.leave_type.id,
+        apply_date: (this.staff_leave == null) ?  this.getCurrentDate() : this.staff_leave.apply_date,
+        from_date: (this.staff_leave == null) ? "" : this.staff_leave.leave_from,
+        from_to: (this.staff_leave == null) ? "" : this.staff_leave.leave_to,
+        reason : (this.staff_leave ==null ) ? "" : this.staff_leave.employee_remarks,
 
         api_link:
           this.staff_leave == null
@@ -229,12 +228,12 @@
             : "/api/update_staff_leave/" + this.staff_leave.slack,
   
       
-      };
+      }
     },
     props: {
       users: [Array, Object],
       leave_types: [Array, Object],
-      staff_leave: [Array, Object]
+      staff_leave: [Array, Object],
       
     },
     mounted() {
