@@ -253,7 +253,6 @@
             }}</span>
           </div>
         </div>
-
         <hr />
 
         <div class="d-flex flex-wrap mb-1">

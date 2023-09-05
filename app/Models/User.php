@@ -132,4 +132,9 @@ class User extends Model
     public function products(){
         return $this->belongsTo('App\Models\Product', 'created_by', 'id');
     }
+
+    public function staffAttendances()
+{
+    return $this->hasMany(StaffAttendance::class, 'staff_id');
+}
 }

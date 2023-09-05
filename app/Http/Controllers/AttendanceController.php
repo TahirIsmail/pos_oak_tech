@@ -22,8 +22,9 @@ class AttendanceController extends Controller
         $data['sub_menu_key'] = 'SM_STAFF_ATTENDANCE';
         check_access(array($data['menu_key'],$data['sub_menu_key']));
 
-        $roles = RoleModel::Select('id', 'label')->get();
-        $data['roles']= $roles;
+        $roles = RoleModel::where('id' , '!=', 1)->get();
+        // dd($roles);
+        $data['roles_data']= $roles;
 
         return view('staff_attendance.staffattendancelist', $data);
 

@@ -121,6 +121,9 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/approve_staff_leave_status/{slack}', 'API\LeaveTypeController@approve_staff_leave_status')->name('approve_staff_leave_status');
 
 
+    // staff Attendance routes 
+    Route::post('/fetch_staff_list', 'API\AttendanceController@index');
+    Route::post('/store_staff_attendance', 'API\AttendanceController@store');
    
 
     //product
