@@ -1,9 +1,9 @@
 <template>
     <div class="container pt-3 entry_form">
-        <div class="d-flex justify-content-center pt-5">
-            <div class="col-sm-12 col-md-6 col-lg-4 col-lg-4">
-                <img :src="company_logo" class="d-block mb-4 entry_logo ml-auto mr-auto" alt="OAK">
-                <span class="text-display-0 d-block mb-3 text-center">Forgot Password</span>
+        <div class="d-flex justify-content-center pt-3">
+            <div class="container_content col-sm-12 col-md-6 col-lg-4 col-lg-4  pt-5 pb-3">
+                <img :src="company_logo" class="d-block mb-4 mt-3 entry_logo ml-auto mr-auto" alt="OAK">
+                <span class="text-display-0 d-block mb-5 text-center">Forgot Password</span>
                 <p>Enter your email address and we will send you a link to reset your password.</p>
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
                 <form @submit.prevent="submit_form" class="mb-3" v-if="email_response_sent == false">
@@ -74,3 +74,20 @@
         }
     }
 </script>
+
+
+<style scoped>
+.container_content  {
+    
+    box-shadow: 0 4px 6px rgba(79, 49, 202, 0.1), 
+                0 0 10px rgba(0, 0, 0, 0.2), 
+                0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+
+.container .btn {
+    margin-left: 0;
+   
+}
+</style>

@@ -1,3 +1,95 @@
+
+<style>
+.jumbotron {
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 10px;
+  margin: 20px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #333;
+  /* Text color */
+}
+
+.dashboard_row {
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.dashboard_row:hover {
+  cursor: pointer;
+  box-shadow: 0 8px 16px 0 rgba(0, 5, 0, 0.2);
+}
+
+.Vendors {
+  width: 100%;
+  background: linear-gradient(to right, #ff9b70, #ffad8a);
+  color: #ffffff;
+  text-align: center;
+}
+
+.Customers {
+  width: 100%;
+  background: linear-gradient(to right, #00ce8e, #00f4a9);
+  color: #ffffff;
+  text-align: center;
+}
+
+
+
+
+.staff {
+  width: 100%;
+  background: linear-gradient(to right, #ff5369, #ff8796);
+  color: #ffffff;
+  text-align: center;
+}
+
+
+
+
+.total_purchase {
+  width: 100%;
+  background: linear-gradient(to right, #00b4b7, #00dbdf);
+  color: #ffffff;
+  text-align: center;
+}
+
+
+
+.chart_container {
+  width: 100%;
+  max-width: 600px;
+  /* Adjust the maximum width as needed */
+  margin: 0 auto;
+  /* Center the container horizontally */
+  padding: 10px;
+  background-color: #FEFEFE;
+  border-bottom: 1px solid #fdfdfd;
+  border-left: 1px solid #f8f8f8;
+  border-right: 1px solid #f8f8f8;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart_title {
+  font-size: 15px;
+  font-weight: 400;
+  padding: 5px;
+  border-top: 1px solid #f8f8f8;
+  border-left: 1px solid #f8f8f8;
+  border-right: 1px solid #f8f8f8;
+  background-color: #FEFEFE;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+
+}
+
+#sale_purchase_chart {
+  width: 100%;
+  height: 300px;
+}
+</style>
 <template>
   <div class="row">
     <div class="col-md-12">
@@ -10,14 +102,8 @@
           </div>
         </div>
         <div class="">
-          <date-picker
-            type="month"
-            :lang="date.lang"
-            :format="date.format"
-            v-model="dashboard_month"
-            @change="dashboard_month_change"
-            input-class="form-control bg-white"
-          ></date-picker>
+          <date-picker type="month" :lang="date.lang" :format="date.format" v-model="dashboard_month"
+            @change="dashboard_month_change" input-class="form-control bg-white"></date-picker>
         </div>
       </div>
 
@@ -33,46 +119,30 @@
         </div>
         <div class="col-md-12">
           <div class="row">
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="todays_order_count.raw"
-            >
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light"
+              style="width: 100% ;">
+                <div class="d-flex align-items-center flex-column box-content ">
+                  <div class="Vendors  text-subhead p-2 " id="Vendors/Suppliers">
                     {{ $t("Vendors/Suppliers") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span>
-                      <i
-                        class="fa fa-circle-notch fa-spin"
-                        v-if="stats_processing == true"
-                      ></i>
+                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
                       <div class="d-flex flex-column align-items-center" v-else>
                         <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
                         <input v-knob class="knob" type="text" value="500" />
-                        <span
-                          :class="{
-                            'text-success':
-                              Math.sign(todays_order_count.difference) == 1,
-                            'text-danger':
-                              Math.sign(todays_order_count.difference) == -1,
-                          }"
-                          v-show="todays_order_count.difference !== 0"
-                        >
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == 1
-                            "
-                            ><i class="fas fa-long-arrow-alt-up"></i
-                          ></span>
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == -1
-                            "
-                            ><i class="fas fa-long-arrow-alt-down"></i
-                          ></span>
+                        <span :class="{
+                          'text-success':
+                            Math.sign(todays_order_count.difference) == 1,
+                          'text-danger':
+                            Math.sign(todays_order_count.difference) == -1,
+                        }" v-show="todays_order_count.difference !== 0">
+                          <span v-show="Math.sign(todays_order_count.difference) == 1
+                            "><i class="fas fa-long-arrow-alt-up"></i></span>
+                          <span v-show="Math.sign(todays_order_count.difference) == -1
+                            "><i class="fas fa-long-arrow-alt-down"></i></span>
                           {{ todays_order_count.difference }}%
                         </span>
                       </div>
@@ -82,46 +152,30 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="todays_order_count.raw"
-            >
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="Customers text-subhead p-2">
                     {{ $t("Users / Customers") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+
+                  <div class="mt-auto p-4">
                     <span>
-                      <i
-                        class="fa fa-circle-notch fa-spin"
-                        v-if="stats_processing == true"
-                      ></i>
+                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
                       <div class="d-flex flex-column align-items-center" v-else>
                         <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
                         <input v-knob class="knob" type="text" value="3498" />
-                        <span
-                          :class="{
-                            'text-success':
-                              Math.sign(todays_order_count.difference) == 1,
-                            'text-danger':
-                              Math.sign(todays_order_count.difference) == -1,
-                          }"
-                          v-show="todays_order_count.difference !== 0"
-                        >
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == 1
-                            "
-                            ><i class="fas fa-long-arrow-alt-up"></i
-                          ></span>
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == -1
-                            "
-                            ><i class="fas fa-long-arrow-alt-down"></i
-                          ></span>
+                        <span :class="{
+                          'text-success':
+                            Math.sign(todays_order_count.difference) == 1,
+                          'text-danger':
+                            Math.sign(todays_order_count.difference) == -1,
+                        }" v-show="todays_order_count.difference !== 0">
+                          <span v-show="Math.sign(todays_order_count.difference) == 1
+                            "><i class="fas fa-long-arrow-alt-up"></i></span>
+                          <span v-show="Math.sign(todays_order_count.difference) == -1
+                            "><i class="fas fa-long-arrow-alt-down"></i></span>
                           {{ todays_order_count.difference }}%
                         </span>
                       </div>
@@ -131,44 +185,27 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="todays_order_count.raw"
-            >
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">{{ $t("Staff") }}</div>
+                  <div class="staff text-subhead p-2">{{ $t("Staff") }}</div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span>
-                      <i
-                        class="fa fa-circle-notch fa-spin"
-                        v-if="stats_processing == true"
-                      ></i>
+                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
                       <div class="d-flex flex-column align-items-center" v-else>
                         <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
                         <input v-knob class="knob" type="text" value="1934" />
-                        <span
-                          :class="{
-                            'text-success':
-                              Math.sign(todays_order_count.difference) == 1,
-                            'text-danger':
-                              Math.sign(todays_order_count.difference) == -1,
-                          }"
-                          v-show="todays_order_count.difference !== 0"
-                        >
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == 1
-                            "
-                            ><i class="fas fa-long-arrow-alt-up"></i
-                          ></span>
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == -1
-                            "
-                            ><i class="fas fa-long-arrow-alt-down"></i
-                          ></span>
+                        <span :class="{
+                          'text-success':
+                            Math.sign(todays_order_count.difference) == 1,
+                          'text-danger':
+                            Math.sign(todays_order_count.difference) == -1,
+                        }" v-show="todays_order_count.difference !== 0">
+                          <span v-show="Math.sign(todays_order_count.difference) == 1
+                            "><i class="fas fa-long-arrow-alt-up"></i></span>
+                          <span v-show="Math.sign(todays_order_count.difference) == -1
+                            "><i class="fas fa-long-arrow-alt-down"></i></span>
                           {{ todays_order_count.difference }}%
                         </span>
                       </div>
@@ -178,46 +215,30 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="todays_order_count.raw"
-            >
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+              <div class="dashboard_row col-14 bg-white rounded custom-border-light"
+                >
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="total_purchase text-subhead p-2">
                     {{ $t("Total Purchase Orders") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span>
-                      <i
-                        class="fa fa-circle-notch fa-spin"
-                        v-if="stats_processing == true"
-                      ></i>
+                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
                       <div class="d-flex flex-column align-items-center" v-else>
                         <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
                         <input v-knob class="knob" type="text" value="398" />
-                        <span
-                          :class="{
-                            'text-success':
-                              Math.sign(todays_order_count.difference) == 1,
-                            'text-danger':
-                              Math.sign(todays_order_count.difference) == -1,
-                          }"
-                          v-show="todays_order_count.difference !== 0"
-                        >
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == 1
-                            "
-                            ><i class="fas fa-long-arrow-alt-up"></i
-                          ></span>
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == -1
-                            "
-                            ><i class="fas fa-long-arrow-alt-down"></i
-                          ></span>
+                        <span :class="{
+                          'text-success':
+                            Math.sign(todays_order_count.difference) == 1,
+                          'text-danger':
+                            Math.sign(todays_order_count.difference) == -1,
+                        }" v-show="todays_order_count.difference !== 0">
+                          <span v-show="Math.sign(todays_order_count.difference) == 1
+                            "><i class="fas fa-long-arrow-alt-up"></i></span>
+                          <span v-show="Math.sign(todays_order_count.difference) == -1
+                            "><i class="fas fa-long-arrow-alt-down"></i></span>
                           {{ todays_order_count.difference }}%
                         </span>
                       </div>
@@ -238,52 +259,56 @@
           <div class="d-flex mb-2">
             <div>
               <span class="text-subhead-bold">
-                {{ $t("INCOME & EXPENSE") }}</span
-              >
+                {{ $t("INCOME & EXPENSE") }}</span>
             </div>
           </div>
         </div>
         <div class="col-md-12">
           <div class="row">
-            <div
-              class="col-sm-12 col-md-12 col-lg-4 col-xl-4"
-              style="border-radius: 20px"
-            >
+            <!-- <div class="container">
+              <div class="jumbotron" style="max-width: 920px; margin: 20px auto;">
+                <div id="chartContainer" style="height: 370px;"></div>
+              </div>
+            </div> -->
+
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
               <div class="rounded custom-border-light">
-                <strong class="p-4">
-                  {{ $t("Total Income") }}
-                </strong>
+                <div class="chart_title width-100% ">
+                  <strong class="p-4">
+
+                    {{ $t("Total Income") }}
+                  </strong>
+                </div>
                 <div class="chart_container">
                   <canvas id="income_expense_chart" class=""></canvas>
                 </div>
               </div>
             </div>
-            <div
-              class="col-sm-12 col-md-12 col-lg-4 col-xl-4"
-              style="border-radius: 20px"
-            >
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
               <div class="rounded custom-border-light">
-                <strong class="p-4">
-                  {{ $t("Total Expense") }}
-                </strong>
+                <div class="chart_title width-100% ">
+                  <strong class="p-4">
+                    {{ $t("Total Expense") }}
+                  </strong>
+                </div>
                 <div class="chart_container">
                   <canvas id="income_expense_chart1" class=""></canvas>
                 </div>
               </div>
             </div>
-            <div
-              class="col-sm-12 col-md-12 col-lg-4 col-xl-4"
-              style="border-radius: 20px"
-            >
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
               <div class="rounded custom-border-light">
-                <strong class="p-4">
-                  {{ $t("Total Net Profits") }}
-                </strong>
+                <div class="chart_title width-100% ">
+                  <strong class="p-4">
+                    {{ $t("Total Net Profits") }}
+                  </strong>
+                </div>
                 <div class="chart_container">
                   <canvas id="income_expense_chart2" class=""></canvas>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -296,34 +321,35 @@
           <div class="d-flex mb-2">
             <div>
               <span class="text-subhead-bold">
-                {{ $t("TOTAL SALE AND PURCHASE") }}</span
-              >
+                {{ $t("TOTAL SALE AND PURCHASE") }}</span>
             </div>
           </div>
         </div>
         <div class="col-md-12">
           <div class="row">
-            <div
-              class="col-sm-12 col-md-12 col-lg-6 col-xl-6"
-              style="border-radius: 20px"
-            >
+            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
               <div class="rounded custom-border-light">
-                <strong class="p-4">
-                  {{ $t("Total Sales") }}
-                </strong>
+                <div class="chart_title width-100% ">
+                  <strong class="p-4">
+                    {{ $t("Total Sales ") }}
+                  </strong>
+                </div>
+
                 <div class="chart_container">
                   <canvas id="sale_purchase_chart" class=""></canvas>
                 </div>
+
+
               </div>
+
             </div>
-            <div
-              class="col-sm-12 col-md-12 col-lg-6 col-xl-6"
-              style="border-radius: 20px"
-            >
+            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
               <div class="rounded custom-border-light">
-                <strong class="p-4">
-                  {{ $t("Total Purchase") }}
-                </strong>
+                <div class="chart_title width-100% ">
+                  <strong class="p-4">
+                    {{ $t("Total Purchase") }}
+                  </strong>
+                </div>
                 <div class="chart_container">
                   <canvas id="sale_purchase_chart1" class=""></canvas>
                 </div>
@@ -348,39 +374,36 @@
 
 
       <!-- total stock in and stock out   start -->
- <div class="d-flex flex-wrap mb-4">
+      <div class="d-flex flex-wrap mb-4">
         <div class="mr-auto">
           <div class="d-flex mb-2">
             <div>
               <span class="text-subhead-bold">
-                {{ $t("TOTAL STOCK IN AND STOCK OUT") }}</span
-              >
+                {{ $t("TOTAL STOCK IN AND STOCK OUT") }}</span>
             </div>
           </div>
         </div>
         <div class="col-md-12">
           <div class="row">
-            <div
-              class="col-sm-12 col-md-12 col-lg-6 col-xl-6"
-              style="border-radius: 20px"
-            >
+            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
               <div class="rounded custom-border-light">
-                <strong class="p-4">
-                  {{ $t("Total Stock In") }}
-                </strong>
+                <div class="chart_title width-100% ">
+                  <strong class="p-4">
+                    {{ $t("Total Stock In") }}
+                  </strong>
+                </div>
                 <div class="chart_container">
                   <canvas id="sale_stock_in_chart" class=""></canvas>
                 </div>
               </div>
             </div>
-            <div
-              class="col-sm-12 col-md-12 col-lg-6 col-xl-6"
-              style="border-radius: 20px"
-            >
+            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
               <div class="rounded custom-border-light">
-                <strong class="p-4">
-                  {{ $t("Total Stock Out") }}
-                </strong>
+                <div class="chart_title width-100% ">
+                  <strong class="p-4">
+                    {{ $t("Total Stock Out") }}
+                  </strong>
+                </div>
                 <div class="chart_container">
                   <canvas id="sale_stock_out_chart" class=""></canvas>
                 </div>
@@ -413,10 +436,7 @@
         </div>
         <div class="col-md-12">
           <div class="row">
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="order_count.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_count.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">{{ $t("Total Sales") }}</div>
@@ -430,10 +450,7 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="order_value.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_value.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">
@@ -449,10 +466,7 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="revenue_value.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="revenue_value.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">
@@ -468,10 +482,7 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="invoices_count.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="invoices_count.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">{{ $t("Total Invoices") }}</div>
@@ -485,10 +496,7 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="expense.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="expense.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">
@@ -504,10 +512,7 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="net_profit_value.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="net_profit_value.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">
@@ -523,10 +528,7 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="customer_count.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="customer_count.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">
@@ -542,10 +544,7 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="purchase_order_count.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="purchase_order_count.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">
@@ -568,33 +567,22 @@
       <div class="d-flex flex-wrap mb-4" style="display: none !important">
         <div class="col-md-12">
           <div class="row">
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
               <div class="col-12 rounded custom-border-light">
                 <div class="d-flex flex-wrap box-content">
-                  <div
-                    class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1"
-                  >
+                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
                     <div class="chart_container">
-                      <canvas
-                        id="pos_sales_count_activity_chart"
-                        class=""
-                      ></canvas>
+                      <canvas id="pos_sales_count_activity_chart" class=""></canvas>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
               <div class="col-12 rounded custom-border-light">
                 <div class="d-flex flex-wrap box-content">
-                  <div
-                    class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1"
-                  >
+                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
                     <div class="chart_container d-flex align-items-center">
                       <canvas id="horizontal_chart"></canvas>
                     </div>
@@ -616,48 +604,26 @@
         </div>
         <div class="col-md-12">
           <div class="row">
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="todays_order_count.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">{{ $t("Sales") }}</div>
 
                   <div class="mt-auto p-2">
                     <span>
-                      <i
-                        class="fa fa-circle-notch fa-spin"
-                        v-if="stats_processing == true"
-                      ></i>
+                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
                       <div class="d-flex flex-column align-items-center" v-else>
-                        <input
-                          v-knob
-                          class="knob"
-                          type="text"
-                          :value="todays_order_count.raw"
-                        />
-                        <span
-                          :class="{
-                            'text-success':
-                              Math.sign(todays_order_count.difference) == 1,
-                            'text-danger':
-                              Math.sign(todays_order_count.difference) == -1,
-                          }"
-                          v-show="todays_order_count.difference !== 0"
-                        >
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == 1
-                            "
-                            ><i class="fas fa-long-arrow-alt-up"></i
-                          ></span>
-                          <span
-                            v-show="
-                              Math.sign(todays_order_count.difference) == -1
-                            "
-                            ><i class="fas fa-long-arrow-alt-down"></i
-                          ></span>
+                        <input v-knob class="knob" type="text" :value="todays_order_count.raw" />
+                        <span :class="{
+                          'text-success':
+                            Math.sign(todays_order_count.difference) == 1,
+                          'text-danger':
+                            Math.sign(todays_order_count.difference) == -1,
+                        }" v-show="todays_order_count.difference !== 0">
+                          <span v-show="Math.sign(todays_order_count.difference) == 1
+                            "><i class="fas fa-long-arrow-alt-up"></i></span>
+                          <span v-show="Math.sign(todays_order_count.difference) == -1
+                            "><i class="fas fa-long-arrow-alt-down"></i></span>
                           {{ todays_order_count.difference }}%
                         </span>
                       </div>
@@ -667,14 +633,10 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
               <div class="col-12 rounded custom-border-light">
                 <div class="d-flex p-3 flex-wrap box-content">
-                  <div
-                    class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0"
-                  >
+                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
                     <div class="stat_chart_container">
                       <canvas id="today_sales_count_chart" class=""></canvas>
                     </div>
@@ -683,49 +645,27 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-              :title="todays_order_value.raw"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_value.raw">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
                   <div class="text-subhead p-2">{{ $t("Sale Value") }}</div>
 
                   <div class="mt-auto p-2">
                     <span>
-                      <i
-                        class="fa fa-circle-notch fa-spin"
-                        v-if="stats_processing == true"
-                      ></i>
+                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
                       <div class="d-flex flex-column align-items-center" v-else>
-                        <input
-                          v-knob
-                          class="knob"
-                          type="text"
-                          :value="todays_order_value.raw"
-                        />
+                        <input v-knob class="knob" type="text" :value="todays_order_value.raw" />
 
-                        <span
-                          :class="{
-                            'text-success':
-                              Math.sign(todays_order_value.difference) == 1,
-                            'text-danger':
-                              Math.sign(todays_order_value.difference) == -1,
-                          }"
-                          v-show="todays_order_value.difference !== 0"
-                        >
-                          <span
-                            v-show="
-                              Math.sign(todays_order_value.difference) == 1
-                            "
-                            ><i class="fas fa-long-arrow-alt-up"></i
-                          ></span>
-                          <span
-                            v-show="
-                              Math.sign(todays_order_value.difference) == -1
-                            "
-                            ><i class="fas fa-long-arrow-alt-down"></i
-                          ></span>
+                        <span :class="{
+                          'text-success':
+                            Math.sign(todays_order_value.difference) == 1,
+                          'text-danger':
+                            Math.sign(todays_order_value.difference) == -1,
+                        }" v-show="todays_order_value.difference !== 0">
+                          <span v-show="Math.sign(todays_order_value.difference) == 1
+                            "><i class="fas fa-long-arrow-alt-up"></i></span>
+                          <span v-show="Math.sign(todays_order_value.difference) == -1
+                            "><i class="fas fa-long-arrow-alt-down"></i></span>
                           {{ todays_order_value.difference }}%
                         </span>
                       </div>
@@ -735,14 +675,10 @@
               </div>
             </div>
 
-            <div
-              class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box"
-            >
+            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
               <div class="col-12 p-3 bg-white rounded custom-border-light">
                 <div class="d-flex flex-wrap box-content">
-                  <div
-                    class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0"
-                  >
+                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
                     <div class="stat_chart_container">
                       <canvas id="today_sales_value_chart" class=""></canvas>
                     </div>
@@ -870,7 +806,7 @@
       </div> -->
 
       <div class="d-flex flex-wrap mb-4">
-      
+
         <!-- <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 pl-sm-0 pl-md-3 pr-4">
           <div class="mr-auto">
             <div class="d-flex mb-2">
@@ -916,9 +852,28 @@
           </div>
         </div> -->
       </div>
+
+
+      <!-- <div class="container">
+        <h1>Chart Integration Example</h1>
+        <div id="app">
+          <chart-component></chart-component>
+        </div>
+      </div> -->
+
+
+
     </div>
+
   </div>
 </template>
+<script>
+
+
+</script>
+
+
+
 
 <script>
 "use strict";
@@ -1307,7 +1262,7 @@ export default {
     knob: {
       inserted(el) {
         const availableColors = ["#FF5733", "#C70039", "#900C3F", "#FFC300", "#3366FF", "#00CC66", "#8B008B", "#FF6347", "#9933CC", "#FF9900"];
-      const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+        const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
         $(el).knob({
           min: 0,
           max: 9999,
@@ -1382,7 +1337,7 @@ export default {
       });
     },
 
-     renderChartForTotalStockOut() {
+    renderChartForTotalStockOut() {
       const ctx = document
         .getElementById("sale_stock_out_chart")
         .getContext("2d");
@@ -1397,7 +1352,7 @@ export default {
               backgroundColor: "rgba(75, 192, 192, 0.6)",
               borderColor: "rgba(75, 192, 192, 1)",
               borderWidth: 1,
-              data: [10, 20, 15, 30,10, 20, 15, 30,10, 20, 15, 30],
+              data: [10, 20, 15, 30, 10, 20, 15, 30, 10, 20, 15, 30],
             },
           ],
         },
@@ -1422,7 +1377,7 @@ export default {
       });
     },
 
-     renderChartForTotalStockIn() {
+    renderChartForTotalStockIn() {
       const ctx = document
         .getElementById("sale_stock_in_chart")
         .getContext("2d");
@@ -1437,7 +1392,7 @@ export default {
               backgroundColor: "rgba(75, 192, 192, 0.6)",
               borderColor: "rgba(75, 192, 192, 1)",
               borderWidth: 1,
-              data: [10, 20, 15, 30,10, 20, 15, 30,10, 20, 15, 30],
+              data: [10, 20, 15, 30, 10, 20, 15, 30, 10, 20, 15, 30],
             },
           ],
         },
@@ -1502,248 +1457,249 @@ export default {
       });
     },
 
+
     renderChartForTotalPurchase() {
       const ctx = document
         .getElementById("sale_purchase_chart1")
         .getContext("2d");
 
-        new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['January', 'February', 'March', 'April'], // Add the labels for each month
-    datasets: [
-      {
-        label: 'Dataset Label',
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-        data: [10, 20, 15, 30],
-      },
-    ],
-  },
-  options: {
-    scales: {
-      xAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          position: 'top', // Change the x-axis position to 'top'
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['January', 'February', 'March', 'April'], // Add the labels for each month
+          datasets: [
+            {
+              label: 'Dataset Label',
+              backgroundColor: 'rgba(75, 192, 192, 0.6)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              data: [10, 20, 15, 30],
+            },
+          ],
         },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            reverse: true,
+        options: {
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+                position: 'top', // Change the x-axis position to 'top'
+              },
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  reverse: true,
+                },
+                position: 'right', // Change the y-axis position to 'right'
+              },
+            ],
           },
-          position: 'right', // Change the y-axis position to 'right'
         },
-      ],
-    },
-  },
-});
+      });
 
     },
 
-    targetAchieveGraph1(){
+    targetAchieveGraph1() {
       const targetValues = [200, 300, 400]; // Replace with your target values
-  const achievedValues = [10, 200, 320]; // Replace with your achieved values
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
-  const ctx1 = document.getElementById('myChart1').getContext('2d');
-  const myChart1 = new Chart(ctx1, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Target',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        data: targetValues,
-        fill: true,
-      }, {
-        label: 'Achieved',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        data: achievedValues,
-        fill: true,
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        annotation: {
-          annotations: [
-            {
-              type: 'bar',
-              mode: 'vertical',
-              scaleID: 'x',
-              value: 'Feb', // Change to the appropriate label where you want to add an arrow
-              borderColor: 'gray',
-              borderWidth: 2,
-              label: {
-                enabled: true,
-                content: 'Arrow',
-                position: 'top'
-              }
+      const achievedValues = [10, 200, 320]; // Replace with your achieved values
+      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
+      const ctx1 = document.getElementById('myChart1').getContext('2d');
+      const myChart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Target',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: targetValues,
+            fill: true,
+          }, {
+            label: 'Achieved',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            data: achievedValues,
+            fill: true,
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
             }
-          ]
-        }
-      }
-    }
-  });
-    },
-    targetAchieveGraph(){
-  const targetValues = [100, 200, 300]; // Replace with your target values
-  const achievedValues = [20, 100, 120]; // Replace with your achieved values
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
-
-  const ctx = document.getElementById('myChart').getContext('2d');
-  const myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Target',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        data: targetValues,
-        fill: true,
-      }, {
-        label: 'Achieved',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        data: achievedValues,
-        fill: true,
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        annotation: {
-          annotations: [
-            {
-              type: 'bar',
-              mode: 'vertical',
-              scaleID: 'x',
-              value: 'Feb', // Change to the appropriate label where you want to add an arrow
-              borderColor: 'gray',
-              borderWidth: 2,
-              label: {
-                enabled: true,
-                content: 'Arrow',
-                position: 'top'
-              }
+          },
+          plugins: {
+            annotation: {
+              annotations: [
+                {
+                  type: 'bar',
+                  mode: 'vertical',
+                  scaleID: 'x',
+                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
+                  borderColor: 'gray',
+                  borderWidth: 2,
+                  label: {
+                    enabled: true,
+                    content: 'Arrow',
+                    position: 'top'
+                  }
+                }
+              ]
             }
-          ]
+          }
         }
-      }
-    }
-  });
-
-  
+      });
     },
-    targetAchieveGraph2(){
+    targetAchieveGraph() {
+      const targetValues = [100, 200, 300]; // Replace with your target values
+      const achievedValues = [20, 100, 120]; // Replace with your achieved values
+      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
+
+      const ctx = document.getElementById('myChart').getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Target',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: targetValues,
+            fill: true,
+          }, {
+            label: 'Achieved',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            data: achievedValues,
+            fill: true,
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            annotation: {
+              annotations: [
+                {
+                  type: 'bar',
+                  mode: 'vertical',
+                  scaleID: 'x',
+                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
+                  borderColor: 'gray',
+                  borderWidth: 2,
+                  label: {
+                    enabled: true,
+                    content: 'Arrow',
+                    position: 'top'
+                  }
+                }
+              ]
+            }
+          }
+        }
+      });
+
+
+    },
+    targetAchieveGraph2() {
       const targetValues = [200, 300, 400]; // Replace with your target values
-  const achievedValues = [110, 290, 390]; // Replace with your achieved values
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
-  const ctx1 = document.getElementById('myChart2').getContext('2d');
-  const myChart1 = new Chart(ctx1, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Target',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        data: targetValues,
-        fill: true,
-      }, {
-        label: 'Achieved',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        data: achievedValues,
-        fill: true,
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        annotation: {
-          annotations: [
-            {
-              type: 'bar',
-              mode: 'vertical',
-              scaleID: 'x',
-              value: 'Feb', // Change to the appropriate label where you want to add an arrow
-              borderColor: 'gray',
-              borderWidth: 2,
-              label: {
-                enabled: true,
-                content: 'Arrow',
-                position: 'top'
-              }
+      const achievedValues = [110, 290, 390]; // Replace with your achieved values
+      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
+      const ctx1 = document.getElementById('myChart2').getContext('2d');
+      const myChart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Target',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: targetValues,
+            fill: true,
+          }, {
+            label: 'Achieved',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            data: achievedValues,
+            fill: true,
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
             }
-          ]
+          },
+          plugins: {
+            annotation: {
+              annotations: [
+                {
+                  type: 'bar',
+                  mode: 'vertical',
+                  scaleID: 'x',
+                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
+                  borderColor: 'gray',
+                  borderWidth: 2,
+                  label: {
+                    enabled: true,
+                    content: 'Arrow',
+                    position: 'top'
+                  }
+                }
+              ]
+            }
+          }
         }
-      }
-    }
-  });
+      });
     },
 
-    targetAchieveGraph3(){
+    targetAchieveGraph3() {
       const targetValues = [200, 300, 400]; // Replace with your target values
-  const achievedValues = [110, 290, 390]; // Replace with your achieved values
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
-  const ctx1 = document.getElementById('myChart3').getContext('2d');
-  const myChart1 = new Chart(ctx1, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Target',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        data: targetValues,
-        fill: true,
-      }, {
-        label: 'Achieved',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        data: achievedValues,
-        fill: true,
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        annotation: {
-          annotations: [
-            {
-              type: 'bar',
-              mode: 'vertical',
-              scaleID: 'x',
-              value: 'Feb', // Change to the appropriate label where you want to add an arrow
-              borderColor: 'gray',
-              borderWidth: 2,
-              label: {
-                enabled: true,
-                content: 'Arrow',
-                position: 'top'
-              }
+      const achievedValues = [110, 290, 390]; // Replace with your achieved values
+      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
+      const ctx1 = document.getElementById('myChart3').getContext('2d');
+      const myChart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Target',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: targetValues,
+            fill: true,
+          }, {
+            label: 'Achieved',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            data: achievedValues,
+            fill: true,
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
             }
-          ]
+          },
+          plugins: {
+            annotation: {
+              annotations: [
+                {
+                  type: 'bar',
+                  mode: 'vertical',
+                  scaleID: 'x',
+                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
+                  borderColor: 'gray',
+                  borderWidth: 2,
+                  label: {
+                    enabled: true,
+                    content: 'Arrow',
+                    position: 'top'
+                  }
+                }
+              ]
+            }
+          }
         }
-      }
-    }
-  });
+      });
     },
 
 
@@ -1843,28 +1799,28 @@ export default {
             this.target.income_width =
               (response.data.data.revenue_value.count_raw /
                 response.data.data.targets.income) *
-                100 +
+              100 +
               "%";
 
             this.target.expense = response.data.data.targets.expense;
             this.target.expense_width =
               (response.data.data.expense.count_raw /
                 response.data.data.targets.expense) *
-                100 +
+              100 +
               "%";
 
             this.target.sales = response.data.data.targets.sales;
             this.target.sales_width =
               (response.data.data.order_value.count_raw /
                 response.data.data.targets.sales) *
-                100 +
+              100 +
               "%";
 
             this.target.net_profit = response.data.data.targets.net_profit;
             this.target.net_profit_width =
               (response.data.data.net_profit_value.count_raw /
                 response.data.data.targets.net_profit) *
-                100 +
+              100 +
               "%";
 
             var today_sales_count_chart = this.create_chart(
@@ -1922,17 +1878,17 @@ export default {
 
             income_expense_chart.data.datasets = [];
             income_expense_chart.data.datasets.push({
-              backgroundColor: ["#FF5733", "#3366FF", "#900C3F", "#FFC300", ],
+              backgroundColor: ["#FF5733", "#3366FF", "#900C3F", "#FFC300",],
               borderColor: "#FFF",
-              data: [4, 5,54,34],
+              data: [4, 5, 54, 34],
             });
             income_expense_chart.update();
 
             income_expense_chart1.data.datasets = [];
             income_expense_chart1.data.datasets.push({
-              backgroundColor: ["#3366FF","#FF5733","#FFC300", "#900C3F"],
+              backgroundColor: ["#3366FF", "#FF5733", "#FFC300", "#900C3F"],
               borderColor: "#FFF",
-              data: [43, 3,4,34],
+              data: [43, 3, 4, 34],
             });
             income_expense_chart1.update();
 
