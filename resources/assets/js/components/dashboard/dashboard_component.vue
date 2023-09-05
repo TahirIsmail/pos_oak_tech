@@ -21,14 +21,14 @@
 
 .Vendors {
   width: 100%;
-  background: linear-gradient(to right, #ff9b70, #ffad8a);
+  background: linear-gradient(to right, #70bfff, #6080e0);
   color: #ffffff;
   text-align: center;
 }
 
 .Customers {
   width: 100%;
-  background: linear-gradient(to right, #00ce8e, #00f4a9);
+  background: linear-gradient(to right, #70bfff, #6080e0);
   color: #ffffff;
   text-align: center;
 }
@@ -38,7 +38,7 @@
 
 .staff {
   width: 100%;
-  background: linear-gradient(to right, #ff5369, #ff8796);
+  background: linear-gradient(to right, #70bfff, #6080e0);
   color: #ffffff;
   text-align: center;
 }
@@ -48,7 +48,7 @@
 
 .total_purchase {
   width: 100%;
-  background: linear-gradient(to right, #00b4b7, #00dbdf);
+  background: linear-gradient(to right, #70bfff, #6080e0);
   color: #ffffff;
   text-align: center;
 }

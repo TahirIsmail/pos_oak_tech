@@ -12,5 +12,5 @@ npm-debug.log
 yarn-error.log
 .env
 public/timezone_config.txt
-package-lock.json
-composer.lock
+/package-lock.json
+/composer.lock
