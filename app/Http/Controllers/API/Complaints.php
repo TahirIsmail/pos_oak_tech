@@ -73,15 +73,18 @@ class Complaints extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
+        //    dd($request->complaint_by);
 
             if ($slack == null) {
                 $customer_complaints = [
                     "slack" => $this->generate_slack("complaints"),
+                    "store_id" => $request->logged_user_store_id,
                     "assigned_to" => $request->assigned_to,
-                    "complaint_by " => $request->complaint_by,
+                    "complaint_by" => (int) $request->complaint_by,
                     "complaint_ref" => $request->complaint_ref,
                     "descriptions" => $request->descriptions,
                     "complaint_status" => $request->complaint_status,
+                    "updated_by" => $request->logged_user_id,
                     "created_by" => $request->logged_user_id
                     
                 ];
@@ -96,27 +99,24 @@ class Complaints extends Controller
                     ));
                 }
             } else {
-                $supplier_performance = [                  
-                    "supplier_id" => $request->name,
-                    "store_id" => $request->logged_user_store_id,
-                    "status" => $request->status,
-                    "address" => $request->address,
-                    "delivery_timeline" => $request->DeliveryTimeline,
-                    "rating_delivery_timeline" => $request->Rating_DeliveryTimeline,
-                    "product_quality" => $request->ProductQuality,
-                    "rating_product_quality" => $request->Rating_ProductQuality,    
-                    "responsiveness" => $request->Responsiveness,
-                    "rating_responsiveness" => $request->Rating_Responsiveness,
+                $customer_complaints = [                  
+                  
+                    "assigned_to" => $request->assigned_to,
+                    "complaint_by" => $request->complaint_by,
+                    "complaint_ref" => $request->complaint_ref,
+                    "descriptions" => $request->descriptions,
+                    "complaint_status" => $request->complaint_status,
+                    "updated_by" => $request->logged_user_id
                 ];
                 $conditions = [
                     "slack" => $slack,
                 ];
-                $supplier_performance = SupplierPerformance::updateOrInsert($conditions, $supplier_performance);
-                if ($supplier_performance) {
+                $customer_complaint = ModelsComplaints::updateOrInsert($conditions, $customer_complaints);
+                if ($customer_complaint) {
                     return response()->json($this->generate_response(
                         array(
-                            "message" => "Supplier Performance Update successfully",
-                            "data" => $supplier_performance,
+                            "message" => "Customer Complaints Update successfully",
+                            "data" => $customer_complaint,
                             'msg' => 'success',
                         ), 'SUCCESS'
                     ));

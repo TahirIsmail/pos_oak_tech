@@ -6,13 +6,15 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Scopes\StoreScope;
+use App\Events\ComplaintCreated;
 use Yajra\DataTables\Contracts\DataTable;
 class Complaints extends Model
 {
     use HasFactory;
     protected $table = 'complaints';
     // protected $hidden = ['id'];
-    protected $fillable = ['slack', 'store_id', 'complaint_ref', 'complaint_status', 'descriptions', 'created_by', 'updated_by', 'complaint_by ', 'assigned_to', 'created_at', 'updated_at'];
+    protected $fillable = ['slack', 'store_id', 'complaint_ref', 'complaint_status', 'descriptions', 'created_by', 'updated_by', 'complaint_by', 'assigned_to', 'created_at', 'updated_at'];
+   
     protected static function boot()
     {
         parent::boot();

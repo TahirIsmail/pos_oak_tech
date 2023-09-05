@@ -120,8 +120,11 @@ export default {
             complaint_ref: this.complaint_data && this.complaint_data.complaint_ref !== null ? this.complaint_data.complaint_ref : null,
             complaint_status: this.complaint_data && this.complaint_data.complaint_status !== null ? this.complaint_data.complaint_status : null,
             description: this.complaint_data && this.complaint_data.descriptions !== null ? this.complaint_data.descriptions : null,
-            complaint_by: this.complaint_data && this.complaint_data.complaint_by.name !== null ? this.complaint_data.complaint_by.name : '',
-            assigned_to: this.complaint_data && this.complaint_data.assigned_to.fullname !== null ? this.complaint_data.assigned_to.fullname : '',
+
+            complaint_by: this.complaint_data && this.complaint_data.complaint_by.id !== null ? this.complaint_data.complaint_by.id || "" : "",
+
+            // complaint_by: this.complaint_data && this.complaint_data.complaint_by.name !== null ? this.complaint_data.complaint_by.value : '',
+            assigned_to: this.complaint_data && this.complaint_data.assigned_to.id !== null ? this.complaint_data.assigned_to.id : '',
         };
 
     },
@@ -144,8 +147,8 @@ export default {
             formData.append("complaint_ref", this.complaint_ref);
             formData.append("complaint_status", this.complaint_status);
             formData.append("descriptions", this.description);
-            formData.append("complaint_by ", this.complaint_by);
-            formData.append("assigned_to ", this.assigned_to);
+            formData.append("complaint_by", this.complaint_by);
+            formData.append("assigned_to", this.assigned_to);
             
         
 
