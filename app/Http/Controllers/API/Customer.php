@@ -18,6 +18,75 @@ use App\Http\Resources\Collections\CustomerCollection;
 class Customer extends Controller
 {
     /**
+     * Authentication of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function authenticate(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email'     => $this->get_validation_rules("email", true),
+                'password'  => $this->get_validation_rules("password", true)
+            ]);
+            
+            $validation_status = $validator->fails();
+            if($validation_status){
+                throw new Exception($validator->errors());
+            }
+            
+            $user_data = CustomerModel::select('customers.*')
+            ->roleJoin()
+            ->where([
+                ['status', '=', 1],
+                ['email' ,'=', $request->email]
+            ])
+            ->active()
+            ->first();
+            
+            if($user_data){
+                $password = $user_data->password;
+                if (Hash::check($request->password, $password)) {
+                    
+                    //Get the first link
+                    $first_link = $this->get_user_default_link($user_data);
+                    $user_data->initial_link = (!empty($first_link))?route($first_link->route):"/";
+                    if($user_data->initial_link == "/"){
+                        throw new Exception("You don't have access to the system. Please contact the system administrator for assistance.", 401); 
+                    }
+
+                    $access_token = $this->generate_access_token($user_data);
+                    
+                    $user_detail = UserModel::where('id', $user_data->id)->first();
+                    
+                    $user = collect(new UserResource($user_detail));
+
+                    $user['access_token'] = $access_token;
+
+                    return response()->json($this->generate_response(
+                        array(
+                            "message" => "Authenticated successfully", 
+                            "data"    => $user,
+                            "link"    => $user_data->initial_link
+                        ), 'SUCCESS'
+                    ));
+                }else{
+                    throw new Exception("Invalid email or password", 401);
+                }
+            }else{
+                throw new Exception("Invalid email or password", 401);
+            }
+
+        }catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

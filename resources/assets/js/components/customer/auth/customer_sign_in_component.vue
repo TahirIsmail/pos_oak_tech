@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-center pt-5">
             <div class="container1 col-sm-12 col-md-6 col-lg-4 col-lg-4">
                 <img :src="company_logo" class="d-block mb-4 entry_logo ml-auto mr-auto" alt="OAK">
-                <span class="text-display-0 d-block mb-3 text-center">Sign in</span>
+                <span class="text-display-0 d-block mb-3 text-center">Customer Sign in</span>
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
                 {{ message }}
                 <form @submit.prevent="submit_form" class="mb-3">
@@ -30,78 +30,51 @@
         </div>
     </div>
 </template>
-
 <script>
 'use strict';
-
 export default {
     data() {
         return {
             server_errors: '',
             error_class: '',
             processing: false,
-            email: (this.is_demo == true && this.preview_mode == true) ? 'admin@OAK.com' : '',
-            password: (this.is_demo == true && this.preview_mode == true) ? 'administrator' : '',
+            email: (this.is_demo == true && this.preview_mode == true) ? 'customer@OAK.com' : '',
+            password: (this.is_demo == true && this.preview_mode == true) ? 'Customer' : '',
             message: this.prop_message
         }
     },
+
     props: {
-        prop_message: String,
-        is_demo: Boolean,
-        preview_mode: Boolean,
-        company_logo: String
-    },
+            prop_message: String,
+            is_demo: Boolean,
+            preview_mode: Boolean,
+            company_logo: String
+        },
     mounted() {
-        console.log('Sign in page loaded');
+        console.log('Customer Sign in page loaded');
+        
     },
-    methods: {
-        submit_form() {
-            this.$validator.validateAll().then((result) => {
-                if (result) {
-                    this.processing = true;
 
-                    var formData = new FormData();
-                    formData.append("email", (this.email == null) ? '' : this.email);
-                    formData.append("password", (this.password == null) ? '' : this.password);
-
-                    axios.post('/api/user/authenticate', formData).then((response) => {
-                        this.processing = false;
-                        if (response.data.status_code === 200) {
-                            window.location.href = response.data.link;
-                        } else {
-                            try {
-                                var error_json = JSON.parse(response.data.msg);
-                                this.loop_api_errors(error_json);
-                            } catch (err) {
-                                this.server_errors = response.data.msg;
-                            }
-                            this.error_class = 'error';
-                        }
-                    })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                }
-            });
-        }
-    }
 }
+
+
 </script>
 <style scoped>
 .container1 {
-
-    box-shadow: 0 4px 6px rgba(79, 49, 202, 0.1),
-        0 0 10px rgba(0, 0, 0, 0.2),
-        0 0 20px rgba(0, 0, 0, 0.3);
+    
+    box-shadow: 0 4px 6px rgba(79, 49, 202, 0.1), 
+                0 0 10px rgba(0, 0, 0, 0.2), 
+                0 0 20px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
 }
 
 .container1:hover {
-
-    background-color: #fcfcfc;
+   
+   background-color: #fcfcfc;
 }
 
 .container1 .btn {
     margin-left: 0;
-
-}</style>
+   
+}
+</style>

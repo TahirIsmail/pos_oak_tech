@@ -17,6 +17,8 @@ return new class extends Migration
             $table->increments('id');
             $table->string('slack', 30)->unique();
             $table->enum('customer_type', ['DEFAULT', 'CUSTOM', 'WALKIN']);
+            $table->string('password', 100);
+            $table->string('init_password', 10)->nullable();
             $table->string('name', 250);
             $table->string('email', 150)->nullable();
             $table->string('phone', 15)->nullable();
