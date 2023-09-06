@@ -1,7 +1,6 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-     
       <form @submit.prevent="submit_form" class="mb-3">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -53,9 +52,11 @@
       </form>
     </div>
 
-    <div class="col-md-12" v-if="show_attendance_table" style="overflow: scroll;">
-      
-
+    <div
+      class="col-md-12"
+      v-if="show_attendance_table"
+      style="overflow: scroll"
+    >
       <form
         ref="attendanceForm"
         @submit.prevent="submitAttendance"
@@ -104,7 +105,9 @@
                 >
               </div>
             </td>
-            <td><input type="text" v-model="staffAttendanceData[index].note" /></td>
+            <td>
+              <input type="text" v-model="staffAttendanceData[index].note" />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -146,7 +149,7 @@ export default {
       staffList: [],
       staffAttendanceTypes: [],
       staffAttendanceData: [],
-
+      already_mark_staff_attendance: [],
       staffListHtml: "",
       staff_role: "",
       server_errors: "",
@@ -167,7 +170,6 @@ export default {
   mounted() {
     console.log("Roles:", this.roles_data);
 
-    // Assign the roles array to the data property
     this.roles = this.roles_data;
   },
   created() {},
@@ -179,7 +181,7 @@ export default {
 
           // Handle the submit event
           const handleSubmit = () => {
-            this.processing = true;
+            // this.processing = true;
             var formData = new FormData();
 
             formData.append("access_token", window.settings.access_token);
@@ -195,17 +197,53 @@ export default {
                 this.show_modal = false;
                 this.show_attendance_table = true;
                 this.processing = false;
-                this.staffList = response.data.data.staff_list;
-                // Initialize staffAttendanceData based on staffList
-                this.staffAttendanceData = this.staffList.map((staff) => ({
-                  staff_id: staff.id,
-                  attendance_type_id: null, // Set the default value for attendance_type_id
-                  note: "", // Set the default value for note
-                }));
-                this.staffAttendanceTypes =
-                  response.data.data.staff_attendance_types;
-                //   this.staffListHtml = response.data.data;
-                console.log(response.data.data.staff_list);
+                if (response.data.data.already_mark_staff_attendance) {
+                  this.staffList = response.data.data.staff_list;
+
+                  this.staffAttendanceData = this.staffList.map((staff) => ({
+                    staff_id: staff.id,
+                    staff_attendance_id: null,
+                    attendance_type_id: null,
+                    note: "",
+                  }));
+
+                  // Update staffAttendanceData with existing attendance data
+                  this.staffAttendanceData.forEach((attendanceData) => {
+                    const existingAttendance =
+                      response.data.data.already_mark_staff_attendance.find(
+                        (attendance) => {
+                          return (
+                            String(attendance.staff_id) ===
+                            String(attendanceData.staff_id)
+                          );
+                        }
+                      );
+
+                    if (existingAttendance) {
+                      attendanceData.staff_attendance_id =
+                        existingAttendance.id;
+                      attendanceData.attendance_type_id =
+                        existingAttendance.staff_attendance_type_id;
+                      attendanceData.note = existingAttendance.remark;
+                    }
+                  });
+                  this.staffAttendanceTypes =
+                    response.data.data.staff_attendance_types;
+                  //   this.staffListHtml = response.data.data;
+                  console.log(response.data.data.staff_list);
+                } else {
+                  this.staffList = response.data.data.staff_list;
+                  // Initialize staffAttendanceData based on staffList
+                  this.staffAttendanceData = this.staffList.map((staff) => ({
+                    staff_id: staff.id,
+                    attendance_type_id: null,
+                    note: "",
+                  }));
+                  this.staffAttendanceTypes =
+                    response.data.data.staff_attendance_types;
+                  //   this.staffListHtml = response.data.data;
+                  console.log(response.data.data.staff_list);
+                }
               })
               .catch((error) => {
                 console.log(error);
@@ -226,7 +264,7 @@ export default {
     },
 
     submitAttendance() {
-        this.$validator.validateAll().then((result) => {
+      this.$validator.validateAll().then((result) => {
         if (result) {
           this.show_modal = true;
 
@@ -240,10 +278,13 @@ export default {
               "staffAttendanceData",
               JSON.stringify(this.staffAttendanceData)
             );
-            formData.append("attendance_date", JSON.stringify(this.attendance_date));
+            formData.append(
+              "attendance_date",
+              JSON.stringify(this.attendance_date)
+            );
             console.log(...formData);
             axios
-              .post('/api/store_staff_attendance', formData)
+              .post("/api/store_staff_attendance", formData)
               .then((response) => {
                 this.show_modal = false;
                 this.processing = false;
@@ -280,8 +321,6 @@ export default {
                   }
                   this.error_class = "error";
                 }
-                
-               
               })
               .catch((error) => {
                 console.log(error);

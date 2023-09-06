@@ -62,6 +62,15 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/view_attendance/{slack}', "AttendanceController@view_attendance")->name('view_attendance');
 
 
+    //staff payroll generation and assigning
+
+    Route::get('/staff_payroll', "StaffPayrollController@staff_payroll")->name('staff_payroll');
+    Route::post('/search/staff_payroll', "StaffPayrollController@search_staff_list")->name('payroll.search_staff');
+
+    Route::get('/staff/generatePayroll/{slack}/{month}/{year}', 'StaffPayrollController@generatePayroll')->name('staff.generatePayroll');
+
+
+
 
     //role
     Route::get('/roles', "Role@index")->name('roles');

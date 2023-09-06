@@ -212,6 +212,9 @@ Vue.component('viewstaffapproveleave', require('./components/leave/view_staff_ap
 
 Vue.component('staffattendancecomponent', require('./components/staff_attendance/staff_attendance_component.vue').default);
 
+Vue.component('generatestaffpayroll', require('./components/staff_payroll/generate_staff_payroll.vue').default);
+
+
 
 const app = new Vue({
     el: '#app',

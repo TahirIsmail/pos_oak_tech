@@ -134,7 +134,7 @@ class User extends Model
     }
 
     public function staffAttendances()
-{
-    return $this->hasMany(StaffAttendance::class, 'staff_id');
-}
+    {
+        return $this->hasMany(StaffAttendance::class, 'staff_id', 'id');
+    }
 }
