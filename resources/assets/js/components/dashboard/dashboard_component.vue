@@ -18,37 +18,16 @@
   cursor: pointer;
   box-shadow: 0 8px 16px 0 rgba(0, 5, 0, 0.2);
 }
-
-.Vendors {
+/* 
+.dashboard_title {
   width: 100%;
   background: linear-gradient(to right, #70bfff, #6080e0);
   color: #ffffff;
   text-align: center;
-}
-
-.Customers {
+} */
+.dashboard_title {
   width: 100%;
-  background: linear-gradient(to right, #70bfff, #6080e0);
-  color: #ffffff;
-  text-align: center;
-}
-
-
-
-
-.staff {
-  width: 100%;
-  background: linear-gradient(to right, #70bfff, #6080e0);
-  color: #ffffff;
-  text-align: center;
-}
-
-
-
-
-.total_purchase {
-  width: 100%;
-  background: linear-gradient(to right, #70bfff, #6080e0);
+  background: linear-gradient(to right, #1488CC, #5691c8);
   color: #ffffff;
   text-align: center;
 }
@@ -120,10 +99,9 @@
         <div class="col-md-12">
           <div class="row">
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light"
-              style="width: 100% ;">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content ">
-                  <div class="Vendors  text-subhead p-2 " id="Vendors/Suppliers">
+                  <div class="dashboard_title  text-subhead p-2 " id="Vendors/Suppliers">
                     {{ $t("Vendors/Suppliers") }}
                   </div>
 
@@ -155,7 +133,7 @@
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
               <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="Customers text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Users / Customers") }}
                   </div>
 
@@ -188,7 +166,7 @@
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
               <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="staff text-subhead p-2">{{ $t("Staff") }}</div>
+                  <div class="dashboard_title text-subhead p-2">{{ $t("Staff") }}</div>
 
                   <div class="mt-auto p-4">
                     <span>
@@ -219,7 +197,7 @@
               <div class="dashboard_row col-14 bg-white rounded custom-border-light"
                 >
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="total_purchase text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Total Purchase Orders") }}
                   </div>
 
@@ -437,11 +415,12 @@
         <div class="col-md-12">
           <div class="row">
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_count.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row  col-14 bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">{{ $t("Total Sales") }}</div>
+                  <div class="dashboard_title text-subhead p-2">
+                    {{ $t("Total Sales") }}</div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="2423" />
                     </span>
@@ -451,13 +430,13 @@
             </div>
 
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_value.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Total Sale Value") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="2324" />
                     </span>
@@ -467,13 +446,13 @@
             </div>
 
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="revenue_value.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Total Revenue") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4 ">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="223" />
                     </span>
@@ -483,11 +462,11 @@
             </div>
 
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="invoices_count.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">{{ $t("Total Invoices") }}</div>
+                  <div class="dashboard_title text-subhead p-2">{{ $t("Total Invoices") }}</div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="523" />
                     </span>
@@ -497,13 +476,13 @@
             </div>
 
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="expense.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Total Expense") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="123" />
                     </span>
@@ -513,13 +492,13 @@
             </div>
 
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="net_profit_value.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Net Profit") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="232" />
                     </span>
@@ -529,13 +508,13 @@
             </div>
 
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="customer_count.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Total Customers") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="465" />
                     </span>
@@ -545,13 +524,13 @@
             </div>
 
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="purchase_order_count.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
+              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
                 <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
+                  <div class="dashboard_title text-subhead p-2">
                     {{ $t("Total Purchase Orders") }}
                   </div>
 
-                  <div class="mt-auto p-2">
+                  <div class="mt-auto p-4">
                     <span class="text-headline">
                       <input v-knob class="knob" type="text" value="23" />
                     </span>
@@ -867,14 +846,6 @@
 
   </div>
 </template>
-<script>
-
-
-</script>
-
-
-
-
 <script>
 "use strict";
 import "jquery";
