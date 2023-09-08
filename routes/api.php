@@ -113,10 +113,17 @@ Route::group(['middleware' => ['token_auth']], function () {
 
 
     Route::post('/leaves_listing', 'API\LeaveTypeController@leaves_listing')->name('leaves_listing');
+    Route::post('/approve_leaves_listing', 'API\LeaveTypeController@approve_leaves_listing')->name('approve_leaves_listing');
 
     Route::post('/add_staff_leave', 'API\LeaveTypeController@add_staff_leave')->name('add_staff_leave');
     Route::post('/update_staff_leave/{slack}', 'API\LeaveTypeController@add_staff_leave')->name('update_staff_leave');
+    Route::post('/delete_staff_leave/{slack}', 'API\LeaveTypeController@delete_staff_leave')->name('delete_staff_leave');
+    Route::post('/approve_staff_leave_status/{slack}', 'API\LeaveTypeController@approve_staff_leave_status')->name('approve_staff_leave_status');
 
+
+    // staff Attendance routes 
+    Route::post('/fetch_staff_list', 'API\AttendanceController@index');
+    Route::post('/store_staff_attendance', 'API\AttendanceController@store');
    
 
     //product

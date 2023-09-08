@@ -33,6 +33,15 @@ class Leave extends Model
         return $this->belongsTo(LeaveType::class, 'leave_type_id');
     }
 
+    public function approvedLeave()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function appliedBy()
+    {
+        return $this->belongsTo(User::class, 'applied_by');
+    }
 
 
 }

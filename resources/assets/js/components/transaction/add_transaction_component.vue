@@ -1,10 +1,10 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            
+            <div class="card">
             <form @submit.prevent="submit_form" class="mb-3">
 
-                <div class="d-flex flex-wrap mb-4">
+                <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
                         <span class="text-title" v-if="transaction_slack == ''">{{ $t("Add Transaction") }}</span>
                         <span class="text-title" v-else>{{ $t("Edit Transaction") }}</span>
@@ -17,12 +17,12 @@
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="transaction_date">{{ $t("Transaction Date") }}</label>
                         <date-picker :format="date.format" :lang='date.lang' v-model="transaction_date" v-validate="'required|date_format:yyyy-MM-dd'" input-class="form-control form-control-custom bg-white" ref="transaction_date" name="transaction_date" :placeholder="$t('Please enter transaction date')" autocomplete="off"></date-picker>
                         <span v-bind:class="{ 'error' : errors.has('transaction_date') }">{{ errors.first('transaction_date') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="bill_to">{{ $t("Bill To") }}</label>
                         <select name="bill_to" v-model="bill_to" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Bill To..</option>
@@ -32,7 +32,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('bill_to') }">{{ errors.first('bill_to') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="bill_to_slack">{{ $t("Choose Customer or Supplier") }}</label>
                         <cool-select type="text" name="bill_to_slack" v-validate="'required'" :placeholder="$t('Please choose Customer or Supplier')"  autocomplete="off" v-model="bill_to_slack" :items="bill_to_list" item-text="label" itemValue='slack' @search='load_bill_to_list' ref="bill_to_label">
                         </cool-select>
@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="account">{{ $t("Account") }}</label>
                         <select name="account" v-model="account" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Account..</option>
@@ -51,7 +51,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('account') }">{{ errors.first('account') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="account">{{ $t("Transaction Type") }}</label>
                         <select name="transaction_type" v-model="transaction_type" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Transaction Type..</option>
@@ -61,13 +61,18 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('transaction_type') }">{{ errors.first('transaction_type') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="amount">{{ $t("Amount") }}</label>
                         <input type="number" name='amount' v-model="amount" v-validate="'required|decimal'" class="form-control form-control-custom" :placeholder="$t('Please enter the amount')"  autocomplete="off" step="0.01" min="0">
                         <span v-bind:class="{ 'error' : errors.has('amount') }">{{ errors.first('amount') }}</span> 
                     </div>
 
-                    <div class="form-group col-md-3">
+                    
+                </div>
+
+                <div class="form-row mb-2">
+
+                    <div class="form-group col-md-4">
                         <label for="payment_method">{{ $t("Payment Method") }}</label>
                         <select name="payment_method" v-model="payment_method" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Payment Method..</option>
@@ -77,12 +82,9 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('payment_method') }">{{ errors.first('payment_method') }}</span> 
                     </div>
-                </div>
-
-                <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="notes">{{ $t("Notes") }}</label>
-                        <textarea name="notes" v-model="notes" v-validate="'max:65535'" class="form-control form-control-custom" rows="5" :placeholder="$t('Enter notes')"></textarea>
+                        <textarea name="notes" v-model="notes" v-validate="'max:65535'" class="form-control form-control-custom" rows="1" :placeholder="$t('Enter notes')"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('notes') }">{{ errors.first('notes') }}</span>
                     </div>
                 </div>
@@ -103,7 +105,7 @@
                 <button type="button" class="btn btn-primary" @click="$emit('submit')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> Continue</button>
             </template>
         </modalcomponent>
-        
+    </div>
     </div>
 </template>
 
@@ -238,3 +240,47 @@
         }
     }
 </script>
+
+
+<style scoped>
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .03);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 0.25rem;
+}
+
+
+.mb-2,
+.my-2 {
+    margin-left: 10px;
+    margin-bottom: 0.5rem !important;
+}
+.mb-1, .my-1 {
+    margin-bottom: 0.25rem!important;
+    margin-left: 10px;
+}
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+</style>

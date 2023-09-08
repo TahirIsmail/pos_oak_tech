@@ -34,6 +34,16 @@ class User extends Model
         return $this->hasMany(Leave::class, 'line_manager');
     }
 
+    public function approvedLeave()
+    {
+        return $this->hasMany(Leave::class, 'approved_by');
+    }
+
+    public function appliedBy()
+    {
+        return $this->hasMany(Leave::class, 'applied_by');
+    }
+
 
 
     public function scopeActive($query){
@@ -121,5 +131,10 @@ class User extends Model
     }
     public function products(){
         return $this->belongsTo('App\Models\Product', 'created_by', 'id');
+    }
+
+    public function staffAttendances()
+    {
+        return $this->hasMany(StaffAttendance::class, 'staff_id', 'id');
     }
 }

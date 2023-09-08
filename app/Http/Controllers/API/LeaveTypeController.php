@@ -217,7 +217,61 @@ class LeaveTypeController extends Controller
         }
 
         if ($request->ajax()) {
-            $data = Leave::with('staff', 'lineManager', 'leaveType')->get();
+            $data = Leave::with('staff', 'lineManager', 'leaveType', 'appliedBy')->where('staff_id', $request->logged_user_id)->get();
+
+            // dd($data);
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('leave_type_id', function ($row) {
+                    $output = $row['leaveType']->type;
+                    return $output;
+                })
+
+                ->addColumn('staff_id', function ($row) {
+                    $output = $row['staff']->fullname . ' (' . $row['staff']->user_code . ')';
+                    return $output;
+                })
+
+                ->addColumn('line_manager', function ($row) {
+                    $output = $row['linemanager']->fullname . ' (' . $row['linemanager']->user_code . ')';
+                    return $output;
+                })
+
+                ->addColumn('applied_by', function ($row) {
+                    $output = $row['appliedBy']->fullname . ' (' . $row['appliedBy']->user_code . ')';
+                    return $output;
+                })
+
+                ->addColumn('action', function ($row) {
+                    $data['supplier'] = $row;
+                    return view('leaves.layout.leave_type_action', $data)->render();
+                })
+                ->rawColumns(['staff_id', 'line_manager', 'leave_type_id','applied_by', 'action'])
+                ->make(true);
+        }
+    }
+
+
+
+    public function approve_leaves_listing(Request $request)
+    {
+        $data['action_key'] = 'A_LISTING_APPROVE_LEAVES';
+
+        if (check_access(array($data['action_key']), true) == false) {
+            $response = $this->no_access_response_for_listing_table();
+            return $response;
+        }
+
+        if ($request->ajax()) {
+            if($request->logged_user_role_id == 1){
+                $data = Leave::with('staff', 'lineManager', 'leaveType')->get();
+
+            }
+            else{
+                $data = Leave::with('staff', 'lineManager', 'leaveType')->where('line_manager', $request->logged_user_id)->get();
+            }
 
             // dd($data);
 
@@ -241,7 +295,7 @@ class LeaveTypeController extends Controller
 
                 ->addColumn('action', function ($row) {
                     $data['supplier'] = $row;
-                    return view('leaves.layout.leave_type_action', $data)->render();
+                    return view('leaves.layout.approve_leave_actions', $data)->render();
                 })
                 ->rawColumns(['staff_id', 'line_manager', 'leave_type_id', 'action'])
                 ->make(true);
@@ -290,6 +344,7 @@ class LeaveTypeController extends Controller
                     "leave_type_id" => $request->leave_type,
                     "leave_from" => $request->from_date,
                     "leave_to" => $request->from_to,
+                    "apply_date" => $request->apply_date,
                     "leave_days" => $numberOfDays,
                     "employee_remarks" => $request->reason,
                     "leave_status" => 'Pending',
@@ -328,6 +383,7 @@ class LeaveTypeController extends Controller
                     "leave_type_id" => $request->leave_type,
                     "leave_from" => $request->from_date,
                     "leave_to" => $request->from_to,
+                    "apply_date" => $request->apply_date,
                     "leave_days" => $numberOfDays,
                     "employee_remarks" => $request->reason,
                     "applied_by" => $request->logged_user_id
@@ -383,6 +439,102 @@ class LeaveTypeController extends Controller
             'from_date' => $this->get_validation_rules("from_date", true),
             'from_to' => $this->get_validation_rules("from_to", true),
             'leave_type' => $this->get_validation_rules("Leave Type", true),
+
+        ]);
+        $validation_status = $validator->fails();
+        if ($validation_status) {
+            throw new Exception($validator->errors());
+        }
+    }
+
+    public function delete_staff_leave($slack){
+        try {
+            if (!check_access(['A_DELETE_LEAVES'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            $leave = Leave::select('id')->where('slack', $slack)->first();
+            if (empty($leave)) {
+                throw new Exception("Invalid leave provided", 400);
+            }
+            $leave_id = $leave->id;
+
+            DB::beginTransaction();
+
+            Leave::where('id', $leave_id)->delete();
+
+            DB::commit();
+
+            $forward_link = route('leave_listing');
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Leave deleted successfully",
+                    "data" => $slack,
+                    "link" => $forward_link,
+                ),
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+
+    public function approve_staff_leave_status(Request $request, $slack){
+        try {
+
+            if (!check_access(['A_APPROVE_STAFF_LEAVES'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            if ($slack) {
+
+                $this->validate_approve_staff_leave_request($request);
+
+                $approve_leave = [
+                    "leave_status" => $request->leave_status,                   
+                    "admin_remarks" => $request->admin_remarks,
+                    "approved_by" => $request->logged_user_id,
+                ];
+               
+                $staff_leave = Leave::where('slack', $slack)
+                ->update($approve_leave);
+
+                if($staff_leave){
+                    return response()->json($this->generate_response(
+                        array(
+                            "message" => "Staff Leave approved successfully",
+                            "data" => $approve_leave,
+                        ),
+                        'SUCCESS'
+                    ));
+                }
+
+
+
+            }
+
+
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+    public function validate_approve_staff_leave_request($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'admin_remarks' => $this->get_validation_rules("admin_remarks", true),
 
         ]);
         $validation_status = $validator->fails();

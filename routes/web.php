@@ -50,6 +50,28 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_staff_leave/{slack}', "LeaveTypeController@edit_staff_leave")->name('edit_staff_leave');
     Route::get('/view_staff_leave/{slack}', "LeaveTypeController@view_staff_leave")->name('view_staff_leave');
 
+    Route::get('/approve_leaves', "LeaveTypeController@listing_staff_leaves")->name('approve_leaves');
+    Route::get('/view_staff_approve_leaves/{slack}', "LeaveTypeController@view_staff_approve_leaves")->name('view_staff_approve_leaves');
+
+    // staff attendance routes 
+
+    Route::get('/staff_attendance', "AttendanceController@index")->name('staff_attendance');
+    Route::get('/attendance_listing', "AttendanceController@attendance_listing")->name('attendance_listing');
+    Route::get('/add_attendance', "AttendanceController@add_attendance")->name('add_attendance');
+    Route::get('/edit_attendance/{slack}', "AttendanceController@edit_attendance")->name('edit_attendance');
+    Route::get('/view_attendance/{slack}', "AttendanceController@view_attendance")->name('view_attendance');
+
+
+    //staff payroll generation and assigning
+
+    Route::get('/staff_payroll', "StaffPayrollController@staff_payroll")->name('staff_payroll');
+    Route::post('/search/staff_payroll', "StaffPayrollController@search_staff_list")->name('payroll.search_staff');
+
+    Route::get('/staff/generatePayroll/{slack}/{month}/{year}', 'StaffPayrollController@generatePayroll')->name('staff.generatePayroll');
+
+
+
+
     //role
     Route::get('/roles', "Role@index")->name('roles');
     Route::get('/role/{slack}', "Role@detail")->name('role');
