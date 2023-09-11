@@ -995,12 +995,11 @@
                 }
             }
 
-            this.product_info_form();
+            // this.product_info_form();
 
             event_bus.$on('new_customer_data', this.set_new_customer_data);
         },
         created(){
-            //if order is already closed, load new order page
             if(this.order_data != null && this.order_data.order.current_status.value_constant == 'CLOSED'){
                 console.log('Order is already closed!');
                 window.location.href = this.new_order_route;
@@ -1008,6 +1007,7 @@
         },
         methods: {
             product_info_form(){
+                alert(this.category);
                 this.product_processing = true;
                 var formData = new FormData();
 
@@ -1015,6 +1015,7 @@
                 formData.append("barcode", this.barcode);
                 formData.append("product_title", this.product_title);
                 formData.append("product_category", this.category);
+                
 
                 axios.post('/api/get_product', formData).then((response) => {
                     this.product_processing = false;
@@ -1023,6 +1024,8 @@
                         this.resolve_variants(this.product_list[0]);
                         this.barcode = '';
                     }
+
+                   
                 })
                 .catch((error) => {
                     console.log(error);
