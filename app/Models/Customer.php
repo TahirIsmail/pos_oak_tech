@@ -11,7 +11,7 @@ class Customer extends Model
 
     protected $table = 'customers';
     // protected $hidden = ['id'];
-    protected $fillable = ['slack','customer_type','password', 'init_password', 'name', 'email', 'phone', 'address', 'dob', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = ['slack','customer_type','password', 'init_password', 'name', 'email', 'phone', 'address', 'dob', 'status','user_id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
     public function scopeActive($query)
     {
@@ -74,5 +74,8 @@ class Customer extends Model
     public function complaints()
     {
         return $this->hasMany('App\Models\Complaints', 'id', 'complaint_by');
+    }
+    public function user(){
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
 }

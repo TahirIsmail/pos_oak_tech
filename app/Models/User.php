@@ -9,7 +9,7 @@ class User extends Model
 {
     protected $table = 'users';
     protected $hidden = [ 'password', 'role_id'];
-    protected $fillable = ['id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'line_manager' , 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'line_manager' , 'created_by', 'updated_by'];
 
 
 
@@ -34,6 +34,16 @@ class User extends Model
         return $this->hasMany(Leave::class, 'line_manager');
     }
 
+    public function approvedLeave()
+    {
+        return $this->hasMany(Leave::class, 'approved_by');
+    }
+
+    public function appliedBy()
+    {
+        return $this->hasMany(Leave::class, 'applied_by');
+    }
+
 
 
     public function scopeActive($query){
@@ -43,6 +53,7 @@ class User extends Model
     public function scopeRoleJoin($query){
         return $query->leftJoin('roles', function ($join) {
             $join->on('roles.id', '=', 'users.role_id');
+            
         });
     }
 
@@ -81,6 +92,9 @@ class User extends Model
     public function scopeHideSuperAdminRole($query){
         return $query->where('users.role_id', '!=', 1);
     }
+    public function scopeHideCustomerRole($query){
+        return $query->where('users.role_id', '!=', 2);
+    }
 
     public function scopeHideCurrentLoggedUser($query, $logged_user_id){
         return $query->where('users.id', '!=', $logged_user_id);
@@ -118,5 +132,9 @@ class User extends Model
     public function products(){
         return $this->belongsTo('App\Models\Product', 'created_by', 'id');
     }
-    
+
+    public function staffAttendances()
+    {
+        return $this->hasMany(StaffAttendance::class, 'staff_id', 'id');
+    }
 }

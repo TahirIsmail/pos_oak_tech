@@ -2554,6 +2554,7 @@ class Import extends Controller
 
             $data['user_codes'] = UserModel::select('user_code', 'fullname')
             ->hideSuperAdminRole()
+            ->HideCustomerRole()
             ->active()->get()->toArray();
 
             $data['statuses'] = MasterStatusModel::select('key', DB::raw('GROUP_CONCAT(value_constant) AS status_values'))

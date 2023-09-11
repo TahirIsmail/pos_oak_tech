@@ -32,6 +32,7 @@ class UserExport implements FromCollection, WithMapping, WithHeadings
         $query = User::query()
         ->select('users.*', 'roles.id')
         ->roleJoin()
+        ->HideCustomerRole()
         ->hideSuperAdminRole();
 
         if($from_created_date != ''){

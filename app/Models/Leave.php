@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\StoreScope;
 
 class Leave extends Model
 {
@@ -11,6 +12,11 @@ class Leave extends Model
     protected $table = 'leaves';
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new StoreScope);
+    }
 
     public function staff()
     {
@@ -27,6 +33,15 @@ class Leave extends Model
         return $this->belongsTo(LeaveType::class, 'leave_type_id');
     }
 
+    public function approvedLeave()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function appliedBy()
+    {
+        return $this->belongsTo(User::class, 'applied_by');
+    }
 
 
 }

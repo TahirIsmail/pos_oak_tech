@@ -63,7 +63,7 @@ Vue.component('signincomponent', require('./components/entry/sign_in_component.v
 Vue.component('forgotpasswordcomponent', require('./components/entry/forgot_password_component.vue').default);
 Vue.component('resetpasswordcomponent', require('./components/entry/reset_password_component.vue').default);
 
-Vue.component('customersignincomponent', require('./components/customer/auth/customer_sign_in_component.vue').default);
+//Vue.component('customersignincomponent', require('./components/customer/auth/customer_sign_in_component.vue').default);
 
 
 
@@ -205,6 +205,20 @@ Vue.component('printerdetailcomponent', require('./components/printer/printer_de
 Vue.component('addkitchendisplaycomponent', require('./components/kitchen_display/add_kitchen_display_component.vue').default);
 Vue.component('kitchendisplaydetailcomponent', require('./components/kitchen_display/kitchen_display_detail_component.vue').default);
 Vue.component('kitchendisplaycomponent', require('./components/kitchen/kitchen_display_component.vue').default);
+
+
+Vue.component('addleavetype', require('./components/leave/add_leave_type_component.vue').default);
+Vue.component('viewleavetype', require('./components/leave/view_leave_type_component.vue').default);
+Vue.component('addstaffleave', require('./components/leave/add_staff_leave_component.vue').default);
+Vue.component('viewstaffleave', require('./components/leave/view_staff_leave_component.vue').default);
+
+Vue.component('viewstaffapproveleave', require('./components/leave/view_staff_approve_leave_component.vue').default);
+
+Vue.component('staffattendancecomponent', require('./components/staff_attendance/staff_attendance_component.vue').default);
+
+Vue.component('generatestaffpayroll', require('./components/staff_payroll/generate_staff_payroll.vue').default);
+
+
 
 Vue.component('add-customer-complaint-component', require('./components/complaint/add_customer_complaint_component.vue').default);
 const app = new Vue({

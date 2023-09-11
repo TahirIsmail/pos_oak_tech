@@ -35,12 +35,19 @@ class Product extends Model
             $join->where('master_status.key', '=', 'PRODUCT_STATUS');
         });
     }
-
+    /***
+     * Before Sub Categories
+     */
     // public function scopeCategoryJoin($query){
     //     return $query->leftJoin('category', function ($join) {
     //         $join->on('category.id', '=', 'products.category_id');
     //     });
     // }
+    public function scopeCategoryJoin($query){
+        return $query->leftJoin('sub_categories', function ($join) {
+            $join->on('sub_categories.id', '=', 'products.sub_category_id');
+        });
+    }
 
     public function scopeSupplierJoin($query){
         return $query->leftJoin('suppliers', function ($join) {
@@ -60,9 +67,9 @@ class Product extends Model
         });
     }
 
-    // public function scopeCategoryActive($query){
-    //     return $query->where('category.status', 1);
-    // }
+    public function scopeCategoryActive($query){
+        return $query->where('category.status', 1);
+    }
 
     public function scopeSupplierActive($query){
         return $query->where('suppliers.status', 1);

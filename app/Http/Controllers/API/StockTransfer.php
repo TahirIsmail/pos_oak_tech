@@ -677,7 +677,7 @@ class StockTransfer extends Controller
                 ->supplierJoin()
                 ->taxcodeJoin()
                 ->discountcodeJoin()
-                ->categoryActive()
+                //->categoryActive()
                 ->supplierActive()
                 ->taxcodeActive()
                 ->quantityCheck($quantity)

@@ -55,6 +55,7 @@ class Table extends Controller
             $user_list = UserModel::select('*')
             ->where('role_id', '=', $store_waiter_role_id)
             ->hideSuperAdminRole()
+            ->HideCustomerRole()
             ->active()
             ->get();
 

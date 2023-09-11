@@ -135,8 +135,8 @@
             <td>{{ subcategory.sub_category_name }}</td>
             <td>Active</td> <!-- You can replace this with actual status logic -->
             <td>
-              <button class="btn btn-success" @click="editSubcategory(subcategory)">Edit</button>
-              <button class="btn btn-danger" @click="deleteSubcategory(subcategory.id)">Delete</button>
+              <button class="btn" @click="editSubcategory(subcategory)"><i style="color:#17a05c" class="fas fa-edit"></i></i></button>
+              <button class="btn" @click="deleteSubcategory(subcategory.id)"><i style="color:#dc3545" class="fas fa-trash"></i></button>
             </td>
           </tr>
 
@@ -267,36 +267,36 @@ export default {
     },
     updateSubcategory() {
       // Assuming you have the edited subcategory name and subcategory ID     
-            var formData = new FormData();
-            formData.append("access_token", window.settings.access_token);
-            formData.append(
-              "id",
-              this.editingSubcategory.id
-            );
-            formData.append("sub_category_name", this.editedSubcategoryName);
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append(
+        "id",
+        this.editingSubcategory.id
+      );
+      formData.append("sub_category_name", this.editedSubcategoryName);
 
       axios
         .post('/api/update_subcategory', formData)
         .then(response => {
           if (response.data.status_code == 200) {
-                  this.show_response_message(response.data.msg, "Success");
-                  this.editModalVisible = false;
-                  setTimeout(function () {
-                    location.reload();
-                  }, 1000);
-                } else {
-                  this.editModalVisible = false;
-                  try {
-                    var error_json = JSON.parse(response.data.msg);
-                    this.loop_api_errors(error_json);
-                  } catch (err) {
-                    this.server_errors = response.data.msg;
-                  }
-                  this.error_class = "error";
-                }
+            this.show_response_message(response.data.msg, "Success");
+            this.editModalVisible = false;
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            this.editModalVisible = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              this.loop_api_errors(error_json);
+            } catch (err) {
+              this.server_errors = response.data.msg;
+            }
+            this.error_class = "error";
+          }
           // Handle success
           // Refresh data or update UI as needed
-         
+
         })
         .catch(error => {
           console.error('Error updating subcategory:', error);
@@ -386,7 +386,7 @@ export default {
         axios
           .post('/api/delete_subcategory', formData)
           .then((response) => {
-            
+
             if (response.data.status_code == 200) {
               this.show_response_message(response.data.msg, "Success");
               this.show_modal = false;
@@ -438,15 +438,16 @@ export default {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   width: 50%;
   margin-left: auto;
-    margin-right: auto;
-    height: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top:10%;
+  margin-right: auto;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
 }
+
 .modal-content {
-  border:none!important;
+  border: none !important;
 }
 
 /* Centering and spacing for buttons */

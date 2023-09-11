@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Complaints;
+use App\Models\Expenses;
 class ComplaintsSeeder extends Seeder
 {
     /**
@@ -15,5 +16,6 @@ class ComplaintsSeeder extends Seeder
     {
         //
         Complaints::factory()->count(10)->create();
+        Expenses::factory()->count(10)->create();
     }
 }

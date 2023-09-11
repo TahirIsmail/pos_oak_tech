@@ -739,6 +739,7 @@ class Invoice extends Controller
                 ->active()
                 ->hideCurrentLoggedUser($request->logged_user_id)
                 ->hideSuperAdminRole()
+                ->HideCustomerRole()
                 ->get();
             }
            

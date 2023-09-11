@@ -105,6 +105,27 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/submit_supplier_performance', 'API\Supplier@submit_supplier_performance');
     Route::post('/update_supplier_performance/{slack}', 'API\Supplier@submit_supplier_performance');
 
+    // leave type and leaves 
+
+    Route::post('/add_leave_type', 'API\LeaveTypeController@store');
+    Route::post('/update_leave_type/{slack}', 'API\LeaveTypeController@store');
+    Route::post('/delete_leave_type/{slack}', 'API\LeaveTypeController@delete');
+
+
+    Route::post('/leaves_listing', 'API\LeaveTypeController@leaves_listing')->name('leaves_listing');
+    Route::post('/approve_leaves_listing', 'API\LeaveTypeController@approve_leaves_listing')->name('approve_leaves_listing');
+
+    Route::post('/add_staff_leave', 'API\LeaveTypeController@add_staff_leave')->name('add_staff_leave');
+    Route::post('/update_staff_leave/{slack}', 'API\LeaveTypeController@add_staff_leave')->name('update_staff_leave');
+    Route::post('/delete_staff_leave/{slack}', 'API\LeaveTypeController@delete_staff_leave')->name('delete_staff_leave');
+    Route::post('/approve_staff_leave_status/{slack}', 'API\LeaveTypeController@approve_staff_leave_status')->name('approve_staff_leave_status');
+
+
+    // staff Attendance routes 
+    Route::post('/fetch_staff_list', 'API\AttendanceController@index');
+    Route::post('/store_staff_attendance', 'API\AttendanceController@store');
+   
+
     //product
     Route::post('/products', 'API\Product@index');
     Route::post('/add_product', 'API\Product@store')->name('add_product');
