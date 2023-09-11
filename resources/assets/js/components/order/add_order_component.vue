@@ -1,16 +1,16 @@
 <template>
     <div class="row m-0">
-        
+
         <div class="col-md-8 p-0 bg-white border-right">
             
-            <div class="p-0 border-bottom">
+            <div class="card-header  p-0 border-bottom">
                 <div class="d-flex flex-nowrap justify-content-between p-3 horizontal-scroll hide-horizontal-scroll">
                     <div class="mr-auto text-nowrap">
                         <span class="text-title" v-if="order_slack == ''">{{ $t("New Order") }}</span>
                         <span class="text-title" v-else>{{ $t("Order") }} # {{ order_number }}</span>
                     </div>
 
-                    <button class="btn btn-light ml-3" v-on:click="get_keyboard_shortcuts()" v-if="keyboard_shortcuts.length > 0"><i class="fas fa-keyboard"></i></button>
+                    <button class="btn_key btn btn-light ml-3" v-on:click="get_keyboard_shortcuts()" v-if="keyboard_shortcuts.length > 0"><i class="fas fa-keyboard"></i></button>
                     
                     <div class="col-md-2 pr-0" v-if="store_restaurant_mode == true" title="Bill Type">
                         <select name="billing_type" v-model="billing_type" class="form-control form-control-custom custom-select" :disabled="(order_restaurant_mode == 1 && order_slack != '' && this.order_data.order.current_status.value_constant != 'CUSTOMER_ORDER')">
@@ -95,13 +95,13 @@
             
             <div class="cart_form border-left">
                 <div class="p-0 border-bottom">
-                    <div class="d-flex flex-wrap p-3 align-items-center">
+                    <div class="card-header d-flex flex-wrap p-3 align-items-center">
                         <span class="mr-auto text-title text-black-50">{{ $t("Cart") }}</span>
                         <button class="btn btn-outline-primary" v-on:click="show_customer_modal = true"><i class="fas fa-user-edit"></i> {{ $t("Customer") }}: {{ customer_label | truncate(26) }}</button>
                     </div>
                 </div>
 
-                <div class="p-0 border-bottom">
+                <div class="bg p-0 border-bottom">
                     <div class="d-flex flex-wrap justify-content-between p-3">
                         <span>{{ item_count }} {{ $t("Items") }} ({{ quantity_count }} Qty)</span>
                         <span>{{ $t("Order Level Tax") }} : {{ store_level_total_tax_amount }}</span>
@@ -166,39 +166,39 @@
                     
                 </div>
 
-                <div class="d-flex flex-column p-3 ml-auto fixed-bottom col-md-4 border-top cart-summary">
+                <div class="Total d-flex flex-column p-3 ml-auto fixed-bottom col-md-4 border-top cart-summary d-flex flex-column p-3 ml-auto fixed-bottom col-md-4 border-top cart-summary">
                     <div class="d-flex justify-content-center show-more-billing-data bg-white cursor" v-on:click="toggle_calculation">
                         <span class="show-more-billing-data-text">
                             <span v-if="toggle_calculation_data == 0"><i class="fas fa-angle-double-up show-more-billing-data-icon"></i> Show more</span>
                             <span v-else><i class="fas fa-angle-double-down show-more-billing-data-icon"></i> Show less</span>
                         </span>
                     </div>
-                    <div v-show="toggle_calculation_data == 1">
-                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                    <div class="bg" v-show="toggle_calculation_data == 1">
+                        <div class=" bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
                             <span class="">{{ $t("Sub total") }}</span>
                             <span class="">{{ sub_total }}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                        <div class="bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
                             <span class="">{{ $t("Discount") }}</span>
                             <span class="">{{ discount_total }}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                        <div class="bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
                             <span class="d-inline-flex">
                                 {{ $t("Addt'l Discount") }}
                                 <input type="number" v-model="additional_discount_percentage" v-on:input="update_prices()" class="form-control form-control-sm ml-3 mr-1 additional_discount" :placeholder="$t('Discount')" min="0" max="100">%
                             </span>
                             <span class="">{{ additional_discount_amount }}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                        <div class="bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
                             <span class="">{{ $t("Total After Discount") }}</span>
                             <span class="">{{ total_after_discount }}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2 cart-summary-label">
+                        <div class="bg d-flex justify-content-between mb-2 cart-summary-label">
                             <span class="">{{ $t("Total Tax") }}</span>
                             <span class="">{{ tax_total }}</span>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mb-2 cart-total">
+                    <div class="bg d-flex justify-content-between mb-2 cart-total">
                         <span class="">{{ $t("Total") }}</span>
                         <span class="">{{ total }}</span>
                     </div>
@@ -1587,3 +1587,94 @@
         }
     }
 </script>
+<style scoped>
+
+
+
+.btn-hold-order {
+        background-color: #f2f2f2;
+        color: #333;
+        border: 1px solid #ccc;
+    }
+
+    /* Style for the Close Order button */
+    .btn-close-order {
+        background-color: #007bff;
+        color: #fff;
+        border: 1px solid #007bff;
+    }
+.cart-summary {
+
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+    z-index: 1;
+    margin-bottom: 3.8rem;
+     background:	#F8F8F8 !important; 
+     border-top-left-radius: 15px; 
+    border-top-right-radius: 15px;
+}
+.cart-total{
+    padding: 10px; 
+        color: #333333; 
+        font-weight: bold;
+}
+
+.cart-total span {
+        margin: 0 5px; 
+    }
+.bg{
+ 
+border-bottom: 1px solid rgba(0, 0, 0, .06);
+}
+
+
+    .cart-summary-label {
+        padding: 10px; 
+        color: #333; 
+        font-weight: bold; 
+    }
+    
+    .cart-summary-label span {
+        margin: 0 5px; 
+    }
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .03);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+
+.show-more-billing-data {
+    width: 8rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-top: -2.8rem;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background: #e3e7eb !important;
+    padding: 0.5rem 1rem; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    text-align: center; 
+    color: #333; 
+    text-decoration: none; 
+    cursor: pointer; 
+}
+
+.show-more-billing-data:hover {
+    background: #cfd4d9 !important; 
+    border-color: #cfd4d9; 
+}
+
+.btn_key{
+    background-color: rgba(0, 0, 0, 0.0);
+
+}
+
+.btn_key:hover {
+    background: #d4d9de !important;
+    border-color: #d4d9de
+}
+</style>

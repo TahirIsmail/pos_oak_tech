@@ -106,7 +106,7 @@ class Order extends Controller
         $data['enable_customer_detail_popup'] = ($store_data->enable_customer_popup == 0)?false:true;
         $data['enable_vairants_popup'] = ($store_data->enable_variants_popup == 0)?false:true;
 
-        $categories = CategoryModel::select('slack', 'category_code', 'label')->showPosScreen()->sortLabelAsc()->get();
+        $categories = CategoryModel::select('slack', 'category_code', 'label')->sortLabelAsc()->get();
         $data['categories'] = (!empty($categories))?$categories:[];
 
         $payment_methods = PaymentMethodModel::select('slack', 'label')
