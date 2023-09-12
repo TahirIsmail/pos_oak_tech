@@ -63,21 +63,31 @@
                     <span v-bind:class="{ error: errors.has('notes') }">{{
                         errors.first("notes")
                     }}</span>
-                   
+
                 </div>
             </div>
             <div class="form-row mb-2">
                 <div class="form-group col-md-3">
                     <label for="expense_date">{{ $t("Expense Date") }}</label>
-                    <date-picker  v-model="expense_date"
-                        name="expense_date"
-                        v-validate="'required|date_format:yyyy-MM-dd'"
+                    <date-picker v-model="expense_date" name="expense_date" v-validate="'required|date_format:yyyy-MM-dd'"
                         input-class="form-control form-control-custom bg-white"
                         :placeholder="$t('Please enter Expense Date')" autocomplete="off"></date-picker>
                     <span v-bind:class="{ 'error': errors.has('Expense Date') }">{{ errors.first('Expense Date')
                     }}</span>
                 </div>
-                
+                <div class="form-group col-md-3">
+                    <label for="receipt_upload">{{
+                        $t("Expense Receipt Upload") + " (pdf, msword, vnd)"
+                    }}</label>
+                    <input type="file" class="form-control-file form-control form-control-custom file-input"
+                        name="receipt_upload" ref="receipt_upload" accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        v-validate="'ext:jpg,jpeg,png,webp|size:1500'" multiple="multiple" />
+                    <small class="form-text text-muted mb-1">Allowed file size per file is 1.5 MB</small>
+                    <small class="form-text text-muted">Hold down CTRL or Command for choosing multiple files</small>
+                    <span v-bind:class="{ error: errors.has('receipt_upload') }">{{
+                        errors.first("receipt_upload")
+                    }}</span>
+                </div>
             </div>
 
 
@@ -89,7 +99,7 @@
             <template v-slot:modal-header>
                 {{ $t("Confirm") }}
             </template>
-            
+
             <template v-slot:modal-footer>
                 <button type="button" class="btn btn-light" @click="$emit('close')">
                     Cancel
@@ -124,8 +134,8 @@ export default {
             expense_name: "",
             expense_category: "",
             expense_amount: "",
-            expense_date:"",
-            notes:"",
+            expense_date: "",
+            notes: "",
         }
     },
     props: {
