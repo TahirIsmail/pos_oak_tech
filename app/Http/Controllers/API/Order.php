@@ -144,15 +144,17 @@ class Order extends Controller
      */
     public function store(Request $request)
     {
+       
         try {
             $validation_required = ($request->order_status == "CLOSE")?true:false;
             $validator = Validator::make($request->all(), [
                 'order_status' => $this->get_validation_rules("order_status", true),
-                'payment_method' => $this->get_validation_rules("slack", $validation_required),
+                // 'payment_method' => $this->get_validation_rules("slack", $validation_required),
                 'business_account' => $this->get_validation_rules("slack", $validation_required),
                 'contact_number' => $this->get_validation_rules("phone", false),
                 'address' => $this->get_validation_rules("text", false),
             ]);
+
             $validation_status = $validator->fails();
             if($validation_status){
                 throw new Exception($validator->errors());
@@ -161,23 +163,24 @@ class Order extends Controller
             if(!check_access(['A_ADD_ORDER'], true)){
                 throw new Exception("Invalid request", 400);
             }
-
             $cart = json_decode($request->cart);
+            
 
             DB::beginTransaction();
 
             if(!empty($cart)){
+                
 
                 $business_register_data = BusinessRegisterModel::select('id', 'slack')
                 ->where('user_id', '=', trim($request->logged_user_id))
                 ->whereNull('closing_date')
                 ->first();
-
                 if (empty($business_register_data) && $request->order_status != "CUSTOMER_ORDER") {
                     throw new Exception("You dont have any register open", 400);
                 }
-
+                
                 $order_data = $this->form_order_array($request);
+                // dd($request->all());
                 
                 if(!empty($order_data['order_data']) && !empty($order_data['order_products_data'])){
                     if(!empty($order_data['order_data'])){
@@ -192,7 +195,11 @@ class Order extends Controller
                         $order['created_at'] = now();
                         $order['created_by'] = $request->logged_user_id;
 
+                        
+
                         $order_id = OrderModel::create($order)->id;
+                      
+
 
                         $code_start_config = Config::get('constants.unique_code_start.order');
                         $code_start = (isset($code_start_config))?$code_start_config:100;
@@ -362,12 +369,13 @@ class Order extends Controller
      */
     public function update(Request $request, $slack)
     {
+        dd($request->all());
         try {
 
             $validation_required = ($request->order_status == "CLOSE")?true:false;
             $validator = Validator::make($request->all(), [
                 'order_status' => $this->get_validation_rules("order_status", true),
-                'payment_method' => $this->get_validation_rules("slack", $validation_required),
+                // 'payment_method' => $this->get_validation_rules("slack", $validation_required),
                 'business_account' => $this->get_validation_rules("slack", $validation_required),
                 'contact_number' => $this->get_validation_rules("phone", false),
                 'address' => $this->get_validation_rules("text", false),
@@ -600,13 +608,13 @@ class Order extends Controller
             $cart_key = 1;
             foreach($cart as $cart_item_key => $cart_item){
 
-                $product_data = ProductModel::select('products.*','tax_codes.id as tax_code_id', 'discount_codes.id as discount_code_id', 'tax_codes.tax_code', 'discount_codes.discount_code','tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
+                $product_data = ProductModel::with('subcategory')->select('products.*','tax_codes.id as tax_code_id', 'discount_codes.id as discount_code_id', 'tax_codes.tax_code', 'discount_codes.discount_code','tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
                 ->where('products.slack', '=', $cart_item->product_slack)
                 ->categoryJoin()
                 ->supplierJoin()
                 ->taxcodeJoin()
                 ->discountcodeJoin()
-                ->categoryActive()
+                // ->categoryActive()
                 ->supplierActive()
                 //->taxcodeActive()
                 ->quantityCheck($cart_item->quantity)
@@ -1160,7 +1168,7 @@ class Order extends Controller
     }
 
     public function record_order_payment_transaction($order_slack){
-        
+       
         $order_detail = OrderModel::select('*')->where('slack', $order_slack)->first();
 
         $transaction_type_data = MasterTransactionTypeModel::select('id')

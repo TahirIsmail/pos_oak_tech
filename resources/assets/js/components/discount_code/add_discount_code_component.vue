@@ -1,10 +1,10 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            
+            <div class="card">
             <form @submit.prevent="submit_form" class="mb-3">
 
-                <div class="d-flex flex-wrap mb-4">
+                <div class="card-header  d-flex flex-wrap mb-4">
                     <div class="mr-auto">
                         <span class="text-title" v-if="discount_code_slack == ''">{{ $t("Add Discount Code") }}</span>
                         <span class="text-title" v-else>{{ $t("Edit Discount Code") }}</span>
@@ -17,22 +17,28 @@
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="discount_name">{{ $t("Discount Name") }}</label>
                         <input type="text" name="discount_name" v-model="discount_name" v-validate="'required|max:250'" class="form-control form-control-custom" :placeholder="$t('Please enter discount name')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('discount_name') }">{{ errors.first('discount_name') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="discount_code">{{ $t("Discount Code") }}</label>
                         <input type="text" name="discount_code" v-model="discount_code" v-validate="'required|alpha_dash|max:30'" class="form-control form-control-custom" :placeholder="$t('Please enter discount code')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('discount_code') }">{{ errors.first('discount_code') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="discount_percentage">{{ $t("Discount Percentage") }}</label>
                         <input type="number" name='discount_percentage' v-model="discount_percentage" v-validate="'required|decimal'" class="form-control form-control-custom" :placeholder="$t('Please enter discount percentage')"  autocomplete="off" step="0.01" min="0">
                         <span v-bind:class="{ 'error' : errors.has('discount_percentage') }">{{ errors.first('discount_percentage') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    
+                </div>
+
+                <div class="form-row mb-2">
+
+
+                    <div class="form-group col-md-4">
                         <label for="status">{{ $t("Status") }}</label>
                         <select name="status" v-model="status" v-validate="'required|numeric'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Status..</option>
@@ -42,12 +48,9 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('status') }">{{ errors.first('status') }}</span> 
                     </div>
-                </div>
-
-                <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="description">{{ $t("Description") }}</label>
-                        <textarea name="description" v-model="description" v-validate="'max:65535'" class="form-control form-control-custom" rows="5" :placeholder="$t('Enter description')"></textarea>
+                        <textarea name="description" v-model="description" v-validate="'max:65535'" class="form-control form-control-custom" rows="1" :placeholder="$t('Enter description')"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('description') }">{{ errors.first('description') }}</span>
                     </div>
                 </div>
@@ -67,7 +70,7 @@
                 <button type="button" class="btn btn-primary" @click="$emit('submit')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> Continue</button>
             </template>
         </modalcomponent>
-        
+    </div> 
     </div>
 </template>
 
@@ -153,3 +156,45 @@
         }
     }
 </script>
+<style scoped>
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .03);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 0.25rem;
+}
+
+
+.mb-2,
+.my-2 {
+    margin-left: 10px;
+    margin-bottom: 0.5rem !important;
+}
+.mb-1, .my-1 {
+    margin-bottom: 0.25rem!important;
+    margin-left: 10px;
+}
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+</style>

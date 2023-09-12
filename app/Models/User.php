@@ -137,4 +137,10 @@ class User extends Model
     {
         return $this->hasMany(StaffAttendance::class, 'staff_id', 'id');
     }
+
+    public function staffPayrolls()
+    {
+        return $this->hasMany(StaffPayroll::class, 'staff_id', 'id');
+    }
+    
 }

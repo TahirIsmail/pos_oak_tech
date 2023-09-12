@@ -1,142 +1,98 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <form @submit.prevent="submit_form" class="mb-3">
-        <div class="d-flex flex-wrap mb-4">
-          <div class="mr-auto">
-            <span class="text-title">{{ $t("Staff Attendance") }}</span>
+      <div class="card">
+        <form @submit.prevent="submit_form" class=" mb-3">
+          <div class="card-header d-flex flex-wrap mb-4">
+            <div class="mr-auto">
+              <span class="text-title">{{ $t("Staff Attendance") }}</span>
+            </div>
+            <div class="">
+              <button type="submit" class="btn btn-primary" v-bind:disabled="processing == true">
+                <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>{{ $t("Search Staff List") }}
+              </button>
+            </div>
           </div>
-          <div class="">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              v-bind:disabled="processing == true"
-            >
-              <i
-                class="fa fa-circle-notch fa-spin"
-                v-if="processing == true"
-              ></i
-              >{{ $t("Search Staff List") }}
-            </button>
-          </div>
-        </div>
 
-        <p v-html="server_errors" v-bind:class="[error_class]"></p>
+          <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
-        <div class="form-row mb-2">
-          <div class="form-group col-md-6">
-            <label for="role">{{ $t("Choose Staff") }}</label>
-            <select
-              v-model="staff_role"
-              class="form-control form-control-custom"
-            >
-              <option value="">Choose Staff..</option>
-              <option
-                v-for="(staff_role, index) in roles_data"
-                :value="staff_role.id"
-                :key="index"
-              >
-                {{ staff_role.label }}
-              </option>
-            </select>
+          <div class="form-row mb-2">
+            <div class="form-group col-md-5">
+              <label for="role">{{ $t("Choose Staff") }}</label>
+              <select v-model="staff_role" class="form-control form-control-custom">
+                <option value="">Choose Staff..</option>
+                <option v-for="(staff_role, index) in roles_data" :value="staff_role.id" :key="index">
+                  {{ staff_role.label }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-5">
+              <label for="barcode">{{ $t("Date") }}</label>
+              <input type="date" v-model="attendance_date" class="form-control form-control-custom" />
+            </div>
           </div>
-          <div class="form-group col-md-6">
-            <label for="barcode">{{ $t("Date") }}</label>
-            <input
-              type="date"
-              v-model="attendance_date"
-              class="form-control form-control-custom"
-            />
+        </form>
+      </div>
+
+      <div class="col-md-12" v-if="show_attendance_table" style="overflow: scroll">
+        <form ref="attendanceForm" @submit.prevent="submitAttendance" class="mb-3">
+          <div class="w-100 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Save Attendance</button>
           </div>
-        </div>
-      </form>
+        </form>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Staff Name</th>
+              <th>Staff Role</th>
+              <th>Attendance</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(staff, index) in staffList" :key="staff.id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ staff.fullname }} ({{ staff.user_code }})</td>
+              <td>{{ staff.role.label }}</td>
+              <td class="d-flex">
+                <input type="hidden" :v-model="staffAttendanceData[index].staff_id" :value="staff.id" />
+                <div v-for="(type, typeIndex) in staffAttendanceTypes" :key="type.id"
+                  class="radio radio-info radio-inline mx-4">
+                  <input :id="'staff_attendance_type_' + staff.id + '_' + type.id"
+                    :name="'staff_attendance_type_' + staff.id" :value="type.id"
+                    v-model="staffAttendanceData[index].attendance_type_id" type="radio" />
+                  <label :for="'staff_attendance_type_' + staff.id + '_' + type.id">{{ type.type }}</label>
+                </div>
+              </td>
+              <td>
+                <input type="text" v-model="staffAttendanceData[index].note" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="staff_list_append" v-html="staffListHtml"></div>
+
+      <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
+        <template v-slot:modal-header>
+          {{ $t("Confirm") }}
+        </template>
+        <template v-slot:modal-body>
+          {{ $t("Are you sure you want to proceed?") }}
+        </template>
+        <template v-slot:modal-footer>
+          <button type="button" class="btn btn-light" @click="$emit('close')">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" @click="$emit('submit')" v-bind:disabled="processing == true">
+            <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
     </div>
-
-    <div
-      class="col-md-12"
-      v-if="show_attendance_table"
-      style="overflow: scroll"
-    >
-      <form
-        ref="attendanceForm"
-        @submit.prevent="submitAttendance"
-        class="mb-3"
-      >
-        <div class="w-100 d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary">Save Attendance</button>
-        </div>
-      </form>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Staff Name</th>
-            <th>Staff Role</th>
-            <th>Attendance</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(staff, index) in staffList" :key="staff.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ staff.fullname }} ({{ staff.user_code }})</td>
-            <td>{{ staff.role.label }}</td>
-            <td class="d-flex">
-              <input
-                type="hidden"
-                :v-model="staffAttendanceData[index].staff_id"
-                :value="staff.id"
-              />
-              <div
-                v-for="(type, typeIndex) in staffAttendanceTypes"
-                :key="type.id"
-                class="radio radio-info radio-inline mx-4"
-              >
-                <input
-                  :id="'staff_attendance_type_' + staff.id + '_' + type.id"
-                  :name="'staff_attendance_type_' + staff.id"
-                  :value="type.id"
-                  v-model="staffAttendanceData[index].attendance_type_id"
-                  type="radio"
-                />
-                <label
-                  :for="'staff_attendance_type_' + staff.id + '_' + type.id"
-                  >{{ type.type }}</label
-                >
-              </div>
-            </td>
-            <td>
-              <input type="text" v-model="staffAttendanceData[index].note" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div id="staff_list_append" v-html="staffListHtml"></div>
-
-    <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
-      <template v-slot:modal-header>
-        {{ $t("Confirm") }}
-      </template>
-      <template v-slot:modal-body>
-        {{ $t("Are you sure you want to proceed?") }}
-      </template>
-      <template v-slot:modal-footer>
-        <button type="button" class="btn btn-light" @click="$emit('close')">
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          @click="$emit('submit')"
-          v-bind:disabled="processing == true"
-        >
-          <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
-          Continue
-        </button>
-      </template>
-    </modalcomponent>
   </div>
 </template>
 
@@ -172,7 +128,7 @@ export default {
 
     this.roles = this.roles_data;
   },
-  created() {},
+  created() { },
   methods: {
     submit_form() {
       this.$validator.validateAll().then((result) => {
@@ -342,3 +298,36 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, .03);
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+
+.card {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: 0.25rem;
+}
+
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: 133px;
+}
+</style>

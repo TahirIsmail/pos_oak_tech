@@ -1,10 +1,11 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
-            
+            <div class="card">
             <form @submit.prevent="submit_form" class="mb-3">
 
-                <div class="d-flex flex-wrap mb-4">
+                <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
                         <span class="text-title" v-if="payment_method_slack == ''">{{ $t("Add Payment Method") }}</span>
                         <span class="text-title" v-else>{{ $t("Edit Payment Method") }}</span>
@@ -17,12 +18,12 @@
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="payment_method">{{ $t("Payment Method") }}</label>
                         <input type="text" name="payment_method" v-model="payment_method" v-validate="'required|max:250'" class="form-control form-control-custom" :placeholder="$t('Please enter payment method')"  autocomplete="off" :readonly="uneditable.includes(payment_method.toUpperCase())">
                         <span v-bind:class="{ 'error' : errors.has('payment_method') }">{{ errors.first('payment_method') }}</span> 
                     </div>
-                    <div class="form-group col-md-3" v-if="payment_method_slack != ''">
+                    <div class="form-group col-md-4" v-if="payment_method_slack != ''">
                         <label for="activate_on_digital_menu">{{ $t("Activate On QR Menu") }}</label>
                         <select name="activate_on_digital_menu" v-model="activate_on_digital_menu" v-validate="'numeric'" class="form-control form-control-custom custom-select" :disabled="!uneditable.includes(payment_method.toUpperCase())">
                             <option value="">Choose Activate on QR Menu..</option>
@@ -32,7 +33,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('activate_on_digital_menu') }">{{ errors.first('activate_on_digital_menu') }}</span>  
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="status">{{ $t("Status") }}</label>
                         <select name="status" v-model="status" v-validate="'required|numeric'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Status..</option>
@@ -45,12 +46,12 @@
                 </div>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="key_1">{{ key_1_label }}</label>
                         <textarea name="key_1" v-model="key_1" v-validate="'max:65535'" class="form-control form-control-custom" rows="5" :placeholder="$t('Please enter key 1')"  autocomplete="off"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('key_1') }">{{ errors.first('key_1') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="key_2">{{ key_2_label }}</label>
                         <textarea name="key_2" v-model="key_2" v-validate="'max:65535'" class="form-control form-control-custom" rows="5" :placeholder="$t('Please enter key 2')"  autocomplete="off"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('key_2') }">{{ errors.first('key_2') }}</span> 
@@ -58,7 +59,7 @@
                 </div>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="description">{{ $t("Description") }}</label>
                         <textarea name="description" v-model="description" v-validate="'max:65535'" class="form-control form-control-custom" rows="5" :placeholder="$t('Enter description')"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('description') }">{{ errors.first('description') }}</span>
@@ -83,6 +84,7 @@
             </template>
         </modalcomponent>
         
+    </div>
     </div>
 </template>
 
@@ -198,3 +200,42 @@
         }
     }
 </script>
+<style scoped>
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .03);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 0.25rem;
+}
+
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: 15px;
+}
+
+.text-subhead {
+    color: var(--label-sub-head);
+    font-weight: 500;
+    font-size: 15px;
+    margin-left: 10px;
+}
+</style>

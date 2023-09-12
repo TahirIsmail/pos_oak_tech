@@ -1,12 +1,13 @@
+
 <template>
     <div class="container pt-3 entry_form">
-        <div class="d-flex justify-content-center pt-5">
-            <div class="container1 col-sm-12 col-md-6 col-lg-4 col-lg-4">
-                <img :src="company_logo" class="d-block mb-4 entry_logo ml-auto mr-auto" alt="OAK">
+        <div class="d-flex justify-content-center pt-2">
+            <div class="container1  col-sm-12 col-md-6 col-lg-4 col-lg-4 pt-5 pb-3">
+                <img :src="company_logo" class="d-block mb-4 entry_logo mt-3 ml-auto mr-auto" alt="OAK">
                 <span class="text-display-0 d-block mb-3 text-center">Sign in</span>
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
                 {{ message }}
-                <form @submit.prevent="submit_form" class="mb-3">
+                <form @submit.prevent="submit_form" class="mb-3 mt-2">
                     <div class="form-group">
                         <label for="email">{{ $t("Email") }}</label>
                         <input type="email" name="email" v-model="email" v-validate="'required|email'"
@@ -30,6 +31,9 @@
         </div>
     </div>
 </template>
+
+
+
 
 <script>
 'use strict';
@@ -87,21 +91,24 @@ export default {
     }
 }
 </script>
+
+
 <style scoped>
 .container1 {
-
-    box-shadow: 0 4px 6px rgba(79, 49, 202, 0.1),
-        0 0 10px rgba(0, 0, 0, 0.2),
-        0 0 20px rgba(0, 0, 0, 0.3);
+    
+    box-shadow: 0 4px 6px rgba(79, 49, 202, 0.1), 
+                0 0 10px rgba(0, 0, 0, 0.2), 
+                0 0 20px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
 }
 
 .container1:hover {
-
-    background-color: #fcfcfc;
+   
+   background-color: #fcfcfc;
 }
 
 .container1 .btn {
     margin-left: 0;
-
-}</style>
+   
+}
+</style>

@@ -29,6 +29,7 @@ use App\Models\Role as RoleModel;
 use App\Models\SettingApp as SettingAppModel;
 use App\Models\KeyboardShortcut as KeyboardShortcutModel;
 use App\Models\User as UserModel;
+use App\Models\SubCategory;
 
 use Mpdf\Mpdf;
 
@@ -106,7 +107,9 @@ class Order extends Controller
         $data['enable_customer_detail_popup'] = ($store_data->enable_customer_popup == 0)?false:true;
         $data['enable_vairants_popup'] = ($store_data->enable_variants_popup == 0)?false:true;
 
-        $categories = CategoryModel::select('slack', 'category_code', 'label')->showPosScreen()->sortLabelAsc()->get();
+        // $categories = CategoryModel::select('slack', 'category_code', 'label')->showPosScreen()->sortLabelAsc()->get();
+        $categories = CategoryModel::select('slack', 'category_code', 'label')->sortLabelAsc()->get();
+        // dd($categories);
         $data['categories'] = (!empty($categories))?$categories:[];
 
         $payment_methods = PaymentMethodModel::select('slack', 'label')
@@ -513,7 +516,6 @@ class Order extends Controller
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_POS_ORDERS';
         check_access([$data['sub_menu_key']]);
-
         $order = OrderModel::select('orders.*')->where('orders.slack', $slack)->first();
         $order_status_master = MasterStatusModel::select('value')->filterByValueConstant('ORDER_STATUS', 'CLOSED')->first();
 

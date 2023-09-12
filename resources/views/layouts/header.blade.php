@@ -29,6 +29,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ $favicon }}">
     <link rel="apple-touch-icon" href="{{ asset('images/logo_apple_touch_icon.png') }}"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <!-- Include CanvasJS library -->
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
     <link rel="stylesheet" href="{{ asset('css/font.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables/datatables.min.css') }}">

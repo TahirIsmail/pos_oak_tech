@@ -75,6 +75,15 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     Route::get('/staff/generatePayroll/{slack}/{month}/{year}', 'StaffPayrollController@generatePayroll')->name('staff.generatePayroll');
 
+    Route::post('staff/searchPayroll', "StaffPayrollController@search_staff_payroll")->name('staff.searchPayroll');
+
+    Route::post('staff/revertPayroll', "StaffPayrollController@revert_staff_payroll")->name('staff.revertPayroll');
+
+
+
+    Route::post('/staff/update_payroll', 'StaffPayrollController@updatePayroll')->name('staff.updatePayroll');
+
+
 
 
 
