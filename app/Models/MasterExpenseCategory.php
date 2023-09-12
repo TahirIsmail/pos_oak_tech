@@ -10,4 +10,9 @@ class MasterExpenseCategory extends Model
     use HasFactory;
     protected $table = 'master_expense_categories';
     protected $guarded = [];
+
+
+    public function expense(){
+        return $this->hasMany(Expense::class,'id','expense_category');
+    }
 }

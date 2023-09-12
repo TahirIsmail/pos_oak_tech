@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expenses;
+use App\Models\Expenses as ExpenseModel;
 use App\Http\Requests\StoreExpensesRequest;
 use App\Http\Requests\UpdateExpensesRequest;
-
+use Symfony\Component\HttpFoundation\Request;
+use App\Models\MasterExpenseCategory as ExpenseCategoryModel;
 class ExpensesController extends Controller
 {
     /**
@@ -19,7 +20,7 @@ class ExpensesController extends Controller
         $data['menu_key'] = 'MM_ACCOUNTS';
         $data['sub_menu_key'] = 'SM_EXPENSES';
         check_access(array($data['menu_key'],$data['sub_menu_key']));
-        dd('view to open');
+        
        return view('expenses.index', $data);
     }
 
@@ -88,4 +89,34 @@ class ExpensesController extends Controller
     {
         //
     }
+    public function add_expense(Request $request,$slack = null){
+        $data['menu_key'] = 'MM_ACCOUNTS';
+        $data['sub_menu_key'] = 'SM_EXPENSES';
+        $data['action_key'] = ($slack == null)?'A_ADD_EXPENSES':'A_EDIT_EXPENSES';
+        check_access(array($data['action_key']));
+
+       
+        $data['expenses_data'] = null;
+        $data['selectedExpenseId'] = '';
+        
+        if(!is_null($slack)){
+            
+            $expense = ExpenseModel::with('createdUser','updatedUser','expenseCategory')->where('slack', '=', $slack)->first();
+            if (empty($complaint)) {
+                abort(404);
+            }
+            $data['selectedExpenseId'] = $complaint->id;
+            $data['expenses_data'] = $complaint;
+            
+        }
+        
+        $data['expenseCategories'] = ExpenseCategoryModel::all();
+       
+     
+
+       
+        
+        return view('expenses.add_expense', $data);
+    }
+    
 }

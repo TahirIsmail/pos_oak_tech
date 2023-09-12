@@ -10,7 +10,7 @@
             </div>
             <div class="">
                 {{-- @if (check_access(array('A_ADD_EXPENSE'), true)) --}}
-                    <a href="" role="button" class="btn btn-primary">{{ __("New Expense") }}</a>
+                    <a href="{{route('add_expense')}}" role="button" class="btn btn-primary">{{ __("New Expense") }}</a>
                 {{-- @endif --}}
             </div>
             <div class="">
@@ -21,13 +21,17 @@
         </div>
 
         <div class="table-responsive">
-            <table id="listing-table" class="table display nowrap w-100">
+                    
+
+            <table id="Expense_listing" class="table display nowrap w-100">
                 <thead>
                     <tr>
-                        <th>{{ __("Name") }}</th>
-                        <th>{{ __("Category") }}</th>
-                        <th>{{ __("Amount") }}</th>
-                        <th>{{ __("Status") }}</th>
+                        <th>{{ __("Expense Date") }}</th>
+                        <th>{{ __("Expense Name") }}</th>
+                        <th>{{ __("Expense Category ") }}</th>
+                        
+                        <th>{{ __("Amount")}}</th>
+                        <th>{{ __("Notes")}}</th>
                         <th>{{ __("Created On") }}</th>
                         <th>{{ __("Updated On") }}</th>
                         <th>{{ __("Created By") }}</th>
@@ -47,10 +51,11 @@
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/datatable.js') }}"></script>
-    {{-- <script src="{{ asset('js/pages/customers.js') }}"></script>
+    <script src="{{ asset('js/pages/expenses.js') }}"></script>
     <script>
         'use strict';
-        var customers = new Customers();
-        customers.load_listing_table();
-    </script> --}}
+        var expenses = new Expenses();
+      
+        expenses.load_expenses_listing_table();
+    </script>
 @endpush
