@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class StaffPayroll extends Model
+{
+    use HasFactory;
+    protected $table = 'staff_payrolls';
+    protected $guarded = [];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'staff_id', 'id');
+    }
+
+    public function paySlipAllownace(){
+        return $this->hasMany(PaySlipAllowance::class, 'payslip_id');
+    }
+}

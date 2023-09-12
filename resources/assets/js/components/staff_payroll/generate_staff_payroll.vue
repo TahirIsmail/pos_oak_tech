@@ -1,6 +1,5 @@
 <template>
   <div class="content-wrapper" style="min-height: 393px">
-
     <div class="container-fluid card">
       <div class="row">
         <!-- left column -->
@@ -13,13 +12,21 @@
                 </div>
               </div>
             </div>
+
             <div class="box-body" style="padding-top: 0">
               <div class="row">
                 <div class="col-md-6 col-sm-12">
                   <div class="sfborder row">
                     <div class="col-md-2">
                       <div class="row">
-                        <img width="90" height="160" class="imgprofile" :src="imagePath" alt="No Image" />
+                        <img
+                          width="90"
+                          height="160"
+                          style="object-fit: cover"
+                          class="round5"
+                          :src="imagePath"
+                          alt="No Image"
+                        />
                       </div>
                     </div>
 
@@ -66,12 +73,14 @@
                           <th class="bozero">P</th>
                           <th class="bozero">L</th>
                           <th class="bozero">A</th>
-                          <th class="bozero">F</th>
-                          <th class="bozero">H</th>
-                          <th class="bozero">Le</th>
-                          <th class="bozero">V</th>
+                          <th class="bozero">Half Day</th>
+                          <th class="bozero">Holiday</th>
+                          <th class="bozero">Approved Leave</th>
                         </tr>
-                        <tr v-for="(record, key) in attendance_records" :key="key">
+                        <tr
+                          v-for="(record, key) in attendance_records"
+                          :key="key"
+                        >
                           <td>{{ formatDate(key) }}</td>
                           <td>{{ record.present }}</td>
                           <td>{{ record.late }}</td>
@@ -86,126 +95,279 @@
                 </div>
                 <!--./col-md-8-->
                 <div class="col-md-12">
-                  <div style="
+                  <div
+                    style="
                       background: #dadada;
                       height: 1px;
                       width: 100%;
                       clear: both;
                       margin-bottom: 10px;
-                    "></div>
+                    "
+                  ></div>
                 </div>
               </div>
             </div>
 
-
-            <form class="form-horizontal" action="" method="post" id="employeeform">
-              <input type="hidden" name="this_month_pf" value="your_this_month_pf_value_here">
-              <input type="hidden" name="pf_deduction" value="your_pf_value_here">
+            <form @submit.prevent="submitForm" v-if="already_payroll_generated">
+              <input
+                type="hidden"
+                name="this_month_pf"
+                value="your_this_month_pf_value_here"
+              />
+              <input
+                type="hidden"
+                name="pf_deduction"
+                value="your_pf_value_here"
+              />
               <div class="box-header">
                 <div class="roww d-flex">
-                  <div class="col-md-4 col-sm-4">
+                  <div class="col-md-4 col-sm-12">
                     <div class="d-flex justify-content-between">
                       <h3 class="box-title">Earning</h3>
-                      <button type="button" onclick="add_more()" class="plusign"><i class="fa fa-plus"></i></button>
+                      <button type="button" @click="addRow" class="plusign">
+                        <i class="fa fa-plus"></i>
+                      </button>
                     </div>
                     <div class="sameheight">
                       <div class="feebox">
                         <table class="table3" id="tableID">
                           <!-- Your PHP loop for payroll_previour_allowance goes here -->
-                          <tr id="row0">
-                            <td><input type="text" class="form-control" id="allowance_type" name="allowance_type[]"
-                                placeholder="Type" value=""></td>
-                            <td><input type="number" id="allowance_amount" name="allowance_amount[]" class="form-control"
-                                value=""></td>
+                          <tr v-for="(row, index) in earnings" :key="index">
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                v-model="row.allowance_type"
+                                placeholder="Type"
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                v-model="row.allowance_amount"
+                                value="0"
+                              />
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                @click="deleteRow(index)"
+                                class="closebtn"
+                              >
+                                <span style="color: red">X</span>
+                              </button>
+                            </td>
                           </tr>
                           <!-- End of your PHP loop -->
                         </table>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-4 col-sm-4">
+                  <div class="col-md-4 col-sm-12">
                     <div class="d-flex justify-content-between">
-
                       <h3 class="box-title">Deduction</h3>
-                      <button type="button" onclick="add_more_deduction()" class="plusign"><i
-                          class="fa fa-plus"></i></button>
+                      <button
+                        type="button"
+                        @click="addDeduction"
+                        class="plusign"
+                      >
+                        <i class="fa fa-plus"></i>
+                      </button>
                     </div>
                     <div class="sameheight">
                       <div class="feebox">
                         <table class="table3" id="tableID2">
-                          <tr id="deduction_row0">
-                            <td><input type="text" id="deduction_type" name="deduction_type[]" class="form-control"
-                                placeholder="Type" value="EOBI" readonly></td>
-                            <td><input type="number" min="1" id="deduction_amount" name="deduction_amount[]"
-                                class="form-control" value="250"></td>
-                          </tr>
-                          <tr id="deduction_row1">
-                            <td><input type="text" id="deduction_type" name="deduction_type[]" class="form-control"
-                                placeholder="Type" value="Provident Fund " readonly></td>
-                            <td><input type="number" min="1" id="deduction_amount" name="deduction_amount[]"
-                                class="form-control" value="your_pf_value_here" readonly></td>
+                          <tr
+                            v-for="(deduction, index) in deductions"
+                            :key="index"
+                          >
+                            <td>
+                              <input
+                                type="text"
+                                :id="'deduction_type' + index"
+                                :name="'deduction_type[' + index + ']'"
+                                class="form-control"
+                                placeholder="Type"
+                                v-model="deduction.deduction_type"
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                min="1"
+                                :id="'deduction_amount' + index"
+                                :name="'deduction_amount[' + index + ']'"
+                                class="form-control"
+                                v-model="deduction.deduction_amount"
+                              />
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                @click="deleteDeduction(index)"
+                                class="closebtn"
+                              >
+                                <span style="color: red">X</span>
+                              </button>
+                            </td>
                           </tr>
                         </table>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-4 col-sm-4">
-                    <button type="button" onclick="add_allowance()" class="plusign"><i class="fas fa-calculator"></i>
-                      Calculate</button>
+                  <div class="col-md-4 col-sm-12">
+                    <button type="button" @click="addAllowance" class="plusign">
+                      <i class="fas fa-calculator"></i> Calculate
+                    </button>
                     <h3 class="box-title">Payroll Summary(Rs.)</h3>
 
                     <div class="sameheight">
                       <div class="payrollbox feebox">
-                        <div class="form-group">
-                          <label class="col-sm-5 control-label"><strong>Basic Salary</strong></label>
+                        <div class="form-group row">
+                          <label class="col-sm-4 control-label"
+                            >Basic Salary</label
+                          >
+                          <div class="col-sm-8">
+                            <input
+                              class="form-control"
+                              name="basic"
+                              v-model="basic_salary"
+                              id="basic"
+                              type="number"
+                              style="
+                                border: none;
+                                border-bottom: 1px solid grey;
+                              "
+                              min="1"
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-sm-4 control-label">Earning</label>
+                          <div class="col-sm-8">
+                            <input
+                              class="form-control"
+                              name="total_allowance"
+                              id="total_allowance"
+                              v-model="total_earnings"
+                              style="
+                                border: none;
+                                border-bottom: 1px solid grey;
+                              "
+                              type="number"
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-sm-4 control-label"
+                            >Deduction</label
+                          >
+                          <div class="col-sm-8 deductiondred">
+                            <input
+                              class="form-control"
+                              name="total_deduction"
+                              id="total_deduction"
+                              type="number"
+                              v-model="total_deductions"
+                              style="
+                                color: #f50000;
+                                border: none;
+                                border-bottom: 1px solid grey;
+                              "
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-sm-4 control-label"
+                            >Gross Salary</label
+                          >
+                          <div class="col-sm-8">
+                            <input
+                              class="form-control"
+                              name="gross_salary"
+                              id="gross_salary"
+                              v-model="gross_salary"
+                              type="number"
+                              style="
+                                border: none;
+                                border-bottom: 1px solid grey;
+                              "
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-sm-4 control-label">Tax</label>
+                          <div class="col-sm-8 deductiondred">
+                            <input
+                              class="form-control"
+                              name="tax"
+                              id="tax"
+                              v-model="tax"
+                              type="number"
+                              style="
+                                border: none;
+                                border-bottom: 1px solid grey;
+                              "
+                            />
+                          </div>
+                        </div>
 
-                          <div class="col-sm-8">
-                            <input class="form-control" name="basic" value="0" id="basic" type="number" min="1" />
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-5 control-label"><strong>Earning</strong></label>
-                          <div class="col-sm-8">
-                            <input class="form-control" name="total_allowance" id="total_allowance" type="number" />
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-5 control-label"><strong>Deduction</strong></label>
-                          <div class="col-sm-8 deductiondred">
-                            <input class="form-control" name="total_deduction" id="total_deduction" type="number"
-                              style="color:#f50000" />
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-5 control-label"> <strong>Gross Salary</strong> </label>
-                          <div class="col-sm-8">
-                            <input class="form-control" name="gross_salary" id="gross_salary" value="0" type="number" />
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-5 control-label"> <strong>Tax</strong> </label>
-                          <div class="col-sm-8 deductiondred">
-                            <input class="form-control" name="tax" id="tax" value="0" type="number" />
-                          </div>
-                        </div>
-                        <hr />
-                        <div class="form-group">
-                          <label class="col-sm-5 control-label"><strong>Net Salary</strong> </label>
+                        <div class="form-group row">
+                          <label class="col-sm-4 control-label"
+                            >Net Salary</label
+                          >
                           <div class="col-sm-8 net_green">
-                            <input class="form-control greentest" name="net_salary" id="net_salary" type="number"
-                              min="1" />
+                            <input
+                              class="form-control greentest"
+                              name="net_salary"
+                              id="net_salary"
+                              v-model="net_salary"
+                              type="number"
+                              min="1"
+                              style="
+                                border: none;
+                                border-bottom: 1px solid grey;
+                              "
+                            />
                             <span class="text-danger" id="err"></span>
-                            <input class="form-control" name="staff_id" value="your_staff_id_here" type="hidden" />
-                            <input class="form-control" name="month" value="your_month_here" type="hidden" />
-                            <input class="form-control" name="year" value="your_year_here" type="hidden" />
-                            <input class="form-control" name="status" value="generated" type="hidden" />
+                            <input
+                              class="form-control"
+                              name="staff_id"
+                              value="your_staff_id_here"
+                              type="hidden"
+                            />
+                            <input
+                              class="form-control"
+                              name="month"
+                              value="your_month_here"
+                              type="hidden"
+                            />
+                            <input
+                              class="form-control"
+                              name="year"
+                              value="your_year_here"
+                              type="hidden"
+                            />
+                            <input
+                              class="form-control"
+                              name="status"
+                              value="generated"
+                              type="hidden"
+                            />
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12">
-                    <button type="submit" id="contact_submit" class="btn btn-info pull-right">Save</button>
+                    <button
+                      type="submit"
+                      id="contact_submit"
+                      class="btn btn-primary pull-right"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </div>
@@ -214,6 +376,33 @@
         </div>
       </div>
     </div>
+
+    <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
+      <template v-slot:modal-header>
+        {{ $t("Confirm") }}
+      </template>
+      <template v-slot:modal-body>
+        <p v-if="status == 0">
+          If supplier is inactive all the products with this supplier will get
+          affected.
+        </p>
+        {{ $t("Are you sure you want to proceed?") }}
+      </template>
+      <template v-slot:modal-footer>
+        <button type="button" class="btn btn-light" @click="$emit('close')">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="$emit('submit')"
+          v-bind:disabled="processing == true"
+        >
+          <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
+          Continue
+        </button>
+      </template>
+    </modalcomponent>
   </div>
 </template>
 
@@ -227,93 +416,159 @@ export default {
       processing: false,
       modal: false,
       show_modal: false,
-      api_link: "/api/fetch_staff_list",
+      already_payroll_generated:true,
+      staff_id: this.staff_with_attendance[0].id,
+      status: "generated",
+      month: this.month,
+      year: this.year,
+      api_link: "/api/staff/payroll_payslip",
+      earnings: [{ allowance_type: "", allowance_amount: "0" }],
+      deductions: [{ deduction_type: "", deduction_amount: "0" }],
+      total_earnings: 0,
+      total_deductions: 0,
+      basic_salary: 0,
+      gross_salary: 0,
+      net_salary: 0,
+      tax: 0,
     };
   },
   props: {
     staff_with_attendance: [Array, Object],
     profile_image: [Array, Object],
     attendance_records: [Array, Object],
+    month: [Array, Object],
+    year: [Array, Object],
   },
-  mounted() { },
-  created() { },
+  mounted() {},
+  created() {},
   methods: {
     formatDate(date) {
-      const parts = date.split('-');
+      const parts = date.split("-");
       const year = parts[2];
       const month = parseInt(parts[1], 10) - 1; // Subtract 1 to adjust for JavaScript's 0-based month
-      const formattedMonth = new Date(year, month, parts[0]).toLocaleDateString('en-US', { month: 'long' });
+      const formattedMonth = new Date(year, month, parts[0]).toLocaleDateString(
+        "en-US",
+        { month: "long" }
+      );
       return `${formattedMonth}`;
+    },
+    addRow() {
+      this.earnings.push({ allowance_type: "", allowance_amount: "0" });
+    },
+    deleteRow(index) {
+      this.earnings.splice(index, 1);
+    },
+    addDeduction() {
+      this.deductions.push({ deduction_type: "", deduction_amount: 0 });
+    },
+    deleteDeduction(index) {
+      this.deductions.splice(index, 1);
+    },
+
+    submitForm() {
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.show_modal = true;
+          this.$on("submit", function () {
+            this.processing = true;
+
+            const formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            this.deductions.forEach((deduction, index) => {
+              formData.append(
+                `deductions[${index}][deduction_type]`,
+                deduction.deduction_type
+              );
+              formData.append(
+                `deductions[${index}][deduction_amount]`,
+                deduction.deduction_amount
+              );
+            });
+
+            this.earnings.forEach((earning, index) => {
+              formData.append(
+                `earnings[${index}][allowance_type]`,
+                earning.allowance_type
+              );
+              formData.append(
+                `earnings[${index}][allowance_amount]`,
+                earning.allowance_amount
+              );
+            });
+
+            formData.append("staff_id", this.staff_id);
+            formData.append("month", this.month);
+            formData.append("year", this.year);
+            formData.append("status", this.status);
+            formData.append("total_earnings", this.total_earnings);
+            formData.append("total_deductions", this.total_deductions);
+            formData.append("basic_salary", this.basic_salary);
+            formData.append("gross_salary", this.gross_salary);
+            formData.append("net_salary", this.net_salary);
+            formData.append("tax", this.tax);
+
+            axios
+              .post(this.api_link, formData)
+              .then((response) => {
+                if (response.data.status_code == 200) {
+                  console.log(response.data);
+                  this.show_response_message(response.data.msg, "Success");
+                  this.show_modal = false;
+                  this.processing = false;
+                  this.already_payroll_generated = false;
+                  // setTimeout(function () {
+                  //   location.reload();
+                  // }, 1000);
+                } else {
+                  this.show_modal = false;
+                  this.processing = false;
+                  try {
+                    var error_json = JSON.parse(response.data.msg);
+                    console.log(response.data);
+                    this.loop_api_errors(error_json);
+                  } catch (err) {
+                    this.server_errors = response.data.msg;
+                  }
+                  this.error_class = "error";
+                }
+              })
+              .catch((error) => {
+                console.log("error");
+                console.log(error);
+              });
+            this.$off("submit");
+          });
+          this.$on("close", function () {
+            this.show_modal = false;
+            this.$off("close");
+          });
+        }
+      });
+    },
+
+    addAllowance() {
+      const basicPay = parseFloat(this.basic_salary) || 0;
+      const tax = parseFloat(this.tax) || 0;
+      let totalAllowance = 0;
+      let totalDeduction = 0;
+      this.deductions.forEach((deduction, index) => {
+        totalDeduction += parseFloat(deduction.deduction_amount) || 0;
+      });
+      this.earnings.forEach((earnings, index) => {
+        totalAllowance += parseFloat(earnings.allowance_amount) || 0;
+      });
+      const grossSalary = basicPay + totalAllowance - totalDeduction;
+      const netSalary = basicPay + totalAllowance - totalDeduction - tax;
+      this.total_earnings = totalAllowance.toFixed(2);
+      this.total_deductions = totalDeduction.toFixed(2);
+      this.gross_salary = grossSalary.toFixed(2);
+      this.net_salary = netSalary.toFixed(2);
     },
   },
 };
 </script>
 
 <style scoped>
-
-
-.table {
-    font-size: 13px;
-    color: var(--base-font-color) !important;
-    border: 1px solid var(--table-border-color) !important; 
-    -webkit-box-shadow: none !important; 
-    box-shadow: none !important; 
-}
-
-.table[data-v-5e3c20fc] {
-    font-size: 13px;
-    color: var(--base-font-color) !important;
-    border: none !important; 
-    box-shadow: none !important; 
-}
-hr {
-  margin-left: -0px;
-  margin-right: -0px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.1);
-
-}
-
-.col-sm-8 {
-
-  max-width: 100%;
-}
-
-.table td[data-v-5e3c20fc],
-.table th[data-v-5e3c20fc] {
-  padding: 0.2rem;
-  padding-left: 10px;
-  vertical-align: top;
-  border-top: 1px solid #dee2e6;
-  border-bottom: 1px solid #dee2e6;
-}
-
-
-.imgprofile {
-  vertical-align: middle;
-  border-style: none;
-  width: 90px;
-  height: 125px;
-  overflow: hidden;
-  object-fit: cover;
-}
-
-
-.table th {
-  font-size: 12px;
-  padding: 0.20rem;
-  vertical-align: top;
-  border-top: none !important;
-  font-weight: bold;
-}
-
-.table td,
-.table th {
-  padding: 0.20rem;
-  padding-left: 10px;
-  vertical-align: top;
-  border-top: 1px solid #dee2e6;
-}
-
 .btn {
   margin-left: 10px;
   margin-top: 20px;
@@ -328,7 +583,10 @@ hr {
   margin-right: -15px;
   margin-left: -30px;
 }
-
+.box-title {
+  font-size: 17px;
+  padding: 2px;
+}
 .letest {
   position: absolute;
   left: -45px;
@@ -496,7 +754,6 @@ hr {
   border: 1px solid #dadada;
   height: 500px;
 }
-
 .feebox {
   margin-top: 10px;
   padding: 10px 10px 0;
@@ -505,4 +762,14 @@ hr {
 
 .plusign:hover {
   background: #faa21c;
-}</style>
+}
+.closebtn {
+  color: #d9534f;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  vertical-align: text-bottom;
+  font-size: 16px;
+  float: right;
+}
+</style>
