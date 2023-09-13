@@ -22,14 +22,14 @@
                         <span class="text-subhead">Basic Information</span>
                     </div>
                     <div class="form-row mb-2">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="name">{{ $t("Fullname") }}</label>
                             <input type="text" name="name" v-model="name" v-validate="'required|max:250'"
                                 class="form-control form-control-custom" :placeholder="$t('Please enter fullname')"
                                 autocomplete="off">
                             <span v-bind:class="{ 'error': errors.has('name') }">{{ errors.first('name') }}</span>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="email">{{ $t("Email") }}</label>
                             <input type="text" name="email" v-model="email"
                                 v-validate="{ required: this.email_required, email: true, max: 150 }"
@@ -37,7 +37,7 @@
                                 autocomplete="off">
                             <span v-bind:class="{ 'error': errors.has('email') }">{{ errors.first('email') }}</span>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="phone">{{ $t("Contact No.") }}&nbsp;<small class="text-muted">(With Country
                                     Code)</small></label>
                             <input type="text" name="phone" v-model="phone"
@@ -51,7 +51,7 @@
 
                     <div class="form-row mb-2">
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="dob">{{ $t("Date of Birth") }}</label>
                             <date-picker :format="date.format" :lang='date.lang' v-model="dob"
                                 v-validate="'date_format:yyyy-MM-dd'"
@@ -59,14 +59,14 @@
                                 :placeholder="$t('Please enter Date of Birth')" autocomplete="off"></date-picker>
                             <span v-bind:class="{ 'error': errors.has('dob') }">{{ errors.first('dob') }}</span>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="address">{{ $t("Address") }}</label>
                             <textarea name="address" v-model="address" v-validate="'max:65535'"
-                                class="form-control form-control-custom" rows="5"
+                                class="form-control form-control-custom" rows="1"
                                 :placeholder="$t('Enter Address')"></textarea>
                             <span v-bind:class="{ 'error': errors.has('address') }">{{ errors.first('address') }}</span>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="status">{{ $t("Status") }}</label>
                             <select name="status" v-model="status" v-validate="'required|numeric'"
                                 class="form-control form-control-custom custom-select">
@@ -214,58 +214,3 @@ export default {
     }
 }
 </script>
-<style scoped>
-
-
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -5px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-.card-header {
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: rgba(0, 0, 0, .03);
-    border-bottom: 1px solid rgba(0, 0, 0, .125);
-}
-
-
-.card {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: 0.25rem;
-}
-
-.page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    margin-left: 18px;
-}
-
-.mb-2,
-.my-2 {
-    margin-bottom: 0.5rem !important;
-    margin-left: 10px;
-}
-
-.form-row {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: -5px;
-    margin-left: 10px;
-}
-</style>

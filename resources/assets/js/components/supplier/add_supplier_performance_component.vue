@@ -255,55 +255,12 @@ export default {
 </style>
 
 <style scoped>
-.card-header {
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  background-color: rgba(0, 0, 0, .03);
-  border-bottom: 1px solid rgba(0, 0, 0, .125);
-}
 
-
-.card {
-  position: relative;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, .125);
-  border-radius: 0.25rem;
-}
-
-.page-item.active .page-link {
-  z-index: 3;
-  color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
-  margin-left: 18px;
-}
-
-.mb-2,
-.my-2 {
-  margin-bottom: 0.5rem !important;
-  margin-left: 10px;
-}
-
-.form-row {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin-right: 10px;
-  margin-left: 10px;
-}
 
 .text-subhead {
   color: var(--label-sub-head);
   font-weight: 500;
   font-size: 15px;
-  margin-left: 10px;
+
 }
 </style>

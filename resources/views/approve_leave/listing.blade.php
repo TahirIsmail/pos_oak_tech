@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <div class="row">
+    <div class="row ">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex flex-wrap mb-4">
@@ -77,5 +77,8 @@
         background-color: #007bff;
         border-color: #007bff;
         margin-left: 18px;
+    }
+    .col-sm-12 col-md-6{
+        margin:50px;
     }
 </style>

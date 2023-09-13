@@ -42,18 +42,49 @@
             <div class="d-flex flex-column p-3 border-bottom product-info-form">
                 <form @submit.prevent="product_info_form">
                     <div class="form-row mb-2">
-                        <div class="form-group col-md-6">
-                            <label for="barcode">{{ $t("Barcode") }}</label>
-                            <input type="text" name="barcode" v-model="barcode" class="form-control form-control-lg"
-                                ref="barcode" :placeholder="$t('Scan Barcode')" autocomplete="off">
-                        </div>
                         <div class="form-group col-md-3">
-                            <label for="product_title">{{ $t("Product Title") }}</label>
-                            <input type="text" name="product_title" v-model="product_title"
-                                class="form-control form-control-lg" :placeholder="$t('Product Title')" autocomplete="off">
+                            <label for="barcode" class="text-subhead-bold">{{ $t("Category") }}</label>
+                            <div class="mt-2"> 
+                                <select data-search="true" class="tail-select w-full custom-width">
+                                    <option value="1">Leonardo DiCaprio</option>
+                                    <option value="2">Johnny Deep</option>
+                                    <option value="3">Robert Downey, Jr</option>
+                                    <option value="4">Samuel L. Jackson</option>
+                                    <option value="5">Morgan Freeman</option>
+                                </select> 
+                            </div>
                         </div>
 
+
+
                         <div class="form-group col-md-3">
+                            <label for="barcode" class="text-subhead-bold">{{ $t("Sub-Category") }}</label>
+                            <div class="mt-2"> 
+                                <select data-search="true" class="tail-select w-full custom-width">
+                                    <option value="1">Leonardo DiCaprio</option>
+                                    <option value="2">Johnny Deep</option>
+                                    <option value="3">Robert Downey, Jr</option>
+                                    <option value="4">Samuel L. Jackson</option>
+                                    <option value="5">Morgan Freeman</option>
+                                </select> 
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                            <label for="barcode" class="text-subhead-bold">{{ $t("Product Code") }}</label>
+                            <div class="mt-2"> 
+                                <select data-search="true" class="tail-select w-full custom-width">
+                                    <option value="1">Leonardo DiCaprio</option>
+                                    <option value="2">Johnny Deep</option>
+                                    <option value="3">Robert Downey, Jr</option>
+                                    <option value="4">Samuel L. Jackson</option>
+                                    <option value="5">Morgan Freeman</option>
+                                </select> 
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-2">
                             <button type="submit" class="btn btn-primary btn-block btn-lg find-product-btn"
                                 v-bind:disabled="product_processing == true"> <i class='fa fa-circle-notch fa-spin'
                                     v-if="product_processing == true"></i> {{ $t('Go') }}</button>
@@ -84,7 +115,8 @@
                     <div data-v-4ab120e6="" class="p-0 border-bottom">
                         <div data-v-4ab120e6="" class="card-header d-flex flex-wrap p-4 align-items-center">
                             <span data-v-4ab120e6="" class="mr-auto text-title text-black-50">Products</span>
-                         </div></div>
+                        </div>
+                    </div>
 
 
 
@@ -94,16 +126,16 @@
                                 v-for="(product_list_item, index) in product_list"
                                 v-bind:value="product_list_item.product_slack" v-bind:key="index"
                                 v-on:click='resolve_variants(product_list_item)'>
-                               
+
                                 <div class="col-12 product-card  bg-white product-grid"
                                     v-shortkey="{ left: [keyboard_shortcuts_formatted.ARROW_LEFT], right: [keyboard_shortcuts_formatted.ARROW_RIGHT], choose: [keyboard_shortcuts_formatted.CHOOSE_PRODUCT] }"
                                     @shortkey="product_navigate($event)" :class="{ focus: index === product_focus }">
-                                  
+
                                     <div class="d-flex flex-row-reverse" v-if="product_list_item.images.length > 0">
                                         <img :src="(product_list_item.images.length > 0) ? product_list_item.images[0].thumbnail : '#'"
                                             alt="" class="rounded-circle product-image position-absolute d-none d-lg-block">
                                     </div>
-                                 
+
                                     <div class="product-code">
                                         <span class="small text-secondary text-break">{{ $t("Product Code") }} : {{
                                             product_list_item.product_code }}</span>
@@ -138,9 +170,9 @@
                                             product_list_item.sale_amount_excluding_tax }}
                                     </div>
                                 </div>
-                                
+
                             </div>
-                           
+
                         </div>
                     </div>
 
@@ -253,7 +285,8 @@
 
 
 
-                     <div class="Total  p-3    ml-auto fixed-bottom col-md-4 border-top cart-summary   p-3  fixed-bottom col-md-4 border-top cart-summary">
+                    <div
+                        class="Total  p-3    ml-auto fixed-bottom col-md-4 border-top cart-summary   p-3  fixed-bottom col-md-4 border-top cart-summary">
                         <div class="d-flex justify-content-center show-more-billing-data bg-white cursor"
                             v-on:click="toggle_calculation">
                             <span class="show-more-billing-data-text">
@@ -422,7 +455,7 @@
                             </span>&nbsp;Processing your order...
                         </div>
                     </div>
-                   
+
                 </div>
 
             </div>
@@ -1923,7 +1956,6 @@ export default {
 }
 </script>
 <style scoped>
-
 .btn-hold-order {
     background-color: #f2f2f2;
     color: #333;
@@ -2033,7 +2065,8 @@ export default {
 
     padding: 5px;
 }
-.Total{
+
+.Total {
     margin-right: 17px;
 }
 
@@ -2046,25 +2079,26 @@ export default {
     padding: 10px;
     margin-bottom: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .product-title {
+.product-title {
     font-weight: bold;
     font-size: 14px;
-  }
+}
 
-  .product-price {
+.product-price {
     text-align: right;
     font-weight: bold;
-  }
-  .product-code {
+}
+
+.product-code {
     font-size: 14px;
     color: #555;
     margin-bottom: 5px;
-  }
+}
 
-  .small, small {
+.small,
+small {
     font-size: 85%;
     font-weight: 600;
-}
-</style>
+}</style>

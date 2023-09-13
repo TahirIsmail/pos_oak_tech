@@ -20,10 +20,23 @@ html,body{
   align-items: stretch;
 }
 
+.text-subhead-bold {
+  font-size: 15px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+
+ .mb-3{
+        margin:5px;
+    }
+
+
 .content{
   width: 100%;
   margin-left: 1.5rem;
-  padding: 2rem;
+
+  padding: 25px;
   padding-bottom: 0 !important;
   min-height: calc(100vh - 50px);
   overflow-y: hidden !important;
@@ -168,7 +181,43 @@ hr{
   transform: translateX(-100%);
   background-color: var(--uib-color);
 }
+.custom-width {
+  width: 300px;
+  height: 30px;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  height: calc(1.5em + 1rem + 2px);
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 2px;
 
+
+
+}
+
+.card {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 0.25rem;
+}
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, .03);
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
 @keyframes raceBy {
   0% {
     transform: translateX(-100%);

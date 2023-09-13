@@ -48,7 +48,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('status') }">{{ errors.first('status') }}</span> 
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-8">
                         <label for="description">{{ $t("Description") }}</label>
                         <textarea name="description" v-model="description" v-validate="'max:65535'" class="form-control form-control-custom" rows="1" :placeholder="$t('Enter description')"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('description') }">{{ errors.first('description') }}</span>

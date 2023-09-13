@@ -80,6 +80,14 @@
                 errors.first("status")
               }}</span>
             </div>
+            <div class="form-group col-sm-4 col-md-10 col-lg-4 mx-auto">
+              <label for="description">{{ $t("Description") }}</label>
+              <textarea name="description" v-model="description" v-validate="'max:65535'"
+                class="form-control form-control-custom" rows="1" :placeholder="$t('Enter description')"></textarea>
+              <span v-bind:class="{ error: errors.has('description') }">{{
+                errors.first("description")
+              }}</span>
+            </div>
             <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
               <!-- <label for="display_on_pos_screen">{{
               $t("Show on Screen")
@@ -109,14 +117,7 @@
 
             </div>
 
-            <div class="form-group col-sm-12 col-md-10 col-lg-12 mx-auto">
-              <label for="description">{{ $t("Description") }}</label>
-              <textarea name="description" v-model="description" v-validate="'max:65535'"
-                class="form-control form-control-custom" rows="5" :placeholder="$t('Enter description')"></textarea>
-              <span v-bind:class="{ error: errors.has('description') }">{{
-                errors.first("description")
-              }}</span>
-            </div>
+            
 
           </div>
         </form>
@@ -477,44 +478,4 @@ export default {
   color: white;
 }
 </style>
-<style scoped>
-.card-header {
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  background-color: rgba(0, 0, 0, .03);
-  border-bottom: 1px solid rgba(0, 0, 0, .125);
-}
-
-
-.card {
-  position: relative;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, .125);
-  border-radius: 0.25rem;
-}
-
-
-.mb-2,
-.my-2 {
-  margin-left: 10px;
-  margin-bottom: 0.5rem !important;
-}
-
-.form-row {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin-right: 10px;
-  margin-left: 10px;
-}
-</style>
-
 

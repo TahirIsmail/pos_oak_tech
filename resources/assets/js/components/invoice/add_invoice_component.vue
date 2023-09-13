@@ -17,7 +17,7 @@
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="bill_to">{{ $t("Bill To") }}</label>
                         <select name="bill_to" v-model="bill_to" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Bill To..</option>
@@ -27,34 +27,32 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('bill_to') }">{{ errors.first('bill_to') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="bill_to_slack">{{ $t("Choose Customer or Supplier") }}</label>
                         <cool-select type="text" name="bill_to_slack" v-validate="'required'" :placeholder="$t('Please choose Customer or Supplier')"  autocomplete="off" v-model="bill_to_slack" :items="bill_to_list" item-text="label" itemValue='slack' @search='load_bill_to_list' ref="bill_to_label">
                         </cool-select>
                         <span v-bind:class="{ 'error' : errors.has('bill_to_slack') }">{{ errors.first('bill_to_slack') }}</span> 
                     </div>
-                </div>
-
-                <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="invoice_reference">{{ $t("Invoice Reference #") }}</label>
                         <input type="text" name="invoice_reference" v-model="invoice_reference" v-validate="'max:30'" class="form-control form-control-custom" :placeholder="$t('Please enter Invoice Reference #')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('invoice_reference') }">{{ errors.first('invoice_reference') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                </div>
+
+                <div class="form-row mb-2">
+                   
+                    <div class="form-group col-md-4">
                         <label for="invoice_date">{{ $t("Invoice Date") }}</label>
                         <date-picker :format="date.format" :lang='date.lang' v-model="invoice_date" v-validate="'required|date_format:yyyy-MM-dd'" input-class="form-control form-control-custom bg-white" ref="invoice_date" name="invoice_date" :placeholder="$t('Please enter Invoice Date')" autocomplete="off"></date-picker>
                         <span v-bind:class="{ 'error' : errors.has('invoice_date') }">{{ errors.first('invoice_date') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="invoice_due_date">{{ $t("Invoice Due Date") }}</label>
                         <date-picker :format="date.format" :lang='date.lang' v-model="invoice_due_date" :disabled-date="not_before_order_date" name="invoice_due_date" v-validate="'required|date_format:yyyy-MM-dd'" input-class="form-control form-control-custom bg-white" :placeholder="$t('Please enter Invoice Due Date')" autocomplete="off"></date-picker>
                         <span v-bind:class="{ 'error' : errors.has('invoice_due_date') }">{{ errors.first('invoice_due_date') }}</span> 
                     </div>
-                </div>
-
-                <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="currency">{{ $t("Currency") }}</label>
                         <select name="currency" v-model="currency" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Currency..</option>
@@ -64,7 +62,11 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('currency') }">{{ errors.first('currency') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                </div>
+
+                <div class="form-row mb-2">
+                    
+                    <div class="form-group col-md-4">
                         <label for="tax_option">{{ $t("Tax Option") }}</label>
                         <select name="tax_option" v-model="tax_option" v-validate="''" class="form-control form-control-custom custom-select">
                             <option value="">Choose Tax Option..</option>
@@ -74,15 +76,14 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('tax_option') }">{{ errors.first('tax_option') }}</span> 
                     </div>
-                </div>
-
-                <div class="form-row mb-2">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-8">
                         <label for="terms">{{ $t("Terms") }}</label>
-                        <textarea name="terms" v-model="terms" v-validate="'max:65535'" class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Terms')"></textarea>
+                        <textarea name="terms" v-model="terms" v-validate="'max:65535'" class="form-control form-control-custom" rows="1" :placeholder="$t('Enter Terms')"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('terms') }">{{ errors.first('terms') }}</span>
                     </div>
                 </div>
+
+                
 
                 <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
@@ -584,47 +585,3 @@
         }
     }
 </script>
-
-<style scoped>.card-header {
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: rgba(0, 0, 0, .03);
-    border-bottom: 1px solid rgba(0, 0, 0, .125);
-}
-
-
-.card {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: 0.25rem;
-}
-
-
-.mb-2,
-.my-2 {
-    margin-left: 10px;
-    margin-bottom: 0.5rem !important;
-}
-
-.mb-1,
-.my-1 {
-    margin-bottom: 0.25rem !important;
-    margin-left: 10px;
-}
-
-.form-row {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: 10px;
-    margin-left: 10px;
-}</style>

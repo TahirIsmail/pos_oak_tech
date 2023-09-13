@@ -1,30 +1,19 @@
 
-<style>
-.jumbotron {
-  background-color: #f8f8f8;
-  padding: 30px;
-  border-radius: 10px;
-  margin: 20px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: #333;
-  /* Text color */
-}
+
+<style scoped>
+
 
 .dashboard_row {
   width: 100%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 .dashboard_row:hover {
   cursor: pointer;
   box-shadow: 0 8px 16px 0 rgba(0, 5, 0, 0.2);
 }
-/* 
-.dashboard_title {
-  width: 100%;
-  background: linear-gradient(to right, #70bfff, #6080e0);
-  color: #ffffff;
-  text-align: center;
-} */
+
+
 .dashboard_title {
   width: 100%;
   background: linear-gradient(to right, #1488CC, #5691c8);
@@ -70,270 +59,271 @@
 }
 </style>
 <template>
-  <div class="row">
+  <div class="row ">
     <div class="col-md-12">
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex">
-            <div>
-              <span class="text-title"> {{ $t("Dashboard") }} </span>
+      <div class="card">
+        <div class="card-header d-flex flex-wrap mb-4">
+          <div class="mr-auto">
+            <div class="d-flex ">
+              <div>
+                <span class="text-title"> {{ $t("Dashboard") }} </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="">
-          <date-picker type="month" :lang="date.lang" :format="date.format" v-model="dashboard_month"
-            @change="dashboard_month_change" input-class="form-control bg-white"></date-picker>
-        </div>
-      </div>
-
-      <!--  ====================== total customer vendors and staff start ==========   -->
-
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <!-- <span class="text-subhead-bold"> {{ $t("Today") }} </span> -->
-            </div>
+          <div class="">
+            <date-picker type="month" :lang="date.lang" :format="date.format" v-model="dashboard_month"
+              @change="dashboard_month_change" input-class="form-control bg-white"></date-picker>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content ">
-                  <div class="dashboard_title  text-subhead p-2 " id="Vendors/Suppliers">
-                    {{ $t("Vendors/Suppliers") }}
+
+        <!--  ====================== total customer vendors and staff start ==========   -->
+
+        <div class="d-flex flex-wrap mb-4">
+          <div class="mr-auto">
+            <div class="d-flex mb-2">
+              <div>
+                <!-- <span class="text-subhead-bold"> {{ $t("Today") }} </span> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content ">
+                    <div class="dashboard_title  text-subhead p-2 " id="Vendors/Suppliers">
+                      {{ $t("Vendors/Suppliers") }}
+                    </div>
+
+                    <div class="mt-auto p-4">
+                      <span>
+                        <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
+                        <div class="d-flex flex-column align-items-center" v-else>
+                          <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
+                          <input v-knob class="knob" type="text" value="500" />
+                          <span :class="{
+                            'text-success':
+                              Math.sign(todays_order_count.difference) == 1,
+                            'text-danger':
+                              Math.sign(todays_order_count.difference) == -1,
+                          }" v-show="todays_order_count.difference !== 0">
+                            <span v-show="Math.sign(todays_order_count.difference) == 1
+                              "><i class="fas fa-long-arrow-alt-up"></i></span>
+                            <span v-show="Math.sign(todays_order_count.difference) == -1
+                              "><i class="fas fa-long-arrow-alt-down"></i></span>
+                            {{ todays_order_count.difference }}%
+                          </span>
+                        </div>
+                      </span>
+                    </div>
                   </div>
+                </div>
+              </div>
 
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="500" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
-                      </div>
-                    </span>
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Users / Customers") }}
+                    </div>
+
+
+                    <div class="mt-auto p-4">
+                      <span>
+                        <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
+                        <div class="d-flex flex-column align-items-center" v-else>
+                          <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
+                          <input v-knob class="knob" type="text" value="3498" />
+                          <span :class="{
+                            'text-success':
+                              Math.sign(todays_order_count.difference) == 1,
+                            'text-danger':
+                              Math.sign(todays_order_count.difference) == -1,
+                          }" v-show="todays_order_count.difference !== 0">
+                            <span v-show="Math.sign(todays_order_count.difference) == 1
+                              "><i class="fas fa-long-arrow-alt-up"></i></span>
+                            <span v-show="Math.sign(todays_order_count.difference) == -1
+                              "><i class="fas fa-long-arrow-alt-down"></i></span>
+                            {{ todays_order_count.difference }}%
+                          </span>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">{{ $t("Staff") }}</div>
+
+                    <div class="mt-auto p-4">
+                      <span>
+                        <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
+                        <div class="d-flex flex-column align-items-center" v-else>
+                          <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
+                          <input v-knob class="knob" type="text" value="1934" />
+                          <span :class="{
+                            'text-success':
+                              Math.sign(todays_order_count.difference) == 1,
+                            'text-danger':
+                              Math.sign(todays_order_count.difference) == -1,
+                          }" v-show="todays_order_count.difference !== 0">
+                            <span v-show="Math.sign(todays_order_count.difference) == 1
+                              "><i class="fas fa-long-arrow-alt-up"></i></span>
+                            <span v-show="Math.sign(todays_order_count.difference) == -1
+                              "><i class="fas fa-long-arrow-alt-down"></i></span>
+                            {{ todays_order_count.difference }}%
+                          </span>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+                <div class="dashboard_row col-14 bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Total Purchase Orders") }}
+                    </div>
+
+                    <div class="mt-auto p-4">
+                      <span>
+                        <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
+                        <div class="d-flex flex-column align-items-center" v-else>
+                          <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
+                          <input v-knob class="knob" type="text" value="398" />
+                          <span :class="{
+                            'text-success':
+                              Math.sign(todays_order_count.difference) == 1,
+                            'text-danger':
+                              Math.sign(todays_order_count.difference) == -1,
+                          }" v-show="todays_order_count.difference !== 0">
+                            <span v-show="Math.sign(todays_order_count.difference) == 1
+                              "><i class="fas fa-long-arrow-alt-up"></i></span>
+                            <span v-show="Math.sign(todays_order_count.difference) == -1
+                              "><i class="fas fa-long-arrow-alt-down"></i></span>
+                            {{ todays_order_count.difference }}%
+                          </span>
+                        </div>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Users / Customers") }}
-                  </div>
+        <!--  ====================== total customer vendors and staff start ==========   -->
 
-
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="3498" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">{{ $t("Staff") }}</div>
-
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="1934" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14 bg-white rounded custom-border-light"
-                >
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Purchase Orders") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="398" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
-                      </div>
-                    </span>
-                  </div>
-                </div>
+        <!-- total income and expense graphics respresentation  start  -->
+        <div class="d-flex flex-wrap mb-4">
+          <div class="mr-auto">
+            <div class="d-flex mb-2">
+              <div>
+                <span class="text-subhead-bold">
+                  {{ $t("INCOME & EXPENSE") }}</span>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+          <div class="col-md-12">
 
-      <!--  ====================== total customer vendors and staff start ==========   -->
-
-      <!-- total income and expense graphics respresentation  start  -->
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold">
-                {{ $t("INCOME & EXPENSE") }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <!-- <div class="container">
+            <div class="row">
+              <!-- <div class="container">
               <div class="jumbotron" style="max-width: 920px; margin: 20px auto;">
                 <div id="chartContainer" style="height: 370px;"></div>
               </div>
             </div> -->
 
-            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
+              <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
+                <div class="rounded custom-border-light">
+                  <div class="chart_title width-100% ">
+                    <strong class="p-4">
 
-                    {{ $t("Total Income") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="income_expense_chart" class=""></canvas>
+                      {{ $t("Total Income") }}
+                    </strong>
+                  </div>
+                  <div class="chart_container">
+                    <canvas id="income_expense_chart" class=""></canvas>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Expense") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="income_expense_chart1" class=""></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Net Profits") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="income_expense_chart2" class=""></canvas>
+              <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
+                <div class="rounded custom-border-light">
+                  <div class="chart_title width-100% ">
+                    <strong class="p-4">
+                      {{ $t("Total Expense") }}
+                    </strong>
+                  </div>
+                  <div class="chart_container">
+                    <canvas id="income_expense_chart1" class=""></canvas>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
+                <div class="rounded custom-border-light">
+                  <div class="chart_title width-100% ">
+                    <strong class="p-4">
+                      {{ $t("Total Net Profits") }}
+                    </strong>
+                  </div>
+                  <div class="chart_container">
+                    <canvas id="income_expense_chart2" class=""></canvas>
+                  </div>
+                </div>
+              </div>
 
-          </div>
-        </div>
-      </div>
-
-      <!-- total income and expense graphics respresentation  end  -->
-
-      <!-- total sales and PURCHASE graphics respresentation  start  -->
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold">
-                {{ $t("TOTAL SALE AND PURCHASE") }}</span>
             </div>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Sales ") }}
-                  </strong>
-                </div>
 
-                <div class="chart_container">
-                  <canvas id="sale_purchase_chart" class=""></canvas>
-                </div>
+        <!-- total income and expense graphics respresentation  end  -->
 
-
-              </div>
-
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Purchase") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="sale_purchase_chart1" class=""></canvas>
-                </div>
+        <!-- total sales and PURCHASE graphics respresentation  start  -->
+        <div class="d-flex flex-wrap mb-4">
+          <div class="mr-auto">
+            <div class="d-flex mb-2">
+              <div>
+                <span class="text-subhead-bold">
+                  {{ $t("TOTAL SALE AND PURCHASE") }}</span>
               </div>
             </div>
-            <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 " style="border-radius:20px;">
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="rounded custom-border-light">
+                  <div class="chart_title width-100% ">
+                    <strong class="p-4">
+                      {{ $t("Total Sales ") }}
+                    </strong>
+                  </div>
+
+                  <div class="chart_container">
+                    <canvas id="sale_purchase_chart" class=""></canvas>
+                  </div>
+
+
+                </div>
+
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
+                <div class="rounded custom-border-light">
+                  <div class="chart_title width-100% ">
+                    <strong class="p-4">
+                      {{ $t("Total Purchase") }}
+                    </strong>
+                  </div>
+                  <div class="chart_container">
+                    <canvas id="sale_purchase_chart1" class=""></canvas>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 " style="border-radius:20px;">
                 <div class="rounded custom-border-light">
                   <strong class="p-4">
                         {{ $t("Total Net Profits") }}
@@ -343,51 +333,51 @@
                   </div>
                 </div>
             </div>         -->
-          </div>
-        </div>
-      </div>
-
-      <!-- total sale and puraches graphics respresentation  end  -->
-
-
-
-      <!-- total stock in and stock out   start -->
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold">
-                {{ $t("TOTAL STOCK IN AND STOCK OUT") }}</span>
             </div>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Stock In") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="sale_stock_in_chart" class=""></canvas>
-                </div>
+
+        <!-- total sale and puraches graphics respresentation  end  -->
+
+
+
+        <!-- total stock in and stock out   start -->
+        <div class="d-flex flex-wrap mb-4">
+          <div class="mr-auto">
+            <div class="d-flex mb-2">
+              <div>
+                <span class="text-subhead-bold">
+                  {{ $t("TOTAL STOCK IN AND STOCK OUT") }}</span>
               </div>
             </div>
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Stock Out") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="sale_stock_out_chart" class=""></canvas>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
+                <div class="rounded custom-border-light">
+                  <div class="chart_title width-100% ">
+                    <strong class="p-4">
+                      {{ $t("Total Stock In") }}
+                    </strong>
+                  </div>
+                  <div class="chart_container">
+                    <canvas id="sale_stock_in_chart" class=""></canvas>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 " style="border-radius:20px;">
+              <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
+                <div class="rounded custom-border-light">
+                  <div class="chart_title width-100% ">
+                    <strong class="p-4">
+                      {{ $t("Total Stock Out") }}
+                    </strong>
+                  </div>
+                  <div class="chart_container">
+                    <canvas id="sale_stock_out_chart" class=""></canvas>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 " style="border-radius:20px;">
                 <div class="rounded custom-border-light">
                   <strong class="p-4">
                         {{ $t("Total Net Profits") }}
@@ -397,173 +387,143 @@
                   </div>
                 </div>
             </div>         -->
-          </div>
-        </div>
-      </div>
-
-
-      <!-- total stock in and stock out   end -->
-
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold"> {{ $t("Month") }}</span>
             </div>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_count.raw">
-              <div class="dashboard_row  col-14 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Sales") }}</div>
 
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="2423" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_value.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Sale Value") }}
-                  </div>
+        <!-- total stock in and stock out   end -->
 
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="2324" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="revenue_value.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Revenue") }}
-                  </div>
-
-                  <div class="mt-auto p-4 ">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="223" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="invoices_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">{{ $t("Total Invoices") }}</div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="523" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="expense.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Expense") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="123" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="net_profit_value.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Net Profit") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="232" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="customer_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Customers") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="465" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="purchase_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Purchase Orders") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="23" />
-                    </span>
-                  </div>
-                </div>
+        <div class="d-flex flex-wrap mb-4">
+          <div class="mr-auto">
+            <div class="d-flex mb-2">
+              <div>
+                <span class="text-subhead-bold"> {{ $t("Month") }}</span>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_count.raw">
+                <div class="dashboard_row  col-14 bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Total Sales") }}</div>
 
-
-      <div class="d-flex flex-wrap mb-4" style="display: none !important">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
-              <div class="col-12 rounded custom-border-light">
-                <div class="d-flex flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
-                    <div class="chart_container">
-                      <canvas id="pos_sales_count_activity_chart" class=""></canvas>
+                    <div class="mt-auto p-4">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="2423" />
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
-              <div class="col-12 rounded custom-border-light">
-                <div class="d-flex flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
-                    <div class="chart_container d-flex align-items-center">
-                      <canvas id="horizontal_chart"></canvas>
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_value.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Total Sale Value") }}
+                    </div>
+
+                    <div class="mt-auto p-4">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="2324" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="revenue_value.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Total Revenue") }}
+                    </div>
+
+                    <div class="mt-auto p-4 ">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="223" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="invoices_count.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">{{ $t("Total Invoices") }}</div>
+
+                    <div class="mt-auto p-4">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="523" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="expense.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Total Expense") }}
+                    </div>
+
+                    <div class="mt-auto p-4">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="123" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="net_profit_value.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Net Profit") }}
+                    </div>
+
+                    <div class="mt-auto p-4">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="232" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="customer_count.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Total Customers") }}
+                    </div>
+
+                    <div class="mt-auto p-4">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="465" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="purchase_order_count.raw">
+                <div class="dashboard_row col-14  bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="dashboard_title text-subhead p-2">
+                      {{ $t("Total Purchase Orders") }}
+                    </div>
+
+                    <div class="mt-auto p-4">
+                      <span class="text-headline">
+                        <input v-knob class="knob" type="text" value="23" />
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -571,95 +531,30 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="d-flex flex-wrap mb-4" style="display: none !important">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold"> {{ $t("Today") }} </span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">{{ $t("Sales") }}</div>
 
-                  <div class="mt-auto p-2">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <input v-knob class="knob" type="text" :value="todays_order_count.raw" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
+        <div class="d-flex flex-wrap mb-4" style="display: none !important">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
+                <div class="col-12 rounded custom-border-light">
+                  <div class="d-flex flex-wrap box-content">
+                    <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
+                      <div class="chart_container">
+                        <canvas id="pos_sales_count_activity_chart" class=""></canvas>
                       </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
-              <div class="col-12 rounded custom-border-light">
-                <div class="d-flex p-3 flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
-                    <div class="stat_chart_container">
-                      <canvas id="today_sales_count_chart" class=""></canvas>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_value.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">{{ $t("Sale Value") }}</div>
-
-                  <div class="mt-auto p-2">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <input v-knob class="knob" type="text" :value="todays_order_value.raw" />
-
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_value.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_value.difference) == -1,
-                        }" v-show="todays_order_value.difference !== 0">
-                          <span v-show="Math.sign(todays_order_value.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_value.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_value.difference }}%
-                        </span>
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
+                <div class="col-12 rounded custom-border-light">
+                  <div class="d-flex flex-wrap box-content">
+                    <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
+                      <div class="chart_container d-flex align-items-center">
+                        <canvas id="horizontal_chart"></canvas>
                       </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
-                    <div class="stat_chart_container">
-                      <canvas id="today_sales_value_chart" class=""></canvas>
                     </div>
                   </div>
                 </div>
@@ -667,9 +562,104 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- <div class="d-flex flex-wrap">
+        <div class="d-flex flex-wrap mb-4" style="display: none !important">
+          <div class="mr-auto">
+            <div class="d-flex mb-2">
+              <div>
+                <span class="text-subhead-bold"> {{ $t("Today") }} </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
+                <div class="col-12 p-3 bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="text-subhead p-2">{{ $t("Sales") }}</div>
+
+                    <div class="mt-auto p-2">
+                      <span>
+                        <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
+                        <div class="d-flex flex-column align-items-center" v-else>
+                          <input v-knob class="knob" type="text" :value="todays_order_count.raw" />
+                          <span :class="{
+                            'text-success':
+                              Math.sign(todays_order_count.difference) == 1,
+                            'text-danger':
+                              Math.sign(todays_order_count.difference) == -1,
+                          }" v-show="todays_order_count.difference !== 0">
+                            <span v-show="Math.sign(todays_order_count.difference) == 1
+                              "><i class="fas fa-long-arrow-alt-up"></i></span>
+                            <span v-show="Math.sign(todays_order_count.difference) == -1
+                              "><i class="fas fa-long-arrow-alt-down"></i></span>
+                            {{ todays_order_count.difference }}%
+                          </span>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
+                <div class="col-12 rounded custom-border-light">
+                  <div class="d-flex p-3 flex-wrap box-content">
+                    <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
+                      <div class="stat_chart_container">
+                        <canvas id="today_sales_count_chart" class=""></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_value.raw">
+                <div class="col-12 p-3 bg-white rounded custom-border-light">
+                  <div class="d-flex align-items-center flex-column box-content">
+                    <div class="text-subhead p-2">{{ $t("Sale Value") }}</div>
+
+                    <div class="mt-auto p-2">
+                      <span>
+                        <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
+                        <div class="d-flex flex-column align-items-center" v-else>
+                          <input v-knob class="knob" type="text" :value="todays_order_value.raw" />
+
+                          <span :class="{
+                            'text-success':
+                              Math.sign(todays_order_value.difference) == 1,
+                            'text-danger':
+                              Math.sign(todays_order_value.difference) == -1,
+                          }" v-show="todays_order_value.difference !== 0">
+                            <span v-show="Math.sign(todays_order_value.difference) == 1
+                              "><i class="fas fa-long-arrow-alt-up"></i></span>
+                            <span v-show="Math.sign(todays_order_value.difference) == -1
+                              "><i class="fas fa-long-arrow-alt-down"></i></span>
+                            {{ todays_order_value.difference }}%
+                          </span>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
+                <div class="col-12 p-3 bg-white rounded custom-border-light">
+                  <div class="d-flex flex-wrap box-content">
+                    <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
+                      <div class="stat_chart_container">
+                        <canvas id="today_sales_value_chart" class=""></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="d-flex flex-wrap">
         <div class="mr-auto">
           <div class="d-flex mb-2">
             <div>
@@ -679,7 +669,7 @@
         </div>
       </div> -->
 
-      <!-- <div class="d-flex flex-wrap mb-4">
+        <!-- <div class="d-flex flex-wrap mb-4">
         <div class="col-md-12">
           <div class="row">
             <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3">
@@ -784,9 +774,9 @@
         </div>
       </div> -->
 
-      <div class="d-flex flex-wrap mb-4">
+        <div class="d-flex flex-wrap mb-4">
 
-        <!-- <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 pl-sm-0 pl-md-3 pr-4">
+          <!-- <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 pl-sm-0 pl-md-3 pr-4">
           <div class="mr-auto">
             <div class="d-flex mb-2">
               <div>
@@ -830,10 +820,10 @@
             </div>
           </div>
         </div> -->
-      </div>
+        </div>
 
 
-      <!-- <div class="container">
+        <!-- <div class="container">
         <h1>Chart Integration Example</h1>
         <div id="app">
           <chart-component></chart-component>
@@ -842,8 +832,8 @@
 
 
 
+      </div>
     </div>
-
   </div>
 </template>
 <script>

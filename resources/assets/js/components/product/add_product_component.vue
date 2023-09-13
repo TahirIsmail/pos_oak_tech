@@ -150,7 +150,7 @@
         </div>
 
         <div class="form-row mb-2">
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="name">{{ $t("Name") }}</label>
             <input
               type="text"
@@ -165,7 +165,7 @@
               errors.first("name")
             }}</span>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="product_code">{{ $t("Product Code") }}</label>
             <input
               type="text"
@@ -180,7 +180,7 @@
               errors.first("product_code")
             }}</span>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="supplier">{{ $t("Supplier") }}</label>
             <select
               name="supplier"
@@ -201,7 +201,13 @@
               errors.first("supplier")
             }}</span>
           </div>
-          <div class="form-group col-md-3">
+          
+        </div>
+
+        <div class="form-row mb-2">
+
+
+          <div class="form-group col-md-4">
             <label for="category">{{ $t("Category") }}</label>
             <select
               name="category"
@@ -229,10 +235,7 @@
               errors.first("category")
             }}</span>
           </div>
-        </div>
-
-        <div class="form-row mb-2">
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="status">{{ $t("Status") }}</label>
             <select
               name="status"
@@ -266,7 +269,7 @@
         </div>
 
         <div class="form-row mb-2">
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="tax_code">{{ $t("Tax Code") }}</label>
             <select
               name="tax_code"
@@ -291,7 +294,7 @@
               errors.first("tax_code")
             }}</span>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="discount_code">{{ $t("Discount Code") }}</label>
             <select
               name="discount_code"
@@ -325,7 +328,7 @@
           <div class=""></div>
         </div>
         <div class="form-row mb-2">
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="purchase_price"
               >{{ $t("Purchase Price Excluding Tax") }} ({{
                 currency_code
@@ -346,7 +349,7 @@
               errors.first("purchase_price")
             }}</span>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="sale_price"
               >{{ $t("Sale Price Excluding Tax") }} ({{ currency_code }})</label
             >
@@ -367,7 +370,7 @@
               errors.first("sale_price")
             }}</span>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="sale_price"
               >{{ $t("Sale Price Including Tax") }} ({{ currency_code }})</label
             >
@@ -391,7 +394,7 @@
           </div>
         </div>
         <div class="form-row mb-2">
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="status">{{ $t("Quantity") }}</label>
             <input
               type="number"
@@ -408,7 +411,7 @@
               errors.first("quantity")
             }}</span>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="status">{{ $t("Stock Alert Quantity") }}</label>
             <input
               type="number"
@@ -427,7 +430,7 @@
           </div>
         </div>
         <div class="form-row mb-2">
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="description">{{ $t("Description") }}</label>
             <textarea
               name="description"
@@ -1684,55 +1687,6 @@ export default {
 };
 </script>
 <style scoped>
-    .card-header {
-        padding: 0.75rem 1.25rem;
-        margin-bottom: 0;
-        background-color: rgba(0, 0, 0, .03);
-        border-bottom: 1px solid rgba(0, 0, 0, .125);
-    }
-
-
-    .card {
-        position: relative;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        min-width: 0;
-        word-wrap: break-word;
-        background-color: #fff;
-        background-clip: border-box;
-        border: 1px solid rgba(0, 0, 0, .125);
-        border-radius: 0.25rem;
-    }
-    .page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    margin-left:18px;
-}
-
-
-
-.mb-1,.my-1 {
-  margin-bottom: 0.25rem !important;
-  margin-left: 10px;
-}
-
-.mb-2,.my-2 {
-  margin-bottom: 0.5rem !important;
-  margin-left: 10px;
-}
-
-.form-row {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin-right: 10px;
-  margin-left: 10px;
-}
 hr {
     margin-left: 30px;
     margin-right: 30px;

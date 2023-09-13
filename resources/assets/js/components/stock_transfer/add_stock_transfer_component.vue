@@ -76,20 +76,23 @@
                                     class="fas fa-times"></i></button>
                         </div>
                         <div class="form-group col-md-4">
-                            <span class="d-block mt-1" v-if="product.quantity_left != null && product.quantity_left != ''">{{
-                                $t("Total Stock Left") }}: {{ product.quantity_left }}</span>
+                            <span class="d-block mt-1"
+                                v-if="product.quantity_left != null && product.quantity_left != ''">{{
+                                    $t("Total Stock Left") }}: {{ product.quantity_left }}</span>
                         </div>
+
+                      
                     </div>
 
                     <div class="form-row mb-2">
-                        <div class="form-group col-md-3">
-                            <label for="notes">{{ $t("Notes") }}</label>
-                            <textarea name="notes" v-model="notes" v-validate="'max:65535'"
-                                class="form-control form-control-custom" rows="5"
-                                :placeholder="$t('Enter notes')"></textarea>
-                            <span v-bind:class="{ 'error': errors.has('notes') }">{{ errors.first('notes') }}</span>
+                            <div class="form-group col-md-3">
+                                <label for="notes">{{ $t("Notes") }}</label>
+                                <textarea name="notes" v-model="notes" v-validate="'max:65535'"
+                                    class="form-control form-control-custom" rows="5"
+                                    :placeholder="$t('Enter notes')"></textarea>
+                                <span v-bind:class="{ 'error': errors.has('notes') }">{{ errors.first('notes') }}</span>
+                            </div>
                         </div>
-                    </div>
 
                 </form>
 
@@ -281,42 +284,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.card-header {
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: rgba(0, 0, 0, .03);
-    border-bottom: 1px solid rgba(0, 0, 0, .125);
-}
-
-
-.card {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: 0.25rem;
-}
-
-
-.mb-2,
-.my-2 {
-    margin-left: 10px;
-    margin-bottom: 0.5rem !important;
-}
-
-.form-row {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: 10px;
-    margin-left: 10px;
-}</style>
