@@ -19,11 +19,11 @@
                     <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                     <div class="form-row mb-2">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="from_store">{{ $t("From Store") }}</label>
                             <span class="d-block">{{ current_store.store_code }} - {{ current_store.name }}</span>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="to_store">{{ $t("To Store") }}</label>
                             <select name="to_store" v-model="to_store" v-validate="'required'"
                                 class="form-control form-control-custom custom-select">
@@ -35,16 +35,17 @@
                             </select>
                             <span v-bind:class="{ 'error': errors.has('to_store') }">{{ errors.first('to_store') }}</span>
                         </div>
-                    </div>
-
-                    <div class="form-row mb-2">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="barcode">{{ $t("Search and Add Products") }}</label>
                             <cool-select type="text" v-model="search_product" autocomplete="off"
                                 inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label"
                                 itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search
                                 @search='load_products' @select='add_product_to_list'></cool-select>
                         </div>
+                    </div>
+
+                    <div class="form-row mb-2">
+                        
                     </div>
 
                     <div class="form-row">
@@ -67,7 +68,7 @@
                         <div class="form-group col-md-1">
                             <input type="number" v-bind:name="'product.quantity_' + index" v-model="product.quantity"
                                 v-validate="'required|decimal|min_value:1'" data-vv-as="Quantity"
-                                class="form-control form-control-custom" autocomplete="off" step="0.01" min="0">
+                                class="form-control form-control-custom" autocomplete="off" step="1" min="0">
                             <span v-bind:class="{ 'error': errors.has('product.quantity_' + index) }">{{
                                 errors.first('product.quantity_' + index) }}</span>
                         </div>
@@ -81,18 +82,18 @@
                                     $t("Total Stock Left") }}: {{ product.quantity_left }}</span>
                         </div>
 
-                      
+
                     </div>
 
                     <div class="form-row mb-2">
-                            <div class="form-group col-md-3">
-                                <label for="notes">{{ $t("Notes") }}</label>
-                                <textarea name="notes" v-model="notes" v-validate="'max:65535'"
-                                    class="form-control form-control-custom" rows="5"
-                                    :placeholder="$t('Enter notes')"></textarea>
-                                <span v-bind:class="{ 'error': errors.has('notes') }">{{ errors.first('notes') }}</span>
-                            </div>
+                        <div class="form-group col-md-4">
+                            <label for="notes">{{ $t("Notes") }}</label>
+                            <textarea name="notes" v-model="notes" v-validate="'max:65535'"
+                                class="form-control form-control-custom" rows="1"
+                                :placeholder="$t('Enter notes')"></textarea>
+                            <span v-bind:class="{ 'error': errors.has('notes') }">{{ errors.first('notes') }}</span>
                         </div>
+                    </div>
 
                 </form>
 

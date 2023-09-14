@@ -19,7 +19,7 @@
                     <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                     <div class="form-row mb-2">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="lastname">{{ $t("Role") }}</label>
                             <select name="role" v-model="role" v-validate="''"
                                 class="form-control form-control-custom custom-select">
@@ -30,7 +30,7 @@
                             </select>
                             <span v-bind:class="{ 'error': errors.has('role') }">{{ errors.first('role') }}</span>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="users">{{ $t("Choose Users") }}</label>
                             <cool-select type="text" v-model="search_user" autocomplete="off"
                                 inputForTextClass="form-control form-control-custom" :items="user_list" item-text="label"
@@ -46,6 +46,16 @@
                             </cool-select>
                             <span v-bind:class="{ 'error': errors.has('users') }">{{ errors.first('users') }}</span>
                         </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label for="notification">{{ $t("Notification") }}</label>
+                            <textarea name="notification" v-model="notification" v-validate="'required|max:65535'"
+                                class="form-control form-control-custom" rows="1"
+                                :placeholder="$t('Enter Notification')"></textarea>
+                            <span v-bind:class="{ 'error': errors.has('notification') }">{{ errors.first('notification')
+                            }}</span>
+                        </div>
+                  
                     </div>
 
                     <div class="form-row mb-2">
@@ -66,16 +76,7 @@
                         </div>
                     </div>
 
-                    <div class="form-row mb-2">
-                        <div class="form-group col-md-6">
-                            <label for="notification">{{ $t("Notification") }}</label>
-                            <textarea name="notification" v-model="notification" v-validate="'required|max:65535'"
-                                class="form-control form-control-custom" rows="5"
-                                :placeholder="$t('Enter Notification')"></textarea>
-                            <span v-bind:class="{ 'error': errors.has('notification') }">{{ errors.first('notification')
-                            }}</span>
-                        </div>
-                    </div>
+                    
 
                 </form>
 
