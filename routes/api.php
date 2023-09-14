@@ -179,6 +179,9 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/unmerge_order', 'API\Order@unmerge_order');
     Route::post('/update_all_kitchen_item_as_prepared', 'API\Order@update_all_kitchen_item_as_prepared');
 
+
+    Route::post('/remaining_amount_payment/{slack}', 'API\Order@remaining_amount_payment');
+
     //store
     Route::post('/stores', 'API\Store@index');
     Route::post('/add_store', 'API\Store@store');

@@ -13,24 +13,10 @@
                     <a href="{{ route('add_product')}}" role="button" class="btn btn-primary">{{ __("New Product") }}</a>
                 @endif
             </div>
-        </div>
-
-        {{-- <div class="form-row mb-1">
-            <div class="form-group col-md-3">
-                <label for="product_type_filter">{{ __("Filter Product") }}</label>
-                <select name="product_type_filter" id="product_type_filter" class="form-control form-control-custom custom-select">
-                    <option value="all">All</option>
-                    <option value="billing_products" selected>Billing Products</option>
-                    <option value="addon_products">Add-on Products</option>
-                    @if($restaurant_mode)
-                    <option value="ingredients">Ingredients</option>
-                    @endif
-                </select>
-            </div>
-        </div> --}}
+        </div>        
 
         <div class="table-responsive">
-            <table id="listing-table" class="table nowrap">
+            <table id="listing-table" class="display table nowrap">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -64,6 +50,7 @@
     <script src="{{ asset('plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/datatable.js') }}"></script>
     <script src="{{ asset('js/pages/products.js') }}"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.9/js/dataTables.fixedHeader.min.js"></script>
     <script>
         'use strict';
         var products = new Products();

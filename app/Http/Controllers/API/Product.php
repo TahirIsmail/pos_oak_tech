@@ -65,10 +65,8 @@ class Product extends Controller
             if ($request->ajax()) {
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
-
-                $data = ProductModel::with('supplier', 'subcategory', 'tax_code', 'discount_code', 'User')->get();
-                // dd($data);
-
+                $data = ProductModel::with('supplier', 'subcategory', 'tax_code', 'discount_code', 'User')->where('quantity', '>', 0)->orderBy('id', 'desc')->get();
+                
                 return Datatables::of($data)
                     ->addIndexColumn()
 

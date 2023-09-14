@@ -14,6 +14,7 @@
                         <th scope="col">{{ $t("Account") }}</th>
                         <th scope="col">{{ $t("Payment Method") }}</th>
                         <th scope="col" class="text-right">{{ $t("Amount") }}</th>
+                        <th scope="col" class="text-right">{{ $t("Received Amount") }}</th>
                         <th scope="col">{{ $t("Created On") }}</th>
                         <th scope="col">{{ $t("Created By") }}</th>
                         <th scope="col">{{ $t("Action") }}</th>
@@ -28,6 +29,7 @@
                         <td>{{ transaction.account.label }}</td>
                         <td>{{ transaction.payment_method }}</td>
                         <td class="text-right">{{ transaction.amount }}</td>
+                        <td class="text-center">{{ transaction.received_amount }}</td>
                         <td>{{ transaction.created_at_label }}</td>
                         <td>{{ (transaction.created_by != null)?transaction.created_by.fullname:'-' }}</td>
                         <td>

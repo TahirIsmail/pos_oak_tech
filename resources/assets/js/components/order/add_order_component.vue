@@ -1,16 +1,18 @@
 <template>
     <div class="row m-0">
-        
+       
         <div class="col-md-8 p-0 bg-white border-right">
             
             <div class="p-0 border-bottom">
                 <div class="d-flex flex-nowrap justify-content-between p-3 horizontal-scroll hide-horizontal-scroll">
                     <div class="mr-auto text-nowrap">
-                        <span class="text-title" v-if="order_slack == ''">{{ $t("New Order") }}</span>
+
+                        <span class="text-title" v-if="order_slack == ''">{{ $t("New Order") }}</span>                        
                         <span class="text-title" v-else>{{ $t("Order") }} # {{ order_number }}</span>
+                       
                     </div>
 
-                    <button class="btn btn-light ml-3" v-on:click="get_keyboard_shortcuts()" v-if="keyboard_shortcuts.length > 0"><i class="fas fa-keyboard"></i></button>
+                    <!-- <button class="btn btn-light ml-3" v-on:click="get_keyboard_shortcuts()" v-if="keyboard_shortcuts.length > 0"><i class="fas fa-keyboard"></i></button> -->
                     
                     <div class="col-md-2 pr-0" v-if="store_restaurant_mode == true" title="Bill Type">
                         <select name="billing_type" v-model="billing_type" class="form-control form-control-custom custom-select" :disabled="(order_restaurant_mode == 1 && order_slack != '' && this.order_data.order.current_status.value_constant != 'CUSTOMER_ORDER')">
@@ -24,9 +26,9 @@
 
                     <button class="btn btn-outline-dark ml-3 text-nowrap" v-on:click="get_running_orders_list(1)" v-if="store_restaurant_mode == true"> {{ $t("Running Orders") }}</button>
 
-                    <button class="btn btn-outline-dark ml-3 text-nowrap" v-on:click="get_hold_list"> {{ $t("Hold List") }}</button>
+                    <!-- <button class="btn btn-outline-dark ml-3 text-nowrap" v-on:click="get_hold_list"> {{ $t("Hold List") }}</button> -->
 
-                    <button class="btn btn-danger ml-3 text-nowrap" v-on:click="close_register"> <i class="fas fa-cash-register"></i>&ensp;<span v-if="parent_register ==1">{{ $t("Close Register") }}</span><span v-else>{{ $t("Exit Register") }}</span></button>
+                    <!-- <button class="btn btn-danger ml-3 text-nowrap" v-on:click="close_register"> <i class="fas fa-cash-register"></i>&ensp;<span v-if="parent_register ==1">{{ $t("Close Register") }}</span><span v-else>{{ $t("Exit Register") }}</span></button> -->
                 </div>
             </div>
 
@@ -71,9 +73,9 @@
                                     <span class="ml-1 text-primary" title="Customizable" v-if="product_list_item.customizable == 1"><i class="far fa-plus-square"></i></span>
                                     <span class="ml-1 text-primary" title="Variants Available" v-if="typeof product_list_item.variants_by_options_pos != 'undefined' && product_list_item.variants_by_options_pos != null && Object.keys(product_list_item.variants_by_options_pos).length > 0"><i class="far fa-clone"></i></span>
                                 </div>
-                                <div class="text-bold text-break overflow-hidden" v-show="product_list_item.quantity<=10">
+                                <!-- <div class="text-bold text-break overflow-hidden" v-show="product_list_item.quantity<=10">
                                     <span class="text-warning text-caption">Only {{ product_list_item.quantity }} stock(s) left</span>
-                                </div>
+                                </div> -->
                                 <div class="text-bold text-break overflow-hidden" v-show="order_restaurant_mode == 1 && product_list_item.ingredient_low_stock == true">
                                     <span class="text-warning text-caption">Low on Ingredient stock</span>
                                 </div>
@@ -97,7 +99,8 @@
                 <div class="p-0 border-bottom">
                     <div class="d-flex flex-wrap p-3 align-items-center">
                         <span class="mr-auto text-title text-black-50">{{ $t("Cart") }}</span>
-                        <button class="btn btn-outline-primary" v-on:click="show_customer_modal = true"><i class="fas fa-user-edit"></i> {{ $t("Customer") }}: {{ customer_label | truncate(26) }}</button>
+                        
+                        <button class="btn btn-outline-primary" v-on:click="show_customer_modal = true" ><i class="fas fa-user-edit"></i> {{ $t("Customer") }}: {{ customer_label | truncate(26) }}</button>
                     </div>
                 </div>
 
@@ -123,7 +126,8 @@
                             <span class="text-bold text-break cart-item-title">
                                 {{ cart_item.name }}
                             </span>
-                            <input type="number" v-model="cart_item.quantity" v-on:input="validate_quantity(key, $event)" class="form-control form-control-custom cart-product-quantity mr-2 ml-3" autocomplete="off" min=0>
+                            <input type="number" v-model="cart_item.quantity" v-on:input="validate_quantity(key, $event)" class="form-control form-control-custom cart-product-quantity mr-2 ml-3" autocomplete="off" min=0 readonly>
+
                         </div>
 
                         <div class="d-flex flex-row justify-content-between mr-2 cart-item-summary">
@@ -207,18 +211,18 @@
                         <div v-if="order_restaurant_mode == 1">
                             <div class="mt-2" v-if="order_slack == ''">
                                 
-                                <div class="d-flex mt-2" v-if="billing_type == 'FINE_DINE'">
+                                <!-- <div class="d-flex mt-2" v-if="billing_type == 'FINE_DINE'">
                                     <div class="flex-grow-1">
                                         <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.SEND_TO_KITCHEN" @shortkey="create_order('IN_KITCHEN')" @click.stop.prevent="create_order('IN_KITCHEN')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Send to Kitchen") }}</button>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="d-flex mt-2" v-if="billing_type == 'QUICK_BILL'">
-                                    <div class="mr-2">
+                                    <!-- <div class="mr-2">
                                         <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
-                                    </div>
+                                    </div> -->
                                     <div class="flex-grow-1">
-                                        <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Close Order") }}</button>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
                                     </div>
                                 </div>
 
@@ -226,14 +230,14 @@
                             <div class="mt-2" v-if="order_slack != ''">
                                 
                                 <div class="d-flex flex-row" v-if="this.order_data.order.current_status.value_constant != 'CUSTOMER_ORDER'">
-                                    <div class="mr-2" v-if="order_slack != '' && restaurant_mode_statuses.includes(this.order_data.order.current_status.value_constant)">
+                                    <!-- <div class="mr-2" v-if="order_slack != '' && restaurant_mode_statuses.includes(this.order_data.order.current_status.value_constant)">
                                         <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.SEND_TO_KITCHEN" @shortkey="create_order('IN_KITCHEN')" @click.stop.prevent="create_order('IN_KITCHEN')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Update Order") }}</button>
-                                    </div>
-                                    <div class="mr-2">
+                                    </div> -->
+                                    <!-- <div class="mr-2">
                                         <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
-                                    </div>
+                                    </div> -->
                                     <div class="flex-grow-1">
-                                        <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Close Order") }}</button>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
                                     </div>
                                 </div>
 
@@ -245,11 +249,11 @@
                                     </div>
 
                                     <div class="d-flex mt-2" v-if="billing_type == 'QUICK_BILL'">
-                                        <div class="mr-2">
+                                        <!-- <div class="mr-2">
                                             <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
-                                        </div>
+                                        </div> -->
                                         <div class="flex-grow-1">
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Close Order") }}</button>
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -258,11 +262,11 @@
                         </div>
                         <div v-else>
                             <div class="d-flex mt-2" v-if="order_restaurant_mode == 0">
-                                <div class="mr-2">
+                                <!-- <div class="mr-2">
                                     <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="[keyboard_shortcuts_formatted.HOLD_ORDER]" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
-                                </div>
+                                </div> -->
                                 <div class="flex-grow-1">
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="[keyboard_shortcuts_formatted.CLOSE_ORDER]" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Close Order") }}</button>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="[keyboard_shortcuts_formatted.CLOSE_ORDER]" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
                                 </div>
                             </div>
                         </div>
@@ -295,26 +299,26 @@
                         </cool-select>
                     </div>
 
-                    <div class="d-flex justify-content-center p-2">
+                    <!-- <div class="d-flex justify-content-center p-2">
                         <span class="">Or</span>
-                    </div>
+                    </div> -->
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="customer_name">{{ $t("Customer Name") }}</label>
                         <input type="text" name="customer_name" v-model="customer_name" v-validate="'max:255'" class="form-control" :placeholder="$t('Please provide Name')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('customer_name') }">{{ errors.first('customer_name') }}</span> 
                         <span class="small text-secondary text-break"><i class="fas fa-exclamation-circle text-primary"></i> {{ $t("Track only customer name") }}</span>
-                    </div>
+                    </div> -->
 
-                    <div class="d-flex justify-content-center p-2">
+                    <!-- <div class="d-flex justify-content-center p-2">
                         <span class="">Or</span>
                     </div>
 
                     <div class="d-flex justify-content-center p-2">
                         <span class="text-primary text-bold cursor" v-on:click="new_customer_form()"><i class="fas fa-user-plus"></i> {{ $t("Add New Customer") }}</span>
-                    </div>
+                    </div> -->
 
-                    <addcustomerordercomponent v-show="show_new_customer_form == true" v-bind:class="'mt-2 border-top'" :customer_status="customer_status"></addcustomerordercomponent>
+                    <!-- <addcustomerordercomponent v-show="show_new_customer_form == true" v-bind:class="'mt-2 border-top'" :customer_status="customer_status"></addcustomerordercomponent> -->
                 </div>
                 <div v-else>
                     <div class="">
@@ -367,6 +371,13 @@
                             <small id="business_account_help" class="form-text text-muted">Transaction will be saved under this account</small>
                             <span v-bind:class="{ 'error' : errors.has('confirmation_form.business_account') }">{{ errors.first('confirmation_form.business_account') }}</span> 
                         </div>
+
+
+                        <input type="hidden" name="customer" v-model="check_customer" v-validate="'required'"  />
+
+                        <span v-bind:class="{ 'error' : errors.has('confirmation_form.customer') }">{{ errors.first('confirmation_form.customer') }}</span> 
+
+
                         <div class="form-group">
                             <label for="payment_method d-block">{{ $t("Payment Method") }}</label>
                             <div class="d-flex flex-wrap">
@@ -381,15 +392,17 @@
                         </div>
                         <div class="form-row mb-2" v-if="show_balance_calc_form">
                             <div class="form-group col-md-4">
-                                <label for="calc_received_amount">{{ $t("Received Amount") }}</label>
-                                <input type="number" name="calc_received_amount" v-model="calc_received_amount" class="form-control form-control-lg" :placeholder="$t('Received Amount')"  autocomplete="off" v-on:input="calculate_balance_amount">
-                            </div>
-                            <div class="form-group col-md-4">
                                 <label for="calc_order_amount">{{ $t("Order Value") }}</label>
                                 <input type="number" name="calc_order_amount" v-model="calc_order_amount" class="form-control form-control-lg" :placeholder="$t('Order Value')"  autocomplete="off" readonly>
                             </div>
+
                             <div class="form-group col-md-4">
-                                <label for="calc_balance_amount"> {{ calc_balace_type }} {{ $t("Balance Amount") }}</label>
+                                <label for="calc_received_amount">{{ $t("Received Amount") }}</label>
+                                <input type="number" name="calc_received_amount" v-model="calc_received_amount" class="form-control form-control-lg" :placeholder="$t('Received Amount')"  autocomplete="off" v-on:input="calculate_balance_amount">
+                            </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label for="calc_balance_amount"> {{ calc_balace_type }} {{ $t("Pending Amount") }}</label>
                                 <input type="number" name="calc_balance_amount" v-model="calc_balance_amount" class="form-control form-control-lg" :placeholder="$t('Balance Amount')"  autocomplete="off" readonly>
                             </div>
                         </div>
@@ -578,9 +591,9 @@
                                             {{ variant_product_list_item.product.name | truncate(35) }}
                                             <span class="ml-1 text-primary" title="Customizable" v-if="variant_product_list_item.product.customizable == 1"><i class="far fa-plus-square"></i></span>
                                         </div>
-                                        <div class="text-bold text-break overflow-hidden" v-show="variant_product_list_item.product.quantity<=10">
+                                        <!-- <div class="text-bold text-break overflow-hidden" v-show="variant_product_list_item.product.quantity<=10">
                                             <span class="text-warning text-caption">Only {{ variant_product_list_item.product.quantity }} stock(s) left</span>
-                                        </div>
+                                        </div> -->
                                         <div class="text-bold text-break overflow-hidden" v-show="order_restaurant_mode == 1 && variant_product_list_item.product.ingredient_low_stock == true">
                                             <span class="text-warning text-caption">Low on Ingredient stock</span>
                                         </div>
@@ -801,10 +814,11 @@
                 new_order_route  : this.new_order_link,
                 api_link        : (this.order_data == null)?'/api/add_order':'/api/update_order/'+this.order_data.slack,
                 close_register_api_link : '/api/close_register',
-                default_label   : 'Walkin Customer',
+                default_label   : 'Select Customer',
                 current_date_time : moment().format('MMM Do YYYY, h:mm:ss a'),
 
                 customer_label  : '-',
+                check_customer : (this.customer_label == 'Select Customer') ? '' : this.customer_label,
                 barcode         : '',
                 product_title   : '',
                 category        : [],
@@ -1007,7 +1021,7 @@
         },
         methods: {
             product_info_form(){
-                alert(this.category);
+                // alert(this.category);
                 this.product_processing = true;
                 var formData = new FormData();
 
@@ -1047,7 +1061,8 @@
                     
                     this.$validator.validateAll('confirmation_form').then((isValid) => {
                         if (isValid) {
-                            this.processing = true;
+                            // alert(this.calc_balance_amount);
+                            // this.processing = true;
                             var formData = new FormData();
 
                             formData.append("access_token", window.settings.access_token);
@@ -1057,6 +1072,8 @@
                             formData.append("address", (this.address != null && this.address != '')?this.address:'');
                             formData.append("payment_method", this.payment_method);
                             formData.append("business_account", this.business_account);
+                            formData.append("pending_amount", this.calc_balance_amount);
+                            formData.append("received_amount", this.calc_received_amount);
                             formData.append("restaurant_mode", (this.order_restaurant_mode == true)?1:0);
                             formData.append("restaurant_order_type", this.restaurant_order_type);
                             formData.append("restaurant_table", this.restaurant_table);
@@ -1158,6 +1175,7 @@
                 this.customer_filter = '';
                 this.customer_list = [];
                 this.customer_label = this.get_customer_label();
+                this.check_customer = this.customer_label;
             },
 
             get_customer_label(){
@@ -1570,7 +1588,7 @@
             },
 
             calculate_balance_amount(){
-                var balance = parseFloat(this.calc_received_amount)-parseFloat(this.calc_order_amount);
+                var balance = parseFloat(this.calc_order_amount) - parseFloat(this.calc_received_amount); 
                 this.calc_balace_type = (balance>0)?'Return':'Receive';
                 this.calc_balance_amount = (!isNaN(balance))?balance.toFixed(2):'-';
             },

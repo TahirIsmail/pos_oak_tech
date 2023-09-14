@@ -22,6 +22,7 @@ class TransactionResource extends JsonResource
             'payment_method' => $this->payment_method,
             'currency_code' => $this->currency_code,
             'amount' => $this->amount,
+            'received_amount' => $this->received_amount,
             'pg_transaction_id' => $this->pg_transaction_id,
             'pg_transaction_status' => $this->pg_transaction_status,
             'payment_method_data' => new PaymentMethodResource($this->payment_method_data),

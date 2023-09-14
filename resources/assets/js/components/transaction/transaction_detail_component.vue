@@ -31,10 +31,7 @@
                 <span class="text-subhead">{{ $t("Billing Information") }}</span>
             </div>
             <div class="form-row mb-2">
-                <div class="form-group col-md-3">
-                    <label for="bill_to">{{ $t("Bill To") }}</label>
-                    <p>{{ transaction.bill_to  }}</p>
-                </div>
+                
                 <div class="form-group col-md-3" v-show='bill_to_link != ""'>
                     <label for="bill_to">{{ $t("Bill To Link") }}</label>
                     <p><a v-bind:href="bill_to_link" target="_blank">{{ bill_to_link_text  }}</a></p>

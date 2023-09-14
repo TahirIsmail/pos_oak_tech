@@ -6,7 +6,7 @@
         
         <div class="d-flex flex-wrap mb-4">
             <div class="mr-auto">
-                <span class="text-title">{{ __("POS Orders") }}</span>
+                <span class="text-title">{{ __("Customer Orders") }}</span>
             </div>
             <div class="">
                 @if (check_access(array('A_ADD_ORDER'), true))

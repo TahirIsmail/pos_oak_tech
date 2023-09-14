@@ -312,6 +312,39 @@ class Order extends Controller
 
         $data['order_data'] = $order_data;
 
+        $total_received_amount = 0;
+
+        foreach ($data['order_data']['transactions'] as $transactions){
+
+            
+            $total_received_amount += (int) $transactions['received_amount'];
+            
+        }
+
+        // dd($order_data);
+
+        $payment_methods = PaymentMethodModel::select('slack', 'label')
+        ->active()
+        ->get();
+        $data['payment_methods'] = (!empty($payment_methods))?$payment_methods:[];
+
+
+        $default_business_account = AccountModel::select('slack', 'account_code', 'label')
+        ->where('pos_default', '=', 1)
+        ->active()
+        ->first();
+        $data['default_business_account'] = $default_business_account;
+
+        $business_accounts = AccountModel::select('accounts.slack', 'accounts.account_code', 'accounts.label', 'master_account_type.label as account_type_label')
+        ->masterAccountTypeJoin()
+        ->active()
+        ->get();
+        $data['business_accounts'] = (!empty($business_accounts))?$business_accounts:[];
+
+        
+       
+        $data['total_received_amount'] = $total_received_amount;
+
         $data['print_order_link'] = route('print_order', ['slack' => $slack]);
 
         $data['delete_order_access'] = check_access(['A_DELETE_ORDER'], true);
@@ -326,6 +359,7 @@ class Order extends Controller
         
         $data['printnode_enabled'] = (isset($order_data['store']['printnode_enabled']) && $order_data['store']['printnode_enabled'] == 1)?true:false;
 
+        // dd($data['order_data']);
         return view('order.order_detail', $data);
     }
 
@@ -339,8 +373,20 @@ class Order extends Controller
         if(in_array($order_data['status']['value'], [1, 5] ) != 1){
             abort(404);
         }
+        $record['order_data'] = $order_data;
+        $total_received_amount = 0;
+
+        foreach ($record['order_data']['transactions'] as $transactions){
+
+            
+            $total_received_amount += (int) $transactions['received_amount'];
+            
+        }
+        // dd($total_received_amount);
 
         $invoice_print_type = $order_data['store']['invoice_type'];
+
+        // dd($invoice_print_type);
         
         switch($invoice_print_type){
             case 'A4':
@@ -375,7 +421,7 @@ class Order extends Controller
             break;
         }
 
-        $print_data = view($view_file, ['data' => json_encode($order_data), 'logo_path' => $print_logo_path])->render();
+        $print_data = view($view_file, ['data' => json_encode($order_data), 'total_received_amount' => json_encode($total_received_amount), 'logo_path' => $print_logo_path])->render();
 
         $mpdf_config = [
             'mode'          => 'utf-8',
