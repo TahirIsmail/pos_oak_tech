@@ -332,6 +332,8 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
     Route::get('/edit_expenses/{slack?}','ExpensesController@add_expense')->name('edit_expenses');
+
+    Route::get('/income','IncomeController@index')->name('income');
 });
 
 Route::get('/order_public/{slack}', "Order@detail_public_view")->name('order_public');

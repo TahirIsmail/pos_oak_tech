@@ -34,7 +34,7 @@ class StaffPayrollController extends Controller
             $total_deductions = 0;
             $total_earnings = 0;
 
-            // dd($request->earnings);
+            
 
             if (is_array($request->deductions)) {
                 foreach ($request->deductions as $deduction) {

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStaffPayrollsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,19 +14,17 @@ class CreateStaffPayrollsTable extends Migration
     public function up()
     {
         Schema::create('staff_payrolls', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('staff_id')
-            ->nullable()
-            ->constrained('users');
-            $table->integer('store_id');
-            $table->float('basic', 10, 2);
-            $table->float('total_allowance', 10, 2)->nullable();
-            $table->float('total_deduction', 10, 2)->nullable();
-            $table->float('pf_deduction', 10, 2)->nullable();
-            $table->float('this_month_pf', 10, 2)->nullable();
+            $table->bigIncrements('id');
+            $table->integer('store_id')->nullable();
+            $table->unsignedBigInteger('staff_id')->nullable()->index('staff_payrolls_staff_id_foreign');
+            $table->double('basic', 10, 2);
+            $table->double('total_allowance', 10, 2)->nullable();
+            $table->double('total_deduction', 10, 2)->nullable();
+            $table->double('pf_deduction', 10, 2)->nullable();
+            $table->double('this_month_pf', 10, 2)->nullable();
             $table->integer('leave_deduction')->nullable();
             $table->string('tax', 200);
-            $table->float('net_salary', 10, 2);
+            $table->double('net_salary', 10, 2);
             $table->string('status', 100);
             $table->string('month', 200);
             $table->string('year', 200);
@@ -46,4 +44,4 @@ class CreateStaffPayrollsTable extends Migration
     {
         Schema::dropIfExists('staff_payrolls');
     }
-}
+};
