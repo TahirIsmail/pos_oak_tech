@@ -123,7 +123,7 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     // staff Attendance routes 
     Route::post('/fetch_staff_list', 'API\AttendanceController@index');
-    Route::post('/store_staff_attendance', 'API\StaffPayrollController@store');
+    Route::post('/store_staff_attendance', 'API\AttendanceController@store');
 
 
     // staff payroll and payslips
