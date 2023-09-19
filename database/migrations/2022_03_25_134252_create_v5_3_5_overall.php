@@ -14,7 +14,7 @@ class CreateV535Overall extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->string('bill_to', 50)->comment('POS_ORDER, INVOICE, CUSTOMER, SUPPLIER, STAFF')->change();
+            $table->string('bill_to', 50)->comment('CUSTOMER_ORDER, INVOICE, CUSTOMER, SUPPLIER, STAFF')->change();
         });
     }
 

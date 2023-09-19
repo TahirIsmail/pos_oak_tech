@@ -128,7 +128,7 @@ class Order extends Model
     }
 
     public function transactions(){
-        return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['POS_ORDER'])->orderBy('transactions.id', 'desc');
+        return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['CUSTOMER_ORDER'])->orderBy('transactions.id', 'desc');
     }
 
     public function status_data(){

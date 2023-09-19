@@ -31,7 +31,6 @@
                 <span class="text-subhead">{{ $t("Billing Information") }}</span>
             </div>
             <div class="form-row mb-2">
-                
                 <div class="form-group col-md-3" v-show='bill_to_link != ""'>
                     <label for="bill_to">{{ $t("Bill To Link") }}</label>
                     <p><a v-bind:href="bill_to_link" target="_blank">{{ bill_to_link_text  }}</a></p>
@@ -151,7 +150,7 @@
                 transaction : this.transaction_data,
                 bill_to_link : '',
                 bill_to_link_text : '',
-                block_delete_transaction : ['POS_ORDER']
+                block_delete_transaction : ['CUSTOMER_ORDER']
             }
         },
         props: {
@@ -167,7 +166,7 @@
         methods: {
            get_bill_to_link(){
                 switch(this.transaction.bill_to){
-                    case 'POS_ORDER':
+                    case 'CUSTOMER_ORDER':
                         this.bill_to_link = this.transaction.order.detail_link;
                         this.bill_to_link_text = this.transaction.order.order_number;
                     break;

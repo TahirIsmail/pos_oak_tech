@@ -32,7 +32,7 @@ class TransactionResource extends JsonResource
             'bill_to_name' => $this->bill_to_name,
             'bill_to_contact' => $this->bill_to_contact,
             'bill_to_address' => $this->bill_to_address,
-            'order' => ($this->bill_to == "POS_ORDER" && $blocking_recurring_data_in_transaction == false)?new OrderResource($this->order):'',
+            'order' => ($this->bill_to == "CUSTOMER_ORDER" && $blocking_recurring_data_in_transaction == false)?new OrderResource($this->order):'',
             'invoice' => ($this->bill_to == "INVOICE" && $blocking_recurring_data_in_transaction == false)?new InvoiceResource($this->invoice):'',
             'supplier' => ($this->bill_to == "SUPPLIER" && $blocking_recurring_data_in_transaction == false)? new SupplierResource($this->supplier):'',
             'customer' => ($this->bill_to == "CUSTOMER" && $blocking_recurring_data_in_transaction == false)? new CustomerResource($this->customer):'',

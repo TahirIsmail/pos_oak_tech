@@ -75,6 +75,10 @@ class Transaction extends Model
         return $this->hasOne('App\Models\Customer', 'id', 'bill_to_id');
     }
 
+    public function staff(){
+        return $this->belongsTo('App\Models\User', 'id', 'bill_to_id');
+    }
+
     public function supplier(){
         return $this->hasOne('App\Models\Supplier', 'id', 'bill_to_id');
     }

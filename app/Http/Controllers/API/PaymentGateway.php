@@ -232,7 +232,7 @@ class PaymentGateway extends Controller
                 "transaction_type" => $transaction_type_data->id,
                 "payment_method_id" => $order_detail->payment_method_id,
                 "payment_method" => $order_detail->payment_method,
-                "bill_to" => 'POS_ORDER',
+                "bill_to" => 'CUSTOMER_ORDER',
                 "bill_to_id" => $order_detail->id,
                 "bill_to_name" => (isset($customer_data->name))?$customer_data->name:'Walkin Customer',
                 "bill_to_contact" => $order_detail->customer_phone,

@@ -76,6 +76,7 @@ class Transaction extends Controller
             abort(404);
         }
 
+        // dd($transaction);
         $transaction_data = new TransactionResource($transaction);
         
         $data['transaction_data'] = $transaction_data;
