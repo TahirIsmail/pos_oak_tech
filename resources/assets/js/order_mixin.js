@@ -22,12 +22,14 @@ export var order_mixin = {
         },
 
         add_to_cart(product){
+            
             var tax_type = (product.tax_code != null)?product.tax_code.tax_type:'EXCLUSIVE';
             var product_sale_price = product.sale_amount_excluding_tax;
 
             var tax_percentage = (product.tax_code != null)?parseFloat(product.tax_code.total_tax_percentage):0;
             var discount_percentage = (product.discount_code != null)?parseFloat(product.discount_code.discount_percentage):0;
-            var quantity = (this.cart[product.slack] != null)?parseFloat(this.cart[product.slack].quantity)+1:1;
+            // var quantity = (this.cart[product.slack] != null)?parseFloat(this.cart[product.slack].quantity)+1:1;
+            var quantity = (this.cart[product.slack] != null)?parseFloat(this.cart[product.slack].quantity):1;
             var total_price = parseFloat(quantity)*parseFloat(product_sale_price);
             var image = (product.images.length > 0 && product.images[0].thumbnail !='')?product.images[0]['thumbnail']:'/images/placeholder_images/menu_placeholder.png';
             
@@ -46,6 +48,8 @@ export var order_mixin = {
                 "sale_price_including_tax" : product.sale_amount_including_tax,
                 "tax_type"      : tax_type,
             };
+
+            // alert(quantity);
 
             this.$set(this.cart, product.slack, product_data);
             this.update_prices();
@@ -108,6 +112,8 @@ export var order_mixin = {
 
             for ( var product_slack in this.cart) {
                 const product_data = this.cart[product_slack];
+
+              
 
                 if(product_data.quantity != ""){
                     

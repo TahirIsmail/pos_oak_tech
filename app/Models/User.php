@@ -43,13 +43,12 @@ class User extends Model
     {
         return $this->hasMany(Leave::class, 'applied_by');
     }
-
-
-
+    public function transactions(){
+        return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['STAFF'])->orderBy('transactions.id', 'desc');
+    }
     public function scopeActive($query){
         return $query->where('users.status', 1);
     }
-
     public function scopeRoleJoin($query){
         return $query->leftJoin('roles', function ($join) {
             $join->on('roles.id', '=', 'users.role_id');

@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use DataTables;
+use App\Models\User as UserModel;
+use App\Models\Account as AccountModel;
+use App\Models\PaymentMethod as PaymentMethodModel;
+
+use App\Models\Transaction as TransactionModel;
 
 use Validator;
 
@@ -59,6 +64,7 @@ class StaffPayrollController extends Controller
             DB::beginTransaction();
             $staff_payroll = [
                 'staff_id' => $request->staff_id,
+                "store_id" => $request->logged_user_store_id,
                 'basic' => $request->basic_salary,
                 'total_allowance' => $total_earnings,
                 'total_deduction' => $total_deductions,
@@ -68,10 +74,8 @@ class StaffPayrollController extends Controller
                 'month' => $request->month,
                 'year' => $request->year,
             ];
-
             $staff_payroll_id = StaffPayroll::create($staff_payroll)->id;
-
-
+            
             if (is_array($request->earnings)) {
                 foreach ($request->earnings as $earning) {
                     if (
@@ -131,6 +135,10 @@ class StaffPayrollController extends Controller
             ));
         }
     }
+
+
+
+    
 
 
    

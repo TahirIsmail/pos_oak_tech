@@ -11,7 +11,7 @@ class Transaction extends Model
 {
     protected $table = 'transactions';
     protected $hidden = ['id', 'store_id', 'bill_to_id'];
-    protected $fillable = ['slack', 'store_id', 'transaction_code', 'account_id', 'transaction_type', 'payment_method_id', 'payment_method', 'bill_to', 'bill_to_id', 'bill_to_name', 'bill_to_contact', 'bill_to_address', 'currency_code', 'amount', 'notes', 'pg_transaction_id', 'pg_transaction_status', 'transaction_date', 'transaction_merged', 'merged_to', 'merged_from', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = ['slack', 'store_id', 'transaction_code', 'account_id', 'transaction_type', 'payment_method_id', 'payment_method', 'bill_to', 'bill_to_id', 'bill_to_name', 'bill_to_contact', 'bill_to_address', 'currency_code', 'amount', 'received_amount', 'notes', 'pg_transaction_id', 'pg_transaction_status', 'transaction_date', 'transaction_merged', 'merged_to', 'merged_from', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
     protected static function boot()
     {
@@ -73,6 +73,10 @@ class Transaction extends Model
 
     public function customer(){
         return $this->hasOne('App\Models\Customer', 'id', 'bill_to_id');
+    }
+
+    public function staff(){
+        return $this->belongsTo('App\Models\User', 'id', 'bill_to_id');
     }
 
     public function supplier(){

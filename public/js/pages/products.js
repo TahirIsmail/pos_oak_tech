@@ -54,9 +54,10 @@ class Products{
         var table = $('#listing-table').DataTable({
             destroy: true,
             processing: true,
-            serverSide: true,
+            serverSide: true, 
+            'scrollX': true,
+            autoWidth: false,
            
-            "scrollX": true,
             
             ajax: {
                 url: '/api/products',

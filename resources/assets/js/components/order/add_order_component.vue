@@ -4,15 +4,20 @@
         <div class="col-md-12 p-0 bg-white border-right">
 
             <div class="card-header  p-0 border-bottom">
+       
+        <div class="col-md-8 p-0 bg-white border-right">
+            
+            <div class="p-0 border-bottom">
                 <div class="d-flex flex-nowrap justify-content-between p-3 horizontal-scroll hide-horizontal-scroll">
                     <div class="mr-auto text-nowrap">
-                        <span class="text-title" v-if="order_slack == ''">{{ $t("New Order") }}</span>
+
+                        <span class="text-title" v-if="order_slack == ''">{{ $t("New Order") }}</span>                        
                         <span class="text-title" v-else>{{ $t("Order") }} # {{ order_number }}</span>
+                       
                     </div>
 
-                    <button class="btn_key btn btn-light ml-3" v-on:click="get_keyboard_shortcuts()"
-                        v-if="keyboard_shortcuts.length > 0"><i class="fas fa-keyboard"></i></button>
-
+                    <!-- <button class="btn btn-light ml-3" v-on:click="get_keyboard_shortcuts()" v-if="keyboard_shortcuts.length > 0"><i class="fas fa-keyboard"></i></button> -->
+                    
                     <div class="col-md-2 pr-0" v-if="store_restaurant_mode == true" title="Bill Type">
                         <select name="billing_type" v-model="billing_type"
                             class="form-control form-control-custom custom-select"
@@ -30,12 +35,9 @@
                     <button class="btn btn-outline-dark ml-3 text-nowrap" v-on:click="get_running_orders_list(1)"
                         v-if="store_restaurant_mode == true"> {{ $t("Running Orders") }}</button>
 
-                    <button class="btn btn-outline-dark ml-3 text-nowrap" v-on:click="get_hold_list"> {{ $t("Hold List")
-                    }}</button>
+                    <!-- <button class="btn btn-outline-dark ml-3 text-nowrap" v-on:click="get_hold_list"> {{ $t("Hold List") }}</button> -->
 
-                    <button class="btn btn-danger ml-3 text-nowrap" v-on:click="close_register"> <i
-                            class="fas fa-cash-register"></i>&ensp;<span v-if="parent_register == 1">{{ $t("Close Register")
-                            }}</span><span v-else>{{ $t("Exit Register") }}</span></button>
+                    <!-- <button class="btn btn-danger ml-3 text-nowrap" v-on:click="close_register"> <i class="fas fa-cash-register"></i>&ensp;<span v-if="parent_register ==1">{{ $t("Close Register") }}</span><span v-else>{{ $t("Exit Register") }}</span></button> -->
                 </div>
             </div>
 
@@ -72,77 +74,38 @@
             </div>
 
             <div class="d-flex flex-wrap mb-5 p-3 product-list bg-light">
-
-
-
-                <div class="col-md-8 p-0 full-height">
-
-
-
-
-
-                    <div data-v-4ab120e6="" class="p-0 border-bottom">
-                        <div data-v-4ab120e6="" class="card-header d-flex flex-wrap p-4 align-items-center">
-                            <span data-v-4ab120e6="" class="mr-auto text-title text-black-50">Products</span>
-                         </div></div>
-
-
-
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-4 bg-light product"
-                                v-for="(product_list_item, index) in product_list"
-                                v-bind:value="product_list_item.product_slack" v-bind:key="index"
-                                v-on:click='resolve_variants(product_list_item)'>
-                               
-                                <div class="col-12 product-card  bg-white product-grid"
-                                    v-shortkey="{ left: [keyboard_shortcuts_formatted.ARROW_LEFT], right: [keyboard_shortcuts_formatted.ARROW_RIGHT], choose: [keyboard_shortcuts_formatted.CHOOSE_PRODUCT] }"
-                                    @shortkey="product_navigate($event)" :class="{ focus: index === product_focus }">
-                                  
-                                    <div class="d-flex flex-row-reverse" v-if="product_list_item.images.length > 0">
-                                        <img :src="(product_list_item.images.length > 0) ? product_list_item.images[0].thumbnail : '#'"
-                                            alt="" class="rounded-circle product-image position-absolute d-none d-lg-block">
-                                    </div>
-                                 
-                                    <div class="product-code">
-                                        <span class="small text-secondary text-break">{{ $t("Product Code") }} : {{
-                                            product_list_item.product_code }}</span>
-                                    </div>
-                                    <div class="text-bold text-break overflow-hidden product-title">
-                                        {{ product_list_item.name | truncate(35) }}
-                                        <span class="ml-1 text-primary" title="Customizable"
-                                            v-if="product_list_item.customizable == 1"><i
-                                                class="far fa-plus-square"></i></span>
-                                        <span class="ml-1 text-primary" title="Variants Available"
-                                            v-if="typeof product_list_item.variants_by_options_pos != 'undefined' && product_list_item.variants_by_options_pos != null && Object.keys(product_list_item.variants_by_options_pos).length > 0"><i
-                                                class="far fa-clone"></i></span>
-                                    </div>
-                                    <div class="text-bold text-break overflow-hidden"
-                                        v-show="product_list_item.quantity <= 10">
-                                        <span class="text-warning text-caption">Only {{ product_list_item.quantity }}
-                                            stock(s)
-                                            left</span>
-                                    </div>
-                                    <div class="text-bold text-break overflow-hidden"
-                                        v-show="order_restaurant_mode == 1 && product_list_item.ingredient_low_stock == true">
-                                        <span class="text-warning text-caption">Low on Ingredient stock</span>
-                                    </div>
-                                    <div class="text-bold text-break overflow-hidden">
-                                        <span
-                                            v-if="product_list_item.discount_code != null && product_list_item.discount_code.discount_percentage > 0"
-                                            class="text-success text-caption">{{ $t("Discount") }} {{
-                                                product_list_item.discount_code.discount_percentage }}%</span>
-                                    </div>
-                                    <div class="mt-auto ml-auto pt-3 text-break product-price">
-                                        <span class="product-price-currency">{{ store_currency }}</span> {{
-                                            product_list_item.sale_amount_excluding_tax }}
-                                    </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-4 bg-light product" v-for="(product_list_item, index) in product_list" v-bind:value="product_list_item.product_slack" v-bind:key="index" v-on:click='resolve_variants(product_list_item)'>
+                            <div class="col-12 p-3 bg-white product-grid" v-shortkey="{left: [keyboard_shortcuts_formatted.ARROW_LEFT], right: [keyboard_shortcuts_formatted.ARROW_RIGHT], choose: [keyboard_shortcuts_formatted.CHOOSE_PRODUCT] }" @shortkey="product_navigate($event)" :class="{ focus: index === product_focus }">
+                                <div class="d-flex flex-row-reverse" v-if="product_list_item.images.length>0">
+                                    <img :src="(product_list_item.images.length>0)?product_list_item.images[0].thumbnail:'#'" alt="" class="rounded-circle product-image position-absolute d-none d-lg-block">
                                 </div>
-                                
+                                <div class="product-code">
+                                    <span class="small text-secondary text-break">{{ $t("Product Code") }} : {{ product_list_item.product_code}}</span>
+                                </div>
+                                <div class="text-bold text-break overflow-hidden product-title">
+                                    {{ product_list_item.name | truncate(35) }}
+                                    <span class="ml-1 text-primary" title="Customizable" v-if="product_list_item.customizable == 1"><i class="far fa-plus-square"></i></span>
+                                    <span class="ml-1 text-primary" title="Variants Available" v-if="typeof product_list_item.variants_by_options_pos != 'undefined' && product_list_item.variants_by_options_pos != null && Object.keys(product_list_item.variants_by_options_pos).length > 0"><i class="far fa-clone"></i></span>
+                                </div>
+                                <!-- <div class="text-bold text-break overflow-hidden" v-show="product_list_item.quantity<=10">
+                                    <span class="text-warning text-caption">Only {{ product_list_item.quantity }} stock(s) left</span>
+                                </div> -->
+                                <div class="text-bold text-break overflow-hidden" v-show="order_restaurant_mode == 1 && product_list_item.ingredient_low_stock == true">
+                                    <span class="text-warning text-caption">Low on Ingredient stock</span>
+                                </div>
+                                <div class="text-bold text-break overflow-hidden">
+                                    <span v-if="product_list_item.discount_code != null && product_list_item.discount_code.discount_percentage>0" class="text-success text-caption">{{ $t("Discount") }} {{ product_list_item.discount_code.discount_percentage }}%</span>
+                                </div>
+                                <div class="mt-auto ml-auto pt-3 text-break product-price">
+                                    <span class="product-price-currency">{{ store_currency }}</span> {{ product_list_item.sale_amount_excluding_tax }}
+                                </div>
                             </div>
-                           
                         </div>
                     </div>
+                </div>
+            </div>
 
                 </div>
 
@@ -157,7 +120,8 @@
                     <div class="p-0 border-bottom">
                         <div class="card-header d-flex flex-wrap p-3 align-items-center">
                             <span class="mr-auto text-title text-black-50">{{ $t("Cart") }}</span>
-                            <button class="btn btn-outline-primary" v-on:click="show_customer_modal = true"><i
+                            
+                        <button class="btn btn-outline-primary" v-on:click="show_customer_modal = true" ><i
                                     class="fas fa-user-edit"></i> {{ $t("Customer") }}: {{ customer_label | truncate(26)
                                     }}</button>
                         </div>
@@ -172,28 +136,23 @@
                         </div>
                     </div>
 
-                    <div class="p-0 cart-list">
+                <div class="p-0 cart-list">
+                
+                    <div class="d-flex flex-column pl-3 pt-3 pb-3 border-bottom" v-for="(cart_item, key, index) in cart" v-bind:value="cart_item.product_slack" v-bind:key="index">
+                        <div class="d-flex mb-2">
+                            <span class="small text-secondary">{{ $t("Product Code") }} : {{ cart_item.product_code }}</span>
+                            
+                            <button type="button" v-on:click="remove_from_cart(key)" class="close cart-item-remove bg-light mr-2 ml-auto" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-bold text-break cart-item-title">
+                                {{ cart_item.name }}
+                            </span>
+                            <input type="number" v-model="cart_item.quantity" v-on:input="validate_quantity(key, $event)" class="form-control form-control-custom cart-product-quantity mr-2 ml-3" autocomplete="off" min=0 readonly>
 
-                        <div class="d-flex flex-column pl-3 pt-3 pb-3 border-bottom" v-for="(cart_item, key, index) in cart"
-                            v-bind:value="cart_item.product_slack" v-bind:key="index">
-                            <div class="d-flex mb-2">
-                                <span class="small text-secondary">{{ $t("Product Code") }} : {{ cart_item.product_code
-                                }}</span>
-
-                                <button type="button" v-on:click="remove_from_cart(key)"
-                                    class="close cart-item-remove bg-light mr-2 ml-auto" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="text-bold text-break cart-item-title">
-                                    {{ cart_item.name }}
-                                </span>
-                                <input type="number" v-model="cart_item.quantity"
-                                    v-on:input="validate_quantity(key, $event)"
-                                    class="form-control form-control-custom cart-product-quantity mr-2 ml-3"
-                                    autocomplete="off" min=0>
-                            </div>
+                        </div>
 
                             <div class="d-flex flex-row justify-content-between mr-2 cart-item-summary">
                                 <div class="">
@@ -249,116 +208,76 @@
 
                     </div>
 
-
-
-
-
-                     <div class="Total  p-3    ml-auto fixed-bottom col-md-4 border-top cart-summary   p-3  fixed-bottom col-md-4 border-top cart-summary">
-                        <div class="d-flex justify-content-center show-more-billing-data bg-white cursor"
-                            v-on:click="toggle_calculation">
-                            <span class="show-more-billing-data-text">
-                                <span v-if="toggle_calculation_data == 0"><i
-                                        class="fas fa-angle-double-up show-more-billing-data-icon"></i> Show more</span>
-                                <span v-else><i class="fas fa-angle-double-down show-more-billing-data-icon"></i> Show
-                                    less</span>
+                <div class="d-flex flex-column p-3 ml-auto fixed-bottom col-md-4 border-top cart-summary">
+                    <div class="d-flex justify-content-center show-more-billing-data bg-white cursor" v-on:click="toggle_calculation">
+                        <span class="show-more-billing-data-text">
+                            <span v-if="toggle_calculation_data == 0"><i class="fas fa-angle-double-up show-more-billing-data-icon"></i> Show more</span>
+                            <span v-else><i class="fas fa-angle-double-down show-more-billing-data-icon"></i> Show less</span>
+                        </span>
+                    </div>
+                    <div v-show="toggle_calculation_data == 1">
+                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                            <span class="">{{ $t("Sub total") }}</span>
+                            <span class="">{{ sub_total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                            <span class="">{{ $t("Discount") }}</span>
+                            <span class="">{{ discount_total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                            <span class="d-inline-flex">
+                                {{ $t("Addt'l Discount") }}
+                                <input type="number" v-model="additional_discount_percentage" v-on:input="update_prices()" class="form-control form-control-sm ml-3 mr-1 additional_discount" :placeholder="$t('Discount')" min="0" max="100">%
                             </span>
+                            <span class="">{{ additional_discount_amount }}</span>
                         </div>
-                        <div class="bg" v-show="toggle_calculation_data == 1">
-                            <div class=" bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
-                                <span class="">{{ $t("Sub total") }}</span>
-                                <span class="">{{ sub_total }}</span>
-                            </div>
-                            <div class="bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
-                                <span class="">{{ $t("Discount") }}</span>
-                                <span class="">{{ discount_total }}</span>
-                            </div>
-                            <div class="bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
-                                <span class="d-inline-flex">
-                                    {{ $t("Addt'l Discount") }}
-                                    <input type="number" v-model="additional_discount_percentage"
-                                        v-on:input="update_prices()"
-                                        class="form-control form-control-sm ml-3 mr-1 additional_discount"
-                                        :placeholder="$t('Discount')" min="0" max="100">%
-                                </span>
-                                <span class="">{{ additional_discount_amount }}</span>
-                            </div>
-                            <div class="bg d-flex justify-content-between mb-2 cart-summary-label mt-0">
-                                <span class="">{{ $t("Total After Discount") }}</span>
-                                <span class="">{{ total_after_discount }}</span>
-                            </div>
-                            <div class="bg d-flex justify-content-between mb-2 cart-summary-label">
-                                <span class="">{{ $t("Total Tax") }}</span>
-                                <span class="">{{ tax_total }}</span>
-                            </div>
+                        <div class="d-flex justify-content-between mb-2 cart-summary-label mt-0">
+                            <span class="">{{ $t("Total After Discount") }}</span>
+                            <span class="">{{ total_after_discount }}</span>
                         </div>
-                        <div class="bg d-flex justify-content-between mb-2 cart-total">
-                            <span class="red-text">{{ $t("Total") }}</span>
-                            <span class="red-text">{{ total }}</span>
+                        <div class="d-flex justify-content-between mb-2 cart-summary-label">
+                            <span class="">{{ $t("Total Tax") }}</span>
+                            <span class="">{{ tax_total }}</span>
                         </div>
-
-                        <div v-if="processing == false">
-                            <div v-if="order_restaurant_mode == 1">
-                                <div class="mt-2" v-if="order_slack == ''">
-
-                                    <div class="d-flex mt-2" v-if="billing_type == 'FINE_DINE'">
-                                        <div class="flex-grow-1">
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"
-                                                v-shortkey="keyboard_shortcuts_formatted.SEND_TO_KITCHEN"
-                                                @shortkey="create_order('IN_KITCHEN')"
-                                                @click.stop.prevent="create_order('IN_KITCHEN')"
-                                                v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                    v-if="processing == true"></i> {{ $t("Send to Kitchen") }}</button>
-                                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 cart-total">
+                        <span class="">{{ $t("Total") }}</span>
+                        <span class="">{{ total }}</span>
+                    </div>
+                    
+                    <div v-if="processing == false">
+                        <div v-if="order_restaurant_mode == 1">
+                            <div class="mt-2" v-if="order_slack == ''">
+                                
+                                <!-- <div class="d-flex mt-2" v-if="billing_type == 'FINE_DINE'">
+                                    <div class="flex-grow-1">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.SEND_TO_KITCHEN" @shortkey="create_order('IN_KITCHEN')" @click.stop.prevent="create_order('IN_KITCHEN')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Send to Kitchen") }}</button>
                                     </div>
+                                </div> -->
 
-                                    <div class="d-flex mt-2" v-if="billing_type == 'QUICK_BILL'">
-                                        <div class="mr-2">
-                                            <button type="submit" class="btn btn-light btn-lg btn-block"
-                                                v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER"
-                                                @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')"
-                                                v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                    v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"
-                                                v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER"
-                                                @shortkey="create_order('CLOSE')"
-                                                @click.stop.prevent="create_order('CLOSE')"
-                                                v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                    v-if="processing == true"></i> {{ $t("Close Order") }}</button>
-                                        </div>
+                                <div class="d-flex mt-2" v-if="billing_type == 'QUICK_BILL'">
+                                    <!-- <div class="mr-2">
+                                        <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
+                                    </div> -->
+                                    <div class="flex-grow-1">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
                                     </div>
-
                                 </div>
-                                <div class="mt-2" v-if="order_slack != ''">
 
-                                    <div class="d-flex flex-row"
-                                        v-if="this.order_data.order.current_status.value_constant != 'CUSTOMER_ORDER'">
-                                        <div class="mr-2"
-                                            v-if="order_slack != '' && restaurant_mode_statuses.includes(this.order_data.order.current_status.value_constant)">
-                                            <button type="submit" class="btn btn-light btn-lg btn-block"
-                                                v-shortkey="keyboard_shortcuts_formatted.SEND_TO_KITCHEN"
-                                                @shortkey="create_order('IN_KITCHEN')"
-                                                @click.stop.prevent="create_order('IN_KITCHEN')"
-                                                v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                    v-if="processing == true"></i> {{ $t("Update Order") }}</button>
-                                        </div>
-                                        <div class="mr-2">
-                                            <button type="submit" class="btn btn-light btn-lg btn-block"
-                                                v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER"
-                                                @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')"
-                                                v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                    v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"
-                                                v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER"
-                                                @shortkey="create_order('CLOSE')"
-                                                @click.stop.prevent="create_order('CLOSE')"
-                                                v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                    v-if="processing == true"></i> {{ $t("Close Order") }}</button>
-                                        </div>
+                            </div>
+                            <div class="mt-2" v-if="order_slack != ''">
+                                
+                                <div class="d-flex flex-row" v-if="this.order_data.order.current_status.value_constant != 'CUSTOMER_ORDER'">
+                                    <!-- <div class="mr-2" v-if="order_slack != '' && restaurant_mode_statuses.includes(this.order_data.order.current_status.value_constant)">
+                                        <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.SEND_TO_KITCHEN" @shortkey="create_order('IN_KITCHEN')" @click.stop.prevent="create_order('IN_KITCHEN')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Update Order") }}</button>
+                                    </div> -->
+                                    <!-- <div class="mr-2">
+                                        <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
+                                    </div> -->
+                                    <div class="flex-grow-1">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
                                     </div>
+                                </div>
 
                                     <div v-if="this.order_data.order.current_status.value_constant == 'CUSTOMER_ORDER'">
                                         <div class="d-flex mt-2" v-if="billing_type == 'FINE_DINE'">
@@ -373,57 +292,35 @@
                                             </div>
                                         </div>
 
-                                        <div class="d-flex mt-2" v-if="billing_type == 'QUICK_BILL'">
-                                            <div class="mr-2">
-                                                <button type="submit" class="btn btn-light btn-lg btn-block"
-                                                    v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER"
-                                                    @shortkey="create_order('HOLD')"
-                                                    @click.stop.prevent="create_order('HOLD')"
-                                                    v-bind:disabled="processing == true"> <i
-                                                        class='fa fa-circle-notch fa-spin' v-if="processing == true"></i> {{
-                                                            $t("Hold Order") }}</button>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <button type="submit" class="btn btn-primary btn-lg btn-block"
-                                                    v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER"
-                                                    @shortkey="create_order('CLOSE')"
-                                                    @click.stop.prevent="create_order('CLOSE')"
-                                                    v-bind:disabled="processing == true"> <i
-                                                        class='fa fa-circle-notch fa-spin' v-if="processing == true"></i> {{
-                                                            $t("Close Order") }}</button>
-                                            </div>
+                                    <div class="d-flex mt-2" v-if="billing_type == 'QUICK_BILL'">
+                                        <!-- <div class="mr-2">
+                                            <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.HOLD_ORDER" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
+                                        </div> -->
+                                        <div class="flex-grow-1">
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="keyboard_shortcuts_formatted.CLOSE_ORDER" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
                                         </div>
                                     </div>
+                                </div>
 
-                                </div>
-                            </div>
-                            <div v-else>
-                                <div class="d-flex mt-2" v-if="order_restaurant_mode == 0">
-                                    <div class="mr-2">
-                                        <button type="submit" class="btn btn-light btn-lg btn-block"
-                                            v-shortkey="[keyboard_shortcuts_formatted.HOLD_ORDER]"
-                                            @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')"
-                                            v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <button type="submit" class="btn btn-primary btn-lg btn-block"
-                                            v-shortkey="[keyboard_shortcuts_formatted.CLOSE_ORDER]"
-                                            @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')"
-                                            v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'
-                                                v-if="processing == true"></i> {{ $t("Close Order") }}</button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-
-                        <div class="d-flex mt-2" v-if="processing == true">
-                            <span><i class='fa fa-circle-notch fa-spin' v-if="processing == true"></i>
-                            </span>&nbsp;Processing your order...
+                        <div v-else>
+                            <div class="d-flex mt-2" v-if="order_restaurant_mode == 0">
+                                <!-- <div class="mr-2">
+                                    <button type="submit" class="btn btn-light btn-lg btn-block" v-shortkey="[keyboard_shortcuts_formatted.HOLD_ORDER]" @shortkey="create_order('HOLD')" @click.stop.prevent="create_order('HOLD')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Hold Order") }}</button>
+                                </div> -->
+                                <div class="flex-grow-1">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block" v-shortkey="[keyboard_shortcuts_formatted.CLOSE_ORDER]" @shortkey="create_order('CLOSE')" @click.stop.prevent="create_order('CLOSE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Place Order") }}</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                   
+                    
+                    <div class="d-flex mt-2" v-if="processing == true">
+                        <span><i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> </span>&nbsp;Processing your order...
+                    </div>
                 </div>
+            </div>
 
             </div>
 
@@ -455,31 +352,26 @@
                         </cool-select>
                     </div>
 
-                    <div class="d-flex justify-content-center p-2">
+                    <!-- <div class="d-flex justify-content-center p-2">
                         <span class="">Or</span>
-                    </div>
+                    </div> -->
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="customer_name">{{ $t("Customer Name") }}</label>
-                        <input type="text" name="customer_name" v-model="customer_name" v-validate="'max:255'"
-                            class="form-control" :placeholder="$t('Please provide Name')" autocomplete="off">
-                        <span v-bind:class="{ 'error': errors.has('customer_name') }">{{ errors.first('customer_name')
-                        }}</span>
-                        <span class="small text-secondary text-break"><i class="fas fa-exclamation-circle text-primary"></i>
-                            {{ $t("Track only customer name") }}</span>
-                    </div>
+                        <input type="text" name="customer_name" v-model="customer_name" v-validate="'max:255'" class="form-control" :placeholder="$t('Please provide Name')"  autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('customer_name') }">{{ errors.first('customer_name') }}</span> 
+                        <span class="small text-secondary text-break"><i class="fas fa-exclamation-circle text-primary"></i> {{ $t("Track only customer name") }}</span>
+                    </div> -->
 
-                    <div class="d-flex justify-content-center p-2">
+                    <!-- <div class="d-flex justify-content-center p-2">
                         <span class="">Or</span>
                     </div>
 
                     <div class="d-flex justify-content-center p-2">
-                        <span class="text-primary text-bold cursor" v-on:click="new_customer_form()"><i
-                                class="fas fa-user-plus"></i> {{ $t("Add New Customer") }}</span>
-                    </div>
+                        <span class="text-primary text-bold cursor" v-on:click="new_customer_form()"><i class="fas fa-user-plus"></i> {{ $t("Add New Customer") }}</span>
+                    </div> -->
 
-                    <addcustomerordercomponent v-show="show_new_customer_form == true" v-bind:class="'mt-2 border-top'"
-                        :customer_status="customer_status"></addcustomerordercomponent>
+                    <!-- <addcustomerordercomponent v-show="show_new_customer_form == true" v-bind:class="'mt-2 border-top'" :customer_status="customer_status"></addcustomerordercomponent> -->
                 </div>
                 <div v-else>
                     <div class="">
@@ -552,6 +444,13 @@
                             <span v-bind:class="{ 'error': errors.has('confirmation_form.business_account') }">{{
                                 errors.first('confirmation_form.business_account') }}</span>
                         </div>
+
+
+                        <input type="hidden" name="customer" v-model="check_customer" v-validate="'required'"  />
+
+                        <span v-bind:class="{ 'error' : errors.has('confirmation_form.customer') }">{{ errors.first('confirmation_form.customer') }}</span> 
+
+
                         <div class="form-group">
                             <label for="payment_method d-block">{{ $t("Payment Method") }}</label>
                             <div class="d-flex flex-wrap">
@@ -576,22 +475,20 @@
                         </div>
                         <div class="form-row mb-2" v-if="show_balance_calc_form">
                             <div class="form-group col-md-4">
-                                <label for="calc_received_amount">{{ $t("Received Amount") }}</label>
-                                <input type="number" name="calc_received_amount" v-model="calc_received_amount"
-                                    class="form-control form-control-lg" :placeholder="$t('Received Amount')"
-                                    autocomplete="off" v-on:input="calculate_balance_amount">
-                            </div>
-                            <div class="form-group col-md-4">
                                 <label for="calc_order_amount">{{ $t("Order Value") }}</label>
                                 <input type="number" name="calc_order_amount" v-model="calc_order_amount"
                                     class="form-control form-control-lg" :placeholder="$t('Order Value')" autocomplete="off"
                                     readonly>
                             </div>
+
                             <div class="form-group col-md-4">
-                                <label for="calc_balance_amount"> {{ calc_balace_type }} {{ $t("Balance Amount") }}</label>
-                                <input type="number" name="calc_balance_amount" v-model="calc_balance_amount"
-                                    class="form-control form-control-lg" :placeholder="$t('Balance Amount')"
-                                    autocomplete="off" readonly>
+                                <label for="calc_received_amount">{{ $t("Received Amount") }}</label>
+                                <input type="number" name="calc_received_amount" v-model="calc_received_amount" class="form-control form-control-lg" :placeholder="$t('Received Amount')"  autocomplete="off" v-on:input="calculate_balance_amount">
+                            </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label for="calc_balance_amount"> {{ calc_balace_type }} {{ $t("Pending Amount") }}</label>
+                                <input type="number" name="calc_balance_amount" v-model="calc_balance_amount" class="form-control form-control-lg" :placeholder="$t('Balance Amount')"  autocomplete="off" readonly>
                             </div>
                         </div>
                     </div>
@@ -861,13 +758,10 @@
                                                 v-if="variant_product_list_item.product.customizable == 1"><i
                                                     class="far fa-plus-square"></i></span>
                                         </div>
-                                        <div class="text-bold text-break overflow-hidden"
-                                            v-show="variant_product_list_item.product.quantity <= 10">
-                                            <span class="text-warning text-caption">Only {{
-                                                variant_product_list_item.product.quantity }} stock(s) left</span>
-                                        </div>
-                                        <div class="text-bold text-break overflow-hidden"
-                                            v-show="order_restaurant_mode == 1 && variant_product_list_item.product.ingredient_low_stock == true">
+                                        <!-- <div class="text-bold text-break overflow-hidden" v-show="variant_product_list_item.product.quantity<=10">
+                                            <span class="text-warning text-caption">Only {{ variant_product_list_item.product.quantity }} stock(s) left</span>
+                                        </div> -->
+                                        <div class="text-bold text-break overflow-hidden" v-show="order_restaurant_mode == 1 && variant_product_list_item.product.ingredient_low_stock == true">
                                             <span class="text-warning text-caption">Low on Ingredient stock</span>
                                         </div>
                                         <div class="text-bold text-break overflow-hidden">
@@ -1130,16 +1024,17 @@ export default {
             show_new_customer_form: false,
             show_variant_modal: false,
 
-            new_order_route: this.new_order_link,
-            api_link: (this.order_data == null) ? '/api/add_order' : '/api/update_order/' + this.order_data.slack,
-            close_register_api_link: '/api/close_register',
-            default_label: 'Walkin Customer',
-            current_date_time: moment().format('MMM Do YYYY, h:mm:ss a'),
+                new_order_route  : this.new_order_link,
+                api_link        : (this.order_data == null)?'/api/add_order':'/api/update_order/'+this.order_data.slack,
+                close_register_api_link : '/api/close_register',
+                default_label   : 'Select Customer',
+                current_date_time : moment().format('MMM Do YYYY, h:mm:ss a'),
 
-            customer_label: '-',
-            barcode: '',
-            product_title: '',
-            category: [],
+                customer_label  : '-',
+                check_customer : (this.customer_label == 'Select Customer') ? '' : this.customer_label,
+                barcode         : '',
+                product_title   : '',
+                category        : [],
 
             order_slack: (this.order_data == null) ? '' : this.order_data.slack,
             order_number: (this.order_data == null) ? '' : this.order_data.order['order_number'],
@@ -1329,19 +1224,19 @@ export default {
 
         // this.product_info_form();
 
-        event_bus.$on('new_customer_data', this.set_new_customer_data);
-    },
-    created() {
-        if (this.order_data != null && this.order_data.order.current_status.value_constant == 'CLOSED') {
-            console.log('Order is already closed!');
-            window.location.href = this.new_order_route;
-        }
-    },
-    methods: {
-        product_info_form() {
-
-            this.product_processing = true;
-            var formData = new FormData();
+            event_bus.$on('new_customer_data', this.set_new_customer_data);
+        },
+        created(){
+            if(this.order_data != null && this.order_data.order.current_status.value_constant == 'CLOSED'){
+                console.log('Order is already closed!');
+                window.location.href = this.new_order_route;
+            }
+        },
+        methods: {
+            product_info_form(){
+                // alert(this.category);
+                this.product_processing = true;
+                var formData = new FormData();
 
             formData.append("access_token", window.settings.access_token);
             formData.append("barcode", this.barcode);
@@ -1375,27 +1270,30 @@ export default {
             this.order_status = order_status;
             this.show_creation_modal = true;
 
-            this.$on("submit", function () {
+                this.$on("submit",function () {
+                    
+                    this.$validator.validateAll('confirmation_form').then((isValid) => {
+                        if (isValid) {
+                            // alert(this.calc_balance_amount);
+                            // this.processing = true;
+                            var formData = new FormData();
 
-                this.$validator.validateAll('confirmation_form').then((isValid) => {
-                    if (isValid) {
-                        this.processing = true;
-                        var formData = new FormData();
-
-                        formData.append("access_token", window.settings.access_token);
-                        formData.append("order_status", this.order_status);
-                        formData.append("customer", (this.customer != null) ? JSON.stringify(this.customer) : '');
-                        formData.append("contact_number", (this.contact_number != null && this.contact_number != '') ? this.contact_number : '');
-                        formData.append("address", (this.address != null && this.address != '') ? this.address : '');
-                        formData.append("payment_method", this.payment_method);
-                        formData.append("business_account", this.business_account);
-                        formData.append("restaurant_mode", (this.order_restaurant_mode == true) ? 1 : 0);
-                        formData.append("restaurant_order_type", this.restaurant_order_type);
-                        formData.append("restaurant_table", this.restaurant_table);
-                        formData.append("waiter", (this.waiter != null) ? this.waiter : '');
-                        formData.append("billing_type", (this.billing_type != null) ? this.billing_type : '');
-                        formData.append("additional_discount_percentage", (this.additional_discount_percentage != null) ? this.additional_discount_percentage : 0);
-                        formData.append("cart", JSON.stringify(this.cart));
+                            formData.append("access_token", window.settings.access_token);
+                            formData.append("order_status", this.order_status);
+                            formData.append("customer", (this.customer != null)? JSON.stringify(this.customer):'');
+                            formData.append("contact_number", (this.contact_number != null && this.contact_number != '')?this.contact_number:'');
+                            formData.append("address", (this.address != null && this.address != '')?this.address:'');
+                            formData.append("payment_method", this.payment_method);
+                            formData.append("business_account", this.business_account);
+                            formData.append("pending_amount", this.calc_balance_amount);
+                            formData.append("received_amount", this.calc_received_amount);
+                            formData.append("restaurant_mode", (this.order_restaurant_mode == true)?1:0);
+                            formData.append("restaurant_order_type", this.restaurant_order_type);
+                            formData.append("restaurant_table", this.restaurant_table);
+                            formData.append("waiter", (this.waiter != null)?this.waiter:'');
+                            formData.append("billing_type", (this.billing_type != null)?this.billing_type:'');
+                            formData.append("additional_discount_percentage", (this.additional_discount_percentage != null)?this.additional_discount_percentage:0);
+                            formData.append("cart", JSON.stringify(this.cart));
 
                         axios.post(this.api_link, formData).then((response) => {
                             if (response.data.status_code == 200) {
@@ -1485,12 +1383,13 @@ export default {
             this.$refs.barcode.focus();
         },
 
-        set_customer(data) {
-            this.customer = data;
-            this.customer_filter = '';
-            this.customer_list = [];
-            this.customer_label = this.get_customer_label();
-        },
+            set_customer(data){
+                this.customer = data;
+                this.customer_filter = '';
+                this.customer_list = [];
+                this.customer_label = this.get_customer_label();
+                this.check_customer = this.customer_label;
+            },
 
         get_customer_label() {
             var customer_label = '';
@@ -1901,11 +1800,11 @@ export default {
             }
         },
 
-        calculate_balance_amount() {
-            var balance = parseFloat(this.calc_received_amount) - parseFloat(this.calc_order_amount);
-            this.calc_balace_type = (balance > 0) ? 'Return' : 'Receive';
-            this.calc_balance_amount = (!isNaN(balance)) ? balance.toFixed(2) : '-';
-        },
+            calculate_balance_amount(){
+                var balance = parseFloat(this.calc_order_amount) - parseFloat(this.calc_received_amount); 
+                this.calc_balace_type = (balance>0)?'Return':'Receive';
+                this.calc_balance_amount = (!isNaN(balance))?balance.toFixed(2):'-';
+            },
 
         new_customer_form() {
             this.show_new_customer_form = (this.show_new_customer_form) ? false : true;

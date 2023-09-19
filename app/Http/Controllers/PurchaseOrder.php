@@ -98,6 +98,7 @@ class PurchaseOrder extends Controller
         $data['delete_po_access'] = check_access(['A_DELETE_PURCHASE_ORDER'] ,true);
 
         $data['create_invoice_from_po_access'] = check_access(['A_CREATE_INVOICE_FROM_PO'] ,true);
+        // dd($data['create_invoice_from_po_access']);
 
         $store_data = StoreModel::select('printnode_enabled')
         ->where([

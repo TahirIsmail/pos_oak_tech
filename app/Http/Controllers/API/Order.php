@@ -164,6 +164,9 @@ class Order extends Controller
                 throw new Exception("Invalid request", 400);
             }
             $cart = json_decode($request->cart);
+
+
+            // dd($request->all());
             
 
             DB::beginTransaction();
@@ -180,7 +183,7 @@ class Order extends Controller
                 }
                 
                 $order_data = $this->form_order_array($request);
-                // dd($request->all());
+                // dd($order_data);
                 
                 if(!empty($order_data['order_data']) && !empty($order_data['order_products_data'])){
                     if(!empty($order_data['order_data'])){
@@ -193,13 +196,13 @@ class Order extends Controller
                         $order['register_id'] = (isset($business_register_data->id))?$business_register_data->id:NULL;
                         $order['order_origin'] = ($request->order_status == "CUSTOMER_ORDER")?'DIGITAL_MENU':'POS_WEB';
                         $order['created_at'] = now();
-                        $order['created_by'] = $request->logged_user_id;
+                        $order['created_by'] = $request->logged_user_id;                       
 
-                        
+                        if($order['total_order_amount_rounded'] > $request->received_amount){
+                            $order['payment_status'] = 0;
+                        }                       
 
                         $order_id = OrderModel::create($order)->id;
-                      
-
 
                         $code_start_config = Config::get('constants.unique_code_start.order');
                         $code_start = (isset($code_start_config))?$code_start_config:100;
@@ -233,7 +236,7 @@ class Order extends Controller
                     $forward_link = route('payment_gateway', ['type' => 'razorpay', 'slack' => $order['slack']]);
                 }else{
                     $forward_link = route('order_summary', ['slack' => $order['slack']]);
-                    $this->record_order_payment_transaction($order['slack']);
+                    $this->record_order_payment_transaction($order['slack'], $request->received_amount);
 
                     $notification_api = new NotificationAPI();
                     $notification_api->send_sms('POS_SALE_BILL_MESSAGE', $order['slack']);
@@ -369,7 +372,7 @@ class Order extends Controller
      */
     public function update(Request $request, $slack)
     {
-        dd($request->all());
+        // dd($request->all());
         try {
 
             $validation_required = ($request->order_status == "CLOSE")?true:false;
@@ -447,7 +450,7 @@ class Order extends Controller
                     $forward_link = route('payment_gateway', ['type' => 'razorpay', 'slack' => $slack]);
                 }else{
                     $forward_link = route('order_summary', ['slack' => $slack]);
-                    $this->record_order_payment_transaction($slack);
+                    $this->record_order_payment_transaction($slack, $request->received_amount);
 
                     $notification_api = new NotificationAPI();
                     $notification_api->send_sms('POS_SALE_BILL_MESSAGE', $slack);
@@ -507,7 +510,7 @@ class Order extends Controller
             });
 
             TransactionModel::where([
-                ['bill_to', '=', 'POS_ORDER'],
+                ['bill_to', '=', 'CUSTOMER_ORDER'],
                 ['bill_to_id', '=', $order_id],
             ])->delete();
             OrderProductModel::where('order_id', $order_id)->delete();
@@ -1167,8 +1170,8 @@ class Order extends Controller
         }
     }
 
-    public function record_order_payment_transaction($order_slack){
-       
+    public function record_order_payment_transaction($order_slack, $received_amount = 0){
+    
         $order_detail = OrderModel::select('*')->where('slack', $order_slack)->first();
 
         $transaction_type_data = MasterTransactionTypeModel::select('id')
@@ -1190,19 +1193,22 @@ class Order extends Controller
             "transaction_type" => $transaction_type_data->id,
             "payment_method_id" => $order_detail->payment_method_id,
             "payment_method" => $order_detail->payment_method,
-            "bill_to" => 'POS_ORDER',
+            "bill_to" => 'CUSTOMER_ORDER',
             "bill_to_id" => $order_detail->id,
             "bill_to_name" => (isset($customer_data->name))?$customer_data->name:'Walkin Customer',
             "bill_to_contact" => $order_detail->customer_phone,
             "bill_to_address" => (isset($customer_data->address))?$customer_data->address:'',
             "currency_code" => $order_detail->currency_code,
             "amount" => $order_detail->total_order_amount,
+            "received_amount" => (int) $received_amount,
             "pg_transaction_id" => '',
             "pg_transaction_status" => '',
             "notes" => '',
             "transaction_date" => date('Y-m-d'),
             "created_by" => request()->logged_user_id
         ];
+
+        // dd($transaction);
         
         $transaction_id = TransactionModel::create($transaction)->id;
 
@@ -1214,6 +1220,79 @@ class Order extends Controller
         ];
         TransactionModel::where('id', $transaction_id)
         ->update($transaction_code);
+    }
+
+
+    public function remaining_amount_payment(Request $request, $order_slack){
+        $order_detail = OrderModel::with('transactions')->select('*')->where('slack', $order_slack)->first();
+
+        $total_received_amount = 0;
+        foreach($order_detail->transactions as $transaction){
+            $total_received_amount += $transaction->received_amount;
+        }
+
+        $total_received_amount += $request->received_amount;
+
+        if($order_detail->total_order_amount == $total_received_amount){
+           $order_detail->payment_status = 1;
+           $order_detail->save();
+        }
+
+        $transaction_type_data = MasterTransactionTypeModel::select('id')
+        ->where('transaction_type_constant', '=', 'INCOME')
+        ->first();
+        if (empty($transaction_type_data)) {
+            throw new Exception("Invalid transaction type selected", 400);
+        }
+
+        $customer_data = CustomerModel::select('id', 'name', 'email', 'phone', 'address')
+        ->where('id', '=', $order_detail->customer_id)
+        ->first();
+
+
+        $transaction = [
+            "slack" => $this->generate_slack("transactions"),
+            "store_id" => $order_detail->store_id,
+            "transaction_code" => Str::random(6),
+            "account_id" => $order_detail->business_account_id,
+            "transaction_type" => $transaction_type_data->id,
+            "payment_method_id" => $order_detail->payment_method_id,
+            "payment_method" => $request->payment_method,
+            "bill_to" => 'CUSTOMER_ORDER',
+            "bill_to_id" => $order_detail->id,
+            "bill_to_name" => (isset($customer_data->name))?$customer_data->name:'Walkin Customer',
+            "bill_to_contact" => $order_detail->customer_phone,
+            "bill_to_address" => (isset($customer_data->address))?$customer_data->address:'',
+            "currency_code" => $order_detail->currency_code,
+            "amount" => $request->prev_remaining_amount,
+            "received_amount" => $request->received_amount,
+            "pg_transaction_id" => '',
+            "pg_transaction_status" => '',
+            "notes" => '',
+            "transaction_date" => date('Y-m-d'),
+            "created_by" => request()->logged_user_id
+        ];
+
+        $transaction_id = TransactionModel::create($transaction)->id;
+
+        $code_start_config = Config::get('constants.unique_code_start.transaction');
+        $code_start = (isset($code_start_config))?$code_start_config:100;
+        
+        $transaction_code = [
+            "transaction_code" => ($code_start+$transaction_id)
+        ];
+        TransactionModel::where('id', $transaction_id)
+        ->update($transaction_code);
+
+        if($transaction_id){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Transaction For Remaining Balance Successfully Submitted", 
+                    "data" => $transaction,
+                ), 'SUCCESS'
+            ));
+        }
+
     }
 
     public function get_hold_list(Request $request){
@@ -2204,7 +2283,7 @@ class Order extends Controller
             $this->calculate_and_update_order_amount($request, $order_id);
 
             $child_order_transactions = TransactionModel::where([
-                ['bill_to', '=', 'POS_ORDER'],
+                ['bill_to', '=', 'CUSTOMER_ORDER'],
             ])
             ->whereIn('bill_to_id', $order_id_array)->get()->makeVisible(['bill_to_id', 'store_id'])->toArray();
 
@@ -2398,7 +2477,7 @@ class Order extends Controller
             ])->delete();
 
             TransactionModel::where([
-                ['bill_to', '=', 'POS_ORDER'],
+                ['bill_to', '=', 'CUSTOMER_ORDER'],
                 ['bill_to_id', '=', $order_data->order_merge_parent_id],
                 ['merged_from', '=', $order_data->id]
             ])->delete();
@@ -2413,7 +2492,7 @@ class Order extends Controller
             ])->update(['merged_to' => NULL]);
 
             TransactionModel::where([
-                ['bill_to', '=', 'POS_ORDER'],
+                ['bill_to', '=', 'CUSTOMER_ORDER'],
                 ['bill_to_id', '=', $order_data->id],
                 ['merged_to', '=', $order_data->order_merge_parent_id]
             ])
