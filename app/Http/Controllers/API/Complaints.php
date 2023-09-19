@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Complaints as ModelsComplaints;
 use DataTables;
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\Product;
+use App\Models\Customer;
 
 class Complaints extends Controller
 {
@@ -25,36 +29,31 @@ class Complaints extends Controller
         }
 
         if ($request->ajax()) {
-            $data = ModelsComplaints::with('store', 'assignedTo','complaintBy','createdUser','updatedUser')->get();
+            $data = ModelsComplaints::with('order', 'product', 'customer')->get();
 
           
            
             return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('complaint_by', function ($row) {                    
-                    $output = $row['complaintBy']->name;
-                    return $output;
+                ->addIndexColumn()               
+                ->addColumn('order_id', function ($row){
+                    return 'Order#'.$row->order->order_number;
                 })
-                ->addColumn('assigned_to', function ($row) {                    
-                    $output = $row['assignedTo']->fullname;
-                    return $output;
+                ->addColumn('product_id', function ($row){
+                    return $row->product->name . ' (' .$row->product->product_code . ')';
                 })
-                ->addColumn('created_by', function ($row) {                    
-                    $output = $row['createdUser']->fullname;
-                    return $output;
+                ->addColumn('customer_id', function ($row){
+                    return $row->customer->name . ' (' .$row->customer->email . ')';
                 })
-                ->addColumn('updated_by', function ($row) {                    
-                    $output = $row['updatedUser']->fullname;
-                    return $output;
+                ->addColumn('complaint_status', function ($row){
+                    return '<span class="btn btn-danger text-white">'.$row->complaint_status .'</span>';
                 })
-                
                 ->addColumn('action', function ($row) {
 
                     $data['row']= $row;
                     
                     return view('complaints.layouts.complaints_actions', $data)->render();
                 })
-                ->rawColumns(['complaint_by','assigned_to','action'])
+                ->rawColumns(['order_id','product_id','customer_id','complaint_status','action'])
                 ->make(true);
         }
     }
@@ -75,21 +74,26 @@ class Complaints extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
-        //    dd($request->complaint_by);
+            
+            $order_id = Order::select('id')->where('slack', $request->order_slack)->get();
+            $customer_id = Customer::select('id',)->where('slack', $request->customer_slack)->get();
 
+            // dd($slack);
             if ($slack == null) {
+                  
+                // dd($order_id[0]->id, $customer_id);
                 $customer_complaints = [
                     "slack" => $this->generate_slack("complaints"),
                     "store_id" => $request->logged_user_store_id,
-                    "assigned_to" => $request->assigned_to,
-                    "complaint_by" => (int) $request->complaint_by,
+                    "order_id" => $order_id[0]->id,
+                    "customer_id" => $customer_id[0]->id,
+                    "product_id" => $request->product_id,
                     "complaint_ref" => $request->complaint_ref,
-                    "descriptions" => $request->descriptions,
-                    "complaint_status" => $request->complaint_status,
-                    "updated_by" => $request->logged_user_id,
-                    "created_by" => $request->logged_user_id
-                    
+                    "description" => $request->descriptions,
+                    "complaint_status" => "Complaint",                   
+                    "complaint_by" => 'Customer'                    
                 ];
+                // dd($customer_complaints);
                 $customer_complaints = ModelsComplaints::create($customer_complaints);
                 if ($customer_complaints) {
                     return response()->json($this->generate_response(
@@ -103,12 +107,12 @@ class Complaints extends Controller
             } else {
                 $customer_complaints = [                  
                   
-                    "assigned_to" => $request->assigned_to,
-                    "complaint_by" => $request->complaint_by,
+                    "order_id" => $order_id[0]->id,
+                    "customer_id" => $customer_id[0]->id,
+                    "product_id" => $request->product_id,
                     "complaint_ref" => $request->complaint_ref,
-                    "descriptions" => $request->descriptions,
-                    "complaint_status" => $request->complaint_status,
-                    "updated_by" => $request->logged_user_id
+                    "description" => $request->descriptions,
+
                 ];
                 $conditions = [
                     "slack" => $slack,
@@ -134,6 +138,81 @@ class Complaints extends Controller
             ));
         }
 
+    }
+
+
+    public function customer_orders(Request $request){
+        try {
+
+            if (!check_access(['A_ADD_CUSTOMER_COMPLAINT'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            $customers_orders = Order::with(['customer_data' => function ($query) use ($request) {
+                $query->where('slack', $request->slack);
+            }])->get();
+
+            if($customers_orders)
+            {
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Order Against Customer Fetched successfully",
+                        "data" => $customers_orders,
+                        'msg' => 'success',
+                    ), 'SUCCESS'
+                ));
+            }
+
+
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+       
+
+       
+    }
+
+
+    public function customer_orders_products(Request $request){
+        try {
+
+            if (!check_access(['A_ADD_CUSTOMER_COMPLAINT'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            // dd($request->order_slack);
+            $orders = OrderProduct::with('product_data')->OrderJoin()->where('orders.slack', $request->order_slack)->get();
+            $productData = $orders->pluck('product_data');
+          
+
+            if($productData)
+            {
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Product Against Order Fetched successfully",
+                        "data" => $productData,
+                        'msg' => 'success',
+                    ), 'SUCCESS'
+                ));
+            }
+
+
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+       
+
+       
     }
 
     /**

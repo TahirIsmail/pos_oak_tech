@@ -23,19 +23,16 @@ class Complaints{
                 },
                 
                 {
-                    data: 'complaint_status'
+                    data: 'order_id'
                 },
                 {
-                    data:'assigned_to'
+                    data:'product_id'
                 },
                 {
-                    data:'complaint_by'
+                    data:'customer_id'
                 }, 
                 {
-                    data:'created_by'
-                },
-                {
-                    data:'updated_by'
+                    data:'complaint_status'
                 },
                 {
                     data: 'action'

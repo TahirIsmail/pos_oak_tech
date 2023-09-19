@@ -23,7 +23,10 @@ class CreateComplaintsTable extends Migration
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedInteger('assign_to_lab_staff_id')->nullable();
-            $table->string('lab_staff_remark');
+            $table->string('lab_staff_remark')->nullable();
+            $table->string('admin_remark')->nullable();
+            $table->string('admin_again_remark')->nullable();;
+            $table->date('due_date')->nullable();
             $table->text('description');
             $table->string('status')->default(0);
             $table->string('complaint_by');

@@ -21,11 +21,10 @@
                     <tr>
 
                         <th>{{ __("Complaint Reference No") }}</th>
-                        <th>{{ __("Complaint Status") }}</th>
-                        <th>{{ __("Assigned To")}}</th>
-                        <th>{{ __("Complaint By")}}</th>         
-                        <th>{{__("Created By")}}</th>              
-                        <th>{{__("Updated By")}}</th>
+                        <th>{{ __("Complaint Order")}}</th>
+                        <th>{{ __("Complaint Product") }}</th>
+                        <th>{{ __("Complaint Customer")}}</th>         
+                        <th>{{ __("Complaint Status")}}</th>
                         <th>{{ __("Action") }}</th>
                     </tr>
                 </thead>
@@ -45,7 +44,7 @@
     <script src="{{ asset('js/pages/complaints.js') }}"></script>
     <script>
         'use strict';
-        // var complaints = new Complaints();
-        // complaints.load_customer_complaint_listing_table();
+        var complaints = new Complaints();
+        complaints.load_customer_complaint_listing_table();
     </script>
 @endpush

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Complaints as ComplaintModel;
 use App\Models\User as UserModel;
 use App\Models\Customer as CustomerModel;
+use Pusher\Pusher;
+
 use function PHPUnit\Framework\isNull;
 
 class ComplaintsController extends Controller
@@ -29,24 +31,36 @@ class ComplaintsController extends Controller
         $data['complaints_data'] = null;
         $data['selectedComplaintId'] = '';
         
-        if(!is_null($slack)){
+        if($slack){
             
-            $complaint = ComplaintModel::with('assignedTo','complaintBy')->where('slack', '=', $slack)->first();
+            $complaint = ComplaintModel::with('customer', 'order')->where('slack', '=', $slack)->first();
             if (empty($complaint)) {
                 abort(404);
             }
+
+            // dd($complaint);
+            
             $data['selectedComplaintId'] = $complaint->id;
             $data['complaints_data'] = $complaint;
             
+            
         }
-        
-        $users = UserModel::all();
-        $customers = CustomerModel::all();
-        $data['customers_list'] = $customers;
-        $data['users_list'] = $users;
-
        
+        // $users = UserModel::withCount(['assignComplaints' => function ($query) {
+        //     $query->where('complaint_status', '!=', 'Completed Complaint');
+        // }])->get();
+        // $lab_users = [];        
+        // foreach ($users as $user) {
+        //     $lab_users[] = [
+        //         'id' => $user->id,
+        //         'user_code' => $user->user_code,
+        //         'name' => $user->fullname,
+        //         'assign_complaints' => $user->assign_complaints_count
+        //     ];            
+        // }
         
+        $customers = CustomerModel::has('orders')->with('orders')->get();
+        $data['customers_list'] = $customers;
         return view('complaints.add_customer_complaint', $data);
     }
 }

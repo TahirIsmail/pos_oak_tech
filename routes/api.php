@@ -123,7 +123,7 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     // staff Attendance routes 
     Route::post('/fetch_staff_list', 'API\AttendanceController@index');
-    Route::post('/store_staff_attendance', 'API\StaffPayrollController@store');
+    Route::post('/store_staff_attendance', 'API\AttendanceController@store');
 
 
     // staff payroll and payslips
@@ -427,6 +427,8 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //Customer Complaints
     Route::post('/customer_complaints', 'API\Complaints@index');
+    Route::post('/customer_orders', 'API\Complaints@customer_orders');
+    Route::post('/customer_orders_products', 'API\Complaints@customer_orders_products');
     Route::post('/submit_customer_complaint','API\Complaints@store');
     Route::post('/update_customer_complaint/{slack}','API\Complaints@store');
     //Expenses

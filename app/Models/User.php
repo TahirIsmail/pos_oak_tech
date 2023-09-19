@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Models\Complaint;
+use App\Models\Leave;
+
 
 class User extends Model
 {
@@ -144,7 +147,7 @@ class User extends Model
 
 
     public function assignComplaints(){
-        return $this->hasMany(AssignComplaint::class, 'assign_to_lab_staff_id', 'id');
+        return $this->hasMany(Complaints::class, 'assign_to_lab_staff_id', 'id');
     }
     
 }

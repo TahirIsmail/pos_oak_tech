@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Scopes\StoreScope;
 use App\Events\ComplaintCreated;
 use Yajra\DataTables\Contracts\DataTable;
+
 class Complaints extends Model
 {
     use HasFactory;
     protected $table = 'complaints';
-    protected $guards = [];
+    protected $guarded = [];
    
     protected static function boot()
     {
