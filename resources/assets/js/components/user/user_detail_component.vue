@@ -1,11 +1,11 @@
 <template>
-    <div class="row">
-        <div class="col-md-12">
+    <div class=" row">
+        <div class=" col-md-12">
 
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">
-                        <div>
+                        <div class="card-header">
                             <span class="text-title"> <span class='text-muted'>{{ $t("User") }}</span> {{ user.fullname }} ({{ user.user_code }}) </span>
                         </div>
                     </div>
@@ -123,3 +123,11 @@
         }
     }
 </script>
+<style scoped>
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+</style>

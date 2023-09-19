@@ -1,9 +1,10 @@
 <template>
     <div class="row">
       <div class="col-md-12">
+        <div class="card">
         <form @submit.prevent="submit_form" class="mb-3">
        
-          <div class="d-flex flex-wrap mb-4">
+          <div class="card-header d-flex flex-wrap mb-4">
             <div class="mr-auto">
               <div>
                 <span class="text-title" v-if="leave_slack == '' ">{{
@@ -54,7 +55,7 @@
           </div>
   
           <div class="form-row mb-2">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-5">
               <label for="apply_date">{{ $t("Apply Date") }}</label>
               <input
                 type="date"
@@ -69,7 +70,7 @@
                 errors.first("apply_date")
               }}</span>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-5">
               <label for="leave_types">{{ $t("Available Leaves") }}</label>
               <select
                 name="leave_type"
@@ -90,7 +91,7 @@
                 errors.first("leave_type")
               }}</span>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-5">
               <label for="from_date">{{ $t("Leave From Date") }}</label>
               <input
                 type="date"
@@ -105,7 +106,7 @@
                 errors.first("from_date")
               }}</span>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-5">
               <label for="from_to">{{ $t("Leave to Date") }}</label>
               <input
                 type="date"
@@ -126,14 +127,14 @@
           </div>
   
           <div class="form-row mb-2">
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-10">
               <label for="reason">{{ $t("Reason") }}</label>
               <textarea
                 name="reason"
                 v-model="reason"
                 v-validate="'max:65535'"
                 class="form-control form-control-custom"
-                rows="5"
+                rows="2"
                 :placeholder="$t('Enter Reason')"
               ></textarea>
               <span v-bind:class="{ error: errors.has('reason') }">{{
@@ -194,6 +195,7 @@
         </template>
       </modalcomponent>
     </div>
+  </div>
   </template>
   
   <script>
@@ -350,4 +352,42 @@
     },
   };
   </script>
+  <style scoped>
+
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: 150px;
+}
+  .card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .03);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+  }
   
+  
+  .card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 0.25rem;
+  }
+  
+  .text-subhead {
+    color: var(--label-sub-head);
+    font-weight: 500;
+    font-size: 15px;
+    margin-left: 15px;
+}
+  </style>

@@ -718,13 +718,13 @@ class Invoice extends Controller
             }
             
             if($type == "SUPPLIER"){
-                $list_data = SupplierModel::select('slack', DB::raw("CONCAT(COALESCE(supplier_code, ''),' - ',COALESCE(name, '')) as label"))
+                $list_data = SupplierModel::select('slack','id', DB::raw("CONCAT(COALESCE(supplier_code, ''),' - ',COALESCE(name, '')) as label"))
                 ->where('name', 'like', $keywords.'%')
                 ->orWhere('supplier_code', 'like', $keywords.'%')
                 ->active()
                 ->get();
             }else if($type == "CUSTOMER"){
-                $list_data = CustomerModel::select('slack', DB::raw("CONCAT(COALESCE(name, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
+                $list_data = CustomerModel::select('slack','id', DB::raw("CONCAT(COALESCE(name, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
                 ->where('name', 'like', $keywords.'%')
                 ->orWhere('email', 'like', $keywords.'%')
                 ->orWhere('phone', 'like', $keywords.'%')
@@ -732,13 +732,14 @@ class Invoice extends Controller
                 ->skipDefaultCustomer()
                 ->get();
             }else if($type == "STAFF"){
-                $list_data = UserModel::select('slack', DB::raw("CONCAT(COALESCE(fullname, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
+                $list_data = UserModel::select('slack','id', DB::raw("CONCAT(COALESCE(fullname, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
                 ->where('fullname', 'like', $keywords.'%')
                 ->orWhere('email', 'like', $keywords.'%')
                 ->orWhere('phone', 'like', $keywords.'%')
                 ->active()
                 ->hideCurrentLoggedUser($request->logged_user_id)
                 ->hideSuperAdminRole()
+                ->HideCustomerRole()
                 ->get();
             }
            

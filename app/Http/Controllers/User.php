@@ -72,7 +72,7 @@ class User extends Controller
 
             $data['user_data'] = collect($user_data)->union(collect(['selected_stores' => $selected_stores]));
         }
-        // dd($data['user_data']);
+       
         return view('user.add_user', $data);
     }
 

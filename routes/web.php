@@ -10,8 +10,14 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+    /*
+    Customer Auth Routes
+    
+    */
+    Route::get('/customer_signin',"CustomerEntry@customer_signin")->name('customer_home');
+    Route::get('/customer_forgot_password', "CustomerEntry@forgot_password")->name('forgot_password');
 
-
+    // ----------------------------------------------------------------//
     Route::get('/', "Entry@sign_in")->name('home');
     Route::get('/logout', "Entry@logout")->name('logout');
     Route::get('/forgot_password', "Entry@forgot_password")->name('forgot_password');
@@ -315,6 +321,16 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/kitchen_display/{slack}', "KitchenDisplay@detail")->name('kitchen_display');
     Route::get('/add_kitchen_display', "KitchenDisplay@add_kitchen_display")->name('add_kitchen_display');
     Route::get('/edit_kitchen_display/{slack?}', "KitchenDisplay@add_kitchen_display")->name('edit_kitchen_display');
+
+    //Complaints Modules
+    Route::get('/customer_complaints','ComplaintsController@index')->name('customer_complaints');
+    Route::get('/add_complaints', "ComplaintsController@add_complaints")->name('add_complaints');
+    Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
+    Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
+
+    Route::get('/expenses','ExpensesController@index')->name('expenses');
+
+    Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
 });
 
 Route::get('/order_public/{slack}', "Order@detail_public_view")->name('order_public');

@@ -26,7 +26,9 @@ class Store extends Model
     {
         return $this->hasMany(SupplierPerformance::class, 'store_id');
     }
-
+    public function complaints(){
+        return $this->hasMany(Complaints::class, 'id','store_id');
+    }
     public function scopeTaxcodeJoin($query){
         return $query->leftJoin('tax_codes', function ($join) {
             $join->on('tax_codes.id', '=', 'stores.tax_code_id');

@@ -176,6 +176,7 @@ class Order extends Controller
                 
                 $user_list = UserModel::select('*', 'user_stores.id as user_store_access')
                 ->hideSuperAdminRole()
+                ->HideCustomerRole()
                 ->userStoreAccessData()
                 ->active()
                 ->where('role_id', '=', (!empty($waiter_role_id))?$waiter_role_id->id:NULL)

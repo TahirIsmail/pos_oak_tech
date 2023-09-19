@@ -424,4 +424,11 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/kitchen_display/{slack}', 'API\KitchenDisplay@show');
     Route::post('/kitchen_display_list', 'API\KitchenDisplay@list');
     Route::post('/delete_kitchen_display/{slack}', 'API\KitchenDisplay@destroy');
+
+    //Customer Complaints
+    Route::post('/customer_complaints', 'API\Complaints@index');
+    Route::post('/submit_customer_complaint','API\Complaints@store');
+    Route::post('/update_customer_complaint/{slack}','API\Complaints@store');
+    //Expenses
+    Route::post('/expenses/list','API\Expense@list');
 });

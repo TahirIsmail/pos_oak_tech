@@ -41,11 +41,18 @@ class OrderProduct extends Model
         });
     }
 
+    // public function scopeCategoryJoin($query){
+    //     return $query->leftJoin('category', function ($join) {
+    //         $join->on('category.id', '=', 'products.category_id');
+    //     });
+    // }
     public function scopeCategoryJoin($query){
-        return $query->leftJoin('category', function ($join) {
-            $join->on('category.id', '=', 'products.category_id');
+        return $query->leftJoin('sub_categories', function ($join) {
+            $join->on('sub_categories.id', '=', 'products.sub_categories_id');
         });
     }
+
+    
 
     /* For view files */
     

@@ -8,7 +8,7 @@
             <div class="box-header">
               <div class="row">
                 <div class="col-md-4 p-2">
-                  <h4 class="box-title">Staff Details</h4>
+                  <h4 class="text-title">Staff Details</h4>
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@
                 <div class="col-md-6 col-sm-12">
                   <div class="sfborder relative overvisible">
                     <div class="letest">
-                      <div class="rotatetest">Attendance</div>
+                      <div class="rotatetest"><strong>Attendance</strong> </div>
                     </div>
                     <div class="padd-en-rtl33">
                       <table class="table mb0 font13">
@@ -77,10 +77,7 @@
                           <th class="bozero">Holiday</th>
                           <th class="bozero">Approved Leave</th>
                         </tr>
-                        <tr
-                          v-for="(record, key) in attendance_records"
-                          :key="key"
-                        >
+                        <tr v-for="(record, key) in attendance_records" :key="key">
                           <td>{{ formatDate(key) }}</td>
                           <td>{{ record.present }}</td>
                           <td>{{ record.late }}</td>
@@ -95,15 +92,13 @@
                 </div>
                 <!--./col-md-8-->
                 <div class="col-md-12">
-                  <div
-                    style="
+                  <div style="
                       background: #dadada;
                       height: 1px;
                       width: 100%;
                       clear: both;
                       margin-bottom: 10px;
-                    "
-                  ></div>
+                    "></div>
                 </div>
               </div>
             </div>
@@ -466,8 +461,8 @@ export default {
     accounts: Array,
     payment_methods : Array,
   },
-  mounted() {},
-  created() {},
+  mounted() { },
+  created() { },
   methods: {
     formatDate(date) {
       const parts = date.split("-");
@@ -603,6 +598,7 @@ export default {
   margin-top: 20px;
   float: right;
 }
+
 .roww {
   display: -ms-flexbox;
   display: flex;
@@ -672,6 +668,7 @@ export default {
 
 .bozero {
   border-top: 0 !important;
+
 }
 
 .font12 {

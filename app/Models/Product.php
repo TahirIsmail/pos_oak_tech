@@ -60,9 +60,9 @@ class Product extends Model
         });
     }
 
-    // public function scopeCategoryActive($query){
-    //     return $query->where('category.status', 1);
-    // }
+    public function scopeCategoryActive($query){
+        return $query->where('category.status', 1);
+    }
 
     public function scopeSupplierActive($query){
         return $query->where('suppliers.status', 1);

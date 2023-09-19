@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Customer as CustomerModel;
 use App\Models\MasterStatus;
-
+use App\Models\Store as StoreModel;
 use App\Http\Resources\CustomerResource;
 
 class Customer extends Controller
@@ -30,6 +30,9 @@ class Customer extends Controller
         check_access(array($data['action_key']));
 
         $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('CUSTOMER_STATUS')->active()->sortValueAsc()->get();
+        $data['stores'] =  StoreModel::select('slack', 'store_code', 'name', 'address')
+        ->active()
+        ->get();
 
         $data['customer_data'] = null;
         if(isset($slack)){

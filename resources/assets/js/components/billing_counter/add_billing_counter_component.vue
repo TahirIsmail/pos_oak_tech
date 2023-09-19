@@ -1,10 +1,10 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            
+            <div class="card">
             <form @submit.prevent="submit_form" class="mb-3">
 
-                <div class="d-flex flex-wrap mb-4">
+                <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
                         <span class="text-title" v-if="billing_counter_slack == ''">{{ $t("Add Billing Counter") }}</span>
                         <span class="text-title" v-else>{{ $t("Edit Billing Counter") }}</span>
@@ -17,17 +17,17 @@
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="counter_code">{{ $t("Billing Counter Code") }}</label>
                         <input type="text" name="billing_counter_code" v-model="billing_counter_code" v-validate="'required|alpha_dash|max:30'" class="form-control form-control-custom" :placeholder="$t('Please enter counter code')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('billing_counter_code') }">{{ errors.first('billing_counter_code') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="billing_counter_name">{{ $t("Billing Counter Name") }}</label>
                         <input type="text" name="billing_counter_name" v-model="billing_counter_name" v-validate="'required|max:150'" class="form-control form-control-custom" :placeholder="$t('Please enter counter name')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('billing_counter_name') }">{{ errors.first('billing_counter_name') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="status">{{ $t("Status") }}</label>
                         <select name="status" v-model="status" v-validate="'required|numeric'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Status..</option>
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="description">{{ $t("Description") }}</label>
                         <textarea name="description" v-model="description" v-validate="'max:65535'" class="form-control form-control-custom" rows="5" :placeholder="$t('Enter description')"></textarea>
                         <span v-bind:class="{ 'error' : errors.has('description') }">{{ errors.first('description') }}</span>
@@ -63,7 +63,7 @@
                 <button type="button" class="btn btn-primary" @click="$emit('submit')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> Continue</button>
             </template>
         </modalcomponent>
-        
+    </div>  
     </div>
 </template>
 
@@ -147,3 +147,43 @@
         }
     }
 </script>
+
+<style scoped>
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .03);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 0.25rem;
+}
+
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: 15px;
+}
+
+.text-subhead {
+    color: var(--label-sub-head);
+    font-weight: 500;
+    font-size: 15px;
+    margin-left: 10px;
+}
+</style>

@@ -15,7 +15,7 @@ class InvoiceResource extends JsonResource
     public function toArray($request)
     {
         $request->request->add(['blocking_recurring_data_in_transaction' => true]);
-
+        $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
         return [
             'slack' => $this->slack,
             'invoice_number' => $this->invoice_number,
@@ -43,6 +43,7 @@ class InvoiceResource extends JsonResource
             'total_order_amount' => $this->total_order_amount,
             'tax_option_data' => new MasterTaxOptionResource($this->tax_option_data),
             'terms' => $this->terms,
+            'words' => $f->format($this->total_order_amount),
             'products' => InvoiceProductResource::collection($this->products),
             'store' => new StoreResource($this->storeData),
             'status' => new MasterStatusResource($this->status_data),

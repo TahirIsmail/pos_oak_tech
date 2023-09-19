@@ -1,10 +1,10 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            
+            <div class="card">
             <form @submit.prevent="submit_form" class="mb-3">
 
-                <div class="d-flex flex-wrap mb-4">
+                <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
                         <span class="text-title">{{ $t("Edit App Setting") }}</span>
                     </div>
@@ -165,7 +165,7 @@
 
                 <div class="mb-2">
                     <div class="mb-2">
-                        <label for="clear_cache">{{ $t("Clear Cache") }}</label>
+                        <label   for="clear_cache">{{ $t("Clear Cache") }}</label>
                     </div>
                     <div class="mb-2">
                         <button type="button" class="btn btn-outline-primary" v-bind:disabled="clear_cache_processing == true" v-on:click="clear_cache"> <i class='fa fa-circle-notch fa-spin'  v-if="clear_cache_processing == true"></i> Clear App Cache</button>
@@ -224,7 +224,7 @@
                 <button type="button" class="btn btn-primary" @click="deactivate_proceed" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> Continue</button>
             </template>
         </modalcomponent>
-        
+    </div>
     </div>
 </template>
 
@@ -462,3 +462,53 @@
         }
     }
 </script>
+<style scoped>
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .03);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 0.25rem;
+}
+
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: 15px;
+}
+
+.text-subhead {
+    color: var(--label-sub-head);
+    font-weight: 500;
+    font-size: 15px;
+    margin-left: 10px;
+}
+.mb-2, .my-2 {
+    margin-bottom: 0.5rem!important;
+    margin-left: 8px;
+}
+
+
+hr {
+    margin-left: 0px;
+    margin-right:px;
+    border-top: 0.5px solid rgba(0,0,0,.1);
+}
+</style>
