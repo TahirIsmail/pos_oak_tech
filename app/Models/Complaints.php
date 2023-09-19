@@ -12,37 +12,31 @@ class Complaints extends Model
 {
     use HasFactory;
     protected $table = 'complaints';
-    // protected $hidden = ['id'];
-    protected $fillable = ['slack', 'store_id', 'complaint_ref', 'complaint_status', 'descriptions', 'created_by', 'updated_by', 'complaint_by', 'assigned_to', 'created_at', 'updated_at'];
+    protected $guards = [];
    
     protected static function boot()
     {
         parent::boot();
         static::addGlobalScope(new StoreScope);
     }
-    
-    
-    public function assignedTo()
-    {
-        return $this->belongsTo(User::class, 'assigned_to','id');
-    }
 
-    public function complaintBy()
-    {
-        return $this->belongsTo(Customer::class, 'complaint_by','id');
+    public function product(){
+        return $this->belongsTo(Product::class, 'product_id');
     }
-
-    public function store(){
-        return $this->belongsTo(Store::class, 'store_id','id');
-        
+    public function linkToProduct(){
+        return $this->hasOne(Product::class, 'link_to_complaint');
     }
-
-    public function createdUser(){
-        return $this->belongsTo('App\Models\User', 'created_by', 'id');
+    public function order(){
+        return $this->belongsTo(Order::class, 'order_id');
     }
-
-    public function updatedUser(){
-        return $this->belongsTo('App\Models\User', 'updated_by', 'id');
+    public function customer(){
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+    public function user(){
+        return $this->belongsTo(User::class, 'assign_to_lab_staff_id');
+    }
+    public function getComplaintCreatedAtAttribute(){
+        return Carbon::parse($this->attributes['created_at'])->diffForHumans();
     }
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;

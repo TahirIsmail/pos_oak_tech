@@ -22,11 +22,11 @@ class CreateComplaintsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('customer_id');
-            $table->unsignedInteger('assign_lab_staff_id')->nullable();
+            $table->unsignedInteger('assign_to_lab_staff_id')->nullable();
             $table->string('lab_staff_remark');
-            $table->unsignedBigInteger('complaint_by');
             $table->text('description');
             $table->string('status')->default(0);
+            $table->string('complaint_by');
             $table->timestamps();
         });
     }

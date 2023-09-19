@@ -71,11 +71,13 @@ class Customer extends Model
     {
         return ($date != null) ? Carbon::parse($date)->format(config("app.date_time_format")) : null;
     }
-    public function complaints()
-    {
-        return $this->hasMany('App\Models\Complaints', 'id', 'complaint_by');
-    }
+   
     public function user(){
         return $this->hasOne('App\Models\User', 'id', 'user_id');
+    }
+
+
+    public function complaint(){
+        return $this->hasMany(Complaint::class, 'customer_id', 'id');
     }
 }

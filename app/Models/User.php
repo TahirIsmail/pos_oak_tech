@@ -141,5 +141,10 @@ class User extends Model
     {
         return $this->hasMany(StaffPayroll::class, 'staff_id', 'id');
     }
+
+
+    public function assignComplaints(){
+        return $this->hasMany(AssignComplaint::class, 'assign_to_lab_staff_id', 'id');
+    }
     
 }

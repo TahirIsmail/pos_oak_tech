@@ -45,7 +45,7 @@
     <script src="{{ asset('js/pages/complaints.js') }}"></script>
     <script>
         'use strict';
-        var complaints = new Complaints();
-        complaints.load_customer_complaint_listing_table();
+        // var complaints = new Complaints();
+        // complaints.load_customer_complaint_listing_table();
     </script>
 @endpush

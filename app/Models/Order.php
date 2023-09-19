@@ -208,4 +208,8 @@ class Order extends Model
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
     }
+
+    public function complaint(){
+        return $this->hasMany(Complaint::class, 'order_id');
+    }
 }

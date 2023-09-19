@@ -25,26 +25,27 @@ class CreateProductsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->integer('supplier_id');
-            // $table->integer('tax_code_id');
             $table->foreignId('tax_code_id')
             ->constrained('tax_codes')
             ->onUpdate('cascade');
-
-            // $table->integer('discount_code_id')->nullable();
             $table->foreignId('discount_code_id')
             ->constrained('discount_codes')
             ->onUpdate('cascade');
-
-
-
+            $table->unsignedBigInteger('link_to_complaint')->nullable();
+            $table->unsignedBigInteger('link_to_project')->nullable();
             $table->decimal('quantity', 8, 2)->default(0);
+            $table->decimal('alert_quantity', 8, 2)->default(0);
             $table->decimal('purchase_amount_excluding_tax', 13, 2);
             $table->decimal('sale_amount_excluding_tax', 13, 2);
+            $table->decimal('sale_amount_including_tax', 13, 2);
             $table->tinyInteger('status')->default(0);
             $table->foreignId('created_by')
             ->constrained('users')
             ->onUpdate('cascade');
-            // $table->integer('created_by')->nullable();
+            $table->integer('is_ingredient')->nullable();
+            $table->integer('is_ingredient_price')->nullable();
+            $table->integer('is_addon_product')->nullable();
+            $table->decimal('is_gredient_pride', 13, 2)->nullable();
             // $table->integer('updated_by')->nullable();
             $table->foreignId('updated_by')
             ->constrained('users')
