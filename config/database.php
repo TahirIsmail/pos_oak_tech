@@ -52,6 +52,7 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => 'InnoDB',
+            'log' => env('DB_LOG', false),
         ],
 
         'pgsql' => [

@@ -90,6 +90,7 @@ class ExpensesController extends Controller
         //
     }
     public function add_expense(Request $request,$slack = null){
+       
         $data['menu_key'] = 'MM_ACCOUNTS';
         $data['sub_menu_key'] = 'SM_EXPENSES';
         $data['action_key'] = ($slack == null)?'A_ADD_EXPENSES':'A_EDIT_EXPENSES';
@@ -97,16 +98,16 @@ class ExpensesController extends Controller
 
        
         $data['expenses_data'] = null;
-        $data['selectedExpenseId'] = '';
+        $data['selectedExpenseCatId'] = '';
         
         if(!is_null($slack)){
             
             $expense = ExpenseModel::with('createdUser','updatedUser','expenseCategory')->where('slack', '=', $slack)->first();
-            if (empty($complaint)) {
+            if (empty($expense)) {
                 abort(404);
             }
-            $data['selectedExpenseId'] = $complaint->id;
-            $data['expenses_data'] = $complaint;
+            $data['selectedExpenseCatId'] = $expense->expenseCategory->id;
+            $data['expenses_data'] = $expense;
             
         }
         

@@ -168,6 +168,7 @@ export default {
       address: this.supplier_data && this.supplier_data.address !== null ? this.supplier_data.address : "",
     };
   },
+  
   props: {
     statuses: Array,
     selectedSupplierId: Number,

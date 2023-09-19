@@ -9,7 +9,7 @@ class Expenses extends Model
 {
     use HasFactory;
     protected $table = 'expenses';
-    protected $guarded = [];
+    protected $fillable = ['slack','store_id','expense_name','expense_category','receipt_upload','amount','status','notes','created_by','updated_by','created_at','updated_at'];
 
     protected static function boot()
     {
