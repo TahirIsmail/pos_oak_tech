@@ -22,7 +22,7 @@ class AttendanceController extends Controller
         $data['sub_menu_key'] = 'SM_STAFF_ATTENDANCE';
         check_access(array($data['menu_key'],$data['sub_menu_key']));
 
-        $roles = RoleModel::where('id' , '!=', 1)->get();
+        $roles = RoleModel::where('id' , '!=', 1)->CustomerRole()->get();
         // dd($roles);
         $data['roles_data']= $roles;
 
