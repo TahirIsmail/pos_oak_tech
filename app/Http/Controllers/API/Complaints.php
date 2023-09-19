@@ -26,6 +26,8 @@ class Complaints extends Controller
 
         if ($request->ajax()) {
             $data = ModelsComplaints::with('store', 'assignedTo','complaintBy','createdUser','updatedUser')->get();
+
+          
            
             return DataTables::of($data)
                 ->addIndexColumn()
