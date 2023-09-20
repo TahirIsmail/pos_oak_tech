@@ -7,6 +7,7 @@ use App\Http\Requests\StoreExpensesRequest;
 use App\Http\Requests\UpdateExpensesRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\MasterExpenseCategory as ExpenseCategoryModel;
+use Illuminate\Support\Facades\DB;
 class ExpensesController extends Controller
 {
     /**
@@ -19,7 +20,12 @@ class ExpensesController extends Controller
         //
         $data['menu_key'] = 'MM_ACCOUNTS';
         $data['sub_menu_key'] = 'SM_EXPENSES';
+
         check_access(array($data['menu_key'],$data['sub_menu_key']));
+        $data['supplier_expense'] = 0; 
+        $data['staff_expense'] = DB::table('transactions')->where('transaction_type',2)->where('bill_to','STAFF')->sum('received_amount');
+        $data['total_expense'] = DB::table('transactions')->where('transaction_type',2)->sum('received_amount');
+
         
        return view('expenses.index', $data);
     }
