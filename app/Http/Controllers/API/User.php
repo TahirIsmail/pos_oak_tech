@@ -157,6 +157,7 @@ class User extends Controller
                 });
             })
             ->hideSuperAdminRole()
+            ->HideCustomerRole()
             ->hideCurrentLoggedUser($request->logged_user_id)
             ->get();
 
@@ -1174,6 +1175,7 @@ class User extends Controller
             })
             ->when(($waiter == true), function ($query){
                 $query->hideSuperAdminRole();
+                
             })
             ->active()
             ->get();

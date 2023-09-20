@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center card">
             <div class="">
                 <div class="card-header">
@@ -15,7 +15,7 @@
 
                 @csrf
                 <div class="row card-body">
-                    <div class="col-sm-12 col-md-4">
+                    <div class="col-sm-12 col-md-5">
                         <div class="form-group">
                             <label for="role">Role <span style="color:red">*</span></label>
                             <select id="role" class="form-control" name="role">
@@ -32,7 +32,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-4">
+                    <div class="col-sm-12 col-md-5">
                         <div class="form-group">
                             <label for="month">Month <span style="color:red">*</span></label>
                             <select id="month" class="form-control" name="month">
@@ -100,11 +100,10 @@
                                             </a>
                                         @else
                                             @if (check_access(['A_REVERT_STAFF_PAYROLL'], true))
-                                                
-                                                    <a onclick="revertPayroll({{ $staff['staffPayrolls'][0]['id'] }})" style="cursor:pointer;">
-                                                        ↺
-                                                    </a>
-                                               
+                                                <a onclick="revertPayroll({{ $staff['staffPayrolls'][0]['id'] }})"
+                                                    style="cursor:pointer;">
+                                                    ↺
+                                                </a>
                                             @endif
                                             @if (check_access(['A_VIEW_STAFF_PAYROLL'], true))
                                                 @php
@@ -120,7 +119,7 @@
                                                 </a>
                                             @endif
                                             @if (check_access(['A_PROCEED_STAFF_PAYROLL'], true))
-                                                @if (!$staff['staffPayrolls'][0]['status'] == 'Paid')
+                                                @if ($staff['staffPayrolls'][0]['status'] == 'generated')
                                                     @php
                                                         $monthName = $staff['staffPayrolls'][0]['month'];
                                                         $numericMonth = date('n', strtotime($monthName));
@@ -149,10 +148,10 @@
 
         </div>
 
-        <div class="modal" id="proceedtopay" tabindex="-1" style="display: none;">
+        <div class="modal blur-background" id="proceedtopay" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog2 modal-lg">
                 <div class="modal-content" style="background:#fcfcfc;">
-                    <div class="modal-header d-flex justify-content-between">
+                    <div class="card-header  modal-header d-flex justify-content-between">
                         <h4 class="modal-title">Proceed To Pay</h4>
                         <button type="button" class="close" data-dismiss="modal" onclick="crossModal()">&times;</button>
                     </div>
@@ -174,6 +173,7 @@
                                     <input id="paymentmonth" placeholder="" type="hidden" class="form-control" />
                                     <input id="paymentyear" placeholder="" type="hidden" class="form-control" />
                                     <input id="paymentid" placeholder="" type="hidden" class="form-control" />
+                                    <input type="hidden" type="text" id="Staff_id">
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                     <label for="exampleInputEmail1">Payment Mode</label>
@@ -213,11 +213,11 @@
 
 
 
-        <div id="payslipview" class="modal" tabindex="-1" style="display: none;">
+        <div id="payslipview" class="modal blur-background" tabindex="-1" style="display: none;">
 
             <div class="modal-dialog modal-dialog2 modal-lg" style="">
                 <div class="modal-content" style="background:#fcfcfc;">
-                    <div class="modal-header d-flex justify-content-between">
+                    <div class=" card-header modal-header d-flex justify-content-between">
                         <h4 class="modal-title">Details<span id="print1"></span></h4>
                         <button type="button" class="close" data-dismiss="modal"
                             onclick="closeModal()">&times;</button>
@@ -237,23 +237,24 @@
                                     </table>
                                     <table width="100%" class="paytable2">
                                         <tr>
-                                            <th>Payslip #ID</th>
+                                            <th class="th_table">Payslip #ID</th>
                                             <td id="v_payslipId"></td>
                                             <th class="text-right"></th>
-                                            <th class="text-right">Payment date: <span id="v_payment_date"></span></th>
+                                            <th class="th_table" class="text-right">Payment date: <span
+                                                    id="v_payment_date"></span></th>
                                         </tr>
                                     </table>
                                     <hr />
                                     <table width="100%" class="paytable2">
                                         <tr>
-                                            <th width="25%">Staff ID</th>
+                                            <th class="th_table" width="25%">Staff ID</th>
                                             <td width="25%" id="v_staff_id"></td>
-                                            <th width="25%">Name</th>
+                                            <th class="th_table" width="25%">Name</th>
                                             <td width="25%" id="v_staff_name"></td>
                                         </tr>
                                         <tr>
                                             <!-- Optional: Department and Designation -->
-                                            <th>Designation</th>
+                                            <th class="th_table">Designation</th>
                                             <td id="v_role_name"></td>
 
                                         </tr>
@@ -270,10 +271,10 @@
                                         </tr>
                                         <!-- Loop through earnings and deductions here -->
                                         <tr>
-                                            <td id="v_allownace_name"></td>
-                                            <td class="pttright reborder" id="v_allownace_amount"></td>
-                                            <td class="pttleft" id="v_deduction_name"></td>
-                                            <td class="text-right" id="v_deduction_amount"></td>
+                                            <td class="tablesapce" id="v_allownace_name"></td>
+                                            <td class="tablesapce pttright reborder" id="v_allownace_amount"></td>
+                                            <td class="tablesapce pttleft" id="v_deduction_name"></td>
+                                            <td class="tablesapce text-right" id="v_deduction_amount"></td>
                                         </tr>
                                         <!-- ... Repeat as needed ... -->
                                         {{-- <tr>
@@ -285,8 +286,8 @@
                                     </table>
                                     <table class="totaltable table table-striped table-responsive">
                                         <tr>
-                                            <th width="100%">Payment Mode</th>
-                                            <td class="text-right" id="v_payment_mode"></td>
+                                            <th class="tableth" width="100%">Payment Mode</th>
+                                            <td class="text-right tableborder" id="v_payment_mode"></td>
                                         </tr>
                                         {{-- <tr>
                                             <th width="20%">Total PF(CURRENCY_SYMBOL_HERE)</th>
@@ -310,6 +311,7 @@
                                                 <p>This payslip is computer generated hence no signature is required.</p>
 
                                             </td>
+                                            <td></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -389,8 +391,11 @@
                     success: function(result) {
                         console.log(result[0]['staff_payrolls'][0]['id']);
                         $('#staff_name').val(result[0].fullname + '(' + result[0].user_code + ')');
+                        $('#Staff_id').val(result[0].id);
                         $('#net_salary').val(result[0]['staff_payrolls'][0]['net_salary']);
                         $('#month_year').val(result[0]['staff_payrolls'][0]['month'] + '-' + year);
+                        $('paymentmonth').val(result[0]['staff_payrolls'][0]['month']);
+                        $('paymentyear').val(year);
                         $('#paymentid').val(result[0]['staff_payrolls'][0]['id']);
                         var currentDate = new Date().toISOString().slice(0, 10);
                         $('#payment_date').val(currentDate);
@@ -411,14 +416,14 @@
 
             function payrollProceedToPay() {
                 var csrfToken = $('input[name="_token"]').val();
-
+                alert($('#net_salary').val());
                 $.ajax({
                     url: " {{ route('staff.updatePayroll') }}",
                     type: 'POST',
                     data: {
-                        staff_id: $('#staff_id').val(),
-                        paymentmonth: $('#paymentmonth').val(),
-                        paymentyear: $('#paymentyear').val(),
+                        staff_id: $('#Staff_id').val(),
+                        net_salary: $('#net_salary').val(),
+                        paymentyear: $('#month_year').val(),
                         payment_mode: $('#payment_mode').val(),
                         payment_date: $('#payment_date').val(),
                         remarks: $('#remarks').val(),
@@ -476,7 +481,7 @@
             }
 
 
-            function revertPayroll(payroll_id){
+            function revertPayroll(payroll_id) {
                 alert(payroll_id);
                 var csrfToken = $('input[name="_token"]').val();
                 $.ajax({
@@ -484,7 +489,7 @@
                     type: 'POST',
                     data: {
                         payroll_id: payroll_id,
-                       
+
                     },
                     headers: {
                         'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
@@ -492,7 +497,7 @@
                     success: function(result) {
                         if (result.data) {
                             window.location.reload();
-                        }                       
+                        }
                     }
                 });
             }
@@ -500,8 +505,7 @@
     @endpush
 @endsection
 
-
-<style>
+<style scoped>
     #testdata {
         max-height: 80vh;
         overflow-y: auto;
@@ -510,5 +514,30 @@
 
     .tddata {
         width: 100%;
+    }
+
+    .th_table {
+        font-weight: 500;
+        border-top: none !important;
+        border-bottom: none !important;
+        border: none !important;
+
+    }
+
+
+    .tablesapce {
+        padding: 0px !important;
+        vertical-align: top !important;
+        border-top: 1px solid #dee2e6 !important;
+    }
+
+
+
+    .table {
+        font-size: 13px;
+        color: var(--base-font-color) !important;
+        border: none !important;
+        -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
     }
 </style>

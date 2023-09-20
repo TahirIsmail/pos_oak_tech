@@ -27,7 +27,7 @@ class CreateTransactionsTable extends Migration
             $table->integer('payment_method_id')->nullable();
             $table->string('payment_method', 50)->nullable();
 
-            $table->string('bill_to', 50)->comment('POS_ORDER, INVOICE, CUSTOMER, SUPPLIER')->nullable();
+            $table->string('bill_to', 50)->comment('CUSTOMER_ORDER, INVOICE, CUSTOMER, SUPPLIER')->nullable();
             $table->integer('bill_to_id')->nullable();
             $table->string('bill_to_name', 250)->nullable();
             $table->string('bill_to_contact', 150)->nullable();

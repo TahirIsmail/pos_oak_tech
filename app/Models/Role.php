@@ -19,6 +19,10 @@ class Role extends Model
         $query->where('roles.id', '!=', 1);
     }
 
+    public function scopeCustomerRole($query){
+        $query->where('roles.id', '!=', 2);
+    }
+
     public function scopeSortLabelAsc($query){
         return $query->orderBy('roles.label', 'asc');
     }

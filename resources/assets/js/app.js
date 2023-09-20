@@ -63,6 +63,10 @@ Vue.component('signincomponent', require('./components/entry/sign_in_component.v
 Vue.component('forgotpasswordcomponent', require('./components/entry/forgot_password_component.vue').default);
 Vue.component('resetpasswordcomponent', require('./components/entry/reset_password_component.vue').default);
 
+//Vue.component('customersignincomponent', require('./components/customer/auth/customer_sign_in_component.vue').default);
+
+
+
 Vue.component('dashboardcomponent', require('./components/dashboard/dashboard_component.vue').default);
 Vue.component('billingcounterdashboardcomponent', require('./components/dashboard/billing_counter_dashboard_component.vue').default);
 
@@ -214,8 +218,9 @@ Vue.component('staffattendancecomponent', require('./components/staff_attendance
 
 Vue.component('generatestaffpayroll', require('./components/staff_payroll/generate_staff_payroll.vue').default);
 
+Vue.component('addexpensecomponent',require('./components/expense/add_expense_component.vue').default);
 
-
+Vue.component('add-customer-complaint-component', require('./components/complaint/add_customer_complaint_component.vue').default);
 const app = new Vue({
     el: '#app',
     i18n

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
+use Database\Seeders\ComplaintsSeeder;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             // sample_values_seeder::class
+            ComplaintsSeeder::class,
         ]);
     }
 }

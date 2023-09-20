@@ -18,6 +18,7 @@ class CreateStaffPayrollsTable extends Migration
             $table->foreignId('staff_id')
             ->nullable()
             ->constrained('users');
+            $table->integer('store_id');
             $table->float('basic', 10, 2);
             $table->float('total_allowance', 10, 2)->nullable();
             $table->float('total_deduction', 10, 2)->nullable();

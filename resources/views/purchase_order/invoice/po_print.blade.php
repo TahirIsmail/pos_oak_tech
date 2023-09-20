@@ -8,32 +8,75 @@
         <title>Purchase Order #{{ $data->po_number }}</title>
     </head>
     <body>
-        
-        <table>
+        <div class="invoice-head center bg-black">
+            <h2 class="color-white">Purchase Order / Supply Order</h2>
+        </div>
+        <table class = "mb-1rem header-table w-100 h-100px">
             <tr>
-                <td><h2>PURCHASE ORDER</h2></td>
+                <td class='center w-50' >
+                    @if($logo_path != '')
+                    <img src="{{ $logo_path }}" />
+                    @endif
+                </td>
+                <td class='center w-50'>
+                    <div class='display-block'>U MicroFinance Bank Ltd</div>
+                    <div class='display-block'>Plot 13-b College Road,F-7 Markaz</div>
+                    <div class='display-block'>Jinnah Super F-7 Islammabad</div>
+                    <div class='display-block'>UAN : 111-182-265</div>
+                </td>
+                <td class='center w-50'>
+                    <div class='display-block'>Purchase Order Number: {{ $data->po_number }}</div>
+                    <div class='display-block'>Reference Number: {{ $data->po_reference }}</div>
+                    <div class='display-block'>Order Date: {{ $data->order_date }}</div>
+                    <div class='display-block'>Order Due Date: {{ $data->order_due_date }}</div> 
+                </td>
             </tr>
         </table>
+        <table class="w-100 mb-1rem h-100px" id="entity-details">
+            <tr class='bg-black'>
+                <th  class="left w-50 color-white" colspan="2"><h3>Supplier/Issuedto</h3></th>
+                
+                <th  class="left w-50 color-white" colspan="2"><h3>Supplier Contact Detail</h3></th>
+                
+            </tr>
+            <tr rowspan="4">
+                <td class="left w-25 bg-black color-white" style="border: none !important" colspan="1"><p>Supplier Name:</p></td>
+                <td class="left w-25 center" colspan="1">{{ $data->supplier_name }}</td>
+                <td class="w-25 bg-black color-white center" colspan="1"><p>Contact Person:</p></td>
+                <td class="w-25" colspan="1">Name of the contact person</td><br>
+                
+            </tr>
+            <tr>
+                <td colspan="2"  class="w-50 bg-black color-white" style="border: none !important"></td>
+                <td colspan="1" class="bg-black color-white center ">Telephone</td>
+                <td colspan="1" >{{ $data->store->primary_contact }}</td>
+            </tr>
+            <tr>
+                <td class="left w-25 bg-black color-white" colspan="1"><p>Supplier Address:</p></td>
+                <td class="left w-25 center" colspan="1">{{ $data->supplier_address }}</td>
+                <td class="w-25 bg-black color-white center" colspan="1"><p>Fax:</p></td>
+                <td class="w-25" colspan="1">The Fax Number</td><br>
+                
+            </tr>
+            <tr>
+                <td colspan="2"  class="w-50 bg-black color-white "></td>
+                <td colspan="1" class="bg-black color-white center">Email</td>
+                <td colspan="1" class="border-none">{{ $data->supplier->email }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"  class="w-50 bg-black color-white"></td>
+                <td colspan="1" class="bg-black color-white center ">Supplier NTN/CNIC</td>
+                <td colspan="1" class="border-none">_______________________</td>
+            </tr>
+            <tr>
+                <td colspan="2"  class="w-50 bg-black color-white "></td>
+                <td colspan="1" class="bg-black color-white center ">Supplier STRN</td>
+                <td colspan="1" class="">{{ $data->store->primary_contact }}</td>
+            </tr>
+        </table>
+        
 
-        <div class='mb-1rem'>
-            <table class='w-100'>
-                <tr>
-                    <td class='w-50'>
-                        <div class='display-block'>Purchase Order Number: {{ $data->po_number }}</div>
-                        <div class='display-block'>Reference Number: {{ $data->po_reference }}</div>
-                        <div class='display-block'>Order Date: {{ $data->order_date }}</div>
-                        <div class='display-block'>Order Due Date: {{ $data->order_due_date }}</div> 
-                    </td>
-                    <td class='right'>
-                        @if($logo_path != '')
-                        <img src="{{ $logo_path }}" class='h-50px'/>
-                        @endif
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <table class='w-100 mb-1rem'>
+        {{-- <table class='w-100 mb-1rem'>
             <tr>
                 <td class='v-top w-50 pr-20px'>
                     <div class='bold display-block'>SUPPLIER </div>
@@ -78,8 +121,19 @@
                     </div>
                 </td>
             </tr>
+        </table> --}}
+        <table class="w-100 mb-1rem h-100px">
+            <tr >
+                <td class="bg-black color-white left">Purchase Requisition Numbers</td></tr>
+            <tr>
+                <td>202300718</td></tr>
         </table>
-
+        <table class="w-100 mb-1rem h-100px">
+            <tr >
+                <td class="bg-black color-white left">Note To Suppliers</td></tr>
+            <tr>
+                <td>N/A</td></tr>
+        </table>
 
         <div class="mb-1rem">
             <table class="w-100 product-table mb-1rem">
@@ -152,6 +206,13 @@
                     </tr>
                 </tbody>
             </table>
+            <table class="w-100 mb-1rem h-100px">
+                <tr >
+                    <td class="bg-black color-white left">Total Amount without GST/PST/SST</td>
+                    <td class="bg-black color-white right"> {{ $data->total_order_amount }}</td>
+                </tr>
+              
+                </table>
             @if($data->currency_code != '')
             <div>
                 <small>All prices are in {{ $data->currency_name }} ({{ $data->currency_code }})</small>

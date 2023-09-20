@@ -60,9 +60,9 @@ class Product extends Model
         });
     }
 
-    // public function scopeCategoryActive($query){
-    //     return $query->where('category.status', 1);
-    // }
+    public function scopeCategoryActive($query){
+        return $query->where('category.status', 1);
+    }
 
     public function scopeSupplierActive($query){
         return $query->where('suppliers.status', 1);
@@ -219,6 +219,15 @@ class Product extends Model
     {
         return $this->belongsTo(SubCategory::class, 'sub_category_id', 'id');
     }
+
+
+    public function complaint(){
+        return $this->hasOne('App\Models\Complaint', 'product_id', 'id');
+    }
+    public function linkToComplaint(){
+        return $this->belongsTo(Complaint::class, 'link_to_complaint');
+    }
+    
 
     
 }

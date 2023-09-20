@@ -179,6 +179,9 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/unmerge_order', 'API\Order@unmerge_order');
     Route::post('/update_all_kitchen_item_as_prepared', 'API\Order@update_all_kitchen_item_as_prepared');
 
+
+    Route::post('/remaining_amount_payment/{slack}', 'API\Order@remaining_amount_payment');
+
     //store
     Route::post('/stores', 'API\Store@index');
     Route::post('/add_store', 'API\Store@store');
@@ -421,4 +424,11 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/kitchen_display/{slack}', 'API\KitchenDisplay@show');
     Route::post('/kitchen_display_list', 'API\KitchenDisplay@list');
     Route::post('/delete_kitchen_display/{slack}', 'API\KitchenDisplay@destroy');
+
+    //Customer Complaints
+    Route::post('/customer_complaints', 'API\Complaints@index');
+    Route::post('/submit_customer_complaint','API\Complaints@store');
+    Route::post('/update_customer_complaint/{slack}','API\Complaints@store');
+    //Expenses
+    Route::post('/expenses/list','API\Expense@list');
 });

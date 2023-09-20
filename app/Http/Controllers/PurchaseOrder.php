@@ -98,6 +98,7 @@ class PurchaseOrder extends Controller
         $data['delete_po_access'] = check_access(['A_DELETE_PURCHASE_ORDER'] ,true);
 
         $data['create_invoice_from_po_access'] = check_access(['A_CREATE_INVOICE_FROM_PO'] ,true);
+        // dd($data['create_invoice_from_po_access']);
 
         $store_data = StoreModel::select('printnode_enabled')
         ->where([
@@ -126,7 +127,7 @@ class PurchaseOrder extends Controller
         $purchase_order_data = new PurchaseOrderResource($purchase_order);
 
         $print_logo_path = config("app.invoice_print_logo");
-       
+        
         $print_data = view('purchase_order.invoice.po_print', ['data' => json_encode($purchase_order_data), 'logo_path' => $print_logo_path])->render();
 
         $mpdf_config = [
@@ -149,7 +150,7 @@ class PurchaseOrder extends Controller
         $mpdf->SetHTMLFooter('<div class="footer">Page: {PAGENO}/{nb}</div>');
         $mpdf->WriteHTML($print_data);
         header('Content-Type: application/pdf');
-       
+        header('Content-Disposition: attachment; filename="purchaseorder.pdf"');
         $filename = 'purchase_order_'.$purchase_order_data['po_number'].'.pdf';
 
         Storage::disk('purchase_order')->delete(

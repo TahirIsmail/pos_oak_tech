@@ -1,4 +1,5 @@
 @php $data = json_decode($data); @endphp
+@php $total_received_amount = json_decode($total_received_amount); @endphp
 <!DOCTYPE html>
 <html>
     <head>
@@ -188,6 +189,19 @@
                 <td class='bold w-50'>Bill Total</td>
                 <td class='bold right'>{{ $data->store->currency_code }} {{ $data->total_order_amount }}</td>
             </tr>
+
+            <tr>
+                <td class='bold w-50'>Received Amount</td>
+                <td class='bold right'>{{ $data->store->currency_code }} {{ $total_received_amount }}</td>
+            </tr>
+
+
+            <tr>
+                <td class='bold w-50'>Pending Amount</td>
+                <td class='bold right'>{{ $data->store->currency_code }} {{ $data->total_order_amount - $total_received_amount }}</td>
+            </tr>
+
+
             <tr>
                 <td>
                     <small>All prices are in {{ $data->store->currency_name }} ({{ $data->store->currency_code }})</small>

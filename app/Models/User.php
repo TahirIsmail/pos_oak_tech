@@ -9,7 +9,7 @@ class User extends Model
 {
     protected $table = 'users';
     protected $hidden = [ 'password', 'role_id'];
-    protected $fillable = ['id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'line_manager' , 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'line_manager' , 'created_by', 'updated_by'];
 
 
 
@@ -43,16 +43,16 @@ class User extends Model
     {
         return $this->hasMany(Leave::class, 'applied_by');
     }
-
-
-
+    public function transactions(){
+        return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['STAFF'])->orderBy('transactions.id', 'desc');
+    }
     public function scopeActive($query){
         return $query->where('users.status', 1);
     }
-
     public function scopeRoleJoin($query){
         return $query->leftJoin('roles', function ($join) {
             $join->on('roles.id', '=', 'users.role_id');
+            
         });
     }
 
@@ -91,6 +91,9 @@ class User extends Model
     public function scopeHideSuperAdminRole($query){
         return $query->where('users.role_id', '!=', 1);
     }
+    public function scopeHideCustomerRole($query){
+        return $query->where('users.role_id', '!=', 2);
+    }
 
     public function scopeHideCurrentLoggedUser($query, $logged_user_id){
         return $query->where('users.id', '!=', $logged_user_id);
@@ -110,13 +113,7 @@ class User extends Model
 
     /* For view files */
 
-    public function createdUser(){
-        return $this->hasOne('App\Models\User', 'id', 'created_by')->select(['slack', 'fullname', 'email', 'user_code']);
-    }
-
-    public function updatedUser(){
-        return $this->hasOne('App\Models\User', 'id', 'updated_by')->select(['slack', 'fullname', 'email', 'user_code']);
-    }
+    
     
     public function status_data(){
         return $this->hasOne('App\Models\MasterStatus', 'value', 'status')->where('key', 'USER_STATUS');
@@ -125,6 +122,8 @@ class User extends Model
     public function role(){
         return $this->hasOne('App\Models\Role', 'id', 'role_id');
     }
+
+    
     
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
@@ -141,6 +140,11 @@ class User extends Model
     public function staffPayrolls()
     {
         return $this->hasMany(StaffPayroll::class, 'staff_id', 'id');
+    }
+
+
+    public function assignComplaints(){
+        return $this->hasMany(AssignComplaint::class, 'assign_to_lab_staff_id', 'id');
     }
     
 }

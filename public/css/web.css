@@ -15,6 +15,13 @@ html,body{
   -webkit-text-size-adjust: 100%;
 }
 
+.blur-background {
+  background: rgba(187, 187, 187, 0.7);
+ backdrop-filter: blur(5px); 
+ overflow: hidden ;
+  transition: backdrop-filter 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
+}
+
 .wrapper {
   display: flex;
   align-items: stretch;
@@ -218,6 +225,8 @@ hr{
   background-color: rgba(0, 0, 0, .03);
   border-bottom: 1px solid rgba(0, 0, 0, .125);
 }
+
+
 @keyframes raceBy {
   0% {
     transform: translateX(-100%);

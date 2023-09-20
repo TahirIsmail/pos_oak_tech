@@ -13,7 +13,7 @@ class CreateMasterStatusTable extends Migration
      * @return void
      */
     public function up()
-    {
+    {        
         Schema::create('master_status', function (Blueprint $table) {
             $table->increments('id');
             $table->string('key', 25);

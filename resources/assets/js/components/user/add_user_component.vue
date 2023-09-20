@@ -210,7 +210,7 @@
                             formData.append("role", (this.role == null)?'':this.role);
                             formData.append("line_manager", (this.line_manager == null)?'':this.line_manager);
                             formData.append("status", (this.status == null)?'':this.status);
-                            formData.append("user_stores", this.stores_selected);
+                            formData.append("user_stores", (this.stores_selected == null)?'':this.stores_selected);
 
                             axios.post(this.api_link, formData).then((response) => {
                         

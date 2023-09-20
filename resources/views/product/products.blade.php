@@ -30,34 +30,34 @@
             </div>
         </div> --}}
 
-                <div class="table-responsive">
-                    <table id="listing-table" class="table nowrap">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>{{ __('Product Code') }}</th>
-                                <th>{{ __('Name') }}</th>
-                                <th>{{ __('Supplier') }}</th>
-                                <th>{{ __('Category') }}</th>
-                                <th>{{ __('Tax Code') }}</th>
-                                <th>{{ __('Discount Code') }}</th>
-                                <th>{{ __('Quantity') }}</th>
-                                <th>{{ __('Amount') }}</th>
-                                <th>{{ __('Status') }}</th>
-                                <th>{{ __('Product Status') }}</th>
-                                <th>{{ __('Created On') }}</th>
-                                <th>{{ __('Updated On') }}</th>
-                                <th>{{ __('Created By') }}</th>
-                                <th>{{ __('Action') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="table-responsive">
+            <table id="listing-table" class="display table nowrap">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{{ __("Product Code") }}</th>
+                        <th>{{ __("Name") }}</th>
+                        <th>{{ __("Supplier") }}</th>
+                        <th>{{ __("Category") }}</th>
+                        <th>{{ __("Tax Code") }}</th>
+                        <th>{{ __("Discount Code") }}</th>
+                        <th>{{ __("Quantity") }}</th>
+                        <th>{{ __("Amount") }}</th>
+                        <th>{{ __("Status") }}</th>
+                        <th>{{ __("Product Status") }}</th>
+                        <th>{{ __("Created On") }}</th>
+                        <th>{{ __("Updated On") }}</th>
+                        <th>{{ __("Created By") }}</th>
+                        <th>{{ __("Action") }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
+
     </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -65,6 +65,7 @@
     <script src="{{ asset('plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/datatable.js') }}"></script>
     <script src="{{ asset('js/pages/products.js') }}"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.9/js/dataTables.fixedHeader.min.js"></script>
     <script>
         'use strict';
         var products = new Products();

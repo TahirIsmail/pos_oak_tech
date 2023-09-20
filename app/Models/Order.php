@@ -128,7 +128,7 @@ class Order extends Model
     }
 
     public function transactions(){
-        return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['POS_ORDER'])->orderBy('transactions.transaction_date', 'desc');
+        return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['CUSTOMER_ORDER'])->orderBy('transactions.id', 'desc');
     }
 
     public function status_data(){
@@ -207,5 +207,9 @@ class Order extends Model
 
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
+    }
+
+    public function complaint(){
+        return $this->hasMany(Complaint::class, 'order_id');
     }
 }

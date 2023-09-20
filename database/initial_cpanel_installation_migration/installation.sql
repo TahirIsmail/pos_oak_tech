@@ -2304,7 +2304,7 @@ CREATE TABLE `transactions` (
   `transaction_type` int(11) NOT NULL,
   `payment_method_id` int(11) DEFAULT NULL,
   `payment_method` varchar(50) DEFAULT NULL,
-  `bill_to` varchar(50) DEFAULT NULL COMMENT 'POS_ORDER, INVOICE, CUSTOMER, SUPPLIER, STAFF',
+  `bill_to` varchar(50) DEFAULT NULL COMMENT 'CUSTOMER_ORDER, INVOICE, CUSTOMER, SUPPLIER, STAFF',
   `bill_to_id` int(11) DEFAULT NULL,
   `bill_to_name` varchar(250) DEFAULT NULL,
   `bill_to_contact` varchar(150) DEFAULT NULL,
