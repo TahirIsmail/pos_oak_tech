@@ -98,20 +98,20 @@
             </div>
 
             <div class="d-flex flex-wrap mb-5 p-1 product-list bg-light">
-                <div class="col-md-8">
+                <div class="col-md-8" style="background:white">
 
                     <div class="card-header pad d-flex flex-wrap p-3 align-items-center">
                         <span class="mr-auto text-title text-black-50">{{ $t("Products") }}</span>
 
 
                     </div>
-
-                    <div class="row">
-                        <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-4 bg-light product"
+                    
+                    <div class="row" style="background:white">
+                        <div class=" d-flex align-items-start flex-column p-1 mb-1 col-md-4  product "
                             v-for="(product_list_item, index) in product_list"
                             v-bind:value="product_list_item.product_slack" v-bind:key="index"
                             v-on:click='resolve_variants(product_list_item)'>
-                            <div class="col-12 p-3 bg-white product-grid"
+                            <div class="product-card  col-12 p-3 bg-white product-grid"
                                 v-shortkey="{ left: [keyboard_shortcuts_formatted.ARROW_LEFT], right: [keyboard_shortcuts_formatted.ARROW_RIGHT], choose: [keyboard_shortcuts_formatted.CHOOSE_PRODUCT] }"
                                 @shortkey="product_navigate($event)" :class="{ focus: index === product_focus }">
                                 <div class="d-flex flex-row-reverse" v-if="product_list_item.images.length > 0">
@@ -173,9 +173,9 @@
                             </div>
                         </div>
 
-                        <div class="p-0 cart-list">
+                        <div class="p-1 cart-list ">
 
-                            <div class="d-flex flex-column pl-3 pt-3 pb-3 border-bottom"
+                            <div class="d-flex flex-column pl-3 pt-3 pb-3 border-bottom  product-cart"
                                 v-for="(cart_item, key, index) in cart" v-bind:value="cart_item.product_slack"
                                 v-bind:key="index">
                                 <div class="d-flex mb-2">
@@ -2024,6 +2024,7 @@ export default {
     padding-bottom: 25rem;
     margin-left: -1px;
     width: 100%;
+    background:white;
 }
 
 .ml-auto,
@@ -2051,9 +2052,15 @@ export default {
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px #dededeca;
 }
-
+.product-cart {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 5px;
+    box-shadow: 0 2px 4px #efefefca;
+}
 .product-title {
     font-weight: bold;
     font-size: 14px;
