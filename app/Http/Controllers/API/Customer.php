@@ -27,70 +27,7 @@ class Customer extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function authenticate(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'email'     => $this->get_validation_rules("email", true),
-                'password'  => $this->get_validation_rules("password", true)
-            ]);
-            
-            $validation_status = $validator->fails();
-            if($validation_status){
-                throw new Exception($validator->errors());
-            }
-            
-            $user_data = CustomerModel::select('customers.*')
-            ->roleJoin()
-            ->where([
-                ['status', '=', 1],
-                ['email' ,'=', $request->email]
-            ])
-            ->active()
-            ->first();
-            
-            if($user_data){
-                $password = $user_data->password;
-                if (Hash::check($request->password, $password)) {
-                    
-                    //Get the first link
-                    $first_link = $this->get_user_default_link($user_data);
-                    $user_data->initial_link = (!empty($first_link))?route($first_link->route):"/";
-                    if($user_data->initial_link == "/"){
-                        throw new Exception("You don't have access to the system. Please contact the system administrator for assistance.", 401); 
-                    }
-
-                    $access_token = $this->generate_access_token($user_data);
-                    
-                    $user_detail = UserModel::where('id', $user_data->id)->first();
-                    
-                    $user = collect(new UserResource($user_detail));
-
-                    $user['access_token'] = $access_token;
-
-                    return response()->json($this->generate_response(
-                        array(
-                            "message" => "Authenticated successfully", 
-                            "data"    => $user,
-                            "link"    => $user_data->initial_link
-                        ), 'SUCCESS'
-                    ));
-                }else{
-                    throw new Exception("Invalid email or password", 401);
-                }
-            }else{
-                throw new Exception("Invalid email or password", 401);
-            }
-
-        }catch(Exception $e){
-            return response()->json($this->generate_response(
-                array(
-                    "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
-                )
-            ));
-        }
-    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -101,7 +38,7 @@ class Customer extends Controller
         try {
 
             $data['action_key'] = 'A_VIEW_CUSTOMER_LISTING';
-            if(check_access(array($data['action_key']), true) == false){
+            if (check_access(array($data['action_key']), true) == false) {
                 $response = $this->no_access_response_for_listing_table();
                 return $response;
             }
@@ -111,52 +48,52 @@ class Customer extends Controller
             $draw = $request->draw;
             $limit = $request->length;
             $offset = $request->start;
-            
+
             $order_by = $request->order[0]["column"];
             $order_direction = $request->order[0]["dir"];
             $order_by_column =  $request->columns[$order_by]['name'];
 
             $filter_string = $request->search['value'];
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
-            
+
             $query = CustomerModel::select('customers.*', 'master_status.label as status_label', 'master_status.color as status_color', 'user_created.fullname')
-            ->take($limit)
-            ->skip($offset)
-            ->statusJoin()
-            ->createdUser()
-            ->skipDefaultCustomer()
+                ->take($limit)
+                ->skip($offset)
+                ->statusJoin()
+                ->createdUser()
+                ->skipDefaultCustomer()
 
-            ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
-                $query->orderBy($order_by_column, $order_direction);
-            }, function ($query) {
-                $query->orderBy('created_at', 'desc');
-            })
+                ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
+                    $query->orderBy($order_by_column, $order_direction);
+                }, function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                })
 
-            ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
-                $query->where(function ($query) use ($filter_string, $filter_columns){
-                    foreach($filter_columns as $filter_column){
-                        $query->orWhere($filter_column, 'like', '%'.$filter_string.'%');
-                    }
-                });
-            })
-            ->get();
+                ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
+                    $query->where(function ($query) use ($filter_string, $filter_columns) {
+                        foreach ($filter_columns as $filter_column) {
+                            $query->orWhere($filter_column, 'like', '%' . $filter_string . '%');
+                        }
+                    });
+                })
+                ->get();
 
             $customers = CustomerResource::collection($query);
-           
+
             $total_count = CustomerModel::select('id')->skipDefaultCustomer()->get()->count();
 
             $item_array = [];
-            foreach($customers as $key => $customer){
-                
+            foreach ($customers as $key => $customer) {
+
                 $customer = $customer->toArray($request);
 
-                $item_array[$key][] = (!empty($customer['name']))?$customer['name']:'-';
-                $item_array[$key][] = (!empty($customer['email']))?$customer['email']:'-';
-                $item_array[$key][] = (!empty($customer['phone']))?$customer['phone']:'-';
-                $item_array[$key][] = (isset($customer['status']['label']))?view('common.status', ['status_data' => ['label' => $customer['status']['label'], "color" => $customer['status']['color']]])->render():'-';
+                $item_array[$key][] = (!empty($customer['name'])) ? $customer['name'] : '-';
+                $item_array[$key][] = (!empty($customer['email'])) ? $customer['email'] : '-';
+                $item_array[$key][] = (!empty($customer['phone'])) ? $customer['phone'] : '-';
+                $item_array[$key][] = (isset($customer['status']['label'])) ? view('common.status', ['status_data' => ['label' => $customer['status']['label'], "color" => $customer['status']['color']]])->render() : '-';
                 $item_array[$key][] = $customer['created_at_label'];
                 $item_array[$key][] = $customer['updated_at_label'];
-                $item_array[$key][] = (isset($customer['created_by']) && isset($customer['created_by']['fullname']))?$customer['created_by']['fullname']:'-';
+                $item_array[$key][] = (isset($customer['created_by']) && isset($customer['created_by']['fullname'])) ? $customer['created_by']['fullname'] : '-';
                 $item_array[$key][] = view('customer.layouts.customer_actions', array('customer' => $customer))->render();
             }
 
@@ -166,9 +103,9 @@ class Customer extends Controller
                 'recordsFiltered' => $total_count,
                 'data' => $item_array
             ];
-            
+
             return response()->json($response);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -198,14 +135,14 @@ class Customer extends Controller
     {
         try {
 
-            if(!check_access(['A_ADD_CUSTOMER'], true)){
+            if (!check_access(['A_ADD_CUSTOMER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
-            
+
             $this->validate_request($request);
-            
+
             //check email already exists
-            if($request->email != ''){
+            if ($request->email != '') {
                 $customer_email_exists = CustomerModel::where('email', $request->email)->first();
                 if ($customer_email_exists) {
                     throw new Exception("Customer email already exists");
@@ -213,14 +150,14 @@ class Customer extends Controller
             }
 
             //check phone already exists
-            if($request->phone != ''){
+            if ($request->phone != '') {
                 $customer_phone_exists = CustomerModel::where('phone', $request->phone)->first();
                 if ($customer_phone_exists) {
                     throw new Exception("Customer phone already exists");
                 }
             }
-           
-             $user_data = $this->customerAddInUser($request);
+
+            $user_data = $this->customerAddInUser($request);
 
 
             DB::beginTransaction();
@@ -237,7 +174,7 @@ class Customer extends Controller
                 "user_id" => $user_data['id'],
                 "created_by" => $request->logged_user_id
             ];
-            
+
             $customer_id = CustomerModel::create($customer)->id;
 
             DB::commit();
@@ -246,12 +183,12 @@ class Customer extends Controller
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customer created successfully", 
+                    "message" => "Customer created successfully",
                     "data"    => $customer_data
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -268,34 +205,34 @@ class Customer extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($slack)
-    { 
+    {
         try {
 
-            if(!check_access(['A_DETAIL_CUSTOMER'], true)){
+            if (!check_access(['A_DETAIL_CUSTOMER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $item = CustomerModel::select('*')
-            ->where('slack', $slack)
-            ->first();
+                ->where('slack', $slack)
+                ->first();
 
             $item_data = new CustomerResource($item);
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customer loaded successfully", 
+                    "message" => "Customer loaded successfully",
                     "data"    => $item_data
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
                     "status_code" => $e->getCode()
                 )
             ));
-        }  
+        }
     }
 
     /**
@@ -308,21 +245,21 @@ class Customer extends Controller
     {
         try {
 
-            if(!check_access(['A_VIEW_CUSTOMER_LISTING'], true)){
+            if (!check_access(['A_VIEW_CUSTOMER_LISTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $list = new CustomerCollection(CustomerModel::select('*')
-            ->orderBy('created_at', 'desc')->paginate());
+                ->orderBy('created_at', 'desc')->paginate());
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customers loaded successfully", 
+                    "message" => "Customers loaded successfully",
                     "data"    => $list
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -343,14 +280,14 @@ class Customer extends Controller
     {
         try {
 
-            if(!check_access(['A_EDIT_CUSTOMER'], true)){
+            if (!check_access(['A_EDIT_CUSTOMER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $this->validate_request($request);
 
             //check email already exists
-            if($request->email != ''){
+            if ($request->email != '') {
                 $customer_email_exists = CustomerModel::where('email', $request->email)->where('slack', '!=', $slack)->first();
                 if ($customer_email_exists) {
                     throw new Exception("Customer email already exists");
@@ -358,16 +295,16 @@ class Customer extends Controller
             }
 
             //check phone already exists
-            if($request->phone != ''){
+            if ($request->phone != '') {
                 $customer_phone_exists = CustomerModel::where('phone', $request->phone)->where('slack', '!=', $slack)->first();
                 if ($customer_phone_exists) {
                     throw new Exception("Customer phone already exists");
                 }
             }
-            $this->customerUpdateInUser($request ,$slack);
+            $this->customerUpdateInUser($request, $slack);
             DB::beginTransaction();
 
-            $customer = [        
+            $customer = [
                 "name" => $request->name,
                 "email" => $request->email,
                 "phone" => $request->phone,
@@ -378,18 +315,18 @@ class Customer extends Controller
             ];
 
             $data = CustomerModel::where('slack', $slack)
-            ->update($customer);
+                ->update($customer);
 
             DB::commit();
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customer updated successfully", 
+                    "message" => "Customer updated successfully",
                     "data"    => $data
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -406,29 +343,29 @@ class Customer extends Controller
             $type = $request->type;
             DB::enableQueryLog();
             $customer_list = CustomerModel::select('slack', 'name', 'email', 'phone')
-            ->when($type == 'phone', function ($query) use ($keywords){
-                return $query->where('phone', 'like', $keywords.'%');
-            })
-            ->when($type == 'email', function ($query) use ($keywords){
-                return $query->where('email', 'like', $keywords.'%');
-            })
-            ->when($type == 'all', function ($query) use ($keywords){
-                return $query->where('name', 'like', $keywords.'%')
-                ->orWhere('email', 'like', $keywords.'%')
-                ->orWhere('phone', 'like', $keywords.'%');
-            })
-            ->skipDefaultCustomer()
-            ->limit(15)
-            ->get();
-            
+                ->when($type == 'phone', function ($query) use ($keywords) {
+                    return $query->where('phone', 'like', $keywords . '%');
+                })
+                ->when($type == 'email', function ($query) use ($keywords) {
+                    return $query->where('email', 'like', $keywords . '%');
+                })
+                ->when($type == 'all', function ($query) use ($keywords) {
+                    return $query->where('name', 'like', $keywords . '%')
+                        ->orWhere('email', 'like', $keywords . '%')
+                        ->orWhere('phone', 'like', $keywords . '%');
+                })
+                ->skipDefaultCustomer()
+                ->limit(15)
+                ->get();
+
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customers loaded successfully", 
+                    "message" => "Customers loaded successfully",
                     "data"    => $customer_list
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-            
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -438,28 +375,29 @@ class Customer extends Controller
         }
     }
 
-    public function filter_customers(Request $request){
-        try{
+    public function filter_customers(Request $request)
+    {
+        try {
 
             $keyword = $request->keyword;
 
             $customer_list = CustomerModel::select("*")
-            ->where('name', 'like', $keyword.'%')
-            ->orWhere('email', 'like', $keyword.'%')
-            ->orWhere('phone', 'like', $keyword.'%')
-            ->limit(25)
-            ->get();
-            
+                ->where('name', 'like', $keyword . '%')
+                ->orWhere('email', 'like', $keyword . '%')
+                ->orWhere('phone', 'like', $keyword . '%')
+                ->limit(25)
+                ->get();
+
             $customers = CustomerResource::collection($customer_list);
-           
+
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customers filtered successfully", 
+                    "message" => "Customers filtered successfully",
                     "data" => $customers
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -470,9 +408,9 @@ class Customer extends Controller
     }
 
     public function destroy(Request $request, $slack)
-    {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-        try{
-            if(!check_access(['A_DELETE_CUSTOMER'], true)){
+    {
+        try {
+            if (!check_access(['A_DELETE_CUSTOMER'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
@@ -481,7 +419,7 @@ class Customer extends Controller
                 throw new Exception("Invalid customer provided", 400);
             }
             $customer_id = $customer_detail->id;
-            
+
             DB::beginTransaction();
 
             CustomerModel::where('id', $customer_id)->delete();
@@ -492,13 +430,13 @@ class Customer extends Controller
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customer deleted successfully", 
+                    "message" => "Customer deleted successfully",
                     "data" => $slack,
                     "link" => $forward_link
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -511,136 +449,146 @@ class Customer extends Controller
     public function validate_request($request)
     {
         $validator = Validator::make($request->all(), [
-            'email'  => 'required_if:phone,""'.'|'.$this->get_validation_rules("email", false),
-            'phone'  => 'required_if:email,""'.'|'.$this->get_validation_rules("phone", false),
+            'email'  => 'required_if:phone,""' . '|' . $this->get_validation_rules("email", false),
+            'phone'  => 'required_if:email,""' . '|' . $this->get_validation_rules("phone", false),
             'name'   => $this->get_validation_rules("fullname", true),
-            'address'=> $this->get_validation_rules("text", false),
+            'address' => $this->get_validation_rules("text", false),
             'status' => $this->get_validation_rules("status", true),
         ]);
         $validation_status = $validator->fails();
-        if($validation_status){
+        if ($validation_status) {
             throw new Exception($validator->errors());
         }
     }
-    private function customerAddInUser($request){
-        
+    private function customerAddInUser($request)
+    {
+
         $user_email_exists = UserModel::where('email', $request->email)->first();
-            if ($user_email_exists) {
-                throw new Exception("Email is already added, try signing in");
-            }
-
-           
-          
-
-            $password = Str::random(6);
-            $hashed_password = Hash::make($password);
-
-            DB::beginTransaction();
-
-            $user = [
-                "slack" => $this->generate_slack("users"),
-                "user_code" => Str::random(6),
-                "email" => $request->email,
-                "password" => $hashed_password,
-                "init_password" => $password,
-                "fullname" => $request->name,
-                "phone" => $request->phone,
-                "role_id" => 2,
-                "store_id" => $request->logged_user_store_id,
-                "status" => $request->status,
-                "created_by" => $request->logged_user_id
-            ];
-            // dd($user);
-            $user_data['slack'] = $user['slack'];
-            
-            $user_id = UserModel::create($user)->id;
-            $user_data['id'] = $user_id; 
-            $code_start_config = Config::get('constants.unique_code_start.user');
-            $code_start = (isset($code_start_config))?$code_start_config:100;
-            
-            $user_code = [
-                "user_code" => ($code_start+$user_id)
-            ];
-            UserModel::where('id', $user_id)
-            ->update($user_code);
-
-            $role_api = new RoleAPI();
-            $role_api->update_user_roles($request, 2);
-
-            $this->update_user_stores($request,  $user_data['slack']);
-
-            DB::commit();
-
-            return $user_data;
-            
-    }
-    public function update_user_stores(Request $request, $user_slack){
-        
-        if($user_slack == ''){
-            return;
-        }
-        
-
-        $selected_stores = explode(",", $request->user_stores);
-
-        $user_data = UserModel::select('id')->where('slack', '=', $user_slack)->first();
-        if(empty($user_data)){
-            return;
+        if ($user_email_exists) {
+            throw new Exception("Email is already added, try signing in");
         }
 
-        $user_stores = UserStoreModel::where('user_id', '=', $user_data->id)
-        ->pluck('store_id')
-        ->toArray();
-        (count($user_stores) >0 )?sort($user_stores):$user_stores;
 
-        $selected_stores_array = StoreModel::whereIn('slack', $selected_stores)
-        ->pluck('id')
-        ->toArray();
-        (count($selected_stores_array) >0 )?sort($selected_stores_array):$selected_stores_array;
 
-        if($user_stores != $selected_stores_array){
 
-            $user_stores_array = [];
-            foreach($selected_stores_array as $selected_stores_array_item){
-                $user_stores_array[] = [
-                    'user_id' => $user_data->id,
-                    'store_id' => $selected_stores_array_item,
-                    'created_by' => $request->logged_user_id,
-                    "created_at"=> now(),
-                    "updated_at"=> now()
-                ];
-            }
+        $password = Str::random(6);
+        $hashed_password = Hash::make($password);
 
-            UserStoreModel::where('user_id', $user_data->id)->delete();
-            UserStoreModel::insert($user_stores_array);
-
-        }
-    }
-    private function customerUpdateInUser($request,$slack){
-        
         DB::beginTransaction();
 
-        $user = [        
+        $user = [
+            "slack" => $this->generate_slack("users"),
+            "user_code" => Str::random(6),
+            "email" => $request->email,
+            "password" => $hashed_password,
+            "init_password" => $password,
+            "fullname" => $request->name,
+            "phone" => $request->phone,
+            "role_id" => 2,
+            "store_id" => $request->logged_user_store_id,
+            "status" => $request->status,
+            "created_by" => $request->logged_user_id
+        ];
+        // dd($user);
+        $user_data['slack'] = $user['slack'];
+
+        $user_id = UserModel::create($user)->id;
+        $user_data['id'] = $user_id;
+        $code_start_config = Config::get('constants.unique_code_start.customer');
+        $code_start = (isset($code_start_config)) ? $code_start_config : 100;
+
+        $user_code = [
+            "user_code" => "CUST".($code_start + $user_id)
+        ];
+        UserModel::where('id', $user_id)
+            ->update($user_code);
+
+        $role_api = new RoleAPI();
+        $role_api->update_user_roles($request, 2);
+
+        $user_stores_array[] = [
+            'user_id' => $user_id,
+            'store_id' => $request->logged_user_store_id,
+            'created_by' => $request->logged_user_id,
+            "created_at" => now(),
+            "updated_at" => now()
+        ];
+
+        UserStoreModel::insert($user_stores_array);
+
+
+        DB::commit();
+
+        return $user_data;
+    }
+    // public function update_user_stores(Request $request, $user_slack)
+    // {
+
+    //     if ($user_slack == '') {
+    //         return;
+    //     }
+
+
+    //     $selected_stores = $request->logged_user_store_id;
+
+    //     $user_data = UserModel::select('id')->where('slack', '=', $user_slack)->first();
+    //     if (empty($user_data)) {
+    //         return;
+    //     }
+
+    //     $user_stores = UserStoreModel::where('user_id', '=', $user_data->id)
+    //         ->pluck('store_id')
+    //         ->toArray();
+    //     (count($user_stores) > 0) ? sort($user_stores) : $user_stores;
+
+    //     $selected_stores_array = StoreModel::whereIn('slack', $selected_stores)
+    //         ->pluck('id')
+    //         ->toArray();
+    //     (count($selected_stores_array) > 0) ? sort($selected_stores_array) : $selected_stores_array;
+
+    //     if ($user_stores != $selected_stores_array) {
+
+    //         $user_stores_array = [];
+    //         foreach ($selected_stores_array as $selected_stores_array_item) {
+    //             $user_stores_array[] = [
+    //                 'user_id' => $user_data->id,
+    //                 'store_id' => $selected_stores_array_item,
+    //                 'created_by' => $request->logged_user_id,
+    //                 "created_at" => now(),
+    //                 "updated_at" => now()
+    //             ];
+    //         }
+
+    //         UserStoreModel::where('user_id', $user_data->id)->delete();
+    //         UserStoreModel::insert($user_stores_array);
+    //     }
+    // }
+
+    private function customerUpdateInUser($request, $slack)
+    {
+
+        DB::beginTransaction();
+
+        $user = [
             "email" => $request->email,
             "fullname" => $request->name,
             "phone" => $request->phone,
-            
-            
+
+
             "status" => $request->status,
             "updated_by" => $request->logged_user_id
         ];
 
         $data = UserModel::where('slack', $slack)
-        ->update($user);
+            ->update($user);
 
         $role_api = new RoleAPI();
         $role_api->update_user_roles($request, 1);
 
-        $this->update_user_stores($request, $slack);
+
 
         DB::commit();
 
         return $data;
     }
-    
 }

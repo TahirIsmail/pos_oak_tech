@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return [
 
@@ -90,22 +90,23 @@ return [
             'upload_path' => 'storage/quotation/'
         ],
     ],
-    
+
     'unique_code_start' => [
         'user'          => 100,
         'role'          => 100,
         'order'         => 100,
         'category'      => 100,
-        'supplier'      => 100,
+        'supplier'      => 300,
         'invoice'       => 100,
         'quotation'     => 100,
         'account'       => 100,
         'transaction'   => 100,
-        'stock_transfer'=> 100,
+        'stock_transfer' => 100,
         'stock_return'  => 100,
         'booking'       => 100,
         'addon_group'   => 100,
-        'variant_option'=> 100,
-        'printer'       => 100
+        'variant_option' => 100,
+        'printer'       => 100,
+        'customer' => 200,
     ],
 ];

@@ -57,6 +57,7 @@ class AuthenticateUser
                 $request->is_super_admin        = ($user_exists->role_id == 1)?true:false;
                 
                 $menus = $this->get_user_menu($request, $user_id);
+                
                 $request->logged_user_menus = $menus;
                 
                 $user_stores = $this->get_available_stores($request, $user_id);

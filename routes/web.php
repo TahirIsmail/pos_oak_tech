@@ -14,8 +14,7 @@
     Customer Auth Routes
     
     */
-    Route::get('/customer_signin',"CustomerEntry@customer_signin")->name('customer_home');
-    Route::get('/customer_forgot_password', "CustomerEntry@forgot_password")->name('forgot_password');
+   
 
     // ----------------------------------------------------------------//
     Route::get('/', "Entry@sign_in")->name('home');
