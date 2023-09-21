@@ -436,7 +436,8 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     Route::post('/assign_complaint_to_technician','API\Complaints@assign_complaint_to_technician');
 
-
+    //Repairing / Workshop Routes 
+    Route::post('/repairing_listing', 'API\RepairingLab@index');
 
 
 

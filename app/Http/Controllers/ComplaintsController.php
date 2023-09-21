@@ -84,6 +84,7 @@ class ComplaintsController extends Controller
         }else{
             $data['delete_access'] = true;
         }
+        
         return view('complaints.view_customer_complaint', $data);
     }
 }

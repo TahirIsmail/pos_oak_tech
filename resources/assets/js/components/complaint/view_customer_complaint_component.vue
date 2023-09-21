@@ -23,6 +23,9 @@
                     <div>
                     <button type="submit" class="alert alert-success mr-1" v-if="complaint.assign_to_lab_staff_id != null"> {{ $t("Complaint Assigned") }}</button>
                     </div>
+                    <div>
+                    <button type="submit" class="btn btn-success mr-1" v-if="complaint.assign_to_lab_staff_id != null" v-on:click="request_for_product()"> {{ $t("Add Required Product") }}</button>
+                    </div>
                     <div v-if="delete_access">
                         <button type="submit" class="btn btn-danger mr-1" v-if="delete_access == true" v-on:click="delete_category()" v-bind:disabled="delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="delete_processing == true"></i> {{ $t("Delete Complaint") }}</button>
                     </div>
@@ -123,6 +126,34 @@
             </template>
         </modalcomponent>
 
+
+        <modalcomponent v-if="required_product == true" v-on:close="required_product = false" :modal_width="'modal-container-md'">
+            <template v-slot:modal-header>
+                Add Request For Required Product
+            </template>
+            <template v-slot:modal-body>
+                <div class="form-row mb-2">
+                                 
+                <div class="form-group col-sm-12 col-md-10 mx-auto">
+                    <label for="lab_staff_remark">{{ $t("Add Request") }}</label>
+                    <textarea name="lab_staff_remark" v-model="lab_staff_remark" v-validate="'required|max:65535'"
+                        class="form-control form-control-custom" rows="5"
+                        :placeholder="$t('Enter Remark')"></textarea>
+
+                    <span v-bind:class="{ error: errors.has('lab_staff_remark') }">{{
+                        errors.first("lab_staff_remark")
+                    }}</span>
+                    
+                </div>
+
+                </div>
+            </template>
+            <template v-slot:modal-footer>
+                <button type="button" class="btn btn-light" @click="cancel_complaint">Cancel</button>
+                <button type="button" class="btn btn-primary" @click="requested_for_required_product" > Requested</button>
+            </template>
+        </modalcomponent>
+
         <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
             <template v-slot:modal-header>
                 {{ $t("Confirm") }}
@@ -151,11 +182,13 @@
                 show_assign_complaint:false,
                 delete_access:true,
                 assign_processing:false,
+                required_product:false,
                 server_errors:'',
                 submit_complaint_technician:false,
                 labtechnician: '',
                 due_date: '',
                 admin_remark: '',
+                lab_staff_remark: '',
                 complaint_slack:this.complaint.slack,
                 delete_category_api_link: '/api/delete_complaint/'+ this.complaint.slack,
             }
@@ -228,6 +261,10 @@
             cancel_complaint(){
                 this.$off("cancel_complaint");
                 this.show_assign_complaint = false;
+                this.required_product = false;
+            },
+            request_for_product(){
+                this.required_product = true;
             },
             
             delete_category(){
@@ -272,6 +309,9 @@
                 this.$on("close",function () {
                     this.show_modal = false;
                 });
+            },
+            requested_for_required_product(){
+                alert('kashif');
             }
         }
     }
