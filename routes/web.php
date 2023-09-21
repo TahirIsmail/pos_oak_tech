@@ -331,6 +331,15 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/expenses','ExpensesController@index')->name('expenses');
 
     Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
+
+
+    // Workshop / Repairing lab 
+    Route::get('/repairing_lab', 'RepairingLab@index')->name('repairing_lab');
+
+
+
+
+
 });
 
 Route::get('/order_public/{slack}', "Order@detail_public_view")->name('order_public');

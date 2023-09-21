@@ -29,6 +29,8 @@ class CreateUsersTable extends Migration
             $table->text('profile_image')->nullable();
             $table->integer('role_id')->nullable();
             $table->integer('store_id')->nullable();
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('supplier_id');
             $table->tinyInteger('status')->default(0);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
