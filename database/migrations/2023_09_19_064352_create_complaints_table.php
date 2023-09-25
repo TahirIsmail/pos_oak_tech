@@ -28,6 +28,10 @@ class CreateComplaintsTable extends Migration
             $table->string('admin_again_remark')->nullable();;
             $table->date('due_date')->nullable();
             $table->text('description');
+            $table->text('final_total_amount')->nullable();
+            $table->text('final_lab_staff_remark')->nullable();
+            $table->date('complaint_completed_date')->nullable();
+            $table->text('description');
             $table->string('status')->default(0);
             $table->string('complaint_by');
             $table->timestamps();

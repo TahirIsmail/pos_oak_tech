@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -287,6 +288,197 @@ class Complaints extends Controller
                     "message" => $e->getMessage(),
                     "status_code" => $e->getCode(),
                 )
+            ));
+        }
+    }
+
+    public function complaint_completed(Request $request){
+        try {          
+
+           
+            $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+            $complaint->final_lab_staff_remark = $request->final_lab_staff_remark;
+            $complaint->complaint_status = 'Completed Complaint';
+            $complaint->complaint_completed_date =  date('Y-m-d');
+            $complaint->save();
+            if($complaint){
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Customer Complaint Assign to Lab Technician Completed Successfully",
+                        "data" => '',
+                        'msg' => 'success',
+                    ),
+                    'SUCCESS'
+                ));
+            }
+            else{
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Some Error Occur",
+                        "data" => '',
+                        'msg' => 'Fail',
+                    ),
+                    'Fail'
+                ));
+            }
+
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+
+    public function assign_products_complaint(Request $request){
+        $complaint_id = ModelsComplaints::select('id')->where('slack', $request->complaint_slack)->first();
+
+        if($complaint_id){
+            $products = Product::with('subcategory.category')->where('link_to_complaint', $complaint_id->id)->get();
+            $data['products'] = $products;
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "",
+                    "data" => $data,
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+        }
+       
+    }
+
+    public function request_requirement(Request $request){
+
+        $complaints = ModelsComplaints::where('slack', $request->complaint_slack)->get();
+        if ($complaints->count() > 0) {
+            $complaint = $complaints->first();
+            $complaint->lab_staff_remark = $request->lab_staff_remark;
+            $complaint->save();
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Requirement Request Submitted Successfully",
+                    "data" => $complaint,
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+        }
+    }
+
+
+    public function fetchCategorySubcategory(Request $request){
+        $categories = Category::with('subcategories')->get();
+        if($categories){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Requirement Request Submitted Successfully",
+                    "data" => $categories,
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+        }
+    }
+
+
+    public function fetchCategoryProduct(Request $request){
+        $category = Category::where('slack',$request->category_slack)->first();
+        // dd($category);
+        if ($category) {
+            $subCategories = $category->subcategories->toArray();
+            $subCategoryIDs = $category->subcategories->pluck('id')->toArray();
+            $products = Product::with('subcategory.category')->whereIn('sub_category_id', $subCategoryIDs)->where('quantity', 1)->get();
+            $data['products'] = $products;
+            $data['subCategories'] = $subCategories;
+            if ($products) {
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "",
+                        "data" => $data,
+                       'msg' =>'success',
+                    ),
+                    'SUCCESS'
+                ));
+            }
+    }
+}
+
+    public function fetchSubCategoryProduct(Request $request){
+        $products = Product::with('subcategory.category')->where('sub_category_id', $request->sub_category_id)->where('quantity', 1)->get();
+        if($products){
+            $data['products'] = $products;
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "",
+                    "data" => $data,
+                   'msg' =>'success',
+                ),
+                'SUCCESS'
+            ));
+        }
+    }
+
+    public function assignProductToTechnician(Request $request)
+    {
+        try {
+
+            if (!check_access(['A_REQUIREMENT_REQUEST_CUSTOMER_COMPLAINT_LABTECHNICIAN'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+            $productIdsArray = explode(",", $request->product_ids);
+            $complaint_id = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+            DB::beginTransaction();
+            foreach($productIdsArray as $productId){
+                $complaint_update = [
+                    'admin_again_remark' => $request->admin_again_remark,
+                    'due_date' => $request->extend_date,  
+                    'complaint_status'   => 'Request Completed'               
+                ];
+                $complaint_id->update($complaint_update);
+                $product = Product::find($productId);
+                $product->link_to_complaint = $complaint_id->id;
+                $product->quantity = 0;
+                $product->save();
+            }
+            DB::commit();
+            if($product){
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Requirement Request Completed Successfully!",
+                        "data" => '',
+                        'msg' => 'success',
+                    ),
+                    'SUCCESS'
+                ));
+            }
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+    public function fetchSelectedProduct(Request $request){
+        // dd($request->product_ids);
+        $productIdsArray = explode(",", $request->product_ids[0]);
+        $products = Product::with('subcategory.category')->whereIn('id', $productIdsArray)->where('quantity', 1)->get();
+        if($products){
+            $data['products'] = $products;
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "",
+                    "data" => $data,
+                   'msg' =>'success',
+                ),
+                'SUCCESS'
             ));
         }
     }

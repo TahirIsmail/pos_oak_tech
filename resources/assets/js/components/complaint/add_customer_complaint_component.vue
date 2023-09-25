@@ -184,9 +184,7 @@ export default {
                         formData.append("customer_slack", this.selectedCustomer);
                         formData.append("order_slack", this.selectedOrder);
                         formData.append("product_id", this.product_id);
-
-
-
+                        
                         axios
                             .post(this.api_link, formData)
                             .then((response) => {

@@ -78,12 +78,34 @@ class ComplaintsController extends Controller
             $data['assign_access'] = true;
         }
 
+
+        $data['requirement_request_key'] = 'A_REQUIREMENT_REQUEST_CUSTOMER_COMPLAINT_LABTECHNICIAN';
+        if (check_access(array($data['requirement_request_key']), true) == false) {
+           
+        }else{
+            $data['requirement_request_access'] = true;
+        }
+
+
+        $data['Customer_complaint_make_invoice_key'] = 'A_CUSTOMER_COMPLAINT_MAKE_INVOICE';
+        if (check_access(array($data['Customer_complaint_make_invoice_key']), true) == false) {
+           
+        }else{
+            $data['Customer_complaint_make_invoice'] = true;
+        }
+
+
+
+
         $data['delete_access_key'] = 'A_DELETE_CUSTOMER_COMPLAINT';
         if (check_access(array($data['delete_access_key']), true) == false) {
            
         }else{
             $data['delete_access'] = true;
         }
+
+
+
         
         return view('complaints.view_customer_complaint', $data);
     }
