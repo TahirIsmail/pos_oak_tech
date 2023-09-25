@@ -36,6 +36,9 @@ class Expenses{
                     data:'notes'
                 },
                 {
+                    data:'status'
+                },
+                {
                     data:'created_by'
                 },
                 {

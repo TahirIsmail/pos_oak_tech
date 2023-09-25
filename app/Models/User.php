@@ -91,6 +91,9 @@ class User extends Model
     public function scopeHideSuperAdminRole($query){
         return $query->where('users.role_id', '!=', 1);
     }
+    public function scopeShowSuperAdminRole($query){
+        return $query->where('users.role_id', '=', 1);
+    }
     public function scopeHideCustomerRole($query){
         return $query->where('users.role_id', '!=', 2);
     }

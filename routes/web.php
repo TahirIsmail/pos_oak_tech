@@ -322,15 +322,13 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_kitchen_display/{slack?}', "KitchenDisplay@add_kitchen_display")->name('edit_kitchen_display');
 
     //Complaints Modules
-    Route::get('/customer_complaints','ComplaintsController@index')->name('customer_complaints');
-    Route::get('/add_complaints', "ComplaintsController@add_complaints")->name('add_complaints');
-    Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
-    Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
+   
 
     Route::get('/expenses','ExpensesController@index')->name('expenses');
 
     Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
     Route::get('/edit_expenses/{slack?}','ExpensesController@add_expense')->name('edit_expenses');
+    Route::get('/view_expenses/{slack?}','ExpensesController@view_expense')->name('view_expenses');
 
     Route::get('/income','IncomeController@index')->name('income');
 });

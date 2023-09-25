@@ -433,4 +433,5 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/expenses/list','API\Expense@list');
     Route::post('/add_expense','API\Expense@store');
     Route::post('/update_expense/{slack}','API\Expense@store');
+    Route::post('/add_expense_transaction','API\Expense@add_expense_transaction');
 });

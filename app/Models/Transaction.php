@@ -19,31 +19,36 @@ class Transaction extends Model
         static::addGlobalScope(new StoreScope);
     }
 
-    public function scopeNotMerged($query){
+    public function scopeNotMerged($query)
+    {
         return $query->where([
             ['transactions.transaction_merged', '=', 0],
         ]);
     }
 
-    public function scopeCreatedUser($query){
+    public function scopeCreatedUser($query)
+    {
         return $query->leftJoin('users AS user_created', function ($join) {
             $join->on('user_created.id', '=', 'transactions.created_by');
         });
     }
 
-    public function scopeUpdatedUser($query){
+    public function scopeUpdatedUser($query)
+    {
         return $query->leftJoin('users AS user_updated', function ($join) {
             $join->on('user_created.id', '=', 'transactions.updated_by');
         });
     }
 
-    public function scopeMasterTransactionTypeJoin($query){
+    public function scopeMasterTransactionTypeJoin($query)
+    {
         return $query->leftJoin('master_transaction_type', function ($join) {
             $join->on('master_transaction_type.id', '=', 'transactions.transaction_type');
         });
     }
 
-    public function scopeAccountJoin($query){
+    public function scopeAccountJoin($query)
+    {
         return $query->leftJoin('accounts', function ($join) {
             $join->on('accounts.id', '=', 'transactions.account_id');
         });
@@ -51,51 +56,67 @@ class Transaction extends Model
 
     /* For view files */
 
-    public function createdUser(){
+    public function createdUser()
+    {
         return $this->hasOne('App\Models\User', 'id', 'created_by')->select(['slack', 'fullname', 'email', 'user_code']);
     }
 
-    public function updatedUser(){
+    public function updatedUser()
+    {
         return $this->hasOne('App\Models\User', 'id', 'updated_by')->select(['slack', 'fullname', 'email', 'user_code']);
     }
 
-    public function account(){
+    public function account()
+    {
         return $this->hasOne('App\Models\Account', 'id', 'account_id');
     }
 
-    public function order(){
+    public function order()
+    {
         return $this->hasOne('App\Models\Order', 'id', 'bill_to_id');
     }
 
-    public function invoice(){
+    public function invoice()
+    {
         return $this->hasOne('App\Models\Invoice', 'id', 'bill_to_id');
     }
 
-    public function customer(){
+    public function customer()
+    {
         return $this->hasOne('App\Models\Customer', 'id', 'bill_to_id');
     }
 
-    public function staff(){
+    public function staff()
+    {
         return $this->belongsTo('App\Models\User', 'id', 'bill_to_id');
     }
 
-    public function supplier(){
+    public function supplier()
+    {
         return $this->hasOne('App\Models\Supplier', 'id', 'bill_to_id');
     }
 
-    public function payment_method_data(){
+    public function payment_method_data()
+    {
         return $this->hasOne('App\Models\PaymentMethod', 'id', 'payment_method_id');
     }
 
-    public function transaction_type_data(){
+    public function transaction_type_data()
+    {
         return $this->hasOne('App\Models\MasterTransactionType', 'id', 'transaction_type');
     }
 
-    public function parseDateOnly($date){
-        return ($date != null)?Carbon::parse($date)->format(config("app.date_format")):null;
+    public function parseDateOnly($date)
+    {
+        return ($date != null) ? Carbon::parse($date)->format(config("app.date_format")) : null;
     }
 
-    public function parseDate($date){
-        return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
+    public function parseDate($date)
+    {
+        return ($date != null) ? Carbon::parse($date)->format(config("app.date_time_format")) : null;
+    }
+    public function expense()
+    {
+        return $this->belongsTo(Expense::class,'transaction_id','id');
     }
 }

@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateExpensesRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\MasterExpenseCategory as ExpenseCategoryModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\MasterStatus;  
+use App\Http\Resources\ExpenseResource;
 class ExpensesController extends Controller
 {
     /**
@@ -57,7 +59,7 @@ class ExpensesController extends Controller
      * @param  \App\Models\Expenses  $expenses
      * @return \Illuminate\Http\Response
      */
-    public function show(Expenses $expenses)
+    public function show(ExpenseModel $expenses)
     {
         //
     }
@@ -68,7 +70,7 @@ class ExpensesController extends Controller
      * @param  \App\Models\Expenses  $expenses
      * @return \Illuminate\Http\Response
      */
-    public function edit(Expenses $expenses)
+    public function edit(ExpenseModel $expenses)
     {
         //
     }
@@ -105,6 +107,7 @@ class ExpensesController extends Controller
        
         $data['expenses_data'] = null;
         $data['selectedExpenseCatId'] = '';
+        $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('EXPENSE_APPROVAL_STATUS')->active()->sortValueAsc()->get();
         
         if(!is_null($slack)){
             
@@ -124,6 +127,23 @@ class ExpensesController extends Controller
        
         
         return view('expenses.add_expense', $data);
+    }
+
+    public function view_expense(Request $request,$slack = null)
+    {
+        $data['menu_key'] = 'MM_ACCOUNTS';
+        $data['sub_menu_key'] = 'SM_EXPENSES';
+        $data['action_key'] = 'A_DETAIL_EXPENSE';
+        $current_expense  = ExpenseModel::where('slack',$slack)->with('createdUser','updatedUser','expenseCategory','transaction')->StatusJoin()->get();
+        if (empty($current_expense)) {
+            abort(404);
+        }
+       
+        
+        $data['expense_data'] = $current_expense;
+
+        $data['delete_access'] = check_access(['A_DETAIL_EXPENSE'], true);
+        return view('expenses.expense_detail', $data);
     }
     
 }
