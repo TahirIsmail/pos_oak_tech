@@ -285,6 +285,7 @@ class Expense extends Controller
             "bill_to_contact" => $bill_to_contact,
             "currency_code" => $store_data->currency_code,
             "amount" => $request->amount,
+            "received_amount" => $request->received_amount,
             "notes" => $request->notes,
             "transaction_date" => $request->transaction_date,
             "created_by" => $request->logged_user_id

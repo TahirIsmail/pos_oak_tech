@@ -49,14 +49,14 @@
                 <div class="dashboard_row col-14 bg-white rounded custom-border-light">
                     <div class="d-flex align-items-center flex-column box-content">
                         <div class="dashboard_title text-subhead p-2">
-                            Supplier Expense
+                            Travel Expense
                         </div>
 
                         <div class="mt-auto p-4">
                             <span>
 
                                 <div class="d-flex flex-column align-items-center">
-                                    <h1>{{ $supplier_expense }}</h1>
+                                    <h1>{{ $travel_expense }}</h1>
 
                             </span>
                         </div>

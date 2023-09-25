@@ -92,8 +92,8 @@
                         errors.first("receipt_upload")
                     }}</span>
                 </div>
-                <div v-if="!expense_transaction">
-                    <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
+                
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto" v-if="expense_transaction == null">
                         <label for="status">{{ $t("Status") }}</label>
                         <select name="status" v-model="status" v-validate="'required|numeric'"
                             class="form-control form-control-custom custom-select">
@@ -104,7 +104,7 @@
                         </select>
                         <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
                     </div>
-                </div>
+                
 
 
             </div>

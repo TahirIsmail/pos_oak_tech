@@ -24,7 +24,7 @@ class ExpensesController extends Controller
         $data['sub_menu_key'] = 'SM_EXPENSES';
 
         check_access(array($data['menu_key'],$data['sub_menu_key']));
-        $data['supplier_expense'] = 0; 
+        $data['travel_expense'] = DB::table('transactions')->where('transaction_type',2)->where('bill_to','TRAVEL')->sum('received_amount');; 
         $data['staff_expense'] = DB::table('transactions')->where('transaction_type',2)->where('bill_to','STAFF')->sum('received_amount');
         $data['total_expense'] = DB::table('transactions')->where('transaction_type',2)->sum('received_amount');
 

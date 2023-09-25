@@ -202,6 +202,8 @@ export default {
                 formData.append("account", 1);
                 formData.append("transaction_type", 2);
                 formData.append("amount", (this.expense_detail.amount == null) ? '' : this.expense_detail.amount);
+                formData.append("received_amount", (this.expense_detail.amount == null) ? '' : this.expense_detail.amount);
+
                 formData.append("payment_method", 'CASH');
                 formData.append("notes", (this.expense_detail.notes == null) ? '' : this.expense_detail.notes);
                 formData.append("expense_slack",this.expense_detail.slack);
