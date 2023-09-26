@@ -25,7 +25,7 @@ class Complaints extends Model
         return $this->belongsTo(Product::class, 'product_id');
     }
     public function linkToProduct(){
-        return $this->hasOne(Product::class, 'link_to_complaint');
+        return $this->hasMany(Product::class, 'link_to_complaint');
     }
     public function order(){
         return $this->belongsTo(Order::class, 'order_id');
@@ -41,5 +41,9 @@ class Complaints extends Model
     }
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
+    }
+
+    public function complaintCharges(){
+        return $this->hasMany(ComplaintCharge::class, 'complaint_id');
     }
 }

@@ -11,6 +11,7 @@ use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Category;
+use App\Models\ComplaintCharge;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -350,6 +351,84 @@ class Complaints extends Controller
             ));
         }
        
+    }
+
+    public function complaintInvoice(Request $request){
+        try {
+
+            if (!check_access(['A_CUSTOMER_COMPLAINT_MAKE_INVOICE'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+            $total_complaint_amount_invoice = 0;
+            $productIdsArray = explode(",", $request->complaint_product_ids);
+            $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+            $products = Product::whereIn('id', $productIdsArray)->get();
+            $chargeLabel = explode(',', $request->charge_label);
+            $chargePrice = explode(',', $request->charge_price);
+        //   dd($complaint->id);
+            foreach($products as $product){
+                $total_complaint_amount_invoice += floatval($product->sale_amount_including_tax);
+            }
+
+            foreach($chargePrice as $complaintPrice){
+                $total_complaint_amount_invoice += floatval($complaintPrice);
+            }
+
+            DB::beginTransaction();
+
+            $complaint->final_total_amount = $total_complaint_amount_invoice;
+            $complaint->save();
+
+            for($i = 0; $i < count($chargeLabel); $i++)
+            {
+                $complaint_charges = [
+                    'slack' => $this->generate_slack('complaint_charges'),
+                    'store_id' => $request->logged_user_store_id,
+                    'complaint_id' => $complaint->id,
+                    'charge_price' => $chargePrice[$i],
+                    'charge_label' => $chargeLabel[$i],
+                ];
+
+                $complaintCharges = ComplaintCharge::create($complaint_charges);
+            }
+
+
+
+           
+
+            DB::commit();
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Complaint Invoice Generated Successfully!",
+                    "data" => $complaintCharges,
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+    public function fetchComplaintRecord(Request $request){
+        $complaints = ModelsComplaints::with('linkToProduct','complaintCharges')->where('slack', $request->complaint_slack)->get();
+        // dd($complaints);
+        if($complaints){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "",
+                    "data" => $complaints,
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+        }
     }
 
     public function request_requirement(Request $request){

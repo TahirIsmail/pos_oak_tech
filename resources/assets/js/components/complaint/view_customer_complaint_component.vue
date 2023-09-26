@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
-                
+                {{ ComplaintRecord }}
                 <div class="mr-auto">
                    <div class="d-flex">
                         <div>
@@ -39,8 +39,13 @@
 
 
 
-                    <div v-if="Customer_complaint_make_invoice && complaint.complaint_completed_date != null">
-                    <button type="submit" class="btn btn-success mr-1" v-if="Customer_complaint_make_invoice" v-on:click="make_complaint_invoice()"> {{ $t("Complaint Invoice") }}</button>
+                    <div v-if="Customer_complaint_make_invoice && complaint.complaint_completed_date != null && complaint.final_total_amount == null">
+                    <button type="submit" class="btn btn-success mr-1" v-if="Customer_complaint_make_invoice" v-on:click="make_complaint_invoice()"> {{ $t("Generate Invoice") }}</button>
+                    </div>
+
+
+                    <div v-if="Customer_complaint_make_invoice && complaint.complaint_completed_date != null && complaint.final_total_amount != null">
+                    <button type="submit" class="btn btn-success mr-1" v-if="Customer_complaint_make_invoice" v-on:click="record_payment_invoice()"> {{ $t("Record Payment") }}</button>
                     </div>
 
 
@@ -132,7 +137,182 @@
                 </div>
             </div>
 
+
+            <div>
+                <hr>
+
+<div class="mb-2">
+    <span class="text-subhead">Product Information</span>
+</div>
+<div class="table-responsive mb-2">
+    <table class="table table-striped display nowrap text-nowrap w-100">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">{{ $t("Product Code") }}</th>
+            <th scope="col">{{ $t("Product") }}</th>
+            <th scope="col" class="text-right">{{ $t("Quantity") }}</th>
+            <th scope="col" class="text-right">{{ $t("Price") }} (EXCL Tax)</th>
+            <th scope="col" class="text-right">{{ $t("Total") }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(invoice_product, key, index) in ComplaintRecord[0].link_to_product" v-bind:key="index">
+
+                
+                
+                <th scope="row">{{ key+1 }}</th>
+                <td>{{ (invoice_product.product_code)?invoice_product.product_code:'-' }}</td>
+                <td>{{ invoice_product.name }}</td>
+                <td class="text-right">{{ invoice_product.quantity }}</td>
+                <td class="text-right">{{ invoice_product.sale_amount_excluding_tax }}</td>
+                <td class="text-right">{{ invoice_product.sale_amount_including_tax }}</td>
+            </tr>
+            <!-- <tr>
+                <td v-bind:colspan="table_colspan" class="text-right">{{ $t("Sub Total") }} (EXCL Tax)</td>
+                <td class="text-right">{{ invoice_product.link_to_product.subtotal_excluding_tax }}</td>
+            </tr> -->
+            
+        </tbody>
+    </table>
+</div>
+<hr>
+
+
+<hr>
+
+<div class="mb-2">
+    <span class="text-subhead">Other Charges Information</span>
+</div>
+<div class="table-responsive mb-2">
+    <table class="table table-striped display nowrap text-nowrap w-100">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">{{ $t("Label") }}</th>
+            <th scope="col" class="text-right">{{ $t("Total Price") }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(invoice_product, key, index) in ComplaintRecord[0].complaint_charges" v-bind:key="index">
+
+                <th scope="row">{{ key+1 }}</th>
+                <td scope="col">{{ (invoice_product.charge_label) }}</td>
+                <td scope="col"  class="text-right">{{ invoice_product.charge_price }}</td>
+            </tr>            
+        </tbody>
+    </table>
+</div>
+<hr>
+
+            </div>
+
         </div>
+
+
+        <modalcomponent v-if="show_payment_modal" v-on:close="show_payment_modal = false" :modal_width="'modal-container-md'">
+            <template v-slot:modal-header>
+                Record Payment
+            </template>
+            <template v-slot:modal-body>
+                <div class="col-md-12">
+            
+            <form class="mb-3" v-on:submit="submit_form">
+                
+                <p v-html="server_errors" v-bind:class="[error_class]"></p>
+
+                <div v-if="payment_pending_amount>0">
+                    
+                    
+
+                    <div class="form-row mb-2">
+                        <div class="form-group col-4 text-right">
+                            <label for="transaction_date">{{ $t("Total Amount") }} ({{ this.currency_codes.store_currency }})</label>
+                            <div class="text-subtitle">{{ payment_total_amount }}</div>
+                        </div>
+                        <div class="form-group col-4 text-right">
+                            <label for="transaction_date">{{ $t("Paid Amount") }} ({{this.currency_codes.store_currency }})</label>
+                            <div class="text-subtitle">{{ payment_paid_amount }}</div>
+                        </div>
+                        <div class="form-group col-4 text-right">
+                            <label for="transaction_date">{{ $t("Pending Amount") }} ({{this.currency_codes.store_currency }})</label>
+                            <div class="text-subtitle">{{ payment_pending_amount }}</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-2">
+                        <div class="form-group col-md-6">
+                            <label for="account">{{ $t("Transaction Type") }}</label>
+                            <select name="transaction_type" v-model="transaction_type" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="">Choose Transaction Type..</option>
+                                <option v-for="(transaction_type_item, index) in transaction_type_data" v-bind:value="transaction_type_item.transaction_type_constant" v-bind:key="index">
+                                    {{ transaction_type_item.label }}
+                                </option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('transaction_type') }">{{ errors.first('transaction_type') }}</span> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="transaction_date">{{ $t("Transaction Date") }}</label>
+                            <date-picker :format="date.format" :lang='date.lang' v-model="transaction_date" v-validate="'required|date_format:yyyy-MM-dd'" input-class="form-control form-control-custom bg-white" ref="transaction_date" name="transaction_date" :placeholder="$t('Please enter transaction date')" autocomplete="off"></date-picker>
+                            <span v-bind:class="{ 'error' : errors.has('transaction_date') }">{{ errors.first('transaction_date') }}</span> 
+                        </div>
+                    </div>
+                    <div class="form-row mb-2">
+                        <div class="form-group col-md-6">
+                            <label for="payment_method">{{ $t("Payment Method") }}</label>
+                            <select name="payment_method" v-model="payment_method" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="">Choose Payment Method..</option>
+                                <option v-for="(payment_method, index) in payment_methods" v-bind:value="payment_method.slack" v-bind:key="index">
+                                    {{ payment_method.label }}
+                                </option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('payment_method') }">{{ errors.first('payment_method') }}</span> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="account">{{ $t("Account") }}</label>
+                            <select name="account" v-model="account" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="">Choose Account..</option>
+                                <option v-for="(account, index) in accounts" v-bind:value="account.slack" v-bind:key="index">
+                                    {{ account.label }} ({{ account.account_type_label }})
+                                </option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('account') }">{{ errors.first('account') }}</span> 
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-2">
+                        <div class="form-group col-md-6">
+                            <label for="amount">{{ $t("Amount") }} ({{ currency_codes.store_currency }})</label>
+                            <input type="number" name='amount' v-model="amount" v-validate="`required|decimal|max_value:${payment_pending_amount}`" class="form-control form-control-custom" :placeholder="$t('Please enter the amount')"  autocomplete="off" step="0.01" min="0">
+                            <span v-bind:class="{ 'error' : errors.has('amount') }">{{ errors.first('amount') }}</span> 
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-2">
+                        <div class="form-group col-md-12">
+                            <label for="notes">{{ $t("Notes") }}</label>
+                            <textarea name="notes" v-model="notes" v-validate="'max:65535'" class="form-control form-control-custom" rows="3" :placeholder="$t('Enter notes')"></textarea>
+                            <span v-bind:class="{ 'error' : errors.has('notes') }">{{ errors.first('notes') }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div v-else>
+                    <p>You have already made the payment(s).</p>
+                </div>
+            </form>
+                
+        </div>
+            </template>
+            <template v-slot:modal-footer>
+                <button type="button" class="btn btn-light" @click="cancel_transaction">Cancel</button>
+                <button type="button" class="btn btn-primary" @click="submit_transaction" v-show="show_payment_submit" v-bind:disabled="make_payment_processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="make_payment_processing == true"></i> Continue</button>
+            </template>
+        </modalcomponent>
+
+
+        
 
         <modalcomponent v-if="show_assign_complaint == true" v-on:close="show_assign_complaint = false" :modal_width="'modal-container-md'">
             <template v-slot:modal-header>
@@ -340,11 +520,12 @@
                 Make Complaint Invoice
             </template>
             <template v-slot:modal-body>
-
+               
                 <div class="form-group col-sm-12 col-md-12 mx-auto" v-if="ComplaintProducts.length > 0">
                     <h5>Assign Products</h5>
                     <table class="table">
                         <tr v-for="(product, index) in ComplaintProducts" :key="index">
+
                             <td>{{ product.product_code }}</td>
                             <td>{{ product.name }}</td>
                             <th>{{ product.subcategory.category.label }} ({{product.subcategory.category.category_code }})</th>
@@ -359,6 +540,26 @@
                 <div class="form-group col-sm-12 col-md-12 mx-auto">
                     <h5>Other Charges</h5>
                     
+                      <div v-for="(charge, index) in charges" :key="index">
+                        <div class="form-row mt-2">
+                        <div class="form-group col-sm-6 col-md-6 mx-auto">
+                    <label for="charge_label">{{ $t("Add Charge Label") }}</label>
+                    <input type="text" name="charge_label"
+                        class="form-control form-control-custom" v-model="charge_label[index]"/>
+                    
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6 mx-auto">
+                    <label for="charge_price">{{ $t("Add Charge Price") }}</label>
+                    <input type="number" name="charge_price"
+                        class="form-control form-control-custom" v-model="charge_price[index]"/>
+                    
+                        </div>
+                
+                    </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button @click="addCharge" v-if="charges.length < 10" class="btn btn-primary">Add Another Charge</button>
+            </div>
                 </div>    
 
 
@@ -397,6 +598,7 @@
             return{
                 processing: false,
                 delete_processing: false,
+                show_payment_modal:false,
                 show_modal: false,
                 show_assign_complaint:false,
                 complaint_complete: false,
@@ -404,15 +606,21 @@
                 assign_processing:false,
                 required_product:false,
                 assign_required_product:false,
+                payment_pending_amount: 22345,
+                tax_component_count:0,
                 server_errors:'',
                 categories: [],
                 category: '',
                 scategories: [],
                 products: [],
+                charge_label:[""],
+                charge_price:[""],
+                complaint_product_ids:[],
                 Selectedproducts: [],
                 ComplaintProducts: [],
                 complaint_invoice: false,
                 product_ids:[],
+                ComplaintRecord: [],
                 s_category: '',
                 extend_date: '',
                 submit_complaint_technician:false,
@@ -425,6 +633,7 @@
                 requirement_request: (this.complaint.lab_staff_remark) ? this.complaint.lab_staff_remark : null,
                 complaint_slack:this.complaint.slack,
                 delete_category_api_link: '/api/delete_complaint/'+ this.complaint.slack,
+                charges: [],
             }
         },
         props: {
@@ -439,10 +648,84 @@
             console.log('Category detail page loaded');
             event_bus.$on('cancel_complaint', this.cancel_complaint);
             this.fetchCategorySubcategoryMounted();
+            this.fetchComplaintRecord();
         },
         methods: {
+            addCharge() {
+                    if (this.charges.length < 10) {
+                        this.charges.push("");
+                    }
+                },
+                record_payment_invoice(){
+                    this.show_payment_modal = true;
+                },
             complaint_invoice_make(){
+                this.$off("submit");
+                this.$off("close");
+                this.show_modal = true;
 
+                this.$on("submit",function () {      
+
+                    var formData = new FormData();
+                    formData.append("access_token", window.settings.access_token);
+                    formData.append("complaint_slack", this.complaint_slack);
+                    formData.append('charge_label', this.charge_label);
+                    formData.append('charge_price', this.charge_price);
+                    formData.append('complaint_product_ids', this.complaint_product_ids);
+
+                    axios.post('/api/complaint_invoice_make', formData).then((response) => {
+
+                        if(response.data.status_code == 200) {
+                            this.show_response_message(response.data.msg, 'Success');
+                            
+                                location.reload();
+                           
+                        }else{
+                            this.show_modal = false;
+                            this.processing = false;
+                            try{
+                                var error_json = JSON.parse(response.data.msg);
+                                this.loop_api_errors(error_json);
+                            }catch(err){
+                                this.server_errors = response.data.msg;
+                            }
+                            this.error_class = 'error';
+                        }
+                       
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                });
+
+                this.$on("close",function () {
+                    this.show_modal = false;
+                });
+            },
+            fetchComplaintRecord(){
+                var formData = new FormData();
+                formData.append("access_token", window.settings.access_token);
+                formData.append("complaint_slack", this.complaint_slack);
+                axios.post('/api/fetchComplaintRecord', formData).then((response) => {
+
+                if(response.data.status_code == 200) {
+                    this.ComplaintRecord = response.data.data;
+                  
+                }else{
+   
+                try{
+                    var error_json = JSON.parse(response.data.msg);
+                    this.loop_api_errors(error_json);
+                }catch(err){
+                    this.server_errors = response.data.msg;
+                }
+                    this.error_class = 'error';
+                }
+                    
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
             },
             make_complaint_invoice(){
                 var formData = new FormData();
@@ -452,6 +735,7 @@
 
                 if(response.data.status_code == 200) {
                     this.ComplaintProducts = response.data.data.products;
+                    this.complaint_product_ids = this.ComplaintProducts.map(product => product.id);
                     this.complaint_invoice = true;
                 }else{
    
@@ -682,6 +966,7 @@
                 this.assign_required_product = false;
                 this.complaint_complete = false;
                 this.complaint_invoice = false;
+                show_payment_modal = false;
             },
             request_for_product(){
                 this.required_product = true;
