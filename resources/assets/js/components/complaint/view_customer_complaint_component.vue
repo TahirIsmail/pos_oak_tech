@@ -206,6 +206,7 @@
 <hr>
 
             </div>
+            <transactionlistcomponent :transaction_list="ComplaintRecord[0].transactions"></transactionlistcomponent>
 
         </div>
 
@@ -222,25 +223,15 @@
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
                 <div v-if="payment_pending_amount>0">
-                    
-                    
 
                     <div class="form-row mb-2">
                         <div class="form-group col-4 text-right">
-                            <label for="transaction_date">{{ $t("Total Amount") }} ({{ this.currency_codes.store_currency }})</label>
+                            <label for="transaction_date">{{ $t("Total Amount") }} ({{ currency_codes.store_currency }})</label>
                             <div class="text-subtitle">{{ payment_total_amount }}</div>
-                        </div>
-                        <div class="form-group col-4 text-right">
-                            <label for="transaction_date">{{ $t("Paid Amount") }} ({{this.currency_codes.store_currency }})</label>
-                            <div class="text-subtitle">{{ payment_paid_amount }}</div>
-                        </div>
-                        <div class="form-group col-4 text-right">
-                            <label for="transaction_date">{{ $t("Pending Amount") }} ({{this.currency_codes.store_currency }})</label>
-                            <div class="text-subtitle">{{ payment_pending_amount }}</div>
                         </div>
                     </div>
 
-                    <div class="form-row mb-2">
+                    <!-- <div class="form-row mb-2">
                         <div class="form-group col-md-6">
                             <label for="account">{{ $t("Transaction Type") }}</label>
                             <select name="transaction_type" v-model="transaction_type" v-validate="'required'" class="form-control form-control-custom custom-select">
@@ -256,8 +247,8 @@
                             <date-picker :format="date.format" :lang='date.lang' v-model="transaction_date" v-validate="'required|date_format:yyyy-MM-dd'" input-class="form-control form-control-custom bg-white" ref="transaction_date" name="transaction_date" :placeholder="$t('Please enter transaction date')" autocomplete="off"></date-picker>
                             <span v-bind:class="{ 'error' : errors.has('transaction_date') }">{{ errors.first('transaction_date') }}</span> 
                         </div>
-                    </div>
-                    <div class="form-row mb-2">
+                    </div> -->
+                    <!-- <div class="form-row mb-2">
                         <div class="form-group col-md-6">
                             <label for="payment_method">{{ $t("Payment Method") }}</label>
                             <select name="payment_method" v-model="payment_method" v-validate="'required'" class="form-control form-control-custom custom-select">
@@ -278,15 +269,15 @@
                             </select>
                             <span v-bind:class="{ 'error' : errors.has('account') }">{{ errors.first('account') }}</span> 
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="form-row mb-2">
+                    <!-- <div class="form-row mb-2">
                         <div class="form-group col-md-6">
                             <label for="amount">{{ $t("Amount") }} ({{ currency_codes.store_currency }})</label>
                             <input type="number" name='amount' v-model="amount" v-validate="`required|decimal|max_value:${payment_pending_amount}`" class="form-control form-control-custom" :placeholder="$t('Please enter the amount')"  autocomplete="off" step="0.01" min="0">
                             <span v-bind:class="{ 'error' : errors.has('amount') }">{{ errors.first('amount') }}</span> 
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="form-row mb-2">
                         <div class="form-group col-md-12">
@@ -349,8 +340,7 @@
 
                     <span v-bind:class="{ error: errors.has('admin_remark') }">{{
                         errors.first("admin_remark")
-                    }}</span>
-                    
+                    }}</span>                    
                 </div>
 
                 </div>
@@ -612,6 +602,8 @@
                 categories: [],
                 category: '',
                 scategories: [],
+                currency_codes: [],
+                payment_total_amount: 0,
                 products: [],
                 charge_label:[""],
                 charge_price:[""],
@@ -709,7 +701,8 @@
                 axios.post('/api/fetchComplaintRecord', formData).then((response) => {
 
                 if(response.data.status_code == 200) {
-                    this.ComplaintRecord = response.data.data;
+                    this.ComplaintRecord = response.data.data.complaints;
+                    this.currency_codes = response.data.data.currency_codes;
                   
                 }else{
    

@@ -15,6 +15,13 @@ use App\Models\ComplaintCharge;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Store as StoreModel;
+use App\Models\Country as CountryModel;
+use App\Models\MasterStatus as MasterStatusModel;
+use App\Models\MasterTransactionType as MasterTransactionTypeModel;
+use App\Models\Account as AccountModel;
+use App\Models\PaymentMethod as PaymentMethodModel;
+
 class Complaints extends Controller
 {
     /**
@@ -417,13 +424,48 @@ class Complaints extends Controller
     }
 
     public function fetchComplaintRecord(Request $request){
-        $complaints = ModelsComplaints::with('linkToProduct','complaintCharges')->where('slack', $request->complaint_slack)->get();
+        $complaints = ModelsComplaints::with('linkToProduct','complaintCharges', 'transactions')->where('slack', $request->complaint_slack)->get();
         // dd($complaints);
+        $data['transaction_type'] = MasterTransactionTypeModel::select('transaction_type_constant', 'label')
+        ->active()
+        ->get();
+
+        $income_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+        ->where('transaction_type_constant', '=', trim('INCOME'))
+        ->first();
+
+        $expense_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+        ->where('transaction_type_constant', '=', trim('EXPENSE'))
+        ->first();        
+
+        $data['accounts'] = AccountModel::select('accounts.slack', 'accounts.label', 'master_account_type.label as account_type_label')
+        ->masterAccountTypeJoin()
+        ->active()
+        ->get();
+
+        $data['payment_methods'] = PaymentMethodModel::select('slack', 'label')
+        ->active()
+        ->skipPaymentGateway()
+        ->get();
+
+        $store_data = StoreModel::select('currency_name', 'currency_code', 'printnode_enabled')
+        ->where([
+            ['stores.id', '=', request()->logged_user_store_id]
+        ])
+        ->active()
+        ->first();
+
+        $data['currency_codes'] = [
+            'store_currency' => $store_data->currency_code,
+        ];
+
+        $data['complaints'] = $complaints;
+        
         if($complaints){
             return response()->json($this->generate_response(
                 array(
                     "message" => "",
-                    "data" => $complaints,
+                    "data" => $data,
                     'msg' => 'success',
                 ),
                 'SUCCESS'

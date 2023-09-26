@@ -67,6 +67,10 @@ class Transaction extends Model
         return $this->hasOne('App\Models\Order', 'id', 'bill_to_id');
     }
 
+    public function complaint(){
+        return $this->hasOne('App\Models\Complaints', 'id', 'bill_to_id');
+    }
+
     public function invoice(){
         return $this->hasOne('App\Models\Invoice', 'id', 'bill_to_id');
     }

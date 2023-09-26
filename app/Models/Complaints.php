@@ -46,4 +46,8 @@ class Complaints extends Model
     public function complaintCharges(){
         return $this->hasMany(ComplaintCharge::class, 'complaint_id');
     }
+
+    public function transactions(){
+        return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['COMPLAINTS'])->orderBy('transactions.id', 'desc');
+    }
 }
