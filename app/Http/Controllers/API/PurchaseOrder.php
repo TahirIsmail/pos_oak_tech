@@ -144,6 +144,7 @@ class PurchaseOrder extends Controller
 
             $this->validate_request($request);
 
+            // dd($request->all());
             DB::beginTransaction();
 
             $po_data = $this->form_po_array($request);
@@ -429,21 +430,16 @@ class PurchaseOrder extends Controller
             $po['status'] = $po_status->value;
             $po['updated_at'] = now();
             $po['updated_by'] = $request->logged_user_id;
-
             $action_response = PurchaseOrderModel::where('slack', $slack)
             ->update($po);
-
             $this->update_stock_from_po($request, $slack, strtoupper($status_constant));
-
             DB::commit();
-
             return response()->json($this->generate_response(
                 array(
                     "message" => "Purchase order status changed successfully", 
                     "data"    => $po_details->slack
                 ), 'SUCCESS'
             ));
-
         }catch(Exception $e){
             return response()->json($this->generate_response(
                 array(
@@ -547,6 +543,7 @@ class PurchaseOrder extends Controller
                 }
             }
 
+
             if($product_slack != ''){
                 $product_data = ProductModel::select('products.id', 'products.slack', 'products.product_code')
                 ->where('products.slack', '=', $product_slack)
@@ -554,10 +551,12 @@ class PurchaseOrder extends Controller
                 ->supplierJoin()
                 ->taxcodeJoin()
                 ->discountcodeJoin()
-                ->categoryActive()
+                // ->categoryActive()
                 ->supplierActive()
                 ->taxcodeActive()
                 ->first();
+            // dd($product_data);
+
                 if (empty($product_data)) {
                     throw new Exception("Product ".$product_name." is not currently available", 400);
                 }
@@ -835,6 +834,7 @@ class PurchaseOrder extends Controller
             ]);
 
             $po_products = collect($purchase_order_data_decoded->products);
+            
             $products = $po_products->map(function ($item, $key) {
                 return [
                     'slack' => $item->product_slack,
@@ -851,10 +851,11 @@ class PurchaseOrder extends Controller
             $request->request->add([
                 'products' => json_encode($products)
             ]);
-
+            
             $invoice_api = new InvoiceAPI();
             $response = $invoice_api->store($request);
             $response = $response->getData();
+            // dd($response);
            
             if($response->status_code == 0 || $response->status_code == 400){
                 throw new Exception($response->msg);

@@ -19,6 +19,7 @@
                         <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
                         {{ $t("Update") }}
                     </button>
+
                 </div>
             </div>
             <p v-html="server_errors" v-bind:class="[error_class]"></p>
@@ -43,9 +44,9 @@
                     <label for="expense_category">{{ $t("Choose Expense Category") }}</label>
                     <select v-model="expense_category" v-validate="'required'" class="form-control form-control-custom"
                         placeholder="Choose Expense Category..">
-                        <option value="" disabled>Choose Expense Category..</option>
+                        <option value="" selected disabled>Choose Supplier..</option>
                         <option v-for="(expense_item, index) in expense_categories" v-bind:value="expense_item.id"
-                            placeholder="Choose Expense Category.." v-bind:key="index">
+                            placeholder="Choose Expense Category.." v-bind:key="expense_item.slack">
                             {{ expense_item.id }} - {{ expense_item.name }}
                         </option>
                     </select>
@@ -65,29 +66,51 @@
                     }}</span>
 
                 </div>
+
             </div>
             <div class="form-row mb-2">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="expense_date">{{ $t("Expense Date") }}</label>
-                    <date-picker v-model="expense_date" name="expense_date" v-validate="'required|date_format:yyyy-MM-dd'"
+                    <!-- <date-picker :format="date.format" :lang='date.lang' v-model="expense_date" name="expense_date"
+                        v-validate="'required|date_format:yyyy-MM-dd'"
                         input-class="form-control form-control-custom bg-white"
-                        :placeholder="$t('Please enter Expense Date')" autocomplete="off"></date-picker>
+                        :placeholder="$t('Please enter Expense Date')" autocomplete="off"></date-picker> -->
+                        <input type="date"  v-model="expense_date" name="expense_date" 
+                        v-validate="'required|date_format:yyyy-MM-dd'"
+                        input-class="form-control form-control-custom bg-white"
+                        :placeholder="$t('Please enter Expense Date')" autocomplete="off"/>
                     <span v-bind:class="{ 'error': errors.has('Expense Date') }">{{ errors.first('Expense Date')
                     }}</span>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="receipt_upload">{{
-                        $t("Expense Receipt Upload") + " (pdf, msword, vnd)"
+                        $t("Expense Receipt Upload") + "(pdf, msword, vnd)"
                     }}</label>
                     <input type="file" class="form-control-file form-control form-control-custom file-input"
-                        name="receipt_upload" ref="receipt_upload" accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        v-validate="'ext:jpg,jpeg,png,webp|size:1500'" multiple="multiple" />
+                        name="receipt_upload" ref="receipt_upload"
+                        accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        v-validate="'ext:pdf,msword,vnd|size:1500'" />
                     <small class="form-text text-muted mb-1">Allowed file size per file is 1.5 MB</small>
                     <small class="form-text text-muted">Hold down CTRL or Command for choosing multiple files</small>
                     <span v-bind:class="{ error: errors.has('receipt_upload') }">{{
                         errors.first("receipt_upload")
                     }}</span>
                 </div>
+                
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto" v-if="expense_transaction == null">
+                        <label for="status">{{ $t("Status") }}</label>
+                        <select name="status" v-model="status" v-validate="'required|numeric'"
+                            class="form-control form-control-custom custom-select">
+                            <option value="">Choose Status..</option>
+                            <option v-for="(status, index) in statuses" v-bind:value="status.value" v-bind:key="index">
+                                {{ status.label }}
+                            </option>
+                        </select>
+                        <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
+                    </div>
+                
+
+
             </div>
 
 
@@ -111,6 +134,7 @@
             </template>
         </modalcomponent>
 
+
     </div>
 </template>
 <script>
@@ -126,22 +150,101 @@ export default {
             processing: false,
             modal: false,
             show_modal: false,
+
             error_class: "",
 
-
-            api_link: "",
-            expense_slack: null,
-            expense_name: "",
-            expense_category: "",
-            expense_amount: "",
-            expense_date: "",
-            notes: "",
+            date: {
+                lang: 'en',
+                format: "YYYY-MM-DD",
+            },
+            time: {
+                lang: 'en',
+                format: 'hh:mm A'
+            },
+            api_link: (this.expense_data == null) ? "/api/add_expense" : "/api/update_expense/" + this.expense_data.slack,
+            expense_slack: this.expense_data && this.expense_data.slack !== null ? this.expense_data.slack : '',
+            expense_name: this.expense_data && this.expense_data.expense_name !== null ? this.expense_data.expense_name : '',
+            status: (this.expense_data && this.expense_data.status !== null) ? this.expense_data.status : 0,
+            expense_category: typeof this.selected_expense_cat_id !== "undefined" && this.selected_expense_cat_id !== null ? this.selected_expense_cat_id.toString() : "",
+            expense_amount: this.expense_data && this.expense_data.amount !== null ? this.expense_data.amount : null,
+            expense_date: (this.expense_data && this.expense_data.expense_name !== null) ? this.expense_data.expense_date : null,
+            notes: this.expense_data && this.expense_data.notes !== null ? this.expense_data.notes : null,
+            expense_transaction : this.expense_data.transaction_id,
         }
+    },
+    mounted() {
+        // Set the initial selected value from props
+        console.log("Expense Component Loaded");
     },
     props: {
         expense_categories: Array,
-        expense_data: Array,
-        selected_expense_id: Array,
-    }
+        expense_data: [Array, Object],
+        selected_expense_cat_id: Number,
+        statuses: Array
+    },
+    methods: {
+        submit_form() {
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.show_modal = true;
+                    this.$on("submit", function () {
+                        this.processing = true;
+                        alert(this.api_link);
+                        const formData = new FormData();
+                        formData.append("access_token", window.settings.access_token);
+                        formData.append("expense_name", this.expense_name);
+                        formData.append("expense_category", this.expense_category);
+                        formData.append("amount", this.expense_amount);
+                        formData.append("expense_date", this.convert_date_format(this.expense_date));
+                        formData.append("status", this.status);
+                        formData.append("notes", this.notes);
+                        for (var i = 0; i < this.$refs.receipt_upload.files.length; i++) {
+                            let file = this.$refs.receipt_upload.files[i];
+                            formData.append("receipt_upload[" + i + "]", file);
+                        }
+
+
+                        axios
+                            .post(this.api_link, formData)
+                            .then((response) => {
+                                if (response.data.status_code == 200) {
+                                    this.show_response_message(response.data.msg, "Success");
+
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 1000);
+                                } else {
+                                    this.show_modal = false;
+                                    this.processing = false;
+                                    try {
+                                        var error_json = JSON.parse(response.data.msg);
+                                        this.loop_api_errors(error_json);
+                                    } catch (err) {
+                                        this.server_errors = response.data.msg;
+                                    }
+                                    this.error_class = "error";
+                                }
+                            })
+                            .catch((error) => {
+                                console.log("error");
+                                console.log(error);
+                            });
+                        this.$off("submit");
+                    });
+
+                    this.$on("close", function () {
+                        this.show_modal = false;
+                        this.$off("close");
+                    });
+                }
+            });
+        },
+        convert_date_format(date) {
+
+            return (date != '') ? moment(date).format("YYYY-MM-DD") : '';
+        },
+
+
+    },
 }
 </script>

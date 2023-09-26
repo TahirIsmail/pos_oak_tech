@@ -437,6 +437,12 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/assign_complaint_to_technician','API\Complaints@assign_complaint_to_technician');
 
 
+
+
+    Route::post('/complaint_submit_transaction','API\Complaints@complaint_submit_transaction');
+
+
+
     
     
     //Repairing / Workshop Routes 
@@ -460,4 +466,7 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //Expenses
     Route::post('/expenses/list','API\Expense@list');
+    Route::post('/add_expense','API\Expense@store');
+    Route::post('/update_expense/{slack}','API\Expense@store');
+    Route::post('/add_expense_transaction','API\Expense@add_expense_transaction');
 });

@@ -328,9 +328,12 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
     Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
 
-    Route::get('/expenses','ExpensesController@index')->name('expenses');
+    Route::get('/print_complaint_invoice/{slack}', "ComplaintsController@print_invoice")->name('print_complaint_invoice');
 
-    Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
+
+    // Route::get('/expenses','ExpensesController@index')->name('expenses');
+
+    // Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
 
 
     // Workshop / Repairing lab 
@@ -338,6 +341,13 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
 
 
+    // account routes 
+    Route::get('/expenses','ExpensesController@index')->name('expenses');
+    Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
+    Route::get('/edit_expenses/{slack?}','ExpensesController@add_expense')->name('edit_expenses');
+    Route::get('/view_expenses/{slack?}','ExpensesController@view_expense')->name('view_expenses');
+
+    Route::get('/income','IncomeController@index')->name('income');
 
 
 });

@@ -6,7 +6,7 @@
 
                 <div class="d-flex flex-wrap mb-4">
                     <div class="mr-auto">
-                        <span class="text-title"> <span class='text-muted'>{{ $t("Edit SMS Template") }}</span> {{ template_key }} </span>
+                        <span class="text-title"> <span class='text-muted'>{{ $t("Edit SMS Template") }}</span> </span>
                     </div>
                     <div class="">
                         <button type="submit" class="btn btn-primary" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Save") }}</button>

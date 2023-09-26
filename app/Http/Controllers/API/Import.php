@@ -2547,7 +2547,7 @@ class Import extends Controller
             ->categoryJoin()
             ->supplierJoin()
             ->taxcodeJoin()
-            ->categoryActive()
+            // ->categoryActive()
             ->supplierActive()
             ->taxcodeActive()
             ->active()->get()->toArray();

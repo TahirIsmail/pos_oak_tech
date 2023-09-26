@@ -50,4 +50,7 @@ class Complaints extends Model
     public function transactions(){
         return $this->hasMany('App\Models\Transaction', 'bill_to_id', 'id')->whereIn('transactions.bill_to',['COMPLAINTS'])->orderBy('transactions.id', 'desc');
     }
+    public function storeData(){
+        return $this->hasOne('App\Models\Store', 'id', 'store_id');
+    }
 }

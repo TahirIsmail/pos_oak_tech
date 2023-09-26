@@ -22,6 +22,35 @@ use App\Models\MasterTransactionType as MasterTransactionTypeModel;
 use App\Models\Account as AccountModel;
 use App\Models\PaymentMethod as PaymentMethodModel;
 
+
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\KitchenResource;
+
+use App\Models\Order as OrderModel;
+use App\Models\OrderProduct as OrderProductModel;
+use App\Models\Product as ProductModel;
+use App\Models\Customer as CustomerModel;
+use App\Models\TaxcodeType as TaxcodeTypeModel;
+use App\Models\Transaction as TransactionModel;
+use App\Models\MasterOrderType as MasterOrderTypeModel;
+use App\Models\Table as TableModel;
+use App\Models\BusinessRegister as BusinessRegisterModel;
+use App\Models\User as UserModel;
+use App\Models\MasterBillingType as MasterBillingTypeModel;
+use App\Models\ProductIngredient as ProductIngredientModel;
+use App\Models\OrderProductLogs;
+
+use App\Http\Resources\Collections\OrderCollection;
+
+use App\Http\Controllers\API\Notification as NotificationAPI;
+use App\Http\Controllers\API\Otp as OtpAPI;
+
+
 class Complaints extends Controller
 {
     /**
@@ -374,7 +403,7 @@ class Complaints extends Controller
             $chargePrice = explode(',', $request->charge_price);
         //   dd($complaint->id);
             foreach($products as $product){
-                $total_complaint_amount_invoice += floatval($product->sale_amount_including_tax);
+                $total_complaint_amount_invoice += floatval($product->sale_amount_excluding_tax);
             }
 
             foreach($chargePrice as $complaintPrice){
@@ -425,23 +454,47 @@ class Complaints extends Controller
 
     public function fetchComplaintRecord(Request $request){
         $complaints = ModelsComplaints::with('linkToProduct','complaintCharges', 'transactions')->where('slack', $request->complaint_slack)->get();
-        // dd($complaints);
-        $data['transaction_type'] = MasterTransactionTypeModel::select('transaction_type_constant', 'label')
-        ->active()
-        ->get();
+        $total_complaint_amount_invoice = 0;
+        $total_received_amount = 0;
+        $total_pending_amount = 0;
+        $cal = $complaints->toArray();
+        if($cal[0]['transactions']){
+            foreach($cal[0]['transactions'] as $transaction){
+                $total_received_amount += floatval($transaction['received_amount']);
+            }
+        }
 
-        $income_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
-        ->where('transaction_type_constant', '=', trim('INCOME'))
-        ->first();
+        foreach($cal[0]['link_to_product'] as $product){
+            $total_complaint_amount_invoice += floatval($product['sale_amount_including_tax']);
+        }
 
-        $expense_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
-        ->where('transaction_type_constant', '=', trim('EXPENSE'))
-        ->first();        
+        foreach($cal[0]['complaint_charges'] as $complaintPrice){
+            $total_complaint_amount_invoice += floatval($complaintPrice['charge_price']);
+        }
 
+        $total_pending_amount = $total_complaint_amount_invoice - $total_received_amount;
+
+        // dd($total_pending_amount, $total_complaint_amount_invoice, $total_received_amount);
+
+       $data['total_complaint_amount_invoice'] = $total_complaint_amount_invoice;
+       $data['total_received_amount'] = $total_received_amount;
+       $data['total_pending_amount'] = $total_pending_amount;
+       
+       $income_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+       ->where('transaction_type_constant', '=', trim('INCOME'))
+       ->first();
+       
+       $expense_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+       ->where('transaction_type_constant', '=', trim('EXPENSE'))
+       ->first();        
+
+       $data['transaction_type'] =  $income_transaction_type_data;
         $data['accounts'] = AccountModel::select('accounts.slack', 'accounts.label', 'master_account_type.label as account_type_label')
         ->masterAccountTypeJoin()
         ->active()
         ->get();
+
+        // dd($data['transaction_type']);
 
         $data['payment_methods'] = PaymentMethodModel::select('slack', 'label')
         ->active()
@@ -487,6 +540,60 @@ class Complaints extends Controller
                     'msg' => 'success',
                 ),
                 'SUCCESS'
+            ));
+        }
+    }
+
+
+    public function complaint_submit_transaction(Request $request){
+
+        $account_id = AccountModel::where('slack', $request->account)->first();
+        $payment_method_id = PaymentMethodModel::where('slack', $request->payment_method)->first();
+        $complaint_id = ModelsComplaints::with('customer')->where('slack', $request->complaint_slack)->first();
+        // dd($complaint_id->customer->id);
+
+        $transaction = [
+            "slack" => $this->generate_slack("transactions"),
+            "store_id" => $request->logged_user_store_id,
+            "transaction_code" => Str::random(6),
+            "account_id" => $account_id->id,
+            "transaction_type" => $request->transaction_type_data,
+            "payment_method_id" => $payment_method_id->id,
+            "payment_method" => $payment_method_id->label,
+            "bill_to" => 'COMPLAINTS',
+            "bill_to_id" => $complaint_id->id,
+            "bill_to_name" => $complaint_id->customer->name,
+            "bill_to_contact" => $complaint_id->customer->phone,
+            "bill_to_address" => $complaint_id->customer->address,
+            "currency_code" => 'PKR',
+            "amount" => $request->payment_total_amount,
+            "received_amount" => $request->received_amount,
+            "pg_transaction_id" => '',
+            "pg_transaction_status" => '',
+            "notes" => '',
+            "transaction_date" => date('Y-m-d'),
+            "created_by" => $request->logged_user_id
+        ];
+
+        // dd($transaction);
+        
+        $transaction_id = TransactionModel::create($transaction)->id;
+
+        $code_start_config = Config::get('constants.unique_code_start.transaction');
+        $code_start = (isset($code_start_config))?$code_start_config:100;
+        
+        $transaction_code = [
+            "transaction_code" => ($code_start+$transaction_id)
+        ];
+        TransactionModel::where('id', $transaction_id)
+        ->update($transaction_code);
+
+        if($transaction_id){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Transaction updated successfully", 
+                    "data" => $transaction_id
+                ), 'SUCCESS'
             ));
         }
     }

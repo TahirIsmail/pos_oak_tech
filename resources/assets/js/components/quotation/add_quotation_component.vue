@@ -103,32 +103,24 @@
                             }}</span>
                         </div>
 
-
-
-                        
-                 
-                      
-                           
-                        
-         
-               
-
                     
-                        <div class="form-group col-md-4" v-show="bill_to == 'CUSTOMER'">
-                            <span class="text-subhead">{{ $t("Products") }}</span>
-                            <label for="supplier">{{ $t("Choose Supplier") }}</label>
-                            <cool-select type="text" name="supplier" :placeholder="$t('Please choose supplier')"
-                                autocomplete="off" v-model="supplier" :items="supplier_list" item-text="label"
-                                itemValue='slack' @search='load_suppliers'>
-                            </cool-select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="barcode">{{ $t("Search and Add Products") }}</label>
-                            <cool-select type="text" v-model="search_product" autocomplete="off"
-                                inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label"
-                                itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search
-                                @search='load_products' @select='add_product_to_list'
-                                :placeholder="$t('Start Typing..')"></cool-select>
+                        <div v-show="bill_to == 'CUSTOMER'" class="form-group col-md-12">
+                            <div class="form-group col-md-6" >
+                                <span class="text-subhead">{{ $t("Products") }}</span>
+                                <label for="supplier">{{ $t("Choose Supplier") }}</label>
+                                <cool-select type="text" name="supplier" :placeholder="$t('Please choose supplier')"
+                                    autocomplete="off" v-model="supplier" :items="supplier_list" item-text="label"
+                                    itemValue='slack' @search='load_suppliers'>
+                                </cool-select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="barcode">{{ $t("Search and Add Products") }}</label>
+                                <cool-select type="text" v-model="search_product" autocomplete="off"
+                                    inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label"
+                                    itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search
+                                    @search='load_products' @select='add_product_to_list'
+                                    :placeholder="$t('Start Typing..')"></cool-select>
+                            </div>
                         </div>
                     
 

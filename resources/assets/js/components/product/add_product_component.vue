@@ -166,7 +166,7 @@
             }}</span>
           </div>
           <div class="form-group col-md-3">
-            <label for="product_code">{{ $t("Product Code") }}</label>
+            <label for="product_code">{{ $t("Product Code / Serial NO#") }}</label>
             <input
               type="text"
               name="product_code"
@@ -390,7 +390,7 @@
             >
           </div>
         </div>
-        <div class="form-row mb-2">
+        <!-- <div class="form-row mb-2">
           <div class="form-group col-md-3">
             <label for="status">{{ $t("Quantity") }}</label>
             <input
@@ -425,7 +425,7 @@
               errors.first("alert_quantity")
             }}</span>
           </div>
-        </div>
+        </div> -->
         <div class="form-row mb-2">
           <div class="form-group col-md-3">
             <label for="description">{{ $t("Description") }}</label>
@@ -527,7 +527,7 @@
             </div>
           </div>
 
-          <div class="d-flex flex-wrap mb-1">
+          <!-- <div class="d-flex flex-wrap mb-1">
             <div class="mr-auto">
               <span class="text-subhead">{{ $t("Product Variants") }}</span>
             </div>
@@ -669,7 +669,7 @@
             </div>
           </div>
 
-          <hr />
+          <hr /> -->
         </div>
 
         <div v-if="is_addon_product == 0 && is_ingredient == 0">
@@ -1046,9 +1046,8 @@ export default {
           : this.product_data.discount_code == null
           ? ""
           : this.product_data.discount_code.slack,
-      quantity: this.product_data == null ? "" : this.product_data.quantity,
-      alert_quantity:
-        this.product_data == null ? "" : this.product_data.alert_quantity,
+      quantity: 1,
+      alert_quantity:1,
       sale_price:
         this.product_data == null
           ? ""
