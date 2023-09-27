@@ -617,7 +617,7 @@
                     
                     this.$validator.validateAll('confirmation_form').then((isValid) => {
                         if (isValid) {
-                          alert(this.payment_method);
+                        //   alert(this.payment_method);
                             var formData = new FormData();
                             formData.append("access_token", window.settings.access_token);
                             formData.append("order_status", this.order_status);                          
