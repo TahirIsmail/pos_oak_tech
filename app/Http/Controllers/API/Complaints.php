@@ -655,7 +655,7 @@ class Complaints extends Controller
     {
         try {
 
-            if (!check_access(['A_REQUIREMENT_REQUEST_CUSTOMER_COMPLAINT_LABTECHNICIAN'], true)) {
+            if (!check_access(['A_REQUIREMENT_REQUEST_LABTECHNICIAN'], true)) {
                 throw new Exception("Invalid request", 400);
             }
             $productIdsArray = explode(",", $request->product_ids);

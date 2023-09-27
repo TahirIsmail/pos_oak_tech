@@ -87,7 +87,7 @@ class ComplaintsController extends Controller
         }
 
 
-        $data['requirement_request_key'] = 'A_REQUIREMENT_REQUEST_CUSTOMER_COMPLAINT_LABTECHNICIAN';
+        $data['requirement_request_key'] = 'A_REQUIREMENT_REQUEST_LABTECHNICIAN';
         if (check_access(array($data['requirement_request_key']), true) == false) {
            
         }else{
