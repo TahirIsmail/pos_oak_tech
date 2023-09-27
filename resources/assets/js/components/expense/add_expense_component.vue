@@ -20,6 +20,7 @@
                         {{ $t("Update") }}
                     </button>
 
+
                 </div>
             </div>
             <p v-html="server_errors" v-bind:class="[error_class]"></p>
@@ -47,6 +48,7 @@
                         <option value="" selected disabled>Choose Expense Categories..</option>
                         <option v-for="(expense_item, index) in expense_categories" v-bind:value="expense_item.id"
                             placeholder="Choose Expense Category.." v-bind:key="expense_item.slack">
+                            placeholder="Choose Expense Category.." v-bind:key="expense_item.slack">
                             {{ expense_item.id }} - {{ expense_item.name }}
                         </option>
                     </select>
@@ -67,22 +69,30 @@
 
                 </div>
 
+
             </div>
             <div class="form-row mb-2">
+                <div class="form-group col-md-4">
                 <div class="form-group col-md-4">
                     <label for="expense_date">{{ $t("Expense Date") }}</label>
                     <input type="date"  v-model="expense_date" name="expense_date" 
                         v-validate="'required|date_format:yyyy-MM-dd'"
                         input-class="form-control form-control-custom bg-white"
                         :placeholder="$t('Please enter Expense Date')" autocomplete="off"/>
+                        :placeholder="$t('Please enter Expense Date')" autocomplete="off"/>
                     <span v-bind:class="{ 'error': errors.has('Expense Date') }">{{ errors.first('Expense Date')
                     }}</span>
                 </div>
                 <div class="form-group col-md-4">
+                <div class="form-group col-md-4">
                     <label for="receipt_upload">{{
+                        $t("Expense Receipt Upload") + "(pdf, msword, vnd)"
                         $t("Expense Receipt Upload") + "(pdf, msword, vnd)"
                     }}</label>
                     <input type="file" class="form-control-file form-control form-control-custom file-input"
+                        name="receipt_upload" ref="receipt_upload"
+                        accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        v-validate="'ext:pdf,msword,vnd|size:1500'" />
                         name="receipt_upload" ref="receipt_upload"
                         accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         v-validate="'ext:pdf,msword,vnd|size:1500'" />
@@ -92,6 +102,21 @@
                         errors.first("receipt_upload")
                     }}</span>
                 </div>
+                
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto" v-if="expense_transaction == null">
+                        <label for="status">{{ $t("Status") }}</label>
+                        <select name="status" v-model="status" v-validate="'required|numeric'"
+                            class="form-control form-control-custom custom-select">
+                            <option value="">Choose Status..</option>
+                            <option v-for="(status, index) in statuses" v-bind:value="status.value" v-bind:key="index">
+                                {{ status.label }}
+                            </option>
+                        </select>
+                        <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
+                    </div>
+                
+
+
                 
                     <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto" v-if="expense_transaction == null">
                         <label for="status">{{ $t("Status") }}</label>
@@ -129,6 +154,7 @@
                 </button>
             </template>
         </modalcomponent>
+
 
 
     </div>
@@ -170,6 +196,10 @@ export default {
             notes: this.expense_data && this.expense_data.notes !== null ? this.expense_data.notes : null,
             expense_transaction : (this.expense_data && this.expense_data.transaction_id !== null) ? this.expense_data.transaction_id :  null,
         }
+    },
+    mounted() {
+        // Set the initial selected value from props
+        console.log("Expense Component Loaded");
     },
     mounted() {
         // Set the initial selected value from props

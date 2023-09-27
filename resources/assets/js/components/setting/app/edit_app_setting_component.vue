@@ -123,18 +123,18 @@
                     </div>
                 </div>
 
-                <hr>
+                <!-- <hr> -->
 
-                <div class="d-flex flex-wrap mb-1">
+                <!-- <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Default Customer Details") }}</span>
                     </div>
                     <div class="">
                         
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-row mb-2">
+                <!-- <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="name">{{ $t("Name") }}</label>
                         <input type="text" name="name" v-model="name" v-validate="'max:250'" class="form-control form-control-custom" :placeholder="$t('Please enter name')"  autocomplete="off">
@@ -150,7 +150,7 @@
                         <input type="text" name="phone" v-model="phone" v-validate="{ min: 10, max: 15 }" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('phone') }">{{ errors.first('phone') }}</span> 
                     </div>
-                </div>
+                </div> -->
 
                 <hr>
 
@@ -265,9 +265,9 @@
                 show_deactivation_modal: false,
                 deactivate_processing : false,
 
-                name: (this.customer.length == 0)?'':this.customer.name,
-                email: (this.customer.length == 0)?'':this.customer.email,
-                phone: (this.customer.length == 0)?'':this.customer.phone,
+                // name: (this.customer.length == 0)?'':this.customer.name,
+                // email: (this.customer.length == 0)?'':this.customer.email,
+                // phone: (this.customer.length == 0)?'':this.customer.phone,
             }
         },
         props: {
@@ -278,7 +278,7 @@
             deactivation_eligible: Boolean,
             chost: String,
             cip: String,
-            customer: [Array, Object],
+            // customer: [Array, Object],
         },
         mounted() {
             console.log('Edit App setting page loaded');

@@ -10,6 +10,7 @@ use App\Models\MasterExpenseCategory as ExpenseCategoryModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\MasterStatus;  
 use App\Http\Resources\ExpenseResource;
+;
 class ExpensesController extends Controller
 {
     /**
@@ -111,8 +112,8 @@ class ExpensesController extends Controller
         
         if(!is_null($slack)){
             
-            $expense = ExpenseModel::with('createdUser','updatedUser','expenseCategory','transaction')->where('slack', '=', $slack)->first();
-            if (empty($expense)) {
+            $expense = ExpenseModel::with('createdUser','updatedUser','expenseCategory')->where('slack', '=', $slack)->first();
+            if (empty($complaint)) {
                 abort(404);
             }
             $data['selectedExpenseCatId'] = $expense->expenseCategory->id;

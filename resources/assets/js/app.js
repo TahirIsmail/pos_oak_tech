@@ -223,7 +223,7 @@ Vue.component('viewcustomercomplaint', require('./components/complaint/view_cust
 
 
 
-Vue.component('addexpensecomponent',require('./components/expense/add_expense_component.vue').default);
+// Vue.component('addexpensecomponent',require('./components/expense/add_expense_component.vue').default);
 Vue.component('expensedetailcomponent',require('./components/expense/detail_expense_component.vue').default);
 
 
