@@ -111,7 +111,7 @@ class ExpensesController extends Controller
         
         if(!is_null($slack)){
             
-            $expense = ExpenseModel::with('createdUser','updatedUser','expenseCategory')->where('slack', '=', $slack)->first();
+            $expense = ExpenseModel::with('createdUser','updatedUser','expenseCategory','transaction')->where('slack', '=', $slack)->first();
             if (empty($expense)) {
                 abort(404);
             }
@@ -123,7 +123,7 @@ class ExpensesController extends Controller
         $data['expenseCategories'] = ExpenseCategoryModel::all();
        
      
-
+       
        
         
         return view('expenses.add_expense', $data);

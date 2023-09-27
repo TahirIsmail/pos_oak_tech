@@ -322,8 +322,13 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_kitchen_display/{slack?}', "KitchenDisplay@add_kitchen_display")->name('edit_kitchen_display');
 
     //Complaints Modules
-   
+    Route::get('/customer_complaints','ComplaintsController@index')->name('customer_complaints');
+    Route::get('/add_complaints', "ComplaintsController@add_complaints")->name('add_complaints');
+    Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
+    Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
 
+   
+    
     Route::get('/expenses','ExpensesController@index')->name('expenses');
 
     Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
@@ -331,6 +336,8 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/view_expenses/{slack?}','ExpensesController@view_expense')->name('view_expenses');
 
     Route::get('/income','IncomeController@index')->name('income');
+    Route::get('/repairing_lab', 'RepairingLab@index')->name('repairing_lab');
+
 });
 
 Route::get('/order_public/{slack}', "Order@detail_public_view")->name('order_public');

@@ -20,12 +20,12 @@
 
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
-                <div class="ml-auto">
+                <!-- <div class="ml-auto">
                     <button type="submit" class="btn btn-danger mr-1" v-if="delete_access == true"
                         v-on:click="delete_expense()" v-bind:disabled="delete_processing == true"> <i
                             class='fa fa-circle-notch fa-spin' v-if="delete_processing == true">
                         </i> {{ $t("Delete Expense") }}</button>
-                </div>
+                </div> -->
                 <div v-if="expense_detail.transaction_id == null">
                     <div>
                         <button type="submit" class="btn btn-primary mr-1" v-if="expense_detail.value == 1"

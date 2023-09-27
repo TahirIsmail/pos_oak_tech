@@ -71,10 +71,10 @@
             <div class="form-row mb-2">
                 <div class="form-group col-md-4">
                     <label for="expense_date">{{ $t("Expense Date") }}</label>
-                    <date-picker :format="date.format" :lang='date.lang' v-model="expense_date" name="expense_date"
+                    <input type="date"  v-model="expense_date" name="expense_date" 
                         v-validate="'required|date_format:yyyy-MM-dd'"
                         input-class="form-control form-control-custom bg-white"
-                        :placeholder="$t('Please enter Expense Date')" autocomplete="off"></date-picker>
+                        :placeholder="$t('Please enter Expense Date')" autocomplete="off"/>
                     <span v-bind:class="{ 'error': errors.has('Expense Date') }">{{ errors.first('Expense Date')
                     }}</span>
                 </div>
@@ -134,40 +134,41 @@
     </div>
 </template>
 <script>
-"use strict";
+
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import moment from "moment";
 export default {
     data() {
         return {
-            max: 5,
-            server_errors: "",
-            processing: false,
-            modal: false,
-            show_modal: false,
-
-            error_class: "",
-
             date: {
                 lang: 'en',
-                format: "YYYY-MM-DD",
+                format:'YYYY-MM-DD',
             },
             time: {
                 lang: 'en',
                 format: 'hh:mm A'
             },
+            max: 5,
+            server_errors: '',
+            processing: false,
+            modal: false,
+            show_modal: false,
+
+            error_class: '',
+
+            
             api_link: this.expense_data == null
                 ? "/api/add_expense"
                 : "/api/update_expense/" + this.expense_data.slack,
-            expense_slack: this.expense_data && this.expense_data.slack !== null ? this.expense_data.slack : null,
-            expense_name: this.expense_data && this.expense_data.expense_name !== null ? this.expense_data.expense_name : null,
+            expense_slack: this.expense_data && this.expense_data.slack !== null ? this.expense_data.slack : '',
+            expense_name: this.expense_data && this.expense_data.expense_name !== null ? this.expense_data.expense_name : '',
             status: (this.expense_data && this.expense_data.status !== null) ? this.expense_data.status : 0,
-            expense_category: typeof this.selected_expense_cat_id !== "undefined" && this.selected_expense_cat_id !== null ? this.selected_expense_cat_id.toString() : "",
-            expense_amount: this.expense_data && this.expense_data.amount !== null ? this.expense_data.amount : null,
-            expense_date: (this.expense_data && this.expense_data.expense_name !== null) ? this.expense_data.expense_date : null,
-            notes: this.expense_data && this.expense_data.notes !== null ? this.expense_data.notes : null,
-            expense_transaction : this.expense_data.transaction_id,
+            expense_category: typeof this.selected_expense_cat_id !== "undefined" && this.selected_expense_cat_id !== null ? this.selected_expense_cat_id.toString() : '',
+            expense_amount: this.expense_data && this.expense_data.amount !== null ? this.expense_data.amount : '',
+            expense_date: (this.expense_data && this.expense_data.expense_name !== null) ? new Date(this.expense_data.expense_date) :  new Date(),
+            notes: this.expense_data && this.expense_data.notes !== null ? this.expense_data.notes : '',
+            expense_transaction : (this.expense_data && this.expense_data.transaction_id !== null) ? this.expense_data.transaction_id :  null,
         }
     },
     mounted() {
