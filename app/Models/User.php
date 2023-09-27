@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Models\Complaint;
+use App\Models\Leave;
+
 
 class User extends Model
 {
     protected $table = 'users';
     protected $hidden = [ 'password', 'role_id'];
-    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status', 'line_manager' , 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status','customer_id','supplier_id', 'line_manager' , 'created_by', 'updated_by'];
 
 
 
@@ -143,6 +146,11 @@ class User extends Model
     public function staffPayrolls()
     {
         return $this->hasMany(StaffPayroll::class, 'staff_id', 'id');
+    }
+
+
+    public function assignComplaints(){
+        return $this->hasMany(Complaints::class, 'assign_to_lab_staff_id', 'id');
     }
     
 }

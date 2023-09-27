@@ -218,9 +218,15 @@ Vue.component('staffattendancecomponent', require('./components/staff_attendance
 
 Vue.component('generatestaffpayroll', require('./components/staff_payroll/generate_staff_payroll.vue').default);
 
+Vue.component('add-customer-complaint-component', require('./components/complaint/add_customer_complaint_component.vue').default);
+Vue.component('viewcustomercomplaint', require('./components/complaint/view_customer_complaint_component.vue').default);
+
+
+
 Vue.component('addexpensecomponent',require('./components/expense/add_expense_component.vue').default);
 Vue.component('expensedetailcomponent',require('./components/expense/detail_expense_component.vue').default);
-Vue.component('add-customer-complaint-component', require('./components/complaint/add_customer_complaint_component.vue').default);
+
+
 const app = new Vue({
     el: '#app',
     i18n

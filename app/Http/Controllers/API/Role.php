@@ -402,6 +402,8 @@ class Role extends Controller
 
     public function update_user_roles(Request $request, $role_id){
         
+        // dd($request);
+
         if($role_id == ''){
             return;
         }

@@ -79,7 +79,7 @@
                     </div>
                 </div>
 
-                <div class="form-row mb-2">
+                <!-- <div class="form-row mb-2">
                     <div class="form-group col-md-6">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="update_stock_switch" v-model="update_stock">
@@ -87,23 +87,23 @@
                             <small class="form-text text-muted">If this option is enabled, product stock will be updated when the purchase order is "<b>closed</b>".</small>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="d-flex flex-wrap mb-1">
+                <!-- <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Products") }}</span>
                     </div>
                     <div class="">
                         
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-row mb-2">
+                <!-- <div class="form-row mb-2">
                     <div class="form-group col-md-4">
                         <label for="barcode">{{ $t("Search and Add Products") }}</label>
                         <cool-select type="text" v-model="search_product"  autocomplete="off" inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label" itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search @search='load_products' @select='add_product_to_list' :placeholder="$t('Start Typing..')"></cool-select>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="form-row">
                     <div class="form-group col-md-4 mb-1">
@@ -506,7 +506,7 @@
                         this.show_modal = true;
                         this.$on("submit",function () {
                             
-                            this.processing = true;
+                            // this.processing = true;
                             var formData = new FormData();
 
                             formData.append("access_token", window.settings.access_token);

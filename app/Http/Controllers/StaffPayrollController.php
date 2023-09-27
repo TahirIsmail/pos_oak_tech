@@ -32,7 +32,7 @@ class StaffPayrollController extends Controller
         $data['menu_key'] = 'MM_HR';
         $data['sub_menu_key'] = 'SM_STAFF_PAYROLL';
         check_access(array($data['menu_key'], $data['sub_menu_key']));
-        $data['roles'] = Role::select('id', 'label')->where('id', '!=', 1)->get();
+        $data['roles'] = Role::select('id', 'label')->CustomerRole()->SupplierRole()->where('id', '!=', 1)->get();
         $data['users'] = null;
         return view('staff_payroll.add_staff_payroll', $data);
     }
@@ -62,7 +62,7 @@ class StaffPayrollController extends Controller
         $data['month'] = $monthName;
         $data['year'] = $currentYear;
 
-        $data['roles'] = Role::select('id', 'label')->where('id', '!=', 1)->get();
+        $data['roles'] = Role::select('id', 'label')->CustomerRole()->where('id', '!=', 1)->get();
 
         $users = User::with([
             'role',

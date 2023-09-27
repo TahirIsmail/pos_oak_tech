@@ -72,6 +72,8 @@ class AuthenticateUser
                 
                 if(!empty($selected_store)){
                     $request->logged_user_store_id = $user_exists->store_id;
+                    $request->logged_user_customer_id = $user_exists->customer_id;
+                    $request->logged_user_supplier_id = $user_exists->supplier_id;
                     $request->logged_user_store_slack = $selected_store->store_slack;
                     $request->logged_user_store_code = $selected_store->store_code;
                     $request->logged_user_store_name = $selected_store->name;

@@ -427,8 +427,43 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //Customer Complaints
     Route::post('/customer_complaints', 'API\Complaints@index');
+    Route::post('/customer_orders', 'API\Complaints@customer_orders');
+    Route::post('/customer_orders_products', 'API\Complaints@customer_orders_products');
     Route::post('/submit_customer_complaint','API\Complaints@store');
     Route::post('/update_customer_complaint/{slack}','API\Complaints@store');
+
+    Route::post('/delete_complaint/{slack}','API\Complaints@delete_complaint');
+
+    Route::post('/assign_complaint_to_technician','API\Complaints@assign_complaint_to_technician');
+
+
+
+
+    Route::post('/complaint_submit_transaction','API\Complaints@complaint_submit_transaction');
+
+
+
+    
+    
+    //Repairing / Workshop Routes 
+    Route::post('/repairing_listing', 'API\RepairingLab@index');
+    
+    Route::post('/request_requirement','API\Complaints@request_requirement');
+   
+    Route::post('/fetchCategorySubcategory','API\Complaints@fetchCategorySubcategory');
+
+    Route::post('/fetchCategoryProduct','API\Complaints@fetchCategoryProduct');
+    Route::post('/fetchSubCategoryProduct','API\Complaints@fetchSubCategoryProduct');
+    Route::post('/fetchSelectedProduct','API\Complaints@fetchSelectedProduct');
+    Route::post('/assign_product_to_technician','API\Complaints@assignProductToTechnician');
+    Route::post('/complaint_completed','API\Complaints@complaint_completed');
+    Route::post('/assign_products_complaint','API\Complaints@assign_products_complaint');
+    Route::post('/complaint_invoice_make','API\Complaints@complaintInvoice');
+    Route::post('/fetchComplaintRecord','API\Complaints@fetchComplaintRecord');
+
+    
+
+
     //Expenses
     Route::post('/expenses/list','API\Expense@list');
     Route::post('/add_expense','API\Expense@store');

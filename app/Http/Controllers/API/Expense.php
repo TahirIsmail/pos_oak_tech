@@ -208,7 +208,7 @@ class Expense extends Controller
 
         if ($request->ajax()) {
             $data = ExpenseModel::with('createdUser', 'updatedUser', 'expenseCategory')->StatusJoin()->get();
-
+            // dd($data);
             return Datatables::of($data)
                 ->addIndexColumn()
 

@@ -585,7 +585,7 @@ class Invoice extends Controller
                 ->supplierJoin()
                 ->taxcodeJoin()
                 ->discountcodeJoin()
-                ->categoryActive()
+                // ->categoryActive()
                 ->supplierActive()
                 ->taxcodeActive()
                 ->first();

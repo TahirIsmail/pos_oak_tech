@@ -1,19 +1,19 @@
 @extends('layouts.layout')
 
-@section("content")
-<div class="row">
-    <div class="col-md-12">
-        
-        <div class="d-flex flex-wrap mb-4">
-            <div class="mr-auto">
-                <span class="text-title">{{ __("Customer Orders") }}</span>
-            </div>
-            <div class="">
-                @if (check_access(array('A_ADD_ORDER'), true))
-                    <a href="{{ route('add_order')}}" role="button" class="btn btn-primary">{{ __("New Order") }}</a>
-                @endif
-            </div>
-        </div>
+@section('content')
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex flex-wrap mb-4">
+                    <div class="mr-auto">
+                        <span class="text-title">{{ __('POS Orders') }}</span>
+                    </div>
+                    <div class="">
+                        @if (check_access(['A_ADD_ORDER'], true))
+                            <a href="{{ route('add_order') }}" role="button" class="btn btn-primary">{{ __('New Order') }}</a>
+                        @endif
+                    </div>
+                </div>
 
                 <div class="table-responsive">
                     <table id="listing-table" class="table display nowrap w-100">

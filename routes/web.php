@@ -10,18 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-    /*
+/*
     Customer Auth Routes
     
     */
-   
 
-    // ----------------------------------------------------------------//
-    Route::get('/', "Entry@sign_in")->name('home');
-    Route::get('/logout', "Entry@logout")->name('logout');
-    Route::get('/forgot_password', "Entry@forgot_password")->name('forgot_password');
-    Route::get('/reset_password/{user_slack}/{forgot_password_token}', "Entry@reset_password")->name('reset_password');
-    Route::get('/generate_lockout_password/{password_string?}', "Entry@generate_lockout_password")->name('generate_lockout_password');
+
+// ----------------------------------------------------------------//
+Route::get('/', "Entry@sign_in")->name('home');
+Route::get('/logout', "Entry@logout")->name('logout');
+Route::get('/forgot_password', "Entry@forgot_password")->name('forgot_password');
+Route::get('/reset_password/{user_slack}/{forgot_password_token}', "Entry@reset_password")->name('reset_password');
+Route::get('/generate_lockout_password/{password_string?}', "Entry@generate_lockout_password")->name('generate_lockout_password');
 
 
 Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
@@ -97,7 +97,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/customer/{slack}', "Customer@detail")->name('customer');
     Route::get('/add_customer', "Customer@add_customer")->name('add_customer');
     Route::get('/edit_customer/{slack?}', "Customer@add_customer")->name('edit_customer');
-/// /app_settings
+    /// /app_settings
     //product
     Route::get('/products', "Product@index")->name('products');
     Route::get('/product/{slack}', "Product@detail")->name('product');
@@ -242,7 +242,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/add_stock_return', "StockReturn@add_stock_return")->name('add_stock_return');
     Route::get('/edit_stock_return/{slack?}', "StockReturn@add_stock_return")->name('edit_stock_return');
     Route::get('/print_stock_return/{slack}', "StockReturn@print_stock_return")->name('print_stock_return');
-    
+
     //notifications
     Route::get('/notifications', "Notification@index")->name('notifications');
     Route::get('/notification/{slack}', "Notification@detail")->name('notification');
@@ -257,7 +257,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/register_summary/{slack}', "BusinessRegister@register_summary")->name('register_summary');
 
     //setting sms
-    
+
     Route::get('/sms_settings', "SmsSetting@index")->name('sms_settings');
     Route::get('/sms_setting/{slack}', "SmsSetting@detail")->name('sms_setting');
     Route::get('/edit_sms_setting/{slack}', "SmsSetting@add_sms_setting")->name('edit_sms_setting');
@@ -272,7 +272,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/billing_counter/{slack}', "BillingCounter@detail")->name('billing_counter');
     Route::get('/add_billing_counter', "BillingCounter@add_billing_counter")->name('add_billing_counter');
     Route::get('/edit_billing_counter/{slack?}', "BillingCounter@add_billing_counter")->name('edit_billing_counter');
-    
+
     //measurement unit
     Route::get('/measurement_units', "MeasurementUnit@index")->name('measurement_units');
     Route::get('/measurement_unit/{slack}', "MeasurementUnit@detail")->name('measurement_unit');
@@ -322,21 +322,23 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_kitchen_display/{slack?}', "KitchenDisplay@add_kitchen_display")->name('edit_kitchen_display');
 
     //Complaints Modules
-    Route::get('/customer_complaints','ComplaintsController@index')->name('customer_complaints');
+    Route::get('/customer_complaints', 'ComplaintsController@index')->name('customer_complaints');
     Route::get('/add_complaints', "ComplaintsController@add_complaints")->name('add_complaints');
     Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
     Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
 
-   
-    
-    Route::get('/expenses','ExpensesController@index')->name('expenses');
+    Route::get('/repairing_lab', 'RepairingLab@index')->name('repairing_lab');
 
-    Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
+
+
+    Route::get('/print_complaint_invoice/{slack}', "ComplaintsController@print_invoice")->name('print_complaint_invoice');
+    Route::get('/expenses', 'ExpensesController@index')->name('expenses');
+    Route::get('/add_expense', 'ExpensesController@add_expense')->name('add_expense');
+    Route::get('/view_expenses/{slack?}', 'ExpensesController@view_expense')->name('view_expenses');
     Route::get('/edit_expenses/{slack?}','ExpensesController@add_expense')->name('edit_expenses');
-    Route::get('/view_expenses/{slack?}','ExpensesController@view_expense')->name('view_expenses');
 
     Route::get('/income','IncomeController@index')->name('income');
-    Route::get('/repairing_lab', 'RepairingLab@index')->name('repairing_lab');
+
 
 });
 

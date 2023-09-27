@@ -23,12 +23,6 @@ use App\Http\Controllers\API\Role as RoleApi;
 class Customer extends Controller
 {
     /**
-     * Authentication of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -141,6 +135,8 @@ class Customer extends Controller
 
             $this->validate_request($request);
 
+
+            
             //check email already exists
             if ($request->email != '') {
                 $customer_email_exists = CustomerModel::where('email', $request->email)->first();
@@ -148,6 +144,9 @@ class Customer extends Controller
                     throw new Exception("Customer email already exists");
                 }
             }
+
+            // dd($request->email);
+
 
             //check phone already exists
             if ($request->phone != '') {
@@ -157,36 +156,59 @@ class Customer extends Controller
                 }
             }
 
-            $user_data = $this->customerAddInUser($request);
+
 
 
             DB::beginTransaction();
 
             $customer = [
-                "slack" => $user_data['slack'],
+                "slack" => $this->generate_slack("customers"),
                 'customer_type' => 'CUSTOM',
                 "name" => $request->name,
                 "email" => $request->email,
                 "phone" => $request->phone,
                 "address" => $request->address,
                 "dob" => $request->dob,
-                "status" => $request->status,
-                "user_id" => $user_data['id'],
+                "status" => $request->status,                
                 "created_by" => $request->logged_user_id
             ];
 
+
+            
             $customer_id = CustomerModel::create($customer)->id;
+            
+
+            $password = Str::random(6);
+            $hashed_password = Hash::make($password);
+
+            $user = [
+                "slack" => $customer['slack'],
+                "user_code" => Str::random(6),
+                "email" => $customer['email'],
+                "password" => $hashed_password,
+                "init_password" => $password,
+                "fullname" => $customer['name'],
+                "phone" => $customer['phone'],
+                "role_id" => 2,
+                "store_id" => $request->logged_user_store_id,
+                "status" => $request->status,
+                "customer_id" => $customer_id,
+                "created_by" => $request->logged_user_id
+            ];
+
+            // dd($user);
+
+            $this->customerAddInUser($request, $user);
 
             DB::commit();
 
-            $customer_data = CustomerModel::select('slack', 'name', 'email', 'phone')->where('id', $customer_id)->first()->toArray();
+           
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Customer created successfully",
-                    "data"    => $customer_data
-                ),
-                'SUCCESS'
+                    "message" => "Customer created successfully", 
+                    "data"    => $customer
+                ), 'SUCCESS'
             ));
         } catch (Exception $e) {
             return response()->json($this->generate_response(
@@ -198,6 +220,43 @@ class Customer extends Controller
         }
     }
 
+
+    private function customerAddInUser($request, $user){
+        
+        
+        // dd($user->email);
+            $user_email_exists = UserModel::where('email', $user['email'])->first();
+            if ($user_email_exists) {
+                throw new Exception("Email is already added, try signing in");
+            }       
+            
+
+        //    dd($user);
+
+            DB::beginTransaction();   
+            
+            $user_id = UserModel::create($user)->id;
+            $user_data['id'] = $user_id; 
+            $code_start_config = Config::get('constants.unique_code_start.user');
+            $code_start = (isset($code_start_config))?$code_start_config:100;
+            
+            // dd($user_id);
+            $user_code = [
+                "user_code" => ($code_start + $user_id)
+            ];
+            UserModel::where('id', $user_id)
+            ->update($user_code);
+
+            $role_api = new RoleAPI();
+            $role_api->update_user_roles($request, 2);
+
+            $this->update_user_stores($request,  $user['slack']);
+
+            DB::commit();
+
+            return $user_data;
+            
+    }
     /**
      * Display the specified resource.
      *
@@ -460,74 +519,13 @@ class Customer extends Controller
             throw new Exception($validator->errors());
         }
     }
-    private function customerAddInUser($request)
-    {
-
-        $user_email_exists = UserModel::where('email', $request->email)->first();
-        if ($user_email_exists) {
-            throw new Exception("Email is already added, try signing in");
+    
+    public function update_user_stores(Request $request, $user_slack){
+        
+        if($user_slack == ''){
+            return;
         }
-
-
-
-
-        $password = Str::random(6);
-        $hashed_password = Hash::make($password);
-
-        DB::beginTransaction();
-
-        $user = [
-            "slack" => $this->generate_slack("users"),
-            "user_code" => Str::random(6),
-            "email" => $request->email,
-            "password" => $hashed_password,
-            "init_password" => $password,
-            "fullname" => $request->name,
-            "phone" => $request->phone,
-            "role_id" => 2,
-            "store_id" => $request->logged_user_store_id,
-            "status" => $request->status,
-            "created_by" => $request->logged_user_id
-        ];
-        // dd($user);
-        $user_data['slack'] = $user['slack'];
-
-        $user_id = UserModel::create($user)->id;
-        $user_data['id'] = $user_id;
-        $code_start_config = Config::get('constants.unique_code_start.customer');
-        $code_start = (isset($code_start_config)) ? $code_start_config : 100;
-
-        $user_code = [
-            "user_code" => "CUST".($code_start + $user_id)
-        ];
-        UserModel::where('id', $user_id)
-            ->update($user_code);
-
-        $role_api = new RoleAPI();
-        $role_api->update_user_roles($request, 2);
-
-        $user_stores_array[] = [
-            'user_id' => $user_id,
-            'store_id' => $request->logged_user_store_id,
-            'created_by' => $request->logged_user_id,
-            "created_at" => now(),
-            "updated_at" => now()
-        ];
-
-        UserStoreModel::insert($user_stores_array);
-
-
-        DB::commit();
-
-        return $user_data;
-    }
-    // public function update_user_stores(Request $request, $user_slack)
-    // {
-
-    //     if ($user_slack == '') {
-    //         return;
-    //     }
-
+        
 
     //     $selected_stores = $request->logged_user_store_id;
 

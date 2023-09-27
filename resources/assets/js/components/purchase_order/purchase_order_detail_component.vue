@@ -1,7 +1,6 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">
@@ -350,6 +349,7 @@
                 this.show_generate_invoice_modal = true;
 
                 this.$on("submit",function () {       
+                    // alert(this.generate_invoice_from_po_api_link);
                     this.processing = true;
                     this.generate_invoice_processing = true;
 

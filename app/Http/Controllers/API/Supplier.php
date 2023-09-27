@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Collections\SupplierCollection;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier as SupplierModel;
+use App\Models\User as UserModel;
+use App\Models\UserStore as UserStoreModel;
 use App\Models\SupplierPerformance;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,6 +19,8 @@ use App\Models\UserStore as UserStoreModel;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\API\Role as RoleApi;
 use DataTables;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\API\Role as RoleApi;
 
 use Validator;
 
@@ -179,8 +183,8 @@ class Supplier extends Controller
             if (!empty($supplier_data_exists)) {
                 throw new Exception("Supplier already exists", 400);
             }
-            $user_data   = $this->SupplierAddInUser($request);
-
+            // $user_data   = $this->SupplierAddInUser($request);
+           
             DB::beginTransaction();
 
             $supplier = [
@@ -199,15 +203,27 @@ class Supplier extends Controller
 
             SupplierModel::create($supplier)->id;
 
-            // $code_start_config = Config::get('constants.unique_code_start.supplier');
-            // $code_start = (isset($code_start_config)) ? $code_start_config : 100;
+            $password = Str::random(6);
+            $hashed_password = Hash::make($password);
+    
+           
+    
+            $user = [
+                "slack" => $supplier['slack'],
+                "user_code" => $supplier['supplier_code'],
+                "email" => $request->email,
+                "password" => $hashed_password,
+                "init_password" => $password,
+                "fullname" => $request->supplier_name,
+                "phone" => $request->phone,
+                "role_id" => 3,
+                "store_id" => $request->logged_user_store_id,
+                "supplier_id" => $supplier_id,
+                "status" => $request->status,
+                "created_by" => $request->logged_user_id
+            ];
 
-            // $supplier_code = [
-            //     "supplier_code" => "SUP" . ($code_start + $supplier_id),
-            // ];
-            // SupplierModel::where('id', $supplier_id)
-            //     ->update($supplier_code);
-
+             $user_data   = $this->SupplierAddInUser($request, $user);
             DB::commit();
 
             return response()->json($this->generate_response(
@@ -226,7 +242,7 @@ class Supplier extends Controller
             ));
         }
     }
-    private function SupplierAddInUser($request)
+    private function SupplierAddInUser($request, $user)
     {
 
         $user_email_exists = UserModel::where('email', $request->email)->first();
@@ -234,29 +250,7 @@ class Supplier extends Controller
             throw new Exception("Email is already added, try signing in");
         }
 
-
-
-
-        $password = Str::random(6);
-        $hashed_password = Hash::make($password);
-
-        DB::beginTransaction();
-
-        $user = [
-            "slack" => $this->generate_slack("users"),
-            "user_code" => Str::random(6),
-            "email" => $request->email,
-            "password" => $hashed_password,
-            "init_password" => $password,
-            "fullname" => $request->supplier_name,
-            "phone" => $request->phone,
-            "role_id" => 4,
-            "store_id" => $request->logged_user_store_id,
-            "status" => $request->status,
-            "created_by" => $request->logged_user_id
-        ];
-        // dd($user);
-        $user_data['slack'] = $user['slack'];
+        DB::beginTransaction();  
 
         $user_id = UserModel::create($user)->id;
         $user_data['id'] = $user_id;
@@ -270,7 +264,7 @@ class Supplier extends Controller
             ->update($user_code);
         $user_data['user_code'] = $user_code['user_code'];
         $role_api = new RoleAPI();
-        $role_api->update_user_roles($request, 4);
+        $role_api->update_user_roles($request, 3);
 
         $user_stores_array[] = [
             'user_id' => $user_id,
@@ -287,6 +281,7 @@ class Supplier extends Controller
 
         return $user_data;
     }
+
     /**
      * Display the specified resource.
      *

@@ -895,6 +895,7 @@ class Product extends Controller
                 ->discountcodeJoin()
                 ->supplierActive()
                 ->taxcodeActive()
+                // ->where('quantity', 0)
                 ->where('suppliers.slack', $supplier_slack)
                 ->where(function ($query) use ($keywords) {
                     $query->where('products.product_code', 'like', $keywords . '%')

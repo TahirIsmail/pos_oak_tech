@@ -1,19 +1,34 @@
 @extends('layouts.layout')
 
-@section("content")
-<div class="row">
-    <div class="col-md-12">
-        
-        <div class="d-flex flex-wrap mb-4">
-            <div class="mr-auto">
-                <span class="text-title">{{ __("Products") }}</span>
+@section('content')
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex flex-wrap mb-4">
+                    <div class="mr-auto">
+                        <span class="text-title">{{ __('Products') }}</span>
+                    </div>
+                    <div class="">
+                        @if (check_access(['A_ADD_PRODUCT'], true))
+                            <a href="{{ route('add_product') }}" role="button"
+                                class="btn btn-primary">{{ __('New Product') }}</a>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- <div class="form-row mb-1">
+            <div class="form-group col-md-3">
+                <label for="product_type_filter">{{ __("Filter Product") }}</label>
+                <select name="product_type_filter" id="product_type_filter" class="form-control form-control-custom custom-select">
+                    <option value="all">All</option>
+                    <option value="billing_products" selected>Billing Products</option>
+                    <option value="addon_products">Add-on Products</option>
+                    @if ($restaurant_mode)
+                    <option value="ingredients">Ingredients</option>
+                    @endif
+                </select>
             </div>
-            <div class="">
-                @if (check_access(array('A_ADD_PRODUCT'), true))
-                    <a href="{{ route('add_product')}}" role="button" class="btn btn-primary">{{ __("New Product") }}</a>
-                @endif
-            </div>
-        </div>        
+        </div> --}}
 
         <div class="table-responsive">
             <table id="listing-table" class="display table nowrap">

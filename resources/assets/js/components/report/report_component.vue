@@ -20,7 +20,7 @@
                     <div class="mr-auto">
                     <div class="d-flex">
                             <div>
-                                <span class="text-subhead">{{ $t("POS Sales Tax Report") }}</span>
+                                <span class="text-subhead">{{ $t("Sales Tax Report") }}</span>
                             </div>
                         </div>
                     </div>

@@ -44,7 +44,7 @@
                     <label for="expense_category">{{ $t("Choose Expense Category") }}</label>
                     <select v-model="expense_category" v-validate="'required'" class="form-control form-control-custom"
                         placeholder="Choose Expense Category..">
-                        <option value="" selected disabled>Choose Supplier..</option>
+                        <option value="" selected disabled>Choose Expense Categories..</option>
                         <option v-for="(expense_item, index) in expense_categories" v-bind:value="expense_item.id"
                             placeholder="Choose Expense Category.." v-bind:key="expense_item.slack">
                             {{ expense_item.id }} - {{ expense_item.name }}
@@ -158,16 +158,16 @@ export default {
             error_class: '',
 
             
-            api_link: this.expense_data == null
+            api_link: (this.expense_data == null)
                 ? "/api/add_expense"
                 : "/api/update_expense/" + this.expense_data.slack,
-            expense_slack: this.expense_data && this.expense_data.slack !== null ? this.expense_data.slack : '',
-            expense_name: this.expense_data && this.expense_data.expense_name !== null ? this.expense_data.expense_name : '',
+            expense_slack: this.expense_data && this.expense_data.slack !== null ? this.expense_data.slack : null,
+            expense_name: this.expense_data && this.expense_data.expense_name !== null ? this.expense_data.expense_name : null,
             status: (this.expense_data && this.expense_data.status !== null) ? this.expense_data.status : 0,
-            expense_category: typeof this.selected_expense_cat_id !== "undefined" && this.selected_expense_cat_id !== null ? this.selected_expense_cat_id.toString() : '',
-            expense_amount: this.expense_data && this.expense_data.amount !== null ? this.expense_data.amount : '',
+            expense_category: typeof this.selected_expense_cat_id !== "undefined" && this.selected_expense_cat_id !== null ? this.selected_expense_cat_id.toString() : null,
+            expense_amount: this.expense_data && this.expense_data.amount !== null ? this.expense_data.amount : null,
             expense_date: (this.expense_data && this.expense_data.expense_name !== null) ? new Date(this.expense_data.expense_date) :  new Date(),
-            notes: this.expense_data && this.expense_data.notes !== null ? this.expense_data.notes : '',
+            notes: this.expense_data && this.expense_data.notes !== null ? this.expense_data.notes : null,
             expense_transaction : (this.expense_data && this.expense_data.transaction_id !== null) ? this.expense_data.transaction_id :  null,
         }
     },

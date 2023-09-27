@@ -355,27 +355,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="form-group col-md-6">
-                        <label for="account">{{ $t("Account") }}</label>
-                        <select name="account" v-model="account" v-validate="'required'" class="form-control form-control-custom custom-select">
-                            <option value="">Choose Account..</option>
-                            <option v-for="(account, index) in accounts" v-bind:value="account.slack" v-bind:key="index">
-                                {{ account.label }} ({{ account.account_type_label }})
-                            </option>
-                        </select>
-                        <span v-bind:class="{ 'error' : errors.has('account') }">{{ errors.first('account') }}</span> 
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label for="payment_method">{{ $t("Payment Method") }}</label>
-                        <select name="payment_method" v-model="payment_method" v-validate="'required'" class="form-control form-control-custom custom-select">
-                            <option value="">Choose Payment Method..</option>
-                            <option v-for="(payment_method, index) in payment_methods" v-bind:value="payment_method.slack" v-bind:key="index">
-                                {{ payment_method.label }}
-                            </option>
-                        </select>
-                        <span v-bind:class="{ 'error' : errors.has('payment_method') }">{{ errors.first('payment_method') }}</span> 
-                    </div>
+                 
 
                   <div class="col-md-12 col-sm-12">
                     <button
@@ -448,8 +428,7 @@ export default {
       gross_salary: 0,
       net_salary: 0,
       tax: 0,
-      account: '',
-      payment_method: '',
+    
     };
   },
   props: {
@@ -528,8 +507,7 @@ export default {
             formData.append("gross_salary", this.gross_salary);
             formData.append("net_salary", this.net_salary);
             formData.append("tax", this.tax);
-            formData.append("account", this.account);
-            formData.append("payment_method", this.payment_method);
+           
 
             axios
               .post(this.api_link, formData)
