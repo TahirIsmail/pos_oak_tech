@@ -75,7 +75,9 @@ class Setting extends Controller
         }
         $data['setting_data'] = $app_setting_data;
 
-        $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
+        // $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
+
+        // dd($data['customer']);
 
         return view('setting.app.app_setting', $data);
     }
@@ -107,7 +109,7 @@ class Setting extends Controller
 
         $data['timezones'] = timezone_identifiers_list();
 
-        $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
+        // $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
 
        // $activation_data = AppActivation::select('activation_code')->first();
 
@@ -115,6 +117,9 @@ class Setting extends Controller
         
         $data['chost'] = trim($_SERVER['HTTP_HOST']);
         $data['cip'] = trim($_SERVER['REMOTE_ADDR']);
+
+        // dd($data);
+
         
         return view('setting.app.edit_app_setting', $data);
     }

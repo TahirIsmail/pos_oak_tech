@@ -2,12 +2,13 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
+                
                 <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
                         <span class="text-title">{{ $t("App Settings") }}</span>
                     </div>
                     <div class="">
-                        <a v-bind:href="edit_link" class="btn btn-primary"> {{ $t("Edit") }}</a>
+                        <a v-bind:href="'/edit_app_setting'" class="btn btn-primary"> {{ $t("Edit") }}</a>
                     </div>
                 </div>
 
@@ -60,8 +61,8 @@
                         <p><img :src="favicon" class="company-logo-image"></p>
                     </div>
                 </div>
-                <hr>
-                <div class="mb-2">
+                <!-- <hr> -->
+                <!-- <div class="mb-2">
                     <span class="text-subhead">{{ $t("Default Customer Details") }}</span>
                 </div>
                 <div class="form-row mb-2">
@@ -77,7 +78,7 @@
                         <label for="updated_on">{{ $t("Phone") }}</label>
                         <p>{{ phone }}</p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -89,10 +90,10 @@
 export default {
     data() {
         return {
+            edit_link: '/edit_app_setting',
             server_errors: '',
             error_class: '',
             processing: false,
-            edit_link: '/edit_app_setting',
 
             company_name: (this.app_setting.length == 0) ? '-' : this.app_setting.company_name,
             app_title: (this.app_setting.length == 0) ? '-' : this.app_setting.app_title,
@@ -105,14 +106,14 @@ export default {
             invoice_print_logo: (this.app_setting.length == 0) ? '-' : this.app_setting.invoice_print_logo_path,
             navbar_logo: (this.app_setting.length == 0) ? '-' : this.app_setting.navbar_logo_path,
             favicon: (this.app_setting.length == 0) ? '-' : this.app_setting.favicon_path,
-            name: (this.customer.length == 0) ? '-' : this.customer.name,
-            email: (this.customer.length == 0) ? '-' : this.customer.email,
-            phone: (this.customer.length == 0) ? '-' : this.customer.phone,
+            // name: (this.customer.length == 0) ? '-' : this.customer.name,
+            // email: (this.customer.length == 0) ? '-' : this.customer.email,
+            // phone: (this.customer.length == 0) ? '-' : this.customer.phone,
         }
     },
     props: {
-        app_setting: [Array, Object],
-        customer: [Array, Object],
+        app_setting: Array,
+        // customer: [Array, Object],
     },
     mounted() {
         console.log('App setting page loaded');
