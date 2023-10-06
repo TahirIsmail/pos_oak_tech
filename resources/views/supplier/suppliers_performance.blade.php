@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header  d-flex flex-wrap mb-4">
+                <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
                         <span class="text-title">{{ __('Suppliers Performance') }}</span>
                     </div>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive my-4">
                     <table id="listing_performance_table" class="table display nowrap w-100">
                         <thead>
                             <tr>
@@ -57,8 +57,6 @@
         background-color: rgba(0, 0, 0, .03);
         border-bottom: 1px solid rgba(0, 0, 0, .125);
     }
-
-
     .card {
         position: relative;
         display: -ms-flexbox;
@@ -70,7 +68,7 @@
         background-color: #fff;
         background-clip: border-box;
         border: 1px solid rgba(0, 0, 0, .125);
-        border-radius: 0.25rem;
+        border-radius: 10px !important;
     }
 
     .page-item.active .page-link {
@@ -79,5 +77,13 @@
         background-color: #007bff;
         border-color: #007bff;
         margin-left: 18px;
+    }
+    #listing_performance_table_wrapper{
+        width: 96% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .dataTables_scrollHeadInner{
+        width: none !important;
     }
 </style>

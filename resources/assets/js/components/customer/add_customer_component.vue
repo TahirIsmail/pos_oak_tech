@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card shadow">
                 <form @submit.prevent="submit_form" class="mb-3">
 
                     <div class="card-header d-flex flex-wrap mb-4">
@@ -11,63 +11,72 @@
                         </div>
                         <div class="">
                             <button type="submit" class="btn btn-primary" v-bind:disabled="processing == true"> <i
-                                    class='fa fa-circle-notch fa-spin' v-if="processing == true"></i> {{ $t("Save")
+                                    class='fa fa-circle-notch fa-spin' v-if="processing == true"></i> {{ $t("Save Customer")
                                     }}</button>
                         </div>
                     </div>
 
                     <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
-                    <div class="mb-2">
+                    <div class="mb-2 background_set">
                         <span class="text-subhead">Basic Information</span>
                     </div>
                     <div class="form-row mb-2">
-                        <div class="form-group col-md-3">
-                            <label for="name">{{ $t("Fullname") }}</label>
+                        <div class="form-group col-md-4">
+                            <label for="name">{{ $t("Fullname") }}</label><span style="color:red">*</span>
                             <input type="text" name="name" v-model="name" v-validate="'required|max:250'"
                                 class="form-control form-control-custom" :placeholder="$t('Please enter fullname')"
                                 autocomplete="off">
                             <span v-bind:class="{ 'error': errors.has('name') }">{{ errors.first('name') }}</span>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="email">{{ $t("Email") }}</label>
+                        <div class="form-group col-md-4">
+                            <label for="email">{{ $t("Email") }}</label><span style="color:red">*</span>
                             <input type="text" name="email" v-model="email"
                                 v-validate="{ required: this.email_required, email: true, max: 150 }"
                                 class="form-control form-control-custom" :placeholder="$t('Please enter email')"
                                 autocomplete="off">
                             <span v-bind:class="{ 'error': errors.has('email') }">{{ errors.first('email') }}</span>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
+                            <label for="father_name">{{ $t("Father Name") }}</label>
+                            <input type="text" name="father_name" v-model="father_name"
+                                class="form-control form-control-custom" :placeholder="$t('Please Enter Father Name')"
+                                autocomplete="off">
+                        </div>
+                        <div class="form-group col-md-4">
                             <label for="phone">{{ $t("Contact No.") }}&nbsp;<small class="text-muted">(With Country
-                                    Code)</small></label>
+                                    Code)</small></label><span style="color:red">*</span>
                             <input type="text" name="phone" v-model="phone"
                                 v-validate="{ required: this.phone_required, min: 10, max: 15 }"
                                 class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')"
                                 autocomplete="off">
                             <span v-bind:class="{ 'error': errors.has('phone') }">{{ errors.first('phone') }}</span>
-                        </div>
-                      
+                        </div>    
+                    <div class="form-group col-md-4">
+                        <label for="cnic">{{ $t("CNIC NUMBER") }}</label>
+                        <input type="text" name="cnic" v-model="cnic"  class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('cnic') }">{{ errors.first('cnic') }}</span> 
                     </div>
-
-                    <div class="form-row mb-2">
-
-                        <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
+                        <label for="gender">{{ $t("Gender") }}</label><span style="color:red">*</span>
+                        <select name="status" v-model="gender" v-validate="'required'" class="form-control form-control-custom custom-select">
+                            <option value="">Choose Gender..</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        <span v-bind:class="{ 'error' : errors.has('gender') }">{{ errors.first('gender') }}</span> 
+                    </div>
+                    <div class="form-group col-md-4">
                             <label for="dob">{{ $t("Date of Birth") }}</label>
                             <date-picker :format="date.format" :lang='date.lang' v-model="dob"
                                 v-validate="'date_format:yyyy-MM-dd'"
                                 input-class="form-control form-control-custom bg-white" ref="dob" name="dob"
                                 :placeholder="$t('Please enter Date of Birth')" autocomplete="off"></date-picker>
                             <span v-bind:class="{ 'error': errors.has('dob') }">{{ errors.first('dob') }}</span>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="address">{{ $t("Address") }}</label>
-                            <textarea name="address" v-model="address" v-validate="'max:65535'"
-                                class="form-control form-control-custom" rows="5"
-                                :placeholder="$t('Enter Address')"></textarea>
-                            <span v-bind:class="{ 'error': errors.has('address') }">{{ errors.first('address') }}</span>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="status">{{ $t("Status") }}</label>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                            <label for="status">{{ $t("Status") }}</label><span style="color:red">*</span>
                             <select name="status" v-model="status" v-validate="'required|numeric'"
                                 class="form-control form-control-custom custom-select">
                                 <option value="">Choose Status..</option>
@@ -77,7 +86,38 @@
                             </select>
                             <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
                         </div>
+
                     </div>
+
+
+                    <div class="mb-2 background_set">
+                        <span class="text-subhead">Address Information</span>
+                    </div>
+                    <div class="form-row mb-2">
+                        <div class="form-group col-md-4">
+                            <label for="country">{{ $t("Country") }}</label><span style="color:red">*</span>
+                            <input type="text" name="country" v-model="country" v-validate="'required'"
+                                class="form-control form-control-custom"
+                                :placeholder="$t('Enter Country')">
+                            <span v-bind:class="{ 'error': errors.has('country') }">{{ errors.first('country') }}</span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="city">{{ $t("City") }}</label>
+                            <input type="text" name="city" v-model="city"
+                                class="form-control form-control-custom" :placeholder="$t('Enter City')">
+                            <span v-bind:class="{ 'error': errors.has('city') }">{{ errors.first('city') }}</span>
+                           
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="address">{{ $t("Address") }}</label><span style="color:red">*</span>
+                            <textarea name="address" v-model="address" v-validate="'max:65535'"
+                                class="form-control form-control-custom" rows="1"
+                                :placeholder="$t('Enter Address')"></textarea>
+                            <span v-bind:class="{ 'error': errors.has('address') }">{{ errors.first('address') }}</span>
+                        </div>
+                        
+                    </div>
+                    
 
                 </form>
 
@@ -128,6 +168,17 @@ export default {
             name: (this.customer_data == null) ? '' : this.customer_data.name,
             phone: (this.customer_data == null) ? '' : this.customer_data.phone,
             address: (this.customer_data == null) ? '' : this.customer_data.address,
+            city: (this.customer_data == null) ? '' : this.customer_data.city,
+            country: (this.customer_data == null) ? '' : this.customer_data.country,
+
+
+            gender: (this.customer_data == null) ? '' : this.customer_data.gender,
+            father_name: (this.customer_data == null) ? '' : this.customer_data.father_name,
+            cnic: (this.customer_data == null) ? '' : this.customer_data.cnic,
+
+
+
+
             dob: (this.customer_data == null) ? '' : (this.customer_data.dob_raw != null) ? new Date(this.customer_data.dob_raw) : '',
             status: (this.customer_data == null) ? '' : (this.customer_data.status == null) ? '' : this.customer_data.status.value,
         }
@@ -177,6 +228,11 @@ export default {
                         formData.append("email", (this.email == null) ? '' : this.email);
                         formData.append("phone", (this.phone == null) ? '' : this.phone);
                         formData.append("address", (this.address == null) ? '' : this.address);
+                        formData.append("city", (this.city == null) ? '' : this.city);
+                        formData.append("country", (this.country == null) ? '' : this.country);
+                        formData.append("father_name", (this.father_name == null) ? '' : this.father_name);
+                        formData.append("gender", (this.gender == null) ? '' : this.gender);
+                        formData.append("cnic", (this.cnic == null) ? '' : this.cnic);
                         formData.append("dob", (this.dob == null) ? '' : this.convert_date_format(this.dob));
                         formData.append("status", (this.status == null) ? '' : this.status);
 
@@ -220,9 +276,8 @@ export default {
 .form-row {
     display: flex;
     flex-wrap: wrap;
-    margin-right: -5px;
-    margin-left: 20px;
     margin-right: 20px;
+    margin-left: 20px;
 }
 .card-header {
     padding: 0.75rem 1.25rem;
@@ -243,7 +298,8 @@ export default {
     background-color: #fff;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: 0.25rem;
+    border-radius:10px !important;
+    margin-bottom: 30px !important;
 }
 
 .page-item.active .page-link {
@@ -258,6 +314,7 @@ export default {
 .my-2 {
     margin-bottom: 0.5rem !important;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .form-row {
@@ -265,7 +322,11 @@ export default {
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin-right: -5px;
-    margin-left: 10px;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+}
+.background_set{
+    background: #f2f2f2;
+    padding:10px;
 }
 </style>

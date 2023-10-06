@@ -409,7 +409,7 @@ export default {
             }
           })
           .catch((error) => {
-            alert('kashif');
+            // alert('kashif');
             console.log(error);
           });
       });

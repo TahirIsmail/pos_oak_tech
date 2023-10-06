@@ -189,7 +189,7 @@ export default {
                     this.show_modal = true;
                     this.$on("submit", function () {
                         this.processing = true;
-                        alert(this.api_link);
+                        // alert(this.api_link);
                         const formData = new FormData();
                         formData.append("access_token", window.settings.access_token);
                         formData.append("expense_name", this.expense_name);

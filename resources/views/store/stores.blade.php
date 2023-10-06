@@ -15,7 +15,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive my-4">
                     <table id="listing-table" class="table display nowrap w-100">
                         <thead>
                             <tr>
@@ -69,7 +69,7 @@
         background-color: #fff;
         background-clip: border-box;
         border: 1px solid rgba(0, 0, 0, .125);
-        border-radius: 0.25rem;
+        border-radius: 10px !important;
     }
 
     .page-item.active .page-link {
@@ -78,5 +78,13 @@
         background-color: #007bff;
         border-color: #007bff;
         margin-left: 18px;
+    }
+    #listing-table_wrapper{
+        width: 96% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .dataTables_scrollHeadInner{
+        width: none !important;
     }
 </style>

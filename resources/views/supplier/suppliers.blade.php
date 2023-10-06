@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive my-4">
                     <table id="listing-table" class="table display nowrap w-100">
                         <thead>
                             <tr>
@@ -61,18 +61,20 @@
 
 
     .card {
-        position: relative;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        min-width: 0;
-        word-wrap: break-word;
-        background-color: #fff;
-        background-clip: border-box;
-        border: 1px solid rgba(0, 0, 0, .125);
-        border-radius: 0.25rem;
-    }
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius:10px !important;
+    margin-bottom: 30px !important;
+    border-radius: 10px !important;
+}
 
     .page-item.active .page-link {
         z-index: 3;
@@ -80,5 +82,13 @@
         background-color: #007bff;
         border-color: #007bff;
         margin-left: 18px;
+    }
+    #listing-table_wrapper{
+        width: 96% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .dataTables_scrollHeadInner{
+        width: none !important;
     }
 </style>

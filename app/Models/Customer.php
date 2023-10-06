@@ -5,13 +5,14 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'customers';
     // protected $hidden = ['id'];
-    protected $fillable = ['slack','customer_type','password', 'init_password', 'name', 'email', 'phone', 'address', 'dob', 'status','user_id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = ['slack','customer_type','password', 'init_password', 'name', 'email', 'phone', 'address', 'city', 'country' , 'dob', 'father_name', 'gender', 'cnic', 'status','user_id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
     public function scopeActive($query)
     {

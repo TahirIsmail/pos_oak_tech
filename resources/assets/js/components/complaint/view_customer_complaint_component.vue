@@ -771,7 +771,6 @@
                 axios.post('/api/fetchComplaintRecord', formData).then((response) => {
 
                 if(response.data.status_code == 200) {
-                    alert(response.data.data.total_pending_amount);
                     this.ComplaintRecord = response.data.data.complaints;
                     this.transactions = response.data.data.complaints[0].transactions;
                     this.currency_codes = response.data.data.currency_codes;
@@ -929,7 +928,7 @@
                 });
             },
             fetchSubCategoryProduct(){
-                alert(this.s_category);
+                // alert(this.s_category);
                 var formData = new FormData();
                 formData.append("access_token", window.settings.access_token);
                 formData.append("sub_category_id", this.s_category);
@@ -1187,7 +1186,7 @@ console.log(error);
                 this.$off("submit");
                 this.$off("close");
                 this.show_modal = true;
-                alert(this.show_modal);
+                // alert(this.show_modal);
                 this.$on("submit",function () {      
 
                     var formData = new FormData();

@@ -17,7 +17,7 @@
           <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
           <div class="form-row mb-2">
-            <div class="form-group col-md-5">
+            <div class="form-group col-md-6">
               <label for="role">{{ $t("Choose Staff") }}</label>
               <select v-model="staff_role" class="form-control form-control-custom">
                 <option value="">Choose Staff..</option>
@@ -327,7 +327,7 @@ export default {
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin-right: -5px;
-    margin-left: 133px;
+    /* margin-right: -5px; */
+    margin-left: 14px;
 }
 </style>

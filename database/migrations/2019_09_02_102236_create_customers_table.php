@@ -22,10 +22,17 @@ class CreateCustomersTable extends Migration
             $table->string('email', 150)->nullable();
             $table->string('phone', 15)->nullable();
             $table->text('address')->nullable();
+            $table->string('city', 255)->nullable();
+            $table->string('country', 255)->nullable();
+            $table->string('father_name', 255)->nullable();
+            $table->string('gender', 255)->nullable();
+            $table->string('cnic', 255)->nullable();
+            $table->string('dob', 255)->nullable();
             $table->tinyInteger('status')->default(1);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->index(['email', 'phone', 'status']);
         });
 

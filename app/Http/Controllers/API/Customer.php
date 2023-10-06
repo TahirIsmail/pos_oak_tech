@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Http\Resources\Collections\CustomerCollection;
 use App\Http\Controllers\API\Role as RoleApi;
-
+use App\Events\UserCreationEvent;
+use Illuminate\Support\Facades\Event;
 class Customer extends Controller
 {
     /**
@@ -145,8 +146,6 @@ class Customer extends Controller
                 }
             }
 
-            // dd($request->email);
-
 
             //check phone already exists
             if($request->phone != ''){
@@ -155,7 +154,6 @@ class Customer extends Controller
                     throw new Exception("Customer phone already exists");
                 }
             }
-
 
 
 
@@ -168,13 +166,17 @@ class Customer extends Controller
                 "email" => $request->email,
                 "phone" => $request->phone,
                 "address" => $request->address,
+                "city" => $request->city,
+                "country" => $request->country,
                 "dob" => $request->dob,
+                "father_name" => $request->father_name,
+                "gender" => $request->gender,
+                "cnic" => $request->cnic,
                 "status" => $request->status,                
                 "created_by" => $request->logged_user_id
             ];
 
-
-            
+          
             $customer_id = CustomerModel::create($customer)->id;
             
 
@@ -196,9 +198,13 @@ class Customer extends Controller
                 "created_by" => $request->logged_user_id
             ];
 
-            // dd($user);
-
             $this->customerAddInUser($request, $user);
+            
+        
+            $baseUrl = config('app.url');
+            $user['base_url'] = $baseUrl;
+
+            Event::dispatch(new UserCreationEvent($user));
 
             DB::commit();
 
@@ -229,8 +235,7 @@ class Customer extends Controller
             $user_email_exists = UserModel::where('email', $user['email'])->first();
             if ($user_email_exists) {
                 throw new Exception("Email is already added, try signing in");
-            }       
-            
+            }                  
 
         //    dd($user);
 
@@ -369,7 +374,12 @@ class Customer extends Controller
                 "email" => $request->email,
                 "phone" => $request->phone,
                 "address" => $request->address,
+                "city" => $request->city,
+                "country" => $request->country,
                 "dob" => $request->dob,
+                "father_name" => $request->father_name,
+                "gender" => $request->gender,
+                "cnic" => $request->cnic,
                 "status" => $request->status,
                 "updated_by" => $request->logged_user_id
             ];
@@ -439,7 +449,6 @@ class Customer extends Controller
         try{
 
             $keyword = $request->keyword;
-
             $customer_list = CustomerModel::select("*")
             ->where('name', 'like', $keyword.'%')
             ->orWhere('email', 'like', $keyword.'%')
@@ -477,11 +486,14 @@ class Customer extends Controller
             if (empty($customer_detail)) {
                 throw new Exception("Invalid customer provided", 400);
             }
+            $user_id = UserModel::select('id')->where('customer_id', $customer_detail->id)->first();;
             $customer_id = $customer_detail->id;
+            $user_customer_id = $user_id->id;
             
             DB::beginTransaction();
 
             CustomerModel::where('id', $customer_id)->delete();
+            UserModel::where('id', $user_customer_id)->delete();
 
             DB::commit();
 
@@ -527,25 +539,25 @@ class Customer extends Controller
         }
         
 
-        $selected_stores = explode(",", $request->user_stores);
+        $selected_stores = explode(",", $request->logged_user_store_id);
 
+        
         $user_data = UserModel::select('id')->where('slack', '=', $user_slack)->first();
         if(empty($user_data)){
             return;
         }
-
+        
         $user_stores = UserStoreModel::where('user_id', '=', $user_data->id)
         ->pluck('store_id')
         ->toArray();
         (count($user_stores) >0 )?sort($user_stores):$user_stores;
-
-        $selected_stores_array = StoreModel::whereIn('slack', $selected_stores)
+        
+        $selected_stores_array = StoreModel::whereIn('id', $selected_stores)
         ->pluck('id')
         ->toArray();
         (count($selected_stores_array) >0 )?sort($selected_stores_array):$selected_stores_array;
-
+        
         if($user_stores != $selected_stores_array){
-
             $user_stores_array = [];
             foreach($selected_stores_array as $selected_stores_array_item){
                 $user_stores_array[] = [

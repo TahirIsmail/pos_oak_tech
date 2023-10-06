@@ -8,6 +8,9 @@ use App\Models\Customer as CustomerModel;
 use App\Models\MasterStatus;
 use App\Models\Store as StoreModel;
 use App\Http\Resources\CustomerResource;
+use App\Events\UserCreationEvent;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\URL;
 
 class Customer extends Controller
 {
@@ -17,7 +20,7 @@ class Customer extends Controller
         $data['menu_key'] = 'MM_USER';
         $data['sub_menu_key'] = 'SM_CUSTOMERS';
         check_access(array($data['menu_key'],$data['sub_menu_key']));
-        
+
         return view('customer.customers', $data);
     }
 

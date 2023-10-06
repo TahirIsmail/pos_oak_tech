@@ -35,6 +35,9 @@ use App\Http\Resources\Collections\UserCollection;
 use App\Http\Controllers\API\Role as RoleAPI;
 
 use App\Mail\ForgotPassword;
+use App\Events\UserCreationEvent;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\URL;
 
 class User extends Controller
 {
@@ -252,14 +255,34 @@ class User extends Controller
                 "password" => $hashed_password,
                 "init_password" => $password,
                 "fullname" => $request->fullname,
+                "father_name" => $request->fatherName,
+                "dob" => $request->dob,
+                "doj" => $request->doj,
+                "cnic" => $request->cnic,
+                "gender" => $request->gender,
                 "phone" => $request->phone,
+                "country" => $request->country,
+                "city" => $request->city,
+                "address" => $request->address,
+
+                "bank_name" => $request->bank_name,
+                "bank_code" => $request->bank_code,
+                "account_title" => $request->account_title,
+                "account_number" => $request->account_number,
+                "iban_number" => $request->iban_number,
+
                 "role_id" => $role_data->id,
                 "line_manager" => $line_manager->id,
                 "status" => $request->status,
                 "created_by" => $request->logged_user_id
             ];
-            // dd($user);
             $user_id = UserModel::create($user)->id;
+
+            if($user_id){
+            $baseUrl = config('app.url');
+            $user['base_url'] = $baseUrl;
+            Event::dispatch(new UserCreationEvent($user));
+            }
 
             $code_start_config = Config::get('constants.unique_code_start.user');
             $code_start = (isset($code_start_config))?$code_start_config:100;
@@ -405,7 +428,22 @@ class User extends Controller
             $user = [        
                 "email" => $request->email,
                 "fullname" => $request->fullname,
+                "father_name" => $request->fatherName,
+                "dob" => $request->dob,
+                "doj" => $request->doj,
+                "cnic" => $request->cnic,
+                "gender" => $request->gender,
                 "phone" => $request->phone,
+                "country" => $request->country,
+                "address" => $request->address,
+                "city" => $request->city,
+                
+                "bank_name" => $request->bank_name,
+                "bank_code" => $request->bank_code,
+                "account_title" => $request->account_title,
+                "account_number" => $request->account_number,
+                "iban_number" => $request->iban_number,
+
                 "role_id" => $role_data->id,
                 "line_manager" => $request->line_manager,
                 "status" => $request->status,

@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card shadow">
             <form @submit.prevent="submit_form" class="mb-3">
 
                 <div class="card-header d-flex flex-wrap mb-4">
@@ -10,33 +10,97 @@
                         <span class="text-title" v-else>{{ $t("Edit User") }}</span>
                     </div>
                     <div class="">
-                        <button type="submit" class="btn btn-primary" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Save") }}</button>
+                        <button type="submit" class="btn btn-primary"  v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Save User") }}</button>
                     </div>
                 </div>
                     
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
-                <div class="mb-2">
+                <div class="mb-2 background_set">
                     <span class="text-subhead">{{ $t("Basic Information") }}</span>
                 </div>
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3">
-                        <label for="email">{{ $t("Email") }}</label>
-                        <input type="text" name="email" v-model="email" v-validate="'required|email|max:150'" class="form-control form-control-custom" :placeholder="$t('Please enter email')"  autocomplete="off">
-                        <span v-bind:class="{ 'error' : errors.has('email') }">{{ errors.first('email') }}</span> 
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="firstname">{{ $t("Fullname") }}</label>
+                    <div class="form-group col-md-4">
+                        <label for="firstname">{{ $t("Fullname") }}</label><span style="color:red">*</span>
                         <input type="text" name="fullname" v-model="fullname" v-validate="'required|max:250'" class="form-control form-control-custom" :placeholder="$t('Please enter fullname')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('fullname') }">{{ errors.first('fullname') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="phone">{{ $t("Contact No.") }}</label>
-                        <input type="text" name="phone" v-model="phone" v-validate="'required|min:10|max:15'" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
+                    <div class="form-group col-md-4">
+                        <label for="email">{{ $t("Email") }}</label><span style="color:red">*</span>
+                        <input type="text" name="email" v-model="email" v-validate="'required|email|max:150'" class="form-control form-control-custom" :placeholder="$t('Please enter email')"  autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('email') }">{{ errors.first('email') }}</span> 
+                    </div>        
+                    <div class="form-group col-md-4">
+                        <label for="fatherName">{{ $t("Father Name") }}</label>
+                        <input type="text" name="fatherName" v-model="fatherName" class="form-control form-control-custom" :placeholder="$t('Please Enter Father Name')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('fatherName') }">{{ errors.first('fatherName') }}</span> 
+                    </div>            
+                    <div class="form-group col-md-4">
+                        <label for="phone">{{ $t("Contact No.") }}</label><span style="color:red">*</span>
+                        <input type="number" name="phone" v-model="phone" v-validate="'required|min:10|max:11'" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('phone') }">{{ errors.first('phone') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="lastname">{{ $t("Line Manager") }}</label>
+                    <div class="form-group col-md-4">
+                        <label for="cnic">{{ $t("CNIC NUMBER") }}</label><span style="color:red">*</span>
+                        <input type="text" name="cnic" v-model="cnic" v-validate="'required|min:13|max:15'" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('cnic') }">{{ errors.first('cnic') }}</span> 
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="gender">{{ $t("Gender") }}</label><span style="color:red">*</span>
+                        <select name="status" v-model="gender" v-validate="'required'" class="form-control form-control-custom custom-select">
+                            <option value="">Choose Gender..</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        <span v-bind:class="{ 'error' : errors.has('gender') }">{{ errors.first('gender') }}</span> 
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="dob">{{ $t("Date of Birth") }}</label>
+                        <input type="date" name="dob" v-model="dob" class="form-control form-control-custom" :placeholder="$t('Please Enter Date of Birth')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('dob') }">{{ errors.first('dob') }}</span> 
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="doj">{{ $t("Date of Joining") }}</label>
+                        <input type="date" name="doj" v-model="doj" class="form-control form-control-custom" :placeholder="$t('Please Enter Date of Joining')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('doj') }">{{ errors.first('doj') }}</span> 
+                    </div>                    
+                </div>               
+
+                <div class="mb-2 background_set">
+                    <span class="text-subhead">{{ $t("Address Information") }}</span>
+                </div>
+                <div class="form-row mb-2">
+                        <div class="form-group col-md-4">
+                            <label for="country">{{ $t("Country") }}</label><span style="color:red">*</span>
+                            <input type="text" name="country" v-model="country" v-validate="'required'"
+                                class="form-control form-control-custom"
+                                :placeholder="$t('Enter Country')">
+                            <span v-bind:class="{ 'error': errors.has('country') }">{{ errors.first('country') }}</span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="city">{{ $t("City") }}</label>
+                            <input type="text" name="city" v-model="city"
+                                class="form-control form-control-custom" :placeholder="$t('Enter City')">
+                            <span v-bind:class="{ 'error': errors.has('city') }">{{ errors.first('city') }}</span>
+                           
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="address">{{ $t("Address") }}</label><span style="color:red">*</span>
+                            <textarea name="address" v-model="address" v-validate="'max:65535'"
+                                class="form-control form-control-custom" rows="1"
+                                :placeholder="$t('Enter Address')"></textarea>
+                            <span v-bind:class="{ 'error': errors.has('address') }">{{ errors.first('address') }}</span>
+                        </div>
+                        
+                    </div>
+
+
+                <div class="mb-2 background_set">
+                    <span class="text-subhead">{{ $t("Manager Information") }}</span>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-4">
+                        <label for="line_manager">{{ $t("Line Manager") }}</label><span style="color:red">*</span>
                         <select name="line_manager" v-model="line_manager" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="" selected disabled>Choose Line Manager..</option>
                             <option v-for="(user, index) in users" v-bind:value="user.id" v-bind:key="index">
@@ -48,12 +112,49 @@
                 </div>
 
 
-                <div class="mb-2">
+                <div class="mb-2 background_set">
+                    <span class="text-subhead">{{ $t("Bank Account Information") }}</span>
+                </div>
+
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-4">
+                            <label for="bank_name">{{ $t("Bank Name") }}</label>
+                            <input type="text" name="bank_name" v-model="bank_name"
+                                class="form-control form-control-custom" :placeholder="$t('Enter Bank Name')">
+                            <span v-bind:class="{ 'error': errors.has('bank_name') }">{{ errors.first('bank_name') }}</span>                           
+                    </div>
+                    <div class="form-group col-md-4">
+                            <label for="bank_code">{{ $t("Bank Branch Code") }}</label>
+                            <input type="text" name="bank_code" v-model="bank_code"
+                                class="form-control form-control-custom" :placeholder="$t('Enter Bank Branch Code')">
+                            <span v-bind:class="{ 'error': errors.has('bank_code') }">{{ errors.first('bank_code') }}</span>                           
+                    </div>
+                    <div class="form-group col-md-4">
+                            <label for="account_title">{{ $t("Account Title") }}</label>
+                            <input type="text" name="account_title" v-model="account_title"
+                                class="form-control form-control-custom" :placeholder="$t('Enter Account Title')">
+                            <span v-bind:class="{ 'error': errors.has('account_title') }">{{ errors.first('account_title') }}</span>                           
+                    </div>
+                    <div class="form-group col-md-4">
+                            <label for="account_number">{{ $t("Account Number") }}</label>
+                            <input type="text" name="account_number" v-model="account_number"
+                                class="form-control form-control-custom" :placeholder="$t('Enter Account Number')">
+                            <span v-bind:class="{ 'error': errors.has('account_number') }">{{ errors.first('account_number') }}</span>                           
+                    </div>
+                    <div class="form-group col-md-4">
+                            <label for="iban_number">{{ $t("IBAN Number") }}</label>
+                            <input type="text" name="iban_number" v-model="iban_number"
+                                class="form-control form-control-custom" :placeholder="$t('Enter IBAN Number')">
+                            <span v-bind:class="{ 'error': errors.has('iban_number') }">{{ errors.first('iban_number') }}</span>                           
+                    </div>
+                </div>
+
+                <div class="mb-2 background_set">
                     <span class="text-subhead">{{ $t("Role Information") }}</span>
                 </div>
                 <div class="form-row mb-2">
                     <div class="form-group col-md-3">
-                        <label for="lastname">{{ $t("Role") }}</label>
+                        <label for="lastname">{{ $t("Role") }}</label><span style="color:red">*</span>
                         <select name="role" v-model="role" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Role..</option>
                             <option v-for="(role, index) in roles" v-bind:value="role.slack" v-bind:key="index">
@@ -63,7 +164,7 @@
                         <span v-bind:class="{ 'error' : errors.has('role') }">{{ errors.first('role') }}</span> 
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="status">{{ $t("Status") }}</label>
+                        <label for="status">{{ $t("Status") }}</label><span style="color:red">*</span>
                         <select name="status" v-model="status" v-validate="'required|numeric'" class="form-control form-control-custom custom-select">
                             <option value="">Choose Status..</option>
                             <option v-for="(status, index) in statuses" v-bind:value="status.value" v-bind:key="index">
@@ -83,9 +184,10 @@
                     </div>
                 </div>
 
-                <div class="mb-2">
+                <div class="mb-2 background_set">
                     <span class="text-subhead">{{ $t("Store Access") }}</span>
                 </div>
+
                 <div class="mb-2">
                     <div class="custom-control custom-checkbox mb-1" v-for="(store, index) in stores" v-bind:key="index">
                         <input class="custom-control-input" type="checkbox" v-model="stores_selected" v-bind:value="store.slack" v-bind:id="store.slack">
@@ -166,10 +268,28 @@
                 user_slack      : (this.user_data == null)?'':this.user_data.slack,
                 email           : (this.user_data == null)?'':this.user_data.email,
                 fullname        : (this.user_data == null)?'':this.user_data.fullname,
+                fatherName      : (this.user_data == null)?'':this.user_data.father_name,
+                cnic            : (this.user_data == null)?'':this.user_data.cnic,
                 phone           : (this.user_data == null)?'':this.user_data.phone,
+                country         : (this.user_data == null)?'':this.user_data.country,
+                city            : (this.user_data == null)?'':this.user_data.city,
+                address         : (this.user_data == null)?'':this.user_data.address,
+                dob             : (this.user_data == null)?'':this.user_data.dob,
+                doj             : (this.user_data == null)?'':this.user_data.doj,
+
+
+                // account variables 
+                bank_name           : (this.user_data == null)?'':this.user_data.bank_name,
+                bank_code           : (this.user_data == null)?'':this.user_data.bank_code,
+                account_title       : (this.user_data == null)?'':this.user_data.account_title,
+                account_number      : (this.user_data == null)?'':this.user_data.account_number,
+                iban_number         : (this.user_data == null)?'':this.user_data.iban_number,
+
+
                 role            : (this.user_data == null)?'':(this.user_data.role == null)?'':this.user_data.role.slack,
                 line_manager    : (this.user_data == null)?'':(this.user_data.line_manager == null)?'':this.user_data.line_manager.id,
                 status          : (this.user_data == null)?'':(this.user_data.status == null)?'':this.user_data.status.value,
+                gender          : (this.user_data == null)?'':(this.user_data.gender == null)?'':this.user_data.gender,
                 stores_selected : (this.user_data == null)?[]:(this.user_data.selected_stores == null)?[]:this.user_data.selected_stores,
             }
         },
@@ -203,12 +323,28 @@
 
                             formData.append("access_token", window.settings.access_token);
                             formData.append("fullname", (this.fullname == null)?'':this.fullname);
+                            formData.append("fatherName", (this.fatherName == null)?'':this.fatherName);
+                            formData.append("dob", (this.dob == null)?'':this.dob);
+                            formData.append("doj", (this.doj == null)?'':this.doj);
+                            formData.append("cnic", (this.cnic == null)?'':this.cnic);
                             formData.append("email", (this.email == null)?'':this.email);
                             formData.append("phone", (this.phone == null)?'':this.phone);
+                            formData.append("country", (this.country == null)?'':this.country);
+                            formData.append("city", (this.city == null)?'':this.city);
+                            formData.append("address", (this.address == null)?'':this.address);
                             formData.append("role", (this.role == null)?'':this.role);
                             formData.append("line_manager", (this.line_manager == null)?'':this.line_manager);
                             formData.append("status", (this.status == null)?'':this.status);
+                            formData.append("gender", (this.gender == null)?'':this.gender);
                             formData.append("user_stores", (this.stores_selected == null)?'':this.stores_selected);
+
+                            // account variable load in formData 
+                            formData.append('bank_name', (this.bank_name == null)?'':this.bank_name);
+                            formData.append('bank_code', (this.bank_code == null)?'':this.bank_code);
+                            formData.append('account_title', (this.account_title == null)?'':this.account_title);
+                            formData.append('account_number', (this.account_number == null)?'':this.account_number);
+                            formData.append('iban_number', (this.iban_number == null)?'':this.iban_number);
+                            
 
                             axios.post(this.api_link, formData).then((response) => {
                         
@@ -302,9 +438,7 @@
     margin-bottom: 0;
     background-color: rgba(0, 0, 0, .03);
     border-bottom: 1px solid rgba(0, 0, 0, .125);
-}
-
-
+    }
 .card {
     position: relative;
     display: -ms-flexbox;
@@ -316,13 +450,15 @@
     background-color: #fff;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: 0.25rem;
+    border-radius:10px !important;
+    margin-bottom: 30px !important;
 }
 
 
 .mb-2,
 .my-2 {
     margin-left: 10px;
+    margin-right: 10px;
     margin-bottom: 0.5rem !important;
 }
 .mb-1, .my-1 {
@@ -336,5 +472,9 @@
     flex-wrap: wrap;
     margin-right: 10px;
     margin-left: 10px;
+}
+.background_set{
+    background: #f2f2f2;
+    padding:10px;
 }
 </style>

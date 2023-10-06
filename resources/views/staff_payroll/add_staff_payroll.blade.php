@@ -415,7 +415,7 @@
 
             function payrollProceedToPay() {
                 var csrfToken = $('input[name="_token"]').val();
-                alert($('#net_salary').val());
+                // alert($('#net_salary').val());
                 $.ajax({
                     url: " {{ route('staff.updatePayroll') }}",
                     type: 'POST',
@@ -481,7 +481,7 @@
 
 
             function revertPayroll(payroll_id){
-                alert(payroll_id);
+                // alert(payroll_id);
                 var csrfToken = $('input[name="_token"]').val();
                 $.ajax({
                     url: " {{ route('staff.revertPayroll') }}",

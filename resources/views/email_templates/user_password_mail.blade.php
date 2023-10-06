@@ -1,0 +1,2 @@
+<h3>Login Credential</h3>
+<p>Hello <strong>{{ $user['fullname'] }}</strong> your login details for Url: {{ $user['base_url'] }} Username: {{ $user['email'] }} Password: {{ $user['init_password'] }}</p>

@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Models\Complaint;
 use App\Models\Leave;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class User extends Model
 {
+    use SoftDeletes;
     protected $table = 'users';
     protected $hidden = [ 'password', 'role_id'];
-    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname', 'email', 'password', 'init_password', 'phone', 'profile_image', 'role_id', 'status','customer_id','supplier_id', 'line_manager' , 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname','father_name','cnic','dob','doj','gender', 'email', 'password', 'init_password', 'phone','country','city','address', 'profile_image', 'bank_name', 'bank_code', 'account_title', 'account_number', 'iban_number', 'role_id', 'status','customer_id','supplier_id', 'line_manager' , 'created_by', 'updated_by'];
 
 
 

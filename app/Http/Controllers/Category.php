@@ -53,7 +53,9 @@ class Category extends Controller
         $data['action_key'] = 'A_DETAIL_CATEGORY';
         check_access([$data['action_key']]);
 
-        $category = CategoryModel::where('slack', '=', $slack)->first();
+        $category = CategoryModel::with('subcategories')->where('slack', '=', $slack)->first();
+
+
         
         if (empty($category)) {
             abort(404);
@@ -62,6 +64,8 @@ class Category extends Controller
         $category_data = new CategoryResource($category);
         
         $data['category_data'] = $category_data;
+
+        // dd($category_data);
 
         $data['delete_access'] = check_access(['A_DELETE_CATEGORY'], true);
         return view('category.category_detail', $data);

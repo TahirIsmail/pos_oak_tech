@@ -94,7 +94,7 @@
                     var formData = new FormData();
                     formData.append("access_token", window.settings.access_token);
                     formData.append('slack', this.slack)
-                    alert(this.delete_supplier_api_link);
+                    // alert(this.delete_supplier_api_link);
 
                     axios.post(this.delete_supplier_api_link, formData).then((response) => {
 

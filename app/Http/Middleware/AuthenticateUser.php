@@ -45,6 +45,7 @@ class AuthenticateUser
             $user_exists = UserModel::select("users.*")
             ->join('user_access_tokens', 'user_access_tokens.user_id', '=', 'users.id')
             ->where(['users.id' => $user_id, "users.slack" => $user_slack , "user_access_tokens.user_id" => $user_id, "user_access_tokens.access_token" => $token])
+            ->where('deleted_at', null)
             ->active()
             ->first();
 

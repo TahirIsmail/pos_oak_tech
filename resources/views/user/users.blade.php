@@ -3,40 +3,36 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
+            
             <div class="card">
-        <div class="card-header d-flex flex-wrap mb-4">
-                <div class=" mr-auto">
-                    <span class=" text-title">{{ __('Users') }}</span>
+                <div class="card-header d-flex flex-wrap mb-4">
+                    <div class=" mr-auto">
+                        <span class=" text-title">{{ __('Users') }}</span>
+                    </div>
                 </div>
-                {{-- <div class="">
-                @if (check_access(['A_ADD_USER'], true))
-                    <a href="{{ route('add_user')}}" role="button" class="btn btn-primary">{{ __("New User") }}</a>
-                @endif
-            </div> --}}
-            </div>
-
-            <div class=" table-responsive">
-                <table id="listing-table" class="table display nowrap w-100">
-                    <thead>
-                        <tr>
-                            <th>{{ __('User Code') }}</th>
-                            <th>{{ __('Full Name') }}</th>
-                            <th>{{ __('Email') }}</th>
-                            <th>{{ __('Phone') }}</th>
-                            <th>{{ __('Role') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('Created On') }}</th>
-                            <th>{{ __('Updated On') }}</th>
-                            <th>{{ __('Created By') }}</th>
-                            <th>{{ __('Action') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                <div class="table-responsive my-4">
+                    <table id="listing-table" class="table display nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>{{ __('User Code') }}</th>
+                                <th>{{ __('Full Name') }}</th>
+                                <th>{{ __('Email') }}</th>
+                                <th>{{ __('Phone') }}</th>
+                                <th>{{ __('Role') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Created On') }}</th>
+                                <th>{{ __('Updated On') }}</th>
+                                <th>{{ __('Created By') }}</th>
+                                <th>{{ __('Action') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
         </div>
-    </div>
     </div>
 @endsection
 
@@ -71,14 +67,22 @@
         background-color: #fff;
         background-clip: border-box;
         border: 1px solid rgba(0, 0, 0, .125);
-        border-radius: 0.25rem;
+        border-radius: 10px !important;
     }
+
     .page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    margin-left:18px;
-}
-    
+        z-index: 3;
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+        margin-left: 18px;
+    }
+    #listing-table_wrapper{
+        width: 96% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .dataTables_scrollHeadInner{
+        width: none !important;
+    }
 </style>

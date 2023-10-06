@@ -28,7 +28,9 @@ html,body{
   min-height: calc(100vh - 50px);
   overflow-y: hidden !important;
 }
-
+.btn-primary{
+  background-color: #014f99 !important;
+}
 .content-full {
   width: 100%;
   right: 10px;

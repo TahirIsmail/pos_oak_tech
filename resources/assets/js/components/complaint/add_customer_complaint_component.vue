@@ -175,7 +175,7 @@ export default {
                 if (result) {
                     this.show_modal = true;
                     this.$on("submit",() => {
-                        alert(this.api_link);
+                        // alert(this.api_link);
                         this.processing = true;
                         const formData = new FormData();
                         formData.append("access_token", window.settings.access_token);

@@ -189,6 +189,9 @@ class Supplier extends Controller
                 "supplier_code" => Str::random(6),
                 "name" => Str::title($request->supplier_name),
                 "address" => $request->address,
+                "city" => $request->city,
+                "country" => $request->country,
+                "gender" => $request->gender,
                 "phone" => $request->phone,
                 "email" => $request->email,
                 "pincode" => $request->pincode,
@@ -218,7 +221,7 @@ class Supplier extends Controller
                 "created_by" => $request->logged_user_id
             ];
 
-             $user_data   = $this->SupplierAddInUser($request, $user);
+            //  $user_data   = $this->SupplierAddInUser($request, $user);
             DB::commit();
 
             return response()->json($this->generate_response(
@@ -379,6 +382,9 @@ class Supplier extends Controller
             $supplier = [
                 "name" => Str::title($request->supplier_name),
                 "address" => $request->address,
+                "city" => $request->city,
+                "country" => $request->country,
+                "gender" => $request->gender,
                 "phone" => $request->phone,
                 "email" => $request->email,
                 "pincode" => $request->pincode,
@@ -422,14 +428,17 @@ class Supplier extends Controller
             }
 
             $supplier_detail = SupplierModel::select('id')->where('slack', $slack)->first();
+            // $user_supplier = UserModel::select('id')->where('supplier_id', $supplier_detail->id)->first();
             if (empty($supplier_detail)) {
                 throw new Exception("Invalid supplier provided", 400);
             }
             $supplier_id = $supplier_detail->id;
+            // $user_supplier_id = $user_supplier->id;
 
             DB::beginTransaction();
 
             SupplierModel::where('id', $supplier_id)->delete();
+            // UserModel::where('supplier_id', $supplier_id)->delete();
 
             DB::commit();
 

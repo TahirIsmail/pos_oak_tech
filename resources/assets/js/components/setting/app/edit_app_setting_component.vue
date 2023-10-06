@@ -307,9 +307,6 @@
                             formData.append("invoice_print_logo", invoice_print_logo_file);
                             formData.append("navbar_logo", navbar_logo_file);
                             formData.append("favicon", favicon_file);
-                            formData.append("name", this.name);
-                            formData.append("email", this.email);
-                            formData.append("phone", this.phone);
 
                             axios.post(this.api_link, formData).then((response) => {
                                 
