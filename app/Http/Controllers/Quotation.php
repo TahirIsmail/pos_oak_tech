@@ -124,6 +124,7 @@ class Quotation extends Controller
         $quotation_data = new QuotationResource($quotation);
 
         $print_logo_path = config("app.invoice_print_logo");
+        
        
         $print_data = view('quotation.invoice.quotation_print', ['data' => json_encode($quotation_data), 'logo_path' => $print_logo_path])->render();
 

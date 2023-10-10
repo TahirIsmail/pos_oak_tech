@@ -8,7 +8,7 @@
                     <div class="mr-auto">
                         <span class="text-title">{{ __('Categories') }}</span>
                     </div>
-                    <div class="">
+                    <div class="">                       
                         @if (check_access(['A_ADD_CATEGORY'], true))
                             <a href="{{ route('add_category') }}" role="button"
                                 class="btn btn-primary">{{ __('New Category') }}</a>

@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             // sample_values_seeder::class
-            ComplaintsSeeder::class,
+            // ComplaintsSeeder::class,
         ]);
     }
 }

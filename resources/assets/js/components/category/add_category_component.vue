@@ -22,7 +22,7 @@
           <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
           <div class="form-row mb-2">
-            <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
+            <div class="form-group col-sm-12 col-md-10 col-lg-4">
               <label for="category_name">{{ $t("Category Name") }}</label>
               <input type="text" name="category_name" v-model="category_name" v-validate="'required|max:250'"
                 class="form-control form-control-custom" :placeholder="$t('Please enter category name')"
@@ -31,7 +31,7 @@
                 errors.first("category_name")
               }}</span>
             </div>
-            <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
+            <div class="form-group col-sm-12 col-md-10 col-lg-4">
               <label for="category_code">{{ $t("Category Code") }}</label>
               <input type="text" name="category_code" v-model="category_code" v-validate="'required|max:250'"
                 class="form-control form-control-custom" :placeholder="$t('Please enter category code')"
@@ -41,18 +41,25 @@
               }}</span>
             </div>
 
-            <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
+            <div class="form-group col-sm-12 col-md-10 col-lg-4">
               <label for="category_code">{{ $t("Sub Categories") }}</label>
               <vue-tags-input v-model="tag" :tags="tags" @tags-changed="handleTagsChanged"
                 placeholder="Add Sub Categories" />
-
             </div>
 
+            <!-- <div class="form-group col-sm-12 col-md-10 col-lg-4">
+              <label for="category_code">{{ $t("Company Names") }}</label>
+              <vue-tags-input v-model="CompanyTag" :tags="CompanyTags" @tags-changed="handleCompanyTagsChanged"
+                placeholder="Add Company Names" />
+            </div> -->
 
-          </div>
+            <!-- <div class="form-group col-sm-12 col-md-10 col-lg-4">
+              <label for="category_code">{{ $t("Category Product Names") }}</label>
+              <vue-tags-input v-model="ProductTag" :tags="ProductTags" @tags-changed="handleProductTagsChanged"
+                placeholder="Add Company Names" />
+            </div> -->
 
-          <div class="form-row mb-2">
-            <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
+            <div class="form-group col-sm-12 col-md-10 col-lg-4">
               <label for="display_on_qr_menu">{{ $t("Show on QR Menu") }}</label>
               <select name="display_on_qr_menu" v-model="display_on_qr_menu" v-validate="'required|numeric'"
                 class="form-control form-control-custom custom-select">
@@ -67,7 +74,8 @@
                 errors.first("display_on_qr_menu")
               }}</span>
             </div>
-            <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
+
+            <div class="form-group col-sm-12 col-md-10 col-lg-4">
               <label for="status">{{ $t("Status") }}</label>
               <select name="status" v-model="status" v-validate="'required|numeric'"
                 class="form-control form-control-custom custom-select">
@@ -80,33 +88,13 @@
                 errors.first("status")
               }}</span>
             </div>
+
+          </div>
+
+          <div class="form-row mb-2">
+            
+            
             <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto">
-              <!-- <label for="display_on_pos_screen">{{
-              $t("Show on Screen")
-            }}</label>
-            <select
-              name="display_on_pos_screen"
-              v-model="display_on_pos_screen"
-              v-validate="'required|numeric'"
-              class="form-control form-control-custom custom-select"
-            >
-              <option value="">Choose Show on Screen..</option>
-              <option
-                v-for="(
-                  display_on_pos_screen_option, index
-                ) in display_on_pos_screen_options"
-                :value="index"
-                v-bind:key="index"
-              >
-                {{ display_on_pos_screen_option }}
-              </option>
-            </select>
-            <span
-              v-bind:class="{ error: errors.has('display_on_pos_screen') }"
-              >{{ errors.first("display_on_pos_screen") }}</span -->
-              <!-- > -->
-
-
             </div>
 
             <div class="form-group col-sm-12 col-md-10 col-lg-12 mx-auto">
@@ -205,6 +193,10 @@ export default {
       editingSubcategory: null,
       tag: '',
       tags: [],
+      // CompanyTag: '',
+      // CompanyTags: [],
+      // ProductTag: '',
+      // ProductTags: [],
       sub_categories: (this.category_data && this.category_data.subcategories) ? this.category_data.subcategories : [],
       api_link:
         this.category_data == null
@@ -259,8 +251,14 @@ export default {
 
   methods: {
     handleTagsChanged(newTags) {
-      this.tags = newTags.map(tag => tag.text); // Extract the 'text' property
+      this.tags = newTags.map(tag => tag.text);
     },
+    // handleCompanyTagsChanged(newCompanyTags) {
+    //   this.CompanyTags = newCompanyTags.map(CompanyTag => CompanyTag.text);
+    // },
+    // handleProductTagsChanged(newProductTags) {
+    //   this.ProductTags = newProductTags.map(ProductTag => ProductTag.text);
+    // },
     editSubcategory(subcategory) {
       this.editingSubcategory = subcategory;
       this.editedSubcategoryName = subcategory.sub_category_name;

@@ -184,6 +184,7 @@ return [
         App\Providers\MailServiceProvider::class,
         App\Providers\AppSettingServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 

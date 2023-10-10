@@ -21,6 +21,7 @@ class CreateCategoryTable extends Migration
             $table->string('label', 250);
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('display_on_qr_menu')->default(1);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

@@ -16,6 +16,8 @@ use App\Http\Resources\CategoryResource;
 use App\Models\Category as CategoryModel;
 
 use App\Http\Resources\Collections\CategoryCollection;
+use App\Models\CategoryCompany;
+use App\Models\ProductName;
 use App\Models\SubCategory;
 
 class Category extends Controller
@@ -189,6 +191,102 @@ class Category extends Controller
                     "data"    => $category['slack']
                 ), 'SUCCESS'
             ));
+
+        }catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+    }
+
+
+    public function submit_category_company(Request $request)
+    {
+        try {
+
+            if(!check_access(['A_ADD_CATEGORY'], true)){
+                throw new Exception("Invalid request", 400);
+            }
+            // dd($request->all());
+
+            $company_name = [
+                "store_id" => $request->logged_user_store_id,
+                "category_id" => ($request->sub_category_id == "null") ? $request->category_id : null,
+                "sub_category_id" => ($request->sub_category_id != "null") ? $request->sub_category_id : null,
+                "category_company_name" => $request->category_company_name,
+            ];
+            // dd($company_name);
+            $company_name_id = CategoryCompany::create($company_name)->id;
+          
+            
+            if($company_name){
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Category Company Created Successfully", 
+                        "data"    => $company_name_id,
+                    ), 'SUCCESS'
+                ));
+            }
+            else{
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Some Error occurred while.", 
+                        "data"    => '',
+                    ), 'FAILED'
+                ));
+            }
+
+
+        }catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+    }
+
+
+    public function submit_product_name(Request $request)
+    {
+        try {
+
+            if(!check_access(['A_ADD_CATEGORY'], true)){
+                throw new Exception("Invalid request", 400);
+            }
+            // dd($request->all());
+
+            $productName = [
+                "store_id" => $request->logged_user_store_id,
+                "category_id" => ($request->sub_category_id == "null") ? $request->category_id : null,
+                "sub_category_id" => ($request->sub_category_id != "null") ? $request->sub_category_id : null,
+                "product_name" => $request->category_product_name,
+            ];
+           
+            $productName_id = ProductName::create($productName)->id;
+          
+            
+            if($productName_id){
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Category Company Created Successfully", 
+                        "data"    => $productName_id,
+                    ), 'SUCCESS'
+                ));
+            }
+            else{
+                return response()->json($this->generate_response(
+                    array(
+                        "message" => "Some Error occurred while.", 
+                        "data"    => '',
+                    ), 'FAILED'
+                ));
+            }
+
 
         }catch(Exception $e){
             return response()->json($this->generate_response(

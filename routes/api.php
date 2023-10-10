@@ -88,6 +88,10 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/delete_subcategory', 'API\Category@delete_subcategory');
     Route::post('/update_subcategory', 'API\Category@update_subcategory');
 
+
+    Route::post('/submit_category_company', 'API\Category@submit_category_company');
+    Route::post('/submit_product_name', 'API\Category@submit_product_name');
+
     //supplier
     Route::post('/suppliers', 'API\Supplier@index');
     Route::post('/suppliers_performance', 'API\Supplier@suppliers_performance');
