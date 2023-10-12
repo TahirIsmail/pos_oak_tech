@@ -79,9 +79,9 @@
                         <div v-for="category in category.subcategories" :key="category.id">
                             <div style="list-style: none;"><span style="font-weight: bold;">{{ category.sub_category_name }}</span>
                             <div class="d-flex flex-wrap justify-content-between w-100">
-                            <div v-for="(product_name) in category.product_names" :key="product_name.id">
+                            <div v-for="(product_name, index) in category.product_names" :key="product_name.id">
                                 {{ product_name.product_name }}
-
+                                {{ index < category.product_names.length - 1 ? ', ' : '' }}
                             </div>
                             </div>
                         </div>

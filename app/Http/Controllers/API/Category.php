@@ -298,6 +298,45 @@ class Category extends Controller
         }
     }
 
+
+    public function fetch_sub_categories(Request $request){
+        
+        $data['companies'] = [];
+        $subCategories = SubCategory::where('category_id', $request->category_id)->get();
+        if(count($subCategories) == 0){
+            $companies = CategoryCompany::where('category_id', $request->category_id)->get();
+            $data['companies'] = $companies;
+        }
+        $data['subCategories'] = $subCategories;
+
+        
+
+        if($subCategories){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Sub Categories fetched successfully", 
+                    "data"    => $data,
+                ), 'SUCCESS'
+            ));
+        }
+    }
+
+    public function fetch_companies(Request $request){
+        $data['companies'] = [];
+        $companies = CategoryCompany::where('sub_category_id', $request->sub_category_id)->get();
+
+        $data['companies'] = $companies;
+        
+        if($companies){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Sub Categories fetched successfully", 
+                    "data"    => $data,
+                ), 'SUCCESS'
+            ));
+        }
+    }
+
     /**
      * Display the specified resource.
      *

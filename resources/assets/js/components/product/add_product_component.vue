@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
+        {{ subCategories }}
       <form @submit.prevent="submit_form" class="mb-3">
         <div class="card-header  d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -206,29 +207,84 @@
             <select
               name="category"
               v-model="category"
+              @change="fetchSubCategorires()"
               v-validate="'required'"
               class="form-control form-control-custom custom-select"
             >
-              <option selected disabled>Select a Category...</option>
-              <optgroup
-                v-for="(cat, index) in categories"
-                :label="cat.label"
-                :key="index"
-                :disabled="false"
-              >
+              <option value="" disabled>Select Category...</option>              
                 <option
-                  v-for="subcategory in cat.subcategories"
-                  :value="subcategory.id"
-                  :key="subcategory.id"
+                v-for="(category, index) in categories"
+                :label="category.label"
+                :key="index"
+                :value="category.id"
+               
                 >
-                  {{ subcategory.sub_category_name }}
+                  {{ category.label }}
                 </option>
-              </optgroup>
+             
             </select>
             <span v-bind:class="{ error: errors.has('category') }">{{
               errors.first("category")
             }}</span>
           </div>
+
+
+          <div class="form-group col-md-3">
+            <label for="sub_category_id">{{ $t("Sub Category") }}</label>
+            <select
+              name="Sub Category"
+              v-model="sub_category_id"
+              @change="fetchCompanies()"     
+              class="form-control form-control-custom custom-select"
+            >
+              <option value="" disabled>Select Sub Category...</option>              
+                <option
+                v-for="(s_category, index) in subCategories"
+                :label="s_category.sub_category_name"
+                :key="index"
+                :value="s_category.id"
+               
+                >
+                  {{ s_category.sub_category_name }}
+                </option>
+             
+            </select>
+            <span v-bind:class="{ error: errors.has('Sub Category') }">{{
+              errors.first("Sub Category")
+            }}</span>
+          </div>
+
+
+
+          <div class="form-group col-md-3">
+            <label for="sub_category_id">{{ $t("Brand Name") }}</label>
+            <select
+              name="Company Name"
+              v-model="company_id"
+              v-validate="'required'"
+              class="form-control form-control-custom custom-select"
+            >
+              <option value="" disabled>Select Brand Name...</option>              
+                <option
+                v-for="(company_name, index) in companies_name"
+                :label="company_name.category_company_name"
+                :key="index"
+                :value="company_name.id"
+               
+                >
+                  {{ company_name.category_company_name }}
+                </option>
+             
+            </select>
+            <span v-bind:class="{ error: errors.has('Company Name') }">{{
+              errors.first("Company Name")
+            }}</span>
+          </div>
+
+
+
+
+
         </div>
 
         <div class="form-row mb-2">
@@ -1005,6 +1061,10 @@ export default {
   components: { Multiselect },
   data() {
     return {
+      subCategories: [],
+      sub_category_id: '',
+      company_id: '',
+      companies_name: [],
       subcategory: this.product_data,
       server_errors: "",
       error_class: "",
@@ -1192,6 +1252,43 @@ export default {
     this.update_variant_list(this.product_variant_list);
   },
   methods: {
+    fetchCompanies(){
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("sub_category_id", this.sub_category_id);
+      axios
+              .post("/api/fetchCompanies", formData)
+              .then((response) => {
+                if (response.data.status_code == 200) {
+                  this.companies_name = response.data.data.companies;
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+    },
+    fetchSubCategorires(){
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("category_id", this.category);
+      axios
+              .post("/api/fetchSubCategories", formData)
+              .then((response) => {
+                if (response.data.status_code == 200) {
+                  this.company_id = '';
+                  this.sub_category_id = '';
+                  // console.log(response.data.data.companies);                 
+                  this.companies_name = response.data.data.companies;
+                  // this.show_response_message(response.data.msg, "Success");
+                  this.subCategories = response.data.data.subCategories;
+
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+
+    },
     submit_form() {
       this.$off("submit");
       this.$off("close");

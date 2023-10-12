@@ -110,6 +110,67 @@ class Quotation extends Controller
     }
 
     //This is the function that loads the print purchase order page
+    // public function print_quotation(Request $request, $slack, $type = 'INLINE', $full_path = false){
+    //     $data['menu_key'] = 'MM_ORDERS';
+    //     $data['sub_menu_key'] = 'SM_QUOTATIONS';
+    //     check_access([$data['sub_menu_key']]);
+
+    //     $quotation = QuotationModel::where('slack', '=', $slack)->first();
+        
+    //     if (empty($quotation)) {
+    //         abort(404);
+    //     }
+
+    //     $quotation_data = new QuotationResource($quotation);
+
+    //     $print_logo_path = config("app.invoice_print_logo");
+        
+       
+    //     $print_data = view('quotation.invoice.quotation_print', ['data' => json_encode($quotation_data), 'logo_path' => $print_logo_path])->render();
+
+    //     $mpdf_config = [
+    //         'mode'          => 'utf-8',
+    //         'format'        => 'A4',
+    //         'orientation'   => 'P',
+    //         'margin_left'   => 7,
+    //         'margin_right'  => 7,
+    //         'margin_top'    => 7,
+    //         'margin_bottom' => 7,
+    //         'tempDir' => storage_path()."/pdf_temp" 
+    //     ];
+
+    //     $cache_params = '?='.uniqid();
+
+    //     $stylesheet = File::get(public_path('css/quotation_print_invoice.css'));
+    //     $mpdf = new Mpdf($mpdf_config);
+    //     $mpdf->SetDisplayMode('real');
+    //     $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+    //     $mpdf->SetHTMLFooter('<div class="footer">Page: {PAGENO}/{nb}</div>');
+    //     $mpdf->WriteHTML($print_data);
+    //     header('Content-Type: application/pdf');
+
+    //     $filename = 'quotation_'.$quotation_data['quotation_number'].'.pdf';
+
+    //     Storage::disk('quotation')->delete(
+    //         [
+    //             $filename
+    //         ]
+    //     );
+
+    //     if($type == 'INLINE'){
+    //         $mpdf->Output($filename.$cache_params, \Mpdf\Output\Destination::INLINE);
+    //     }else{
+    //         $view_path = Config::get('constants.upload.quotation.view_path');
+    //         $upload_dir = Storage::disk('quotation')->getAdapter()->getPathPrefix();
+
+    //         $mpdf->Output($upload_dir.$filename, \Mpdf\Output\Destination::FILE);
+
+    //         $download_link = ($full_path == false)?$view_path.$filename.$cache_params:$upload_dir.$filename;
+    //         return $download_link; 
+    //     }
+    // }
+
+
     public function print_quotation(Request $request, $slack, $type = 'INLINE', $full_path = false){
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_QUOTATIONS';
@@ -124,9 +185,14 @@ class Quotation extends Controller
         $quotation_data = new QuotationResource($quotation);
 
         $print_logo_path = config("app.invoice_print_logo");
-        
+
+        $first_bg_image = public_path('images/bg_Oak.png');
+        $sec_bg_image = public_path('images/bg-page2.PNG');
+        $third_bg_image = public_path('images/third-bg.png');     
+
+        // dd($print_logo_path);
        
-        $print_data = view('quotation.invoice.quotation_print', ['data' => json_encode($quotation_data), 'logo_path' => $print_logo_path])->render();
+        $print_data = view('quotation.invoice.quotation_print', ['data' => json_encode($quotation_data), 'logo_path' => $print_logo_path, 'first_bg_image' => $first_bg_image ,'sec_bg_image' => $sec_bg_image ,'third_bg_image' => $third_bg_image])->render();
 
         $mpdf_config = [
             'mode'          => 'utf-8',
@@ -169,5 +235,6 @@ class Quotation extends Controller
             return $download_link; 
         }
     }
+    
     
 }

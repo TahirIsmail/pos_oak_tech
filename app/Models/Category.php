@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\SubCategory;
 use App\Models\ProductName;
 use App\Models\CategoryCompany;
+use App\Models\CategorySpecification;
 use App\Models\Scopes\StoreScope;
 
 class Category extends Model
@@ -127,5 +128,9 @@ class Category extends Model
     public function getUpdatedAtAttribute()
     {
         return $this->parseDate($this->attributes['updated_at']);
+    }
+
+    public function category_specifications(){
+        return $this->hasMany(CategorySpecification::class, 'category_id');
     }
 }
