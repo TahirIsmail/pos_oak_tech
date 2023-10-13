@@ -82,7 +82,7 @@ class Products{
                     data: 'supplier_id'
                 },
                 {
-                    data: 'sub_category_id'
+                    data: 'category'
                 },
                 {
                     data: 'tax_code_id'

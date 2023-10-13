@@ -91,6 +91,7 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     Route::post('/submit_category_company', 'API\Category@submit_category_company');
     Route::post('/submit_product_name', 'API\Category@submit_product_name');
+    Route::post('/categorySpecifications', 'API\Category@submit_specifications');
 
 
 

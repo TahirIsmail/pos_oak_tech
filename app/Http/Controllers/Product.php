@@ -116,7 +116,7 @@ class Product extends Controller
         $data['action_key'] = 'A_DETAIL_PRODUCT';
         check_access([$data['action_key']]);
 
-        $product = ProductModel::with('subcategory.category','User', 'updatedUser')->where('products.slack', '=', $slack)->first();
+        $product = ProductModel::with('category','subcategory','category_company', 'product_name', 'User', 'updatedUser', 'product_specifications')->where('products.slack', '=', $slack)->first();
         // dd($product);
         
         if (empty($product)) {

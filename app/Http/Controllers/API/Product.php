@@ -38,7 +38,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\AddonGroupResource;
 
 use App\Http\Resources\Collections\ProductCollection;
-
+use App\Models\ProductSpecifications;
 use Mpdf\Mpdf;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
@@ -65,16 +65,16 @@ class Product extends Controller
             if ($request->ajax()) {
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
-                $data = ProductModel::with('supplier', 'subcategory', 'tax_code', 'discount_code', 'User')->where('quantity', '>', 0)->orderBy('id', 'desc')->get();
-                
+                $data = ProductModel::with('supplier','category', 'subcategory', 'tax_code', 'discount_code', 'User')->where('quantity', '>', 0)->orderBy('id', 'desc')->get();
+                // dd($data);
                 return Datatables::of($data)
                     ->addIndexColumn()
 
                     ->addColumn('supplier_id', function ($row) {
                         return $row['supplier']->name;
                     })
-                    ->addColumn('sub_category_id', function ($row) {
-                        return $row['subcategory']->sub_category_name;
+                    ->addColumn('category', function ($row) {
+                        return $row['category']->label . '(' . $row['category']->category_code . ')';
                     })
                     ->addColumn('tax_code_id', function ($row) {
                         return ($row['tax_code']->label . ' - ' . $row['tax_code']->tax_code);
@@ -108,7 +108,7 @@ class Product extends Controller
                         $data['product'] = $row;
                         return view('product.layouts.product_actions', $data)->render();
                     })
-                    ->rawColumns(['supplier_id', 'sub_category_id', 'tax_code_id', 'discount_code_id', 'status', 'product_status', 'created_by', 'action'])
+                    ->rawColumns(['supplier_id', 'category', 'tax_code_id', 'discount_code_id', 'status', 'product_status', 'created_by', 'action'])
                     ->make(true);
             }
 
@@ -240,7 +240,6 @@ class Product extends Controller
 
             $this->validate_request($request);
 
-
             $product_data_exists = ProductModel::select('id')
                 ->where('product_code', '=', trim($request->product_code))
                 ->first();
@@ -248,7 +247,7 @@ class Product extends Controller
                 throw new Exception("Product code already assigned to a product", 400);
             }
 
-
+            
 
             $supplier_data = SupplierModel::select('id')
                 ->where('slack', '=', trim($request->supplier))
@@ -259,14 +258,6 @@ class Product extends Controller
             }
 
 
-
-            $category_data = SubCategory::select('id')
-                ->where('id', '=', trim($request->category))
-                ->first();
-            if (empty($category_data)) {
-                throw new Exception("Category not found or inactive in the system", 400);
-            }
-            // dd($category_data->id);
             $sale_price = 0;
             $sale_amount_including_tax = 0;
 
@@ -317,7 +308,10 @@ class Product extends Controller
                 "name" => $request->product_name,
                 "product_code" => strtoupper($request->product_code),
                 "description" => $request->description,
-                "sub_category_id" => $category_data->id,
+                "category_id" => $request->category,
+                "sub_category_id" => $request->sub_category,
+                "category_company_id" => $request->category_company_id,
+                "product_name_id" => $request->product_name_id,
                 "supplier_id" => $supplier_data->id,
                 "tax_code_id" => $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
@@ -333,7 +327,23 @@ class Product extends Controller
                 "created_by" => $request->logged_user_id
             ];
 
+
             $product_id = ProductModel::create($product)->id;
+
+            $productSpecifications = [];
+            foreach ($request->input_type as $label => $value) {
+                $productSpec = new ProductSpecifications();
+                $productSpec->specification_label = $label;
+                $productSpec->specification_details = $value;
+                $productSpec->product_id = $product_id;
+            
+                $productSpec->save();
+            }
+            
+          
+
+
+
 
             $this->add_ingredients($request, $product['slack']);
 

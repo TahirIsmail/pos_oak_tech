@@ -26,6 +26,10 @@ class ProductName extends Model
         return $this->belongsTo(SubCategory::class, 'sub_category_id');
     }
 
+    public function products(){
+        return $this->hasMany(Product::class, 'product_name_id');
+    }
+
 
 
 

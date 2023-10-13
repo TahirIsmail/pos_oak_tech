@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\ProductSpecification;
 use App\Models\ProductVariant as ProductVariantModel;
 
 use App\Models\Scopes\StoreScope;
@@ -13,7 +13,7 @@ class Product extends Model
 {
     protected $table = 'products';
     protected $hidden = ['store_id'];
-    protected $fillable = ['id', 'slack', 'store_id', 'product_code', 'name', 'description', 'sub_category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'slack', 'store_id', 'product_code', 'name', 'product_name_id', 'category_id', 'category_company_id', 'description', 'sub_category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
 
     protected static function boot()
     {
@@ -155,9 +155,7 @@ class Product extends Model
         return $this->hasOne('App\Models\Supplier', 'id', 'supplier_id');
     }
 
-    // public function category(){
-    //     return $this->hasOne('App\Models\Category', 'id', 'category_id');
-    // }
+    
 
     public function tax_code(){
         return $this->hasOne('App\Models\Taxcode', 'id', 'tax_code_id')->withoutGlobalScopes();
@@ -215,10 +213,7 @@ class Product extends Model
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
     }
 
-    public function subcategory()
-    {
-        return $this->belongsTo(SubCategory::class, 'sub_category_id', 'id');
-    }
+    
 
 
     public function complaint(){
@@ -227,7 +222,27 @@ class Product extends Model
     public function linkToComplaint(){
         return $this->belongsTo(Complaint::class, 'link_to_complaint');
     }
+
+
+    public function product_specifications(){
+        return $this->hasMany(ProductSpecifications::class, 'product_id');
+    }
     
 
+
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategory::class, 'sub_category_id');
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class,'category_id');
+    }
+    public function category_company(){
+        return $this->belongsTo(CategoryCompany::class,'category_company_id');
+    }
+    public function product_name(){
+        return $this->belongsTo(ProductName::class,'product_name_id');
+    }
     
 }

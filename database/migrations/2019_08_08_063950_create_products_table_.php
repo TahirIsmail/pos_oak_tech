@@ -20,10 +20,13 @@ class CreateProductsTable extends Migration
             $table->string('product_code', 30);
             $table->string('name', 250);
             $table->text('description')->nullable();
-            $table->foreignId('sub_category_id')
-                ->constrained('sub_categories')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('sub_category_id')->nullable();
+            $table->unsignedBigInteger('category_company_id');
+            $table->unsignedBigInteger('product_name_id')->nullable();
+
+
             $table->integer('supplier_id');
             $table->foreignId('tax_code_id')
             ->constrained('tax_codes')
@@ -47,9 +50,7 @@ class CreateProductsTable extends Migration
             $table->integer('is_addon_product')->nullable();
             $table->decimal('is_gredient_pride', 13, 2)->nullable();
             // $table->integer('updated_by')->nullable();
-            $table->foreignId('updated_by')
-            ->constrained('users')
-            ->onUpdate('cascade')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->index(['status', 'store_id', 'product_code']);
         });

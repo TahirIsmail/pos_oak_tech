@@ -133,4 +133,9 @@ class Category extends Model
     public function category_specifications(){
         return $this->hasMany(CategorySpecification::class, 'category_id');
     }
+
+
+    public function products(){
+        return $this->hasMany(Product::class, 'category_id');
+    }
 }

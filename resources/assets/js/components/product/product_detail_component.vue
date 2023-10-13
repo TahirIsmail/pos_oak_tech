@@ -1,7 +1,7 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
-
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">
@@ -47,8 +47,19 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="phone">{{ $t("Category") }}</label>
-                    <p v-if="(product.category!= null)">{{ product.category.category.label }} ({{product.category.sub_category_name}})</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
+                    <p v-if="(product.category!= null)">{{ product.category.label }} ({{product.category.category_code}})</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
                 </div>
+                <div class="form-group col-md-3">
+                    <label for="phone">{{ $t("Sub Category") }}</label>
+                    <p v-if="(product.subcategory!= null)">{{ product.subcateory.sub_category_name }}</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="phone">{{ $t("Brand Name") }}</label>
+                    <p v-if="(product.category_company != null)">{{ product.category_company.category_company_name }}</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
+                </div>
+
+
                 <div class="form-group col-md-3">
                     <label for="created_by">{{ $t("Created By") }}</label>
                     <p>{{ (product.created_by == null)?'-':product.created_by['fullname']+' ('+product.created_by['user_code']+')' }}</p>
@@ -77,6 +88,23 @@
                 </div>
             </div>
             <hr>
+
+            <div v-if="product.product_specifications.length > 0">
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Product Specifications") }}</span>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-3" v-for="spec in product.product_specifications" :key="spec.id">
+                        <label for="">{{ spec.specification_label }}</label>
+                    <p>{{ spec.specification_details }}</p>
+                </div>
+                </div>
+            </div>
+
+
+
+            <hr>
+
 
             <div class="mb-2">
                 <span class="text-subhead">{{ $t("Price and Quantity Information") }}</span>

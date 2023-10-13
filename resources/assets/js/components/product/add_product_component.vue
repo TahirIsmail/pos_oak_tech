@@ -2,7 +2,6 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        {{ subCategories }}
       <form @submit.prevent="submit_form" class="mb-3">
         <div class="card-header  d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -151,21 +150,7 @@
         </div>
 
         <div class="form-row mb-2">
-          <div class="form-group col-md-3">
-            <label for="name">{{ $t("Name") }}</label>
-            <input
-              type="text"
-              name="name"
-              v-model="product_name"
-              v-validate="'required|max:250'"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter product name')"
-              autocomplete="off"
-            />
-            <span v-bind:class="{ error: errors.has('name') }">{{
-              errors.first("name")
-            }}</span>
-          </div>
+          
           <div class="form-group col-md-3">
             <label for="product_code">{{ $t("Product Code / Serial NO#") }}</label>
             <input
@@ -263,6 +248,7 @@
               v-model="company_id"
               v-validate="'required'"
               class="form-control form-control-custom custom-select"
+              @change="setProductName()"
             >
               <option value="" disabled>Select Brand Name...</option>              
                 <option
@@ -282,12 +268,42 @@
           </div>
 
 
+          <div class="form-group col-md-3">
+            <label for="name">{{ $t("Product Name") }}</label>
+            
+
+            <select
+              name="Product Name"
+              v-model="product_name_id" 
+              class="form-control form-control-custom custom-select"
+              v-if = product_names.length > 0         
+            >
+              <option value="" disabled>Select Product Name...</option>              
+                <option
+                v-for="(p_name, index) in product_names"
+                :label="p_name.product_name"
+                :key="index"
+                :value="p_name.id"               
+                >
+                  {{ p_name.product_name }}
+                </option>
+             
+            </select>
+            <input
+              v-else
+              type="text"
+              name="Product Name"
+              v-model="product_name"             
+              class="form-control form-control-custom"
+              :placeholder="$t('Please enter product name')"
+              autocomplete="off"
+              readonly
+            />
+            
+          </div>
 
 
 
-        </div>
-
-        <div class="form-row mb-2">
           <div class="form-group col-md-3">
             <label for="status">{{ $t("Status") }}</label>
             <select
@@ -309,7 +325,17 @@
               errors.first("status")
             }}</span>
           </div>
+
         </div>
+
+        <div class="form-row mb-2" v-if="category_specifications.length > 0">
+    <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
+      <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
+      <input type="text" v-model="input_type[spec.category_specification_label]" class="form-control" placeholder="Enter Specification">
+    </div>
+  </div>
+
+       
         <hr />
 
         <div class="d-flex flex-wrap mb-1">
@@ -446,42 +472,7 @@
             >
           </div>
         </div>
-        <!-- <div class="form-row mb-2">
-          <div class="form-group col-md-3">
-            <label for="status">{{ $t("Quantity") }}</label>
-            <input
-              type="number"
-              name="quantity"
-              v-model="quantity"
-              v-validate="quantity_validate"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter quantity')"
-              autocomplete="off"
-              step="0.01"
-              min="0"
-            />
-            <span v-bind:class="{ error: errors.has('quantity') }">{{
-              errors.first("quantity")
-            }}</span>
-          </div>
-          <div class="form-group col-md-3">
-            <label for="status">{{ $t("Stock Alert Quantity") }}</label>
-            <input
-              type="number"
-              name="alert_quantity"
-              v-model="alert_quantity"
-              v-validate="'decimal'"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter stock alert quantity')"
-              autocomplete="off"
-              step="0.01"
-              min="0"
-            />
-            <span v-bind:class="{ error: errors.has('alert_quantity') }">{{
-              errors.first("alert_quantity")
-            }}</span>
-          </div>
-        </div> -->
+       
         <div class="form-row mb-2">
           <div class="form-group col-md-3">
             <label for="description">{{ $t("Description") }}</label>
@@ -552,472 +543,7 @@
           </div>
         </div>
 
-        <hr />
-
-        <div v-if="is_addon_product == 0 && is_ingredient == 0">
-          <div class="form-row mb-2" v-if="variants.length != 0">
-            <div class="form-group col-md-3">
-              <label for="tax_code">{{
-                $t("Variant Option for Current Product")
-              }}</label>
-              <select
-                name="parent_variant_option"
-                v-model="parent_variant_option"
-                v-validate="'required'"
-                class="form-control form-control-custom custom-select"
-                data-vv-as="Variant Option"
-              >
-                <option value="">Choose Variant Option..</option>
-                <option
-                  v-for="(variant_option, index) in variant_options"
-                  v-bind:value="variant_option.slack"
-                  v-bind:key="index"
-                >
-                  {{ variant_option.label }}
-                </option>
-              </select>
-              <span
-                v-bind:class="{ error: errors.has('parent_variant_option') }"
-                >{{ errors.first("parent_variant_option") }}</span
-              >
-            </div>
-          </div>
-
-          <!-- <div class="d-flex flex-wrap mb-1">
-            <div class="mr-auto">
-              <span class="text-subhead">{{ $t("Product Variants") }}</span>
-            </div>
-            <div class=""></div>
-          </div>
-
-          <div>
-            <div class="form-row mb-2">
-              <div class="form-group col-md-4">
-                <label for="variants">{{
-                  $t("Search and Add Variant Products")
-                }}</label>
-                <cool-select
-                  type="text"
-                  v-model="search_variants"
-                  autocomplete="off"
-                  inputForTextClass="form-control form-control-custom"
-                  :items="variant_list"
-                  item-text="name"
-                  itemValue="name"
-                  :resetSearchOnBlur="false"
-                  disable-filtering-by-search
-                  @search="load_variants"
-                  @select="add_variant_to_list"
-                  :placeholder="$t('Start Typing..')"
-                >
-                  <template #item="{ item }">
-                    <div class="d-flex justify-content-start">
-                      <div>{{ item.product_code }} - {{ item.name }}</div>
-                    </div>
-                  </template>
-                </cool-select>
-              </div>
-            </div>
-
-            <div v-if="variants.length != 0">
-              <div class="form-row">
-                <div class="form-group col-md-3 mb-1">
-                  <label for="name">{{ $t("Variant Option") }}</label>
-                </div>
-                <div class="form-group col-md-6 mb-1">
-                  <label for="name">{{ $t("Name & Description") }}</label>
-                </div>
-                <div class="form-group col-md-2 mb-1">
-                  <label for="sale_price"
-                    >{{ $t("Sale Price") }} ({{ currency_code }})</label
-                  >
-                </div>
-              </div>
-              <div
-                class="form-row mb-1"
-                v-for="(variant, index) in variants"
-                :key="index"
-              >
-                <div class="form-group col-md-3">
-                  <select
-                    v-bind:name="'variant.variant_option_' + index"
-                    v-model="variant.variant_option_slack"
-                    v-validate="'required'"
-                    class="form-control form-control-custom custom-select"
-                    data-vv-as="Variant Option"
-                  >
-                    <option value="">Choose Variant Option..</option>
-                    <option
-                      v-for="(variant_option, index) in variant_options"
-                      v-bind:value="variant_option.slack"
-                      v-bind:key="index"
-                    >
-                      {{ variant_option.label }}
-                    </option>
-                  </select>
-                  <span
-                    v-bind:class="{
-                      error: errors.has('variant.variant_option_' + index),
-                    }"
-                    >{{ errors.first("variant.variant_option_" + index) }}</span
-                  >
-                </div>
-                <div class="form-group col-md-6">
-                  <input
-                    type="text"
-                    v-bind:name="'variant.name_' + index"
-                    v-model="variant.product_code + '-' + variant.name"
-                    v-validate="'max:250'"
-                    data-vv-as="Name"
-                    class="form-control form-control-custom"
-                    autocomplete="off"
-                    readonly="true"
-                  />
-                  <span
-                    v-bind:class="{
-                      error: errors.has('variant.name_' + index),
-                    }"
-                    >{{ errors.first("variant.name_" + index) }}</span
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="number"
-                    v-bind:name="'variant.sale_price_' + index"
-                    v-model="variant.sale_price"
-                    v-validate="
-                      variant.name != ''
-                        ? 'required|decimal|min_value:0.01'
-                        : ''
-                    "
-                    data-vv-as="Sale Price"
-                    class="form-control form-control-custom"
-                    autocomplete="off"
-                    step="0.01"
-                    min="0"
-                    readonly="true"
-                  />
-                  <span
-                    v-bind:class="{
-                      error: errors.has('variant.sale_price_' + index),
-                    }"
-                    >{{ errors.first("variant.sale_price_" + index) }}</span
-                  >
-                </div>
-                <div
-                  class="form-group col-md-1"
-                  v-if="variant.variant_slack != product_slack"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger"
-                    @click="
-                      remove_variant(index, variant.product_variant_slack)
-                    "
-                  >
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div v-if="variants.length == 0">
-              <span class="text-muted">No variants selected!</span>
-            </div>
-          </div>
-
-          <hr /> -->
-        </div>
-
-        <div v-if="is_addon_product == 0 && is_ingredient == 0">
-          <div class="d-flex flex-wrap mb-1">
-            <div class="mr-auto">
-              <span class="text-subhead">{{ $t("Choose Add-on Groups") }}</span>
-            </div>
-            <div class=""></div>
-          </div>
-
-          <div class="form-row mb-2">
-            <div class="form-group col-md-3">
-              <label for="description">{{ $t("Add-on Groups") }}</label>
-              <multiselect
-                v-model="addon_group_values"
-                :options="addon_groups"
-                :multiple="true"
-                :close-on-select="false"
-                :clear-on-select="false"
-                :preserve-search="true"
-                placeholder="Choose Add-on Groups"
-                label="label"
-                track-by="slack"
-                :preselect-first="false"
-              >
-                <template
-                  slot="selection"
-                  class="form-control"
-                  slot-scope="{ values, isOpen }"
-                  ><span
-                    class="multiselect__single"
-                    v-if="values.length &amp;&amp; !isOpen"
-                    >{{ values.length }} options selected</span
-                  ></template
-                >
-              </multiselect>
-            </div>
-          </div>
-          <hr />
-        </div>
-
-        <div
-          v-if="
-            restaurant_mode == 1 && is_ingredient == 0 && is_addon_product == 0
-          "
-        >
-          <div class="d-flex flex-wrap mb-1">
-            <div class="mr-auto">
-              <span class="text-subhead">{{
-                $t("Ingredient Information")
-              }}</span>
-            </div>
-            <div class=""></div>
-          </div>
-
-          <div>
-            <div class="form-row mb-2">
-              <div class="form-group col-md-4">
-                <label for="ingredients">{{
-                  $t("Search and Add Ingredients")
-                }}</label>
-                <cool-select
-                  type="text"
-                  v-model="search_ingredients"
-                  autocomplete="off"
-                  inputForTextClass="form-control form-control-custom"
-                  :items="ingredient_list"
-                  item-text="name"
-                  itemValue="name"
-                  :resetSearchOnBlur="false"
-                  disable-filtering-by-search
-                  @search="load_ingredients"
-                  @select="add_ingredient_to_list"
-                  :placeholder="$t('Start Typing..')"
-                >
-                  <template #item="{ item }">
-                    <div class="d-flex justify-content-start">
-                      <div>{{ item.product_code }} - {{ item.name }}</div>
-                    </div>
-                  </template>
-                </cool-select>
-                <small class="form-text text-muted"
-                  >Choose ingredients for preparing 1 Unit or Quantity of the
-                  product</small
-                >
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group col-md-4 mb-1">
-                <label for="name">{{ $t("Name & Description") }}</label>
-              </div>
-              <div class="form-group col-md-2 mb-1">
-                <label for="purchase_price">{{
-                  $t("Purchase Price of 1 Unit")
-                }}</label>
-              </div>
-              <div class="form-group col-md-2 mb-1">
-                <label for="sale_price">{{ $t("Sale Price of 1 Unit") }}</label>
-              </div>
-              <div class="form-group col-md-1 mb-1">
-                <label for="quantity">{{ $t("Quantity") }}</label>
-              </div>
-              <div class="form-group col-md-2 mb-1">
-                <label for="measurement_unit">{{ $t("Measuring Unit") }}</label>
-              </div>
-            </div>
-
-            <div
-              class="form-row mb-2"
-              v-for="(ingredient, index) in ingredients"
-              :key="index"
-            >
-              <div class="form-group col-md-4">
-                <input
-                  type="text"
-                  v-bind:name="'ingredient.name_' + index"
-                  v-model="ingredient.name"
-                  v-validate="'max:250'"
-                  data-vv-as="Name"
-                  class="form-control form-control-custom"
-                  autocomplete="off"
-                  readonly="true"
-                />
-                <span
-                  v-bind:class="{
-                    error: errors.has('ingredient.name_' + index),
-                  }"
-                  >{{ errors.first("ingredient.name_" + index) }}</span
-                >
-              </div>
-              <div class="form-group col-md-2">
-                <input
-                  type="number"
-                  v-bind:name="'ingredient.purchase_price_' + index"
-                  v-model="ingredient.purchase_price"
-                  v-validate="
-                    ingredient.name != ''
-                      ? 'required|decimal|min_value:0.01'
-                      : ''
-                  "
-                  data-vv-as="Purchase Price"
-                  class="form-control form-control-custom"
-                  autocomplete="off"
-                  step="0.01"
-                  min="0"
-                  readonly="true"
-                />
-                <span
-                  v-bind:class="{
-                    error: errors.has('ingredient.purchase_price_' + index),
-                  }"
-                  >{{
-                    errors.first("ingredient.purchase_price_" + index)
-                  }}</span
-                >
-              </div>
-              <div class="form-group col-md-2">
-                <input
-                  type="number"
-                  v-bind:name="'ingredient.sale_price_' + index"
-                  v-model="ingredient.sale_price"
-                  v-validate="
-                    ingredient.name != ''
-                      ? 'required|decimal|min_value:0.01'
-                      : ''
-                  "
-                  data-vv-as="Sale Price"
-                  class="form-control form-control-custom"
-                  autocomplete="off"
-                  step="0.01"
-                  min="0"
-                  readonly="true"
-                />
-                <span
-                  v-bind:class="{
-                    error: errors.has('ingredient.sale_price_' + index),
-                  }"
-                  >{{ errors.first("ingredient.sale_price_" + index) }}</span
-                >
-              </div>
-              <div class="form-group col-md-1">
-                <input
-                  type="number"
-                  v-bind:name="'ingredient.quantity_' + index"
-                  v-model="ingredient.quantity"
-                  v-validate="
-                    ingredient.name != ''
-                      ? 'required|decimal|min_value:0.01'
-                      : ''
-                  "
-                  data-vv-as="Quantity"
-                  class="form-control form-control-custom"
-                  autocomplete="off"
-                  step="0.01"
-                  min="0"
-                  v-on:change="update_ingredient_prices"
-                />
-                <span
-                  v-bind:class="{
-                    error: errors.has('ingredient.quantity_' + index),
-                  }"
-                  >{{ errors.first("ingredient.quantity_" + index) }}</span
-                >
-              </div>
-              <div class="form-group col-md-2">
-                <select
-                  v-bind:name="'ingredient.unit_' + index"
-                  v-model="ingredient.unit_slack"
-                  v-validate="''"
-                  class="form-control form-control-custom custom-select"
-                >
-                  <option value="">Choose Measurement Unit..</option>
-                  <option
-                    v-for="(measurement_unit, index) in measurement_units"
-                    v-bind:value="measurement_unit.slack"
-                    v-bind:key="index"
-                  >
-                    {{ measurement_unit.unit_code }} -
-                    {{ measurement_unit.label }}
-                  </option>
-                </select>
-                <span
-                  v-bind:class="{
-                    error: errors.has('ingredient.unit_' + index),
-                  }"
-                  >{{ errors.first("ingredient.unit_" + index) }}</span
-                >
-              </div>
-              <div class="form-group col-md-1">
-                <button
-                  type="button"
-                  class="btn btn-outline-danger"
-                  @click="remove_ingredient(index)"
-                >
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="form-row mb-2">
-              <div class="form-group col-md-3">
-                <label for="description">{{
-                  $t("Total Ingredient Purchase Price")
-                }}</label>
-                <p>{{ currency_code }} {{ ingredient_purchase_price }}</p>
-              </div>
-              <div class="form-group col-md-3">
-                <label for="description">{{
-                  $t("Total Ingredient Selling Price Excluding Tax")
-                }}</label>
-                <p>{{ currency_code }} {{ ingredient_selling_price }}</p>
-              </div>
-            </div>
-            <div class="form-row mb-2">
-              <div class="form-group col-md-6">
-                <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="is_ingredient_price"
-                    v-model="is_ingredient_price"
-                    @change="update_product_prices()"
-                    :disabled="is_taxcode_inclusive == true"
-                  />
-                  <label
-                    class="custom-control-label"
-                    for="is_ingredient_price"
-                    >{{ $t("Set Product Price as Ingredient Cost") }}</label
-                  >
-                  <small
-                    class="form-text text-muted"
-                    v-show="is_taxcode_inclusive == false"
-                    >{{
-                      $t(
-                        "If this option is enabled, product sale price and purchase price will be replaced with ingredient cost"
-                      )
-                    }}</small
-                  >
-                  <small
-                    class="form-text text-muted"
-                    v-show="is_taxcode_inclusive == true"
-                    ><i class="fas fa-info-circle text-warning"></i>
-                    {{
-                      $t("Option not available if the tax is INCLUSIVE")
-                    }}</small
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+       
       </form>
     </div>
 
@@ -1062,9 +588,17 @@ export default {
   data() {
     return {
       subCategories: [],
+      category_specifications: [],
       sub_category_id: '',
+      product_name_id: '',
+      productNameLabel: '',
+
+      categoryLabel: '',
+      companyNameLabel: '',
+      input_type:{},
       company_id: '',
       companies_name: [],
+      product_names: [],
       subcategory: this.product_data,
       server_errors: "",
       error_class: "",
@@ -1242,6 +776,9 @@ export default {
   },
   mounted() {
     console.log("Add product page loaded");
+    if (this.product_data) {
+      this.fetchSubCategorires();
+    }
   },
   created() {
     this.set_product_quantity_validation();
@@ -1253,6 +790,13 @@ export default {
   },
   methods: {
     fetchCompanies(){
+      this.input_type = {};
+      this.companies_name = [];
+      this.product_names = [];
+      this.product_name = '';
+
+      
+
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append("sub_category_id", this.sub_category_id);
@@ -1260,14 +804,38 @@ export default {
               .post("/api/fetchCompanies", formData)
               .then((response) => {
                 if (response.data.status_code == 200) {
+                 
                   this.companies_name = response.data.data.companies;
+                  this.category_specifications = response.data.data.specifications;
+                  this.product_names = response.data.data.product_names;
                 }
               })
               .catch((error) => {
                 console.log(error);
               });
     },
+
+    setProductName(){
+     
+      const selectedCompany = this.companies_name.find(company => company.id === this.company_id);
+      if (selectedCompany) {
+        this.companyNameLabel = selectedCompany.category_company_name;
+      }
+
+      if(this.categoryLabel != null && this.companyNameLabel != null && this.product_names.length === 0){
+        this.product_name = this.companyNameLabel +','+ this.categoryLabel;
+      };
+    },
+
     fetchSubCategorires(){
+      this.input_type = {};
+      this.companies_name = [];
+      this.product_names = [];
+      this.product_name = '';
+      const selectedCategory = this.categories.find(category => category.id === this.category);
+      if (selectedCategory) {
+        this.categoryLabel = selectedCategory.label;
+      }
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append("category_id", this.category);
@@ -1277,10 +845,14 @@ export default {
                 if (response.data.status_code == 200) {
                   this.company_id = '';
                   this.sub_category_id = '';
+                 
                   // console.log(response.data.data.companies);                 
                   this.companies_name = response.data.data.companies;
                   // this.show_response_message(response.data.msg, "Success");
                   this.subCategories = response.data.data.subCategories;
+                  this.category_specifications = response.data.data.specifications;
+
+                  this.product_names = response.data.data.product_names;
 
                 }
               })
@@ -1297,7 +869,18 @@ export default {
         if (result) {
           this.show_modal = true;
           this.$on("submit", function () {
-            this.processing = true;
+            // this.processing = true;
+
+
+
+            const selectedProductName = this.product_names.find(p_name => p_name.id === this.product_name_id);
+      if (selectedProductName) {
+        this.productNameLabel = selectedProductName.product_name;
+      }
+
+
+
+
             var formData = new FormData();
 
             for (var i = 0; i < this.$refs.product_image.files.length; i++) {
@@ -1308,7 +891,7 @@ export default {
             formData.append("access_token", window.settings.access_token);
             formData.append(
               "product_name",
-              this.product_name == null ? "" : this.product_name
+              this.product_name == '' ? this.productNameLabel : this.product_name
             );
             formData.append(
               "product_code",
@@ -1318,10 +901,7 @@ export default {
               "supplier",
               this.supplier == null ? "" : this.supplier
             );
-            formData.append(
-              "category",
-              this.category == null ? "" : this.category
-            );
+            
             formData.append(
               "tax_code",
               this.tax_code == null ? "" : this.tax_code
@@ -1398,6 +978,19 @@ export default {
                 : this.parent_variant_option
             );
 
+
+            formData.append('category', this.category);
+            formData.append("sub_category", this.sub_category_id == null ? null : this.sub_category_id);
+            formData.append('category_company_id', this.company_id);
+            formData.append('product_name_id', (this.product_name_id) ? this.product_name_id : null);
+
+            if (this.input_type) {
+  
+  for (const key in this.input_type) {
+    formData.append(`input_type[${key}]`, this.input_type[key]);
+  }
+}
+            console.log(...formData);
             axios
               .post(this.api_link, formData)
               .then((response) => {

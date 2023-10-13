@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -18,6 +19,7 @@
                 <div class="ml-auto">
                     <button type="submit" class="btn btn-info mr-1" v-on:click="add_category_company()" v-bind:disabled="add_category_company_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_company_processing == true"></i> {{ $t("Add Category Company") }}</button>
                     <button type="submit" class="btn btn-info mr-1" v-on:click="add_product_name()" v-bind:disabled="add_product_name_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_product_name_processing == true"></i> {{ $t("Add Product Name") }}</button>
+                    <button type="submit" class="btn btn-info mr-1" v-on:click="add_category_specifications()" v-bind:disabled="add_category_specifications_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specifications_processing == true"></i> {{ $t("Add Category Specifications") }}</button>
                     <button type="submit" class="btn btn-danger mr-1" v-if="delete_access == true" v-on:click="delete_category()" v-bind:disabled="delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="delete_processing == true"></i> {{ $t("Delete Category") }}</button>
                 </div>
             </div>
@@ -189,6 +191,41 @@
             </template>
         </modalcomponent>
 
+
+
+        <modalcomponent v-if="show_modal_category_specification" v-on:close="show_modal_category_specification = false" :modal_width="'modal-container-md'">
+            <template v-slot:modal-header>
+                {{ $t("Add Category Specifications Name") }}
+            </template>
+            <template v-slot:modal-body>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-row mb-2">
+                                <div class="form-group col-md-10 mx-auto">
+                                    <input type="text" v-model="category_name" class="form-control" readonly>
+                                </div>
+                                <div class="form-group col-md-10 mx-auto">
+                                    <select id="sub_category_id" v-model="sub_category_id" class="form-control">
+                                        <option value="" disabled>Select Sub Category</option>
+                                        <option v-for="s_category in category.subcategories" :key="s_category.id" :value="s_category.id">{{ s_category.sub_category_name }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-10 mx-auto">
+                                    <vue-tags-input v-model="tag" :tags="tags" @tags-changed="handleTagsChanged" placeholder="Add Category Specifications" />
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </template>
+            <template v-slot:modal-footer>
+                <button type="button" @click="submit_categorSpecifications" class="btn btn-primary" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> Add Category Specifications</button>
+            </template>
+        </modalcomponent>
+
+
+
+
         <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
             <template v-slot:modal-header>
                 {{ $t("Confirm") }}
@@ -207,6 +244,7 @@
 
 <script>
     'use strict';
+    import VueTagsInput from "@johmun/vue-tags-input";
     
     export default {
         data(){
@@ -217,15 +255,21 @@
                 category_id: this.category_data.id,
                 sub_category_id: '',
                 category_product_name: '',
+                show_modal_add_category:false,
                 category_name: this.category_data.label,
                 processing: false,
                 delete_processing: false,
                 add_category_company_processing: false,
                 add_product_name_processing: false,
+                add_category_specifications_processing: false,
                 show_modal: false,
                 show_modal_product_name:false,
+                show_modal_category_specification:false,
                 server_errors:'',
+                tag: '',
+                tags: [],
                 delete_category_api_link: '/api/delete_category/'+this.category_data.slack,
+                category_specification: '/api/categorySpecifications'
             }
         },
         props: {
@@ -236,7 +280,16 @@
             console.log('Category detail page loaded');
         },
         methods: {
+            handleTagsChanged(newTags) {
+      this.tags = newTags.map(tag => tag.text);
+    },
+            add_category_specifications(){
+                this.show_modal_category_specification = true;
+            },
+
+            
             add_category_company(){
+               
                 this.show_modal_add_category = true;
             },
             add_product_name(){
@@ -345,7 +398,6 @@
                     formData.append("sub_category_id", (this.sub_category_id ? this.sub_category_id : null));
                     formData.append("category_product_name", this.category_product_name);
 
-                    console.log(...formData);
 
                     axios.post('/api/submit_product_name', formData).then((response) => {
 
@@ -375,7 +427,56 @@
                 });
             }
         });
-            }
+            },
+
+
+
+            submit_categorSpecifications(){
+               
+                this.$off("submit");
+                this.$off("close");
+                this.show_modal = true;
+                this.$on("submit",function () {      
+
+                    var formData = new FormData();
+                    formData.append("access_token", window.settings.access_token);
+                    formData.append("category_id", this.category_id);
+                    formData.append("sub_category_id", (this.sub_category_id ? this.sub_category_id : null));
+                    formData.append("category_specification[]", this.tags);
+
+                    axios.post('/api/categorySpecifications', formData).then((response) => {
+
+                            if(response.data.status_code == 200) {
+                                this.show_response_message(response.data.msg, 'Success');
+                                    location.reload();
+                            
+                            }else{
+                                this.show_modal = false;
+                                this.processing = false;
+                                try{
+                                    var error_json = JSON.parse(response.data.msg);
+                                    this.loop_api_errors(error_json);
+                                }catch(err){
+                                    this.server_errors = response.data.msg;
+                                }
+                                this.error_class = 'error';
+                            }
+
+                            })
+                            .catch((error) => {
+                            console.log(error);
+                            });
+                });
+                this.$on("close",function () {
+                    this.show_modal = false;
+                });
+            
+            },
+
+
+            
+
+
         }
     }
 </script>
