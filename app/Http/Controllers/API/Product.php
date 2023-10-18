@@ -65,7 +65,7 @@ class Product extends Controller
             if ($request->ajax()) {
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
-                $data = ProductModel::with('supplier','category', 'subcategory', 'tax_code', 'discount_code', 'User')->where('quantity', '>', 0)->orderBy('id', 'desc')->get();
+                $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User')->where('quantity', '>', 0)->orderBy('id', 'desc')->get();
                 // dd($data);
                 return Datatables::of($data)
                     ->addIndexColumn()
@@ -247,7 +247,7 @@ class Product extends Controller
                 throw new Exception("Product code already assigned to a product", 400);
             }
 
-            
+
 
             $supplier_data = SupplierModel::select('id')
                 ->where('slack', '=', trim($request->supplier))
@@ -331,16 +331,18 @@ class Product extends Controller
             $product_id = ProductModel::create($product)->id;
 
             $productSpecifications = [];
-            foreach ($request->input_type as $label => $value) {
-                $productSpec = new ProductSpecifications();
-                $productSpec->specification_label = $label;
-                $productSpec->specification_details = $value;
-                $productSpec->product_id = $product_id;
-            
-                $productSpec->save();
+            if($request->input_type){
+                foreach ($request->input_type as $label => $value) {
+                    $productSpec = new ProductSpecifications();
+                    $productSpec->specification_label = $label;
+                    $productSpec->specification_details = $value;
+                    $productSpec->product_id = $product_id;
+    
+                    $productSpec->save();
+                }
             }
-            
-          
+
+
 
 
 
@@ -515,13 +517,6 @@ class Product extends Controller
                 throw new Exception("Supplier not found or inactive in the system", 400);
             }
 
-            $category_data = SubCategory::select('id')
-                ->where('id', '=', trim($request->category))
-                ->first();
-            if (empty($category_data)) {
-                throw new Exception("Category not found or inactive in the system", 400);
-            }
-
             $sale_price = 0;
             $sale_amount_including_tax = 0;
 
@@ -556,18 +551,21 @@ class Product extends Controller
                 $discount_code_id = $discount_code_data->id;
             }
 
+           
+            
             DB::beginTransaction();
 
             $product = [
                 "name" => $request->product_name,
                 "product_code" => strtoupper($request->product_code),
                 "description" => $request->description,
-                "sub_category_id" => $category_data->id,
+                "category_id" => $request->category,
+                "sub_category_id" => $request->sub_category,
+                "category_company_id" => $request->category_company_id,
+                "product_name_id" => $request->product_name_id,
                 "supplier_id" => $supplier_data->id,
                 "tax_code_id" => $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
-                "quantity" => $request->quantity,
-                "alert_quantity" => (!isset($request->alert_quantity)) ? 0.00 : $request->alert_quantity,
                 "purchase_amount_excluding_tax" => $request->purchase_price,
                 "sale_amount_excluding_tax" => $sale_price,
                 "sale_amount_including_tax" => $sale_amount_including_tax,
@@ -575,11 +573,42 @@ class Product extends Controller
                 "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
                 "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
                 "status" => $request->status,
-                "updated_by" => $request->logged_user_id
             ];
 
             $action_response = ProductModel::where('slack', $slack)
                 ->update($product);
+
+                if($action_response){
+                    $p_specifications = [];
+                    $keys = array_keys($request->input_type);
+                    
+                    for ($i = 0; $i < count($keys); $i += 2) {
+                        $key1 = $keys[$i];
+                        $key2 = $keys[$i + 1];
+                    
+                        $value1 = $request->input_type[$key2];
+                        $value2 = $request->input_type[$key1];
+                    
+                        $p_specifications[] = [
+                            "id" => $value2,
+                            "specification_label" => $key2,
+                            "specification_details" => $value1,
+                        ];
+                    }
+        
+                    foreach($p_specifications as $spec){
+                        $productSpecification = ProductSpecifications::find($spec['id']);
+                        // dd($productSpecification);
+                        if ($productSpecification) {                    
+                            $productSpecification->update([
+                                'specification_label' => $spec['specification_label'],
+                                'specification_details' => $spec['specification_details'],
+                            ]);
+                        }
+                    }
+                }
+
+
 
             $this->add_ingredients($request, $slack);
 

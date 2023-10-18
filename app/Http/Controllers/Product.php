@@ -92,17 +92,15 @@ class Product extends Controller
         $data['product_data'] = null;
         if(isset($slack)){
             
-            $product = ProductModel::with('subcategory', 'User', 'updatedUser')->where('products.slack', '=', $slack)->first();
+            $product = ProductModel::with('subcategory', 'User','product_name', 'category_company', 'updatedUser', 'product_specifications')->where('products.slack', '=', $slack)->first();
             if (empty($product)) {
                 abort(404);
-            }
-            
+            }            
             $product_data = new ProductResource($product);
-
             $data['product_data'] = $product_data;
-            // dd($data['product_data']);
         }
-
+        
+        // dd($data['product_data']);
         $data['is_taxcode_inclusive'] = isset($product_data->tax_code)?(($product_data->tax_code['tax_type'] == 'INCLUSIVE')?true:false):false;
         $data['taxcode_percentage'] = isset($product_data->tax_code)?$product_data->tax_code['total_tax_percentage']:0;
 

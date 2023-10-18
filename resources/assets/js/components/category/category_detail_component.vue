@@ -1,6 +1,5 @@
 <template>
     <div class="row">
-        
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -43,63 +42,74 @@
                     <p style="font-weight: 600;" v-for="cate in category.subcategories" :key="cate.id">{{ cate.sub_category_name }}</p>
                 </div>
 
-                <div class="form-group col-md-11" v-if="category.subcategories.length > 1">
-                    <label for="label" style="font-weight: 800;font-size:18px;">{{ $t("Companies Name") }}</label>
-                    <div class="">
-                        <div v-for="category in category.subcategories" :key="category.id">
-                            <div style="list-style: none;"><span style="font-weight: bold;">{{ category.sub_category_name }}</span>
-                            <div class="d-flex flex-wrap justify-content-between w-100">
-                            <div v-for="(companies, index) in category.category_companies" :key="companies.id">
-                            {{ companies.category_company_name }}
-                            {{ index < category.category_companies.length - 1 ? ',' : '' }}
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
+
+                <div class="form-group col-md-12">
+                    <table class="table">
+                        <thead>
+                            <th>Category</th>
+                            <th>Sub Category</th>
+                            <th>Brand Name</th>
+                            <th>Product Name</th>
+                            <th>Category Specifications</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ category.label }}</td>
+                                <td>
+                                    <div class="d-flex flex-column" v-for="subCategory in category.subcategories" :key="subCategory.id">{{ subCategory.sub_category_name }}</div>
+                                </td>
+                                <td  v-if="category.category_companies.length > 0">
+                                    <div v-for="name in category.category_companies" :key="name.id">
+                                            {{ name.category_company_name }}
+                                       </div>
+                                </td>
+                                <td v-else>
+                                    <div v-for="brand_name in category.subcategories" :key="brand_name">
+                                       <strong>{{ brand_name.sub_category_name }}</strong>
+                                       <div v-for="name in brand_name.category_companies" :key="name.id">
+                                            {{ name.category_company_name }}
+                                       </div>
+                                    </div>
+                                </td>
+                                <td  v-if="category.product_names.length > 0">
+                                    <div v-for="name in category.product_names" :key="name.id">
+                                            {{ name.product_name }}
+                                       </div>
+                                </td>
+                                <td v-else>
+                                    <div v-for="brand_name in category.subcategories" :key="brand_name">
+                                       <strong>{{ brand_name.sub_category_name }}</strong>
+                                       <div v-if="brand_name.product_names.length > 0">
+                                        <div v-for="name in brand_name.product_names" :key="name.id">
+                                             {{ name.product_name }}
+                                        </div>
+                                       </div>
+                                       <div v-else> --- </div>
+                                    </div>
+                                </td>
+
+
+                                <td  v-if="category.category_specifications.length > 0">
+                                    <div v-for="spec in category.category_specifications" :key="spec.id">
+                                            {{ spec.category_specification_label }}
+                                       </div>
+                                </td>
+                                <td v-else>
+                                    <div v-for="spec_name in category.subcategories" :key="spec_name.id">
+                                       <strong>{{ spec_name.sub_category_name }}</strong>
+                                       <div v-if="spec_name.category_specifications.length > 0">
+                                        <div v-for="name in spec_name.category_specifications" :key="name.id">
+                                             {{ name.category_specification_label }}
+                                        </div>
+                                       </div>
+                                       <div v-else> --- </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="form-group col-md-11" v-else>
-                    <label for="label">{{ $t("Companies Name") }}</label>
-                    <div class="d-flex flex-wrap justify-content-between w-100">
-                        <div v-for="(company, index) in category.category_companies" :key="company.id">
-                            {{ company.category_company_name }}
-
-                            {{ index < category.category_companies.length - 1 ? ',' : '' }}
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <br />
-
-
-                <div class="form-group col-md-11" v-if="category.subcategories.length > 1">
-                    <label for="label" style="font-weight: 800;font-size:18px;">{{ $t("Product Name") }}</label>
-                    <div class="">
-                        <div v-for="category in category.subcategories" :key="category.id">
-                            <div style="list-style: none;"><span style="font-weight: bold;">{{ category.sub_category_name }}</span>
-                            <div class="d-flex flex-wrap justify-content-between w-100">
-                            <div v-for="(product_name, index) in category.product_names" :key="product_name.id">
-                                {{ product_name.product_name }}
-                                {{ index < category.product_names.length - 1 ? ', ' : '' }}
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-11" v-else>
-                    <label for="label">{{ $t("Product Name") }}</label>
-                    <div class="d-flex flex-wrap justify-content-between w-75">
-                        <div v-for="(product_name) in category.product_names" :key="product_name.id">
-                                {{ product_name.product_name }}
-                            </div>
-
-                    </div>
-                </div>
 
 
                 <br />

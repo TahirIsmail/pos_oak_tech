@@ -136,6 +136,27 @@
                     </div>
 
 
+                <div class="d-flex flex-wrap mb-1">
+                    <div class="mr-auto">
+                        <span class="text-subhead ml-3">{{ $t("Products") }}</span>
+                    </div>
+                    <div class="">
+                        
+                    </div>
+                </div>
+
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-3" v-show="bill_to == 'CUSTOMER'">
+                        <label for="supplier">{{ $t("Choose Supplier") }}</label>
+                        <cool-select type="text" name="supplier" :placeholder="$t('Please choose supplier')"  autocomplete="off" v-model="supplier" :items="supplier_list" item-text="label" itemValue='slack' @search='load_suppliers'>
+                        </cool-select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="barcode">{{ $t("Search and Add Products") }}</label>
+                        <cool-select type="text" v-model="search_product"  autocomplete="off" inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label" itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search @search='load_products' @select='add_product_to_list' :placeholder="$t('Start Typing..')"></cool-select>
+                    </div>
+                </div>
+
 
                     <div class="form-row">
                         <div class="form-group col-md-5 mb-1">

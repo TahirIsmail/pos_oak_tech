@@ -27,7 +27,10 @@ class SubCategory extends Model
         return $this->hasMany(ProductName::class, 'sub_category_id');
     }
     
-    public function sub_category_specifications(){
+    public function category_specifications(){
         return $this->hasMany(CategorySpecification::class, 'sub_category_id');
     }
+
+    
+
 }

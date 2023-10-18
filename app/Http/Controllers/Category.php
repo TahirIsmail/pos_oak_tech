@@ -57,12 +57,12 @@ class Category extends Controller
         check_access([$data['action_key']]);
 
         // $category = CategoryModel::with('subcategories', 'product_names', 'category_companies')->where('slack', '=', $slack)->first();
-        $category = CategoryModel::with(['subcategories.product_names','subcategories.category_companies','category_companies'])
+        $category = CategoryModel::with(['subcategories.product_names','subcategories.category_companies','category_companies', 'category_specifications', 'subcategories.category_specifications'])
             ->where('slack', '=', $slack)
             ->first();
 
         if (is_null($category) || is_null($category->product_names)) {
-            $category = CategoryModel::with(['subcategories.product_names', 'subcategories.category_companies','category_companies'])
+            $category = CategoryModel::with(['subcategories.product_names', 'subcategories.category_companies', 'subcategories.category_specifications'])
                 ->where('slack', '=', $slack)
                 ->whereHas('subcategories.product_names', function ($query) {
                     // Add your specific condition here if needed
@@ -77,6 +77,7 @@ class Category extends Controller
 
         // $category_data = new CategoryResource($category);
 
+        // dd($category);
         $data['category_data'] = $category;
 
         // dd($data['category_data']);

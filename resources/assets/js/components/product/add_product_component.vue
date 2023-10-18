@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row">   
     <div class="col-md-12">
       <div class="card">
       <form @submit.prevent="submit_form" class="mb-3">
@@ -256,7 +256,6 @@
                 :label="company_name.category_company_name"
                 :key="index"
                 :value="company_name.id"
-               
                 >
                   {{ company_name.category_company_name }}
                 </option>
@@ -589,17 +588,34 @@ export default {
     return {
       subCategories: [],
       category_specifications: [],
-      sub_category_id: '',
-      product_name_id: '',
-      productNameLabel: '',
+      sub_category_id: this.product_data == null
+          ? ""
+          : this.product_data.subcategory == null
+          ? ""
+          : this.product_data.subcategory.id,
+      
+      product_name_id: this.product_data == null
+          ? ""
+          : this.product_data.product_name_id > 0
+          ? this.product_data.product_name_id
+          : '',
+      productNameLabel: this.product_data == null
+          ? ""
+          : this.product_data.product_name_id > 0
+          ? ""
+          : this.product_data.name,
 
       categoryLabel: '',
       companyNameLabel: '',
       input_type:{},
-      company_id: '',
+      company_id: this.product_data == null
+          ? ""
+          : this.product_data.category_company == null
+          ? ""
+          : this.product_data.category_company.id,
       companies_name: [],
       product_names: [],
-      subcategory: this.product_data,
+      subcategory: (this.product_data != null) ? this.product_data.subcategory : [],
       server_errors: "",
       error_class: "",
       processing: false,
@@ -757,6 +773,8 @@ export default {
         typeof this.taxcode_percentage != "undefined"
           ? this.taxcode_percentage
           : 0,
+
+         
     };
   },
   props: {
@@ -775,10 +793,31 @@ export default {
     taxcode_percentage: [String, Number],
   },
   mounted() {
-    console.log("Add product page loaded");
-    if (this.product_data) {
+
+    if(this.product_data != null && this.product_data.product_specifications.length > 0){
+      
+      this.product_data.product_specifications.forEach(item => {
+        this.input_type[item.specification_label+'_'+item.id] = item.id;
+        this.input_type[item.specification_label] = item.specification_details;
+      });
+  
+      }
+
+    if (this.product_data != null) {
       this.fetchSubCategorires();
+
     }
+
+    if(this.product_data != null && this.product_data.product_name_id > 0){
+      this.product_name_id = this.product_data.product_name.id;
+    }
+
+    if(this.product_data != null && this.product_data.subcategory.id > 0){
+      this.fetchCompanies();
+    }
+
+
+    
   },
   created() {
     this.set_product_quantity_validation();
@@ -790,12 +829,11 @@ export default {
   },
   methods: {
     fetchCompanies(){
-      this.input_type = {};
+      // this.input_type = {};
       this.companies_name = [];
       this.product_names = [];
-      this.product_name = '';
+      // this.product_name = '';
 
-      
 
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
@@ -828,10 +866,10 @@ export default {
     },
 
     fetchSubCategorires(){
-      this.input_type = {};
+      // this.input_type = {};
       this.companies_name = [];
       this.product_names = [];
-      this.product_name = '';
+      // this.product_name = '';
       const selectedCategory = this.categories.find(category => category.id === this.category);
       if (selectedCategory) {
         this.categoryLabel = selectedCategory.label;
@@ -843,8 +881,8 @@ export default {
               .post("/api/fetchSubCategories", formData)
               .then((response) => {
                 if (response.data.status_code == 200) {
-                  this.company_id = '';
-                  this.sub_category_id = '';
+                  // this.company_id = '';
+                  // this.sub_category_id = '';
                  
                   // console.log(response.data.data.companies);                 
                   this.companies_name = response.data.data.companies;
@@ -869,7 +907,7 @@ export default {
         if (result) {
           this.show_modal = true;
           this.$on("submit", function () {
-            // this.processing = true;
+            this.processing = true;
 
 
 
