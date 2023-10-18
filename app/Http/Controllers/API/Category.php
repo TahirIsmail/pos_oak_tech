@@ -338,6 +338,18 @@ class Category extends Controller
         }
     }
 
+    public function fetch_categories(Request $request){
+        $categories = CategoryModel::select('id', 'category_code', 'label')->get();
+        // dd($categories);
+        if($categories){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Categories fetched successfully", 
+                    "data"    => $categories,
+                ), 'SUCCESS'
+            ));
+        }
+    }
 
     public function fetch_sub_categories(Request $request){
         

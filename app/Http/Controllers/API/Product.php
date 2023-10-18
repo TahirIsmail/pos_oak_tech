@@ -960,6 +960,43 @@ class Product extends Controller
         }
     }
 
+
+    public function fetch_products(Request $request){
+        // dd($request->all());
+        $category_id = $request['category_id'] ?? null;
+        $sub_category_id = $request['subcategory_id'] ?? null;
+        $category_company_id = $request['category_company_id'] ?? null;
+
+        
+        // Use these values to filter the products
+        $products = ProductModel::query()
+            ->when($category_id !== null, function ($query) use ($category_id) {
+                return $query->where('category_id', $category_id);
+            })
+            ->when($sub_category_id !== null, function ($query) use ($sub_category_id) {
+                return $query->where('sub_category_id', $sub_category_id);
+            })
+            // ->when($category_company_id !== null, function ($query) use ($category_company_id) {
+            //     return $query->where('category_company_id', $category_company_id);
+            // })
+            ->get();
+        // dd($products);
+
+
+    if($products){
+        return response()->json($this->generate_response(
+            array(
+                "message" => "Product listed successfully",
+                "data"    => $products
+            ),
+            'SUCCESS'
+        ));
+    }
+
+
+
+    }
+
     public function load_product_for_stock_transfer(Request $request)
     {
         try {

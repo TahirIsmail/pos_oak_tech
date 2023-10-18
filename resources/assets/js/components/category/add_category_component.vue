@@ -124,8 +124,8 @@
               <td>{{ subcategory.sub_category_name }}</td>
               <td>Active</td> <!-- You can replace this with actual status logic -->
               <td>
-                <button class="btn btn-success" @click="editSubcategory(subcategory)">Edit</button>
-                <button class="btn btn-danger" @click="deleteSubcategory(subcategory.id)">Delete</button>
+                <button class="btn" @click="editSubcategory(subcategory)"><i class="fas fa-edit" style="color:green"></i></button>
+                <button class="btn" @click="deleteSubcategory(subcategory.id)"><i class="fas fa-trash" aria-hidden="true" style="color:red"></i></button>
               </td>
             </tr>
 
@@ -407,7 +407,6 @@ export default {
             }
           })
           .catch((error) => {
-            // alert('kashif');
             console.log(error);
           });
       });

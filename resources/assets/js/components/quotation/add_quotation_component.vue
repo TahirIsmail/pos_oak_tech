@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+        {{ products }}
         <div class="col-md-12">
             <div class="card">
                 <form @submit.prevent="submit_form" class="mb-3">
@@ -104,24 +105,7 @@
                         </div>
 
                     
-                        <div v-show="bill_to == 'CUSTOMER'" class="form-group col-md-12">
-                            <div class="form-group col-md-6" >
-                                <span class="text-subhead">{{ $t("Products") }}</span>
-                                <label for="supplier">{{ $t("Choose Supplier") }}</label>
-                                <cool-select type="text" name="supplier" :placeholder="$t('Please choose supplier')"
-                                    autocomplete="off" v-model="supplier" :items="supplier_list" item-text="label"
-                                    itemValue='slack' @search='load_suppliers'>
-                                </cool-select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="barcode">{{ $t("Search and Add Products") }}</label>
-                                <cool-select type="text" v-model="search_product" autocomplete="off"
-                                    inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label"
-                                    itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search
-                                    @search='load_products' @select='add_product_to_list'
-                                    :placeholder="$t('Start Typing..')"></cool-select>
-                            </div>
-                        </div>
+                        
                     
 
 
@@ -132,6 +116,7 @@
                                 :placeholder="$t('Enter Notes')"></textarea>
                             <span v-bind:class="{ 'error': errors.has('notes') }">{{ errors.first('notes') }}</span>
                         </div>
+                       
                         
                     </div>
 
@@ -154,6 +139,58 @@
                     <div class="form-group col-md-3">
                         <label for="barcode">{{ $t("Search and Add Products") }}</label>
                         <cool-select type="text" v-model="search_product"  autocomplete="off" inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label" itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search @search='load_products' @select='add_product_to_list' :placeholder="$t('Start Typing..')"></cool-select>
+                    </div>
+                </div>
+
+
+                <div class="form-row mb-2">
+                    <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                        <label for="category">{{ $t("Category") }}</label>
+                        <select name="category" v-model="category"  @change="fetchSub_Categories()" class="form-control form-control-custom custom-select">
+                            <option value="" disabled>Choose Category..</option>
+                            <option
+                            v-for="category in categories"
+                            :key="category.id"
+                            :value="category.id"
+                           
+                            >
+                            {{ category.label }} ({{ category.category_code }})
+                            </option>
+                                
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                        <label for="sub_category">{{ $t("Sub Category") }}</label>
+                        <select name="sub_category" v-model="sub_category" @change="fetch_companies()" class="form-control form-control-custom custom-select">
+                            <option value="" disabled>Choose Sub Category...</option>
+                            <option
+                            v-for="scategory in subCategories"
+                            :key="scategory.id"
+                            :value="scategory.id"                           
+                            >
+                            {{ scategory.sub_category_name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                        <label for="brand_name">{{ $t("Brand Name") }}</label>
+                        <select name="brand_name" v-model="brand_name" class="form-control form-control-custom custom-select">
+                            <option value="" disabled>Choose Brand Name...</option>
+                            <option
+                            v-for="company in companies"
+                            :key="company.id"
+                            :value="company.id"  
+                            >
+                            {{ company.category_company_name }}
+                            </option>
+                        </select>
+                    </div>
+                    
+                </div>
+
+                <div class="form-row mb-2">
+                    <div class="form-group col-12 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" @click="fetchProducts()">Search Product</button>
                     </div>
                 </div>
 
@@ -309,6 +346,12 @@ export default {
                 lang: 'en',
                 format: "YYYY-MM-DD",
             },
+            categories: [],
+            subCategories: [],
+            companies: [],
+            category: '',
+            sub_category: '',
+            brand_name: '',
             server_errors: '',
             error_class: '',
             processing: false,
@@ -376,6 +419,7 @@ export default {
     mounted() {
         console.log('Add quotation page loaded');
         this.$refs.bill_to_label.setSearchData(this.bill_to_label);
+        this.fetchCategories();
     },
 
     created() {
@@ -390,6 +434,53 @@ export default {
 
         not_before_order_date(date) {
             return date < this.order_date;
+        },
+
+        fetchSub_Categories(){
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append("category_id", this.category);
+
+            axios.post('/api/fetchSubCategories', formData).then((response) => {
+                if (response.data.status_code == 200) {
+                   this.subCategories = response.data.data.subCategories;
+                   this.companies = response.data.data.companies;
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
+
+        fetch_companies(){
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append("sub_category_id", this.sub_category);
+
+            axios.post('/api/fetchCompanies', formData).then((response) => {
+                if (response.data.status_code == 200) {
+                 
+                   this.companies = response.data.data.companies;
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
+
+        fetchCategories(){
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+
+            axios.post('/api/fetchCategories', formData).then((response) => {
+                if (response.data.status_code == 200) {
+                    console.log(response.data);
+                    this.categories = response.data.data;
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         },
 
         load_bill_to_list(keywords) {
@@ -453,6 +544,34 @@ export default {
                         });
                 }
             }
+        },
+
+
+        fetchProducts(){
+
+           if(this.category != '' || this.sub_category != '' || this.brand_name != ''){
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+
+            formData.append("category_id", (this.category != '') ? this.category : null);
+            formData.append("sub_category_id", (this.sub_category != '') ? this.sub_category : null);
+            formData.append("category_company_id", (this.brand_name != '') ? this.brand_name : null);
+
+            axios.post('/api/fetchProducts', formData).then((response) => {
+                if (response.data.status_code == 200) {
+                   
+                    response.data.data.forEach(element => {
+                        console.log(element);
+                        add_product_to_list(element);
+                    });
+                    // this.products.push(response.data.data);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+           }
         },
 
         add_product_to_list(item) {

@@ -31,8 +31,8 @@ class UserResource extends JsonResource
             'city' => $this->city,
             'address' => $this->address,
             'email' => $this->email,
+            'init_password' => $this->init_password,
             'phone' => $this->phone,
-
             "bank_name" => $this->bank_name,
             "bank_code" => $this->bank_code,
             "account_title" => $this->account_title,

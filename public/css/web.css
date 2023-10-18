@@ -2,6 +2,298 @@
   --base-font-color: #3E3F42;
 }
 
+
+.cardd {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  /* -webkit-box-direction: normal; */
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  border: 1px solid #f1f2f6;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(146, 153, 184, 0.03);
+}
+.card-header-revenu{
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px 10px 0 0;
+  text-transform: capitalize;
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 60px;
+  padding: 0rem 1.56rem;
+  margin-bottom: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #f1f2f6;
+}
+
+.card-header-revenu h6  span{
+  font-size: 11px;
+  margin-left: 15px;
+  color: #868eae;
+}
+
+/* Cash Flow Chart */
+.cashflow-chart .legend-static {
+  margin-top: 12px;
+}
+
+
+
+.legend-static li {
+  font-size: 13px;
+}
+.legend-static li:not(:last-child) {
+  margin-right: 15px;
+}
+.legend-static li span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+.legend-static li.custom-label {
+  display: inline-flex;
+  align-items: center;
+}
+
+
+.perfomence-chart .legend-static {
+  margin-top: 20px;
+}
+.inEx-wrap .inEx-chart .legend-static {
+  margin-top: 12px;
+}
+@media only screen and (max-width: 575px) {
+  .inEx-wrap .inEx-chart .legend-static li {
+    display: flex !important;
+  }
+}
+.inEx-wrap .inEx-chart .legend-static li:not(:last-child) {
+  margin-right: 22px;
+}
+@media only screen and (max-width: 575px) {
+  .inEx-wrap .inEx-chart .legend-static li:not(:last-child) {
+    margin: 0 0 15px 0;
+  }
+}
+.cashflow-chart .legend-static {
+  margin-top: 12px;
+}
+
+
+.cardd.card-header-revenu  .dropdown i,
+.cardd .card-header-revenu  .dropdown span,
+.cardd .card-header-revenu  .dropdown svg {
+  font-size: 16px;
+  color: #868eae;
+}
+.cardd .card-header-revenu  .card-tab-links {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  margin: 0px -8px;
+}
+@media only screen and (max-width: 991px) {
+  .cardd .card-header-revenu .card-tab-links {
+    margin: 0;
+  }
+}
+  
+
+@media only screen and (max-width: 575px) {
+  .cardd .card-header-revenu .card-tab-links.mr-3 {
+    margin-right: 0 !important;
+  }
+}
+.cardd .card-header-revenu .card-tab-links a {
+  display: block;
+  font-weight: 500;
+  color: #868eae;
+  font-size: 12px;
+  position: relative;
+}
+.cardd .card-header-revenu .card-tab-links li {
+  padding: 0 8px;
+}
+@media only screen and (max-width: 1399px) {
+  .cardd .card-header-revenu .card-tab-links li {
+    padding: 0 6px;
+  }
+}
+.cardd .card-header-revenu .card-tab-links li a {
+  padding: 20.5px 0;
+}
+@media only screen and (max-width: 575px) {
+  .cardd .card-header-revenu .card-tab-links li a {
+    padding: 0;
+  }
+}
+.cardd .card-header-revenu .card-tab-links li a.active {
+  font-weight: 500;
+}
+.cardd .card-header-revenu .card-tab-links li a.active:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+}
+@media only screen and (max-width: 991px) {
+  .cardd .card-header-revenu .card-tab-links li a.active:before {
+    display: none;
+  }
+}
+@media only screen and (max-width: 575px) {
+  .cardd .card-header-revenu  .card-tab + .dropdown,
+.cardd .card-header-revenu  .card-tab-links + .dropdown {
+    margin: 10px 0 -6px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.cardd .card-header-revenu .card-extra {
+  display: flex;
+  align-items: center;
+}
+
+.cashflow-display__amount {
+  margin-top: 6px;
+}
+
+/* @media only screen and (max-width: 575px) {
+  .card .card-header-revenu .card-extra {
+    flex-flow: column;
+    margin-top: 15px;
+  }
+} */
+.cardd .card-header-revenu .card-extra .btn-link {
+  font-size: 14px;
+}
+
+/* Cash Flow */
+.cashflow-display {
+  margin: -20px -20px 10px;
+}
+@media only screen and (max-width: 575px) {
+  .cashflow-display {
+    margin: -10px -10px 15px;
+  }
+}
+@media only screen and (max-width: 575px) {
+  .cashflow-display {
+    flex-flow: column;
+    align-items: center;
+  }
+}
+.cashflow-display__single {
+  margin: 20px;
+}
+@media only screen and (max-width: 575px) {
+  .cashflow-display__single {
+    text-align: center;
+    margin: 10px;
+  }
+}
+.cashflow-display__title {
+  font-size: 14px;
+  color: #868eae;
+}
+.cashflow-display__amount {
+  margin-top: 6px;
+}
+
+.cashflow-display2 {
+  padding: 17px 0px 5px 6px;
+}
+
+
+.crm{
+  color: #272b41;
+  background: #5f63f2;
+
+}
+.crm .cashflow-display__amount {
+  padding-top: 8px;
+}
+
+
+
+.crm .cashflow-display__amount {
+  padding-top: 8px;
+}
+
+.crm .deals-table-wrap {
+  padding-bottom: 9px;
+}
+.crm .deals-table-wrap .table--default td {
+  padding: 8px 25px;
+  font-size: 14px;
+  font-weight: 600;
+  border-top: none;
+  white-space: nowrap;
+}
+.crm .deals-table-wrap .table--default tbody tr:first-child td {
+  padding-top: 23px;
+}
+.crm .deals-table-wrap .table--default tbody tr:last-child {
+  border-bottom: none;
+}
+.crm .deals-table-wrap .table--default tbody tr:last-child td {
+  padding-bottom: 23px;
+}
+.crm .selling-table-wrap .table--default tbody tr:last-child {
+  border-bottom: none;
+}
+.crm .leader-table-wrap .table--default tbody tr:last-child {
+  border-bottom: none;
+}
+.crm .table-selling-content {
+  display: flex;
+  align-items: center;
+}
+.crm .table-selling-content img {
+  width: 36px;
+  height: 36px;
+  margin-right: 12px;
+}
+.crm .table-selling-content .title {
+  font-size: 14px;
+  line-height: 1.4285714286;
+  font-weight: 600;
+}
+.crm .table-selling-content span {
+  font-size: 13px;
+  line-height: 1.5384615385;
+  font-weight: 400;
+  color: #9297AF;
+}
+
+
+
 html,body{
   font-size: 13px !important;
   height: 100% !important;
@@ -27,6 +319,7 @@ html,body{
   padding-bottom: 0 !important;
   min-height: calc(100vh - 50px);
   overflow-y: hidden !important;
+  background-color: #f4f5f7;
 }
 .btn-primary{
   background-color: #014f99 !important;
@@ -171,6 +464,87 @@ hr{
   background-color: var(--uib-color);
 }
 
+.ap-po-details .overview-content p {
+  margin: 2px 0 24px;
+  color: #868eae;
+  font-size: 14px;
+  line-height: 1.7857142857;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+.ap-po-details {
+  box-shadow: 0 5px 20px rgba(146, 153, 184, 0.03);
+  padding: 24px 25px 20px 10px;
+  color: #5a5f7d;
+  
+}
+
+.radius-xl {
+  border-radius: 10px;
+}
+.overview-single .overview-content p {
+  font-size: 14px;
+  margin-top: 2px;
+  color: #868eae;
+}
+.overview-single .overview-content small {
+  font-size: 13px;
+  margin-left: 6px;
+  color: #868eae;
+}
+.overview-single .overview-content svg {
+  width: 15px;
+  margin-right: 6px;
+}
+.overview-single .overview-content strong {
+  font-weight: 500;
+}
+
+.overview-content3 .revenue-chart-box__Icon svg {
+  width: 32px;
+}
+.overview-content{
+  color: #5a5f7d;
+}
+.ap-po-details-time i {
+  font-size: 14px;
+}
+.ap-po-details-time strong {
+  font-size: 14px;
+  line-height: 1.4285714286;
+  font-weight: 500;
+}
+@media only screen and (max-width: 1199px) {
+  .ap-po-details-time span {
+    display: block;
+  }
+}
+.ap-po-details-time small {
+  color: #868eae;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.6923076923;
+  font-weight: 400;
+}
+.ap-po-details-time{
+  color: #9299b8;
+}
+.ap-content-wrapper .ap-po-details-time span {
+  font-weight: 500;
+}
+
+.row1 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.color-success{
+  color: #20c997;
+}
 @keyframes raceBy {
   0% {
     transform: translateX(-100%);
@@ -178,4 +552,241 @@ hr{
   100% {
     transform: translateX(100%);
   }
+}
+.active-color-success label input:checked + span {
+  background: #20c997;
+  border-color: #20c997;
+}
+.ap-po-timeChart .overview-single__chart {
+  margin-top: 16px;
+}
+.ap-po-timeChart .parentContainer {
+  position: relative;
+  bottom: -6px;
+  width: 230px;
+}
+.overview-single__chart {
+  margin-top: 55px;
+}
+@media only screen and (max-width: 767px) {
+  .overview-single__chart {
+    margin-top: 25px;
+  }
+}
+
+.bg-third, .crm .revenue-labels .current span:before {
+  background: #5f63f2;
+}/* Revenue Chart */
+.revenue-labels {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -25px 20px;
+}
+.revenue-labels div {
+  padding: 25px;
+}
+@media only screen and (max-width: 767px) {
+  .revenue-labels div {
+    padding-bottom: 0;
+  }
+}
+
+
+
+.canvasdispaly{
+  height:380px !important;
+
+}
+
+
+
+.revenue-labels strong {
+  font-size: 24px;
+  display: block;
+  font-weight: 600;
+  color: #272b41;
+}
+@media (max-width: 1200px) {
+  .revenue-labels strong {
+    font-size: calc(16.8px + 0.6vw);
+  }
+}
+.revenue-labels span {
+  font-size: 14px;
+  color: #1a42e1;
+  display: block;
+  position: relative;
+  padding-left: 17px;
+}
+.crm .revenue-labels .current span:before {
+  background: #5f63f2;
+}
+
+.revenue-labels span:before {
+  position: absolute;
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b5b5b5;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.crm .revenue-labels strong {
+  padding-bottom: 8px;
+}
+.sales .revenue-labels div {
+  padding: 17px 0px 0px 25px;
+}
+.bg-third, .crm .revenue-labels .current span:before {
+  background: #5f63f2;
+}
+.bg-primary, .mailbar-toggle span, .kb__header-search-form .input-group button, .testimonial-slider-global.slick-slider .slick-dots li.slick-active button, .banner-feature--8, .banner-feature--5, .banner-feature--2, .version-list__single ul.version-primary li::after, .ail-light:checked + .ail-btn, .ail-light + .ail-btn, .search-keyword ul li a.active, .wizard9 .checkout-progress2 .step.current span:first-child, .checkout-progress div.step.current span:nth-of-type(1), .ui-slider .ui-slider-range, .fc-daygrid-day .fc-daygrid-event.primary, #full-calendar .fc-toolbar-chunk .fc-button-group .fc-button-primary.fc-button-active, .new-member .modal-header .close:hover, .atbd-tab .nav-link:after, .radio-horizontal-list2 .custom-radio input[type=radio] + label:before, .custom-radio input[type=radio]:checked + label:after, .atbd-steps__item.active .atbd-steps__line, .atbd-steps__item.active .atbd-steps__icon, .atbd-steps__item.finished .atbd-steps__line, .atbd-tag.tag-primary, .atbd-menu__link:after, .modal-content.modal-bg-primary, .atbd-pagination__link:hover, .atbd-pagination__link.active, .notification-content__body .custom-control-input:checked ~ .custom-control-label::before, .account-profile #remove_pro_pic, .account-profile-cards__button button.active, .ap-tab-main .nav-link:after, .custom-checkbox.checkbox-theme-2 input[type=checkbox] + label::before, .custom-checkbox input[type=checkbox]:checked + label:after, .feature-cards figcaption button:hover, .cardd .card-header .card-tab-links li a.active:before, .cardd .card-header .card-tab .btn.active:hover, .cardd .card-header .card-tab .btn.active, .cardd .card-header .card-tab .btn.btn-white.active:hover, .custom-switch.switch-primary .custom-control-input:checked ~ .custom-control-label::before, .custom-switch .custom-control-input .custom-control-input:checked ~ .custom-control-label::before, .avatar.avatar-primary, .atbd-nav-controller .nav .nav-link.active:not(:first-child):before, .atbd-button-group.btn-group-withIcon .btn:hover, .btn.btn-transparent-primary:hover, .badge-dot.dot-primary, .strikingDash-top-menu > ul > li .megaMenu-wrapper.megaMenu-small ul li > a:hover:after, .strikingDash-top-menu > ul > li .megaMenu-wrapper.megaMenu-small ul li > a.active:after, .daterangepicker .ranges li.active, .daterangepicker.single .calendar-table tbody td.today, .daterangepicker.single .calendar-table tbody td.active, .daterangepicker.show-calendar .calendar-table tbody td.available.active.start-date:after, .daterangepicker.show-calendar .calendar-table tbody td.available.active.start-date:before, .daterangepicker.show-calendar .calendar-table tbody td.available.active.end-date:after, .daterangepicker.show-calendar .calendar-table tbody td.available.active.end-date:before, .daterangepicker .ranges ul li.active {
+  background: #5f63f2;
+}
+.color-dark, .contact-card .cp-info__title, .contact-list .contact-item .contact_title a, .add-contact .add-new-contact label, .mailbox-list__single:hover .time-meta, .mailbox-list__single:hover .mail-content__top .mail-title a, .mailbox-list__single:hover .mail-authorBox .auhor-info .author-name, .task-modal .modal-header h5, .task-card__header .custom-checkbox input[type=checkbox] + label, .task-card .card-header, .kanban-modal__research h6, .kanban-modal__form label, .kanban-modal__header .modal-title, .kanban-list .list-title, .kb__categories li p, .post-pagination p a, .knowledgebase-adv__card .knowledgebase__list li a, .knowledgebase-adv__card .knowledgebase__list li .knowledgebase__list-collapsed, .knowledgebase__more a, .fileM-card .fileM-excerpt, .fileM-wrapper__title, .fileM-sidebar .fileM-types .sidebar__menu-group ul.sidebar_nav li.menu-title span, .testimonial-slider-global .author-thumb p, .changelog-history__title, .v-num, .counting-area .number, .ai-list-item span.active, .application-faqs .panel-title a, .gc__title p, .search-content .keyword-searching, .icon-list i,
+.icon-list svg, .add-product-status-radio .custom-radio input[type=radio]:checked + label, .upload-media-area__title p, .file-upload__label:hover, .file-upload__label, .add-product__body .form-group label, .table5 .pagination-total-text, table.table-rounded tr th,
+table.table-rounded tr td, table.table-basic tr td, .orderDatatable-title, .payment-invoice-table.userDatatable table thead tr th, .payment-invoice-qr__address p, .payment-invoice-qr__code p, .payment-invoice-qr__number p, .payment-invoice-qr__number .display-3, .payment-invoice-address__area address, .payment-invoice-logo span, .crc__method, .check-review__contact p, .payment-method-paypal .form-control, .payment-method-card .card-body label, .wizard9 .checkout-progress2 .step.completed span:last-child, .wizard9 .checkout-progress2 .step.current span:last-child, .wizard10 .payment-method-card .select2-container .select2-selection--single .select2-selection__rendered,
+.wizard10 .payment-method-card .select2-container--default .select2-selection--single .select2-selection__placeholder, .wizard10 .select2-container .select2-selection--single .select2-selection__rendered,
+.wizard10 .select2-container--default .select2-selection--single .select2-selection__placeholder, .wizard10 .checkout-progress3 .step span:first-child, .checkout-progress div.step.completed span:nth-of-type(2), .checkout-progress div.step.current span:nth-of-type(2), .checkout-progress div.step, .order-summery .total > div span, .Product-cart-title .media p, .product-cart__header th, .quantity .input, .product-details .product-details-brandName span, .product-details__availability .title p, #price-range .price-value, .stars-rating__point, .product-item__body .card-title a, .e-info-modal .e-info-list li .list-line .list-meta, .c-event-dialog .modal-header .modal-title, .fc-listMonth-view .fc-list-day th, #full-calendar .fc-toolbar-chunk .fc-toolbar-title, .date-picker__calendar .ui-datepicker-header .ui-datepicker-title span, .drag-drop-wrap .item_title h6 a, .atbd-tab .nav-link, .atbd-drawer .profile-info__label, .area-drawer-wrapper h1,
+.area-drawer-wrapper h2,
+.area-drawer-wrapper h3,
+.area-drawer-wrapper h4,
+.area-drawer-wrapper h5,
+.area-drawer-wrapper h6, .atbd-drawer__body p, .atbd-drawer__header .drawer-title, .page-info__single span, .page-title__left .title-text, .statistics-countdown__time, .statistics-item__number, .atbd-steps__text, .atbd-pop-message__text p, .atbd-submenu li a, .atbd-submenu .submenu-title, .timeline-box--3.basic-timeline .timeline li .timeline-single .timeline-single__days span, .form-basic label, .new-member-modal .form-group label, .userDatatable-inline-title h6,
+.userDatatable-content, .media-ui .user-group-progress-top p, .user-social-profile .edit-profile__body label, .users-list-body__title span span, .atbd-notice__content .notice-list__text, .signUp-admin-right .cardd .card-header h6, .edit-profile__body .form-group label, .ap-product .table thead tr th, .sales-target__progress-bar .total-count, .crm .table-selling-content .title, .crm .deals-table-wrap .table--default td, .revenue-chart-box__data, .revenue-chart-legend__data span, .device-pieChart-wrap .pie-chart-legend span, .atbd-empty__text, .atbd-notification-box__close svg,
+.atbd-notification-box__close img, .atbd-comment-box__content .cci__author-info, .badge.badge-transparent.badge-danger, .dynamic-badge-block .atbd-button-group .btn-icon svg, .strikingDash-top-menu > ul > li .megaMenu-wrapper.megaMenu-wide > li .mega-title, .daterangepicker.single .calendar-table tbody td, .chartjs-tooltip table tbody td, .atbd-message {
+  color: #272b41;
+}
+.text-third {
+  color: #5f63f2 !important;
+}
+/* Forcast Card */
+.forcast-cardbox {
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(146, 153, 184, 0.03);
+}
+.forcast-cardbox .forcast-title {
+  font-weight: 500;
+  padding: 25px 25px 30px;
+}
+.forcast-cardbox .forcast-details {
+  padding: 0 25px 0px 25px;
+  margin-bottom: 24px;
+}
+.forcast-cardbox .forcast-details .forcast-value {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+@media (max-width: 1200px) {
+  .forcast-cardbox .forcast-details .forcast-value {
+    font-size: calc(17.4px + 1.05vw);
+  }
+}
+.forcart_canvas{
+  width: 100% !important;
+}
+.forcast-cardbox .forcast-details .forcast-status .percentage {
+  font-size: 14px;
+  font-weight: 500;
+}
+.forcast-cardbox .forcast-details .forcast-status .percentage svg,
+.forcast-cardbox .forcast-details .forcast-status .percentage img {
+  width: 14px;
+}
+.forcast-cardbox .forcast-details .forcast-status .forcast-text {
+  font-size: 13px;
+  margin-left: 4px;
+  color: #868eae;
+}
+
+
+.forcast-cardbox
+{
+  background: #ffffff;
+  background-color: #fff;
+}
+.forcast-cardbox .forcast-title {
+  font-weight: 500;
+  padding: 25px 25px 30px;
+}
+.forcast-cardbox .forcast-details {
+  padding: 0 25px 0px 25px;
+  margin-bottom: 24px;
+}
+.forcast-cardbox .forcast-details .forcast-value {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+@media (max-width: 1200px) {
+  .forcast-cardbox .forcast-details .forcast-value {
+    font-size: calc(17.4px + 1.05vw);
+  }
+}
+.forcast-cardbox .forcast-details .forcast-status .percentage {
+  font-size: 14px;
+  font-weight: 500;
+}
+.forcast-cardbox .forcast-details .forcast-status .percentage svg,
+.forcast-cardbox .forcast-details .forcast-status .percentage img {
+  width: 14px;
+}
+.forcast-cardbox .forcast-details .forcast-status .forcast-text {
+  font-size: 13px;
+  margin-left: 4px;
+  color: #868eae;
+}
+.ratio-box .ratio-info .ratio-percentage {
+  font-size: 14px;
+  font-weight: 500;
+}
+.inEx__info .inEx__percentage {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 8px -2px 10px;
+}
+@media only screen and (max-width: 1599px) {
+  .inEx__info .inEx__percentage {
+    display: inline-block;
+    margin: 15px 8px 0 0;
+  }
+}
+.inEx__info .inEx__percentage svg,
+.inEx__info .inEx__percentage img {
+  width: 14px;
+  margin-right: 4px;
+}
+.progress-wrap .progress-percentage {
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 10px;
+}
+.user-group-progress-bar .progress-percentage {
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 500;
+}
+.kanban-modal__progress .progress-wrap .progress-percentage {
+  font-size: 12px;
+  line-height: 1.3333333333;
+  font-weight: 500;
+}
+.revenue-chart-legend__percentage span {
+  font-size: 13px;
+  color: #868eae;
+}
+
+.active-color-success label input:checked + span {
+  background: #20c997;
+  border-color: #20c997;
+}
+.color-success, .pricing__features ul li span.fa-check, .wizard10 .payment-success-modal .modal-icon span, .select-cupon .select2-container .select2-selection--single .select2-selection__rendered, .select-cupon .select2-container--default .select2-selection--single .select2-selection__placeholder, .product-details__availability .title span.stock, .statistics-item.statistics-success .statistics-item__number, .atbd-tag.tag-success.tag-transparented, .atbd-pop-message.message-success .atbd-pop-message__icon i,
+.atbd-pop-message.message-success .atbd-pop-message__icon svg,
+.atbd-pop-message.message-success .atbd-pop-message__icon span, .modal-info-body .modal-info-icon.success svg, .revenue-chart-box__Icon.order-bg-opacity-success svg, .performance-stats__up strong sub, .atbd-notification-box.notification-success .atbd-notification-box__icon svg, .feature-cards6 .card-short .card-short-checkbox .checkbox-text, .card-overview-progress .card-progress__bar .progress-upword strong, .avatar .avatar-badge-wrap .badge-icon.badge-icon-success, .avatar.avatar-success.avatar-transparent, .badge.badge-transparent.badge-success {
+  color: #20c997;
+}
+.ap-po-timeChart .parentContainer {
+  position: relative;
+  bottom: -6px;
 }

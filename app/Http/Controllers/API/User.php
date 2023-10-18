@@ -176,6 +176,7 @@ class User extends Controller
                 $item_array[$key][] = $user['user_code'];
                 $item_array[$key][] = $user['fullname'];
                 $item_array[$key][] = $user['email'];
+                $item_array[$key][] = $user['init_password'];
                 $item_array[$key][] = $user['phone'];
                 $item_array[$key][] = (isset($user['role']['status']))?view('common.status_indicators', ['status' => $user['role']['status']])->render(). $user['role']['label']:'-';
                 $item_array[$key][] = (isset($user['status']['label']))?view('common.status', ['status_data' => ['label' => $user['status']['label'], "color" => $user['status']['color']]])->render():'-';

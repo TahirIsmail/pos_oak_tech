@@ -17,6 +17,7 @@
                                 <th>{{ __('User Code') }}</th>
                                 <th>{{ __('Full Name') }}</th>
                                 <th>{{ __('Email') }}</th>
+                                <th>{{ __('Password') }}</th>
                                 <th>{{ __('Phone') }}</th>
                                 <th>{{ __('Role') }}</th>
                                 <th>{{ __('Status') }}</th>

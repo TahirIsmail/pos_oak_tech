@@ -1,4 +1,3 @@
-
 <style>
 .jumbotron {
   background-color: #f8f8f8;
@@ -27,12 +26,10 @@
 } */
 .dashboard_title {
   width: 100%;
-  background: linear-gradient(to right, #1488CC, #5691c8);
+  background: linear-gradient(to right, #1488cc, #5691c8);
   color: #ffffff;
   text-align: center;
 }
-
-
 
 .chart_container {
   width: 100%;
@@ -41,7 +38,7 @@
   margin: 0 auto;
   /* Center the container horizontally */
   padding: 10px;
-  background-color: #FEFEFE;
+  background-color: #fefefe;
   border-bottom: 1px solid #fdfdfd;
   border-left: 1px solid #f8f8f8;
   border-right: 1px solid #f8f8f8;
@@ -58,10 +55,9 @@
   border-top: 1px solid #f8f8f8;
   border-left: 1px solid #f8f8f8;
   border-right: 1px solid #f8f8f8;
-  background-color: #FEFEFE;
+  background-color: #fefefe;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
-
 }
 
 #sale_purchase_chart {
@@ -70,7 +66,7 @@
 }
 </style>
 <template>
-  <div class="row">
+  <div class="row" style="margin-left: -29px !important">
     <div class="col-md-12">
       <div class="d-flex flex-wrap mb-4">
         <div class="mr-auto">
@@ -80,9 +76,17 @@
             </div>
           </div>
         </div>
+
+       
         <div class="">
-          <date-picker type="month" :lang="date.lang" :format="date.format" v-model="dashboard_month"
-            @change="dashboard_month_change" input-class="form-control bg-white"></date-picker>
+          <date-picker
+            type="month"
+            :lang="date.lang"
+            :format="date.format"
+            v-model="dashboard_month"
+            @change="dashboard_month_change"
+            input-class="form-control bg-white"
+          ></date-picker>
         </div>
       </div>
 
@@ -98,132 +102,134 @@
         </div>
         <div class="col-md-12">
           <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content ">
-                  <div class="dashboard_title  text-subhead p-2 " id="Vendors/Suppliers">
-                    {{ $t("Vendors/Suppliers") }}
+            <div
+              class="col-sm-12 col-md-12 col-lg-6   mb-5"
+              style="margin-bottom: 30px"
+            >
+              <div
+                class="row1 ap-po-details ap-po-details--2 radius-xl bg-white d-flex "
+                style="padding: 25px"
+              >
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                  <div class="overview-content">
+                    <h1>7,461</h1>
+                    <p>Vendors/Suppliers</p>
+                    <div class="ap-po-details-time">
+                      <span class="color-success"
+                        ><i class="las la-arrow-up"></i>
+                        <strong>25%</strong></span
+                      >
+                      <small>Since last week</small>
+                    </div>
                   </div>
-
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="500" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
+                </div>
+                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                  <div class="overview-single__chart d-md-flex align-items-end">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas ref="myChart"></canvas>
                       </div>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
+              <!-- Card 4 End  -->
             </div>
 
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Users / Customers") }}
+            <div
+              class="col-sm-12 col-md-12 col-lg-6  mb-5"
+              style="margin-bottom: 30px"
+            >
+              <div
+                class=" row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
+                style="padding: 25px"
+              >
+              <div class="col-sm-12 col-md-6 col-lg-6">
+                  <div class="overview-content">
+                    <h1>7,461</h1>
+                    <p>Users/Customers</p>
+                    <div class="ap-po-details-time">
+                      <span class="color-success"
+                        ><i class="las la-arrow-up"></i>
+                        <strong>25%</strong></span
+                      >
+                      <small>Since last week</small>
+                    </div>
                   </div>
-
-
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="3498" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
+                </div>
+                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                  <div class="overview-single__chart d-md-flex align-items-end">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas ref="myChart13"></canvas>
                       </div>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
+              <!-- Card 2 End  -->
             </div>
 
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">{{ $t("Staff") }}</div>
-
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="1934" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
+            <div class="col-sm-12 col-md-12 col-lg-6  mb-5" style="margin-bottom: 30px">
+              <div
+                class="row1  ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
+                style="padding: 25px"
+              >
+              <div class="col-sm-12 col-md-6 col-lg-6">
+                  <div class="overview-content">
+                    <h1>7,461</h1>
+                    <p>Staff</p>
+                    <div class="ap-po-details-time">
+                      <span class="color-success"
+                        ><i class="las la-arrow-up"></i>
+                        <strong>25%</strong></span
+                      >
+                      <small>Since last week</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                  <div class="overview-single__chart d-md-flex align-items-end">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas ref="myChart14Ref"></canvas>
                       </div>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
+              <!-- Card 3 End  -->
             </div>
 
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="dashboard_row col-14 bg-white rounded custom-border-light"
-                >
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Purchase Orders") }}
+            <div class="col-sm-12 col-md-12 col-lg-6  mb-5" style="margin-bottom: 30px">
+              <div
+                class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
+                style="padding: 25px"
+              >
+              <div class="col-sm-12 col-md-6 col-lg-6">
+                  <div class="overview-content">
+                    <h1>7,461</h1>
+                    <p>Purchase Order</p>
+                    <div class="ap-po-details-time">
+                      <span class="color-success"
+                        ><i class="las la-arrow-up"></i>
+                        <strong>25%</strong></span
+                      >
+                      <small>Since last week</small>
+                    </div>
                   </div>
-
-                  <div class="mt-auto p-4">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <!-- <span class="text-headline d-block mb-1">{{ todays_order_count.raw }}</span> -->
-                        <input v-knob class="knob" type="text" value="398" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
+                </div>
+                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                  <div class="overview-single__chart d-md-flex align-items-end">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas ref="myChart15Canvas"></canvas>
                       </div>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
+              <!-- Card 4 End  -->
             </div>
           </div>
         </div>
@@ -231,621 +237,907 @@
 
       <!--  ====================== total customer vendors and staff start ==========   -->
 
-      <!-- total income and expense graphics respresentation  start  -->
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold">
-                {{ $t("INCOME & EXPENSE") }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <!-- <div class="container">
-              <div class="jumbotron" style="max-width: 920px; margin: 20px auto;">
-                <div id="chartContainer" style="height: 370px;"></div>
-              </div>
-            </div> -->
-
-            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-
-                    {{ $t("Total Income") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="income_expense_chart" class=""></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Expense") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="income_expense_chart1" class=""></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Net Profits") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="income_expense_chart2" class=""></canvas>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- total income and expense graphics respresentation  end  -->
-
-      <!-- total sales and PURCHASE graphics respresentation  start  -->
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold">
-                {{ $t("TOTAL SALE AND PURCHASE") }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Sales ") }}
-                  </strong>
-                </div>
-
-                <div class="chart_container">
-                  <canvas id="sale_purchase_chart" class=""></canvas>
-                </div>
-
-
-              </div>
-
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Purchase") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="sale_purchase_chart1" class=""></canvas>
-                </div>
-              </div>
-            </div>
-            <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 " style="border-radius:20px;">
-                <div class="rounded custom-border-light">
-                  <strong class="p-4">
-                        {{ $t("Total Net Profits") }}
-                  </strong>
-                  <div class="chart_container">
-                    <canvas id="sale_purchase_chart2" class=""></canvas>
-                  </div>
-                </div>
-            </div>         -->
-          </div>
-        </div>
-      </div>
-
-      <!-- total sale and puraches graphics respresentation  end  -->
-
-
-
-      <!-- total stock in and stock out   start -->
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold">
-                {{ $t("TOTAL STOCK IN AND STOCK OUT") }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Stock In") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="sale_stock_in_chart" class=""></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="border-radius: 20px">
-              <div class="rounded custom-border-light">
-                <div class="chart_title width-100% ">
-                  <strong class="p-4">
-                    {{ $t("Total Stock Out") }}
-                  </strong>
-                </div>
-                <div class="chart_container">
-                  <canvas id="sale_stock_out_chart" class=""></canvas>
-                </div>
-              </div>
-            </div>
-            <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 " style="border-radius:20px;">
-                <div class="rounded custom-border-light">
-                  <strong class="p-4">
-                        {{ $t("Total Net Profits") }}
-                  </strong>
-                  <div class="chart_container">
-                    <canvas id="sale_purchase_chart2" class=""></canvas>
-                  </div>
-                </div>
-            </div>         -->
-          </div>
-        </div>
-      </div>
-
-
-      <!-- total stock in and stock out   end -->
-
-      <div class="d-flex flex-wrap mb-4">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold"> {{ $t("Month") }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_count.raw">
-              <div class="dashboard_row  col-14 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Sales") }}</div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="2423" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="order_value.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Sale Value") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="2324" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="revenue_value.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Revenue") }}
-                  </div>
-
-                  <div class="mt-auto p-4 ">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="223" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="invoices_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">{{ $t("Total Invoices") }}</div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="523" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="expense.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Expense") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="123" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="net_profit_value.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Net Profit") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="232" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="customer_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Customers") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="465" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="purchase_order_count.raw">
-              <div class="dashboard_row col-14  bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="dashboard_title text-subhead p-2">
-                    {{ $t("Total Purchase Orders") }}
-                  </div>
-
-                  <div class="mt-auto p-4">
-                    <span class="text-headline">
-                      <input v-knob class="knob" type="text" value="23" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="d-flex flex-wrap mb-4" style="display: none !important">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
-              <div class="col-12 rounded custom-border-light">
-                <div class="d-flex flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
-                    <div class="chart_container">
-                      <canvas id="pos_sales_count_activity_chart" class=""></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-6 box">
-              <div class="col-12 rounded custom-border-light">
-                <div class="d-flex flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-1">
-                    <div class="chart_container d-flex align-items-center">
-                      <canvas id="horizontal_chart"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex flex-wrap mb-4" style="display: none !important">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold"> {{ $t("Today") }} </span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_count.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">{{ $t("Sales") }}</div>
-
-                  <div class="mt-auto p-2">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <input v-knob class="knob" type="text" :value="todays_order_count.raw" />
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_count.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_count.difference) == -1,
-                        }" v-show="todays_order_count.difference !== 0">
-                          <span v-show="Math.sign(todays_order_count.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_count.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_count.difference }}%
-                        </span>
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
-              <div class="col-12 rounded custom-border-light">
-                <div class="d-flex p-3 flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
-                    <div class="stat_chart_container">
-                      <canvas id="today_sales_count_chart" class=""></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box" :title="todays_order_value.raw">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">{{ $t("Sale Value") }}</div>
-
-                  <div class="mt-auto p-2">
-                    <span>
-                      <i class="fa fa-circle-notch fa-spin" v-if="stats_processing == true"></i>
-                      <div class="d-flex flex-column align-items-center" v-else>
-                        <input v-knob class="knob" type="text" :value="todays_order_value.raw" />
-
-                        <span :class="{
-                          'text-success':
-                            Math.sign(todays_order_value.difference) == 1,
-                          'text-danger':
-                            Math.sign(todays_order_value.difference) == -1,
-                        }" v-show="todays_order_value.difference !== 0">
-                          <span v-show="Math.sign(todays_order_value.difference) == 1
-                            "><i class="fas fa-long-arrow-alt-up"></i></span>
-                          <span v-show="Math.sign(todays_order_value.difference) == -1
-                            "><i class="fas fa-long-arrow-alt-down"></i></span>
-                          {{ todays_order_value.difference }}%
-                        </span>
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3 box">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex flex-wrap box-content">
-                  <div class="d-flex col-sm-12 col-md-12 col-lg-12 col-xl-12 p-0">
-                    <div class="stat_chart_container">
-                      <canvas id="today_sales_value_chart" class=""></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- <div class="d-flex flex-wrap">
-        <div class="mr-auto">
-          <div class="d-flex mb-2">
-            <div>
-              <span class="text-subhead-bold"> {{ $t("Targets") }} </span>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- <div class="d-flex flex-wrap mb-4">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
-                    {{ $t("Income") }}
-                  </div>
-
-                  <div class="mt-auto p-2">
-                    <span class="dashboard-target-label">
-                      <canvas id="myChart"></canvas>
-                    </span>
-                  </div>
-
-                 
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
-                    {{ $t("Expense") }} 
-                  </div>
-
-                  <div class="mt-auto p-2">
-                    <span class="dashboard-target-label">
-                      <canvas id="myChart1"></canvas>
-                    </span>
-                  </div>
-
-                  <div class="progress mt-2 w-100 progress-height">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      v-bind:style="{ width: target.expense_width }"
-                      v-bind:aria-valuenow="expense.raw"
-                      aria-valuemin="0"
-                      v-bind:aria-valuemax="target.expense"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
-                    {{ $t("Sales") }} 
-                  </div>
-
-                  <div class="mt-auto p-2">
-                    <span class="dashboard-target-label">
-                      <canvas id="myChart2"></canvas>
-                    </span>
-                  </div>
-
-                  <div class="progress mt-2 w-100 progress-height">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      v-bind:style="{ width: target.sales_width }"
-                      v-bind:aria-valuenow="order_value.raw"
-                      aria-valuemin="0"
-                      v-bind:aria-valuemax="target.sales"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start flex-column p-1 mb-1 col-md-3">
-              <div class="col-12 p-3 bg-white rounded custom-border-light">
-                <div class="d-flex align-items-center flex-column box-content">
-                  <div class="text-subhead p-2">
-                    {{ $t("Net Profit") }}
-                  </div>
-
-                  <div class="mt-auto p-2">
-                    <span class="dashboard-target-label">
-                      <canvas id="myChart3"></canvas>
-                    </span>
-                  </div>
-
-                  <div class="progress mt-2 w-100 progress-height">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      v-bind:style="{ width: target.net_profit_width }"
-                      v-bind:aria-valuenow="net_profit_value.raw"
-                      aria-valuemin="0"
-                      v-bind:aria-valuemax="target.net_profit"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <div class="d-flex flex-wrap mb-4">
-
-        <!-- <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 pl-sm-0 pl-md-3 pr-4">
-          <div class="mr-auto">
-            <div class="d-flex mb-2">
-              <div>
-                <span class="text-subhead-bold">
-                  {{ $t("Recent Transactions") }}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="">
-            <div class="table-container">
-              <div class="table-responsive mb-2" v-if="transactions.length > 0">
-                <table class="table display nowrap text-nowrap w-100">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">{{ $t("Transaction Code") }}</th>
-                      <th scope="col">{{ $t("Transaction Date") }}</th>
-                      <th scope="col">{{ $t("Transaction Type") }}</th>
-                      <th scope="col">{{ $t("Payment Method") }}</th>
-                      <th scope="col" class="text-right">{{ $t("Amount") }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(transaction, key, index) in transactions"
-                      v-bind:value="transactions.slack"
-                      v-bind:key="index"
+      <div class="col-md-12">
+        <div class="row">
+          <!-- <div
+            class="col-sm-12 col-md-12 col-lg-6 col-xl-4"
+            style="border-radius: 20px"
+          > -->
+          <div class="col-sm-12 col-md-12 col-lg-6" style="border-radius: 20px">
+            <div class="cardd">
+              <div class="card-header-revenu">
+                <h6>
+                  INCOME & EXPENSE
+                  <span>Nov 23, 2019 - Nov 29, 2019</span>
+                </h6>
+                <div class="card-extra">
+                  <ul class="card-tab-links mr-3 nav-tabs nav" role="tablist">
+                    <li>
+                      <a
+                        href="#t_revenue-week"
+                        data-toggle="tab"
+                        id="t_revenue-week-tab"
+                        role="tab"
+                        aria-selected="true"
+                        >Week</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#t_revenue-month"
+                        data-toggle="tab"
+                        id="t_revenue-month-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Month</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="active"
+                        href="#t_revenue-year"
+                        data-toggle="tab"
+                        id="t_revenue-year-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Year</a
+                      >
+                    </li>
+                  </ul>
+                  <div class="dropdown dropleft">
+                    <a
+                      href="#"
+                      role="button"
+                      id="cash"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
                     >
-                      <th scope="col">{{ key + 1 }}</th>
-                      <td>{{ transaction.transaction_code }}</td>
-                      <td>{{ transaction.transaction_date }}</td>
-                      <td>{{ transaction.label }}</td>
-                      <td>{{ transaction.payment_method }}</td>
-                      <td class="text-right">{{ transaction.amount }}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                      <i class="la la-ellipsis-h"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="cash">
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div v-else>Transactions not found</div>
+              <!-- ends: .card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div
+                    class="tab-pane fade"
+                    id="t_revenue-week"
+                    role="tabpanel"
+                    aria-labelledby="t_revenue-week-tab"
+                  >
+                    <div class="cashflow-display d-flex">
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Net Profit</span
+                        >
+                        <h2 class="cashflow-display__amount color-primary">
+                          $2,784
+                        </h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Income</span
+                        >
+                        <h2 class="cashflow-display__amount">$4,240</h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Expense</span
+                        >
+                        <h2 class="cashflow-display__amount">$2,470</h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                    </div>
+
+                    <div class="cashflow-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="barChartCashflow_W"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Income
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(255, 77, 79)"
+                          ></span
+                          >Total Expense
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="t_revenue-month"
+                    role="tabpanel"
+                    aria-labelledby="t_revenue-month-tab"
+                  >
+                    <div class="cashflow-display d-flex">
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Net Profit</span
+                        >
+                        <h2 class="cashflow-display__amount color-primary">
+                          $52,784
+                        </h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Income</span
+                        >
+                        <h2 class="cashflow-display__amount">$74,240</h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Expense</span
+                        >
+                        <h2 class="cashflow-display__amount">$22,470</h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                    </div>
+
+                    <div class="cashflow-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="cashflowChartCanvas"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Income
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(255, 77, 79)"
+                          ></span
+                          >Total Expense
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade active show"
+                    id="t_revenue-year"
+                    role="tabpanel"
+                    aria-labelledby="t_revenue-year-tab"
+                  >
+                    <div class="cashflow-display d-flex">
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Net Profit</span
+                        >
+                        <h2 class="cashflow-display__amount color-primary">
+                          $92,784
+                        </h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Income</span
+                        >
+                        <h2 class="cashflow-display__amount">$104,240</h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                      <div class="cashflow-display__single">
+                        <span class="cashflow-display__title"
+                          >Total Expense</span
+                        >
+                        <h2 class="cashflow-display__amount">$872,470</h2>
+                      </div>
+                      <!-- ends: .cashflow-display__single -->
+                    </div>
+
+                    <div class="cashflow-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            id="barChartCashflow_Y"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static">
+                        <li class="custom-label">
+                          <span style="background-color: #2c99ff"></span>Total
+                          Income
+                        </li>
+                        <li class="custom-label">
+                          <span style="background-color: #ff69a5"></span>Total
+                          Expense
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ends: .card-body -->
             </div>
           </div>
-        </div> -->
-      </div>
+          <!--  ====================== total sale purcahe ========== ////  -->
 
+          <div class="col-sm-12 col-md-12 col-lg-6" style="border-radius: 20px">
+            <div class="cardd revenueChartTwo broder-0">
+              <div class="card-header-revenu">
+                <h6>TOTAL SALE AND PURCHASE</h6>
+                <div class="card-extra">
+                  <ul class="card-tab-links mr-3 nav-tabs nav" role="tablist">
+                    <li>
+                      <a
+                        class="active"
+                        href="#tl_revenue-today"
+                        data-toggle="tab"
+                        id="tl_revenue-today-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Today</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#tl_revenue-week"
+                        data-toggle="tab"
+                        id="tl_revenue-week-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Week</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#tl_revenue-month"
+                        data-toggle="tab"
+                        id="tl_revenue-month-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Month</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#tl_revenue-year"
+                        data-toggle="tab"
+                        id="tl_revenue-year-tab"
+                        role="tab"
+                        aria-selected="true"
+                        >Year</a
+                      >
+                    </li>
+                  </ul>
+                  <div class="dropdown dropleft">
+                    <a
+                      href="#"
+                      role="button"
+                      id="revenue3"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span data-feather="more-horizontal"></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- ends: .card-header -->
+              <div class="card-body pt-0">
+                <div class="tab-content">
+                  <div
+                    class="tab-pane fade active show"
+                    id="tl_revenue-today"
+                    role="tabpanel"
+                    aria-labelledby="tl_revenue-today-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Sale</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Purchase</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
 
-      <!-- <div class="container">
-        <h1>Chart Integration Example</h1>
-        <div id="app">
-          <chart-component></chart-component>
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6TExtra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static" style="margin-top: 7px">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Sale
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Purchase
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="tl_revenue-week"
+                    role="tabpanel"
+                    aria-labelledby="tl_revenue-week-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Sale</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Purchase</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
+
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6WExtra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static" style="margin-top: 7px">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Sale
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Purchase
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="tl_revenue-month"
+                    role="tabpanel"
+                    aria-labelledby="tl_revenue-month-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Sale</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Purchase</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
+
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6MExtra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static" style="margin-top: 7px">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Sale
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Purchase
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="tl_revenue-year"
+                    role="tabpanel"
+                    aria-labelledby="tl_revenue-year-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Sale</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Purchase</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
+
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6Extra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static" style="margin-top: 7px">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Sale
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Purchase
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ends: .card-body -->
+            </div>
+          </div>
+
+          <!--  ====================== TOTAL STOCK IN AND STOCK OUT ========== ////  -->
+
+          <div
+            class="col-sm-12 col-md-12 col-lg-12"
+            style="border-radius: 20px; margin-top: 30px"
+          >
+            <div class="cardd revenueChartTwo broder-0">
+              <div class="card-header-revenu">
+                <h6>TOTAL STOCK-IN AND STOCK-OUT</h6>
+                <div class="card-extra">
+                  <ul class="card-tab-links mr-3 nav-tabs nav" role="tablist">
+                    <li>
+                      <a
+                        class="active"
+                        href="#tl_stock-today"
+                        data-toggle="tab"
+                        id="tl_stock-today-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Today</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#tl_stock-week"
+                        data-toggle="tab"
+                        id="tl_stock-week-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Week</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#tl_stock-month"
+                        data-toggle="tab"
+                        id="tl_stock-month-tab"
+                        role="tab"
+                        aria-selected="false"
+                        >Month</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#tl_stock-year"
+                        data-toggle="tab"
+                        id="tl_stock-year-tab"
+                        role="tab"
+                        aria-selected="true"
+                        >Year</a
+                      >
+                    </li>
+                  </ul>
+                  <div class="dropdown dropleft">
+                    <a
+                      href="#"
+                      role="button"
+                      id="stock3"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span data-feather="more-horizontal"></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- ends: .card-header -->
+              <div class="card-body pt-0">
+                <div class="tab-content">
+                  <div
+                    class="tab-pane fade active show"
+                    id="tl_stock-today"
+                    role="tabpanel"
+                    aria-labelledby="tl_stock-today-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Stock-In</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Stock-Out</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
+
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6TodayExtra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Stock-In
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Stock-Out
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="tl_stock-week"
+                    role="tabpanel"
+                    aria-labelledby="tl_stock-week-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Stock-In</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Stock-Out</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
+
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6WeekExtra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Stock-In
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Stock-Out
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="tl_stock-month"
+                    role="tabpanel"
+                    aria-labelledby="tl_stock-month-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Stock-In</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Stock-Out</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
+
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6MonthExtra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Stock-In
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Stock-Out
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="tl_stock-year"
+                    role="tabpanel"
+                    aria-labelledby="tl_stock-year-tab"
+                  >
+                    <div class="revenue-labels">
+                      <div class="current">
+                        <strong class="text-third">$72,784</strong>
+                        <span>Total Stock-In</span>
+                      </div>
+                      <div>
+                        <strong>$52,240</strong>
+                        <span style="color: #868eae !important"
+                          >Total Stock-Out</span
+                        >
+                      </div>
+                    </div>
+                    <!-- ends: .performance-stats -->
+
+                    <div class="wp-chart">
+                      <div class="parentContainer">
+                        <div>
+                          <canvas
+                            class="canvasdispaly"
+                            ref="myChart6yearExtra"
+                          ></canvas>
+                        </div>
+                      </div>
+                      <ul class="legend-static">
+                        <li class="custom-label">
+                          <span
+                            style="background-color: rgb(95, 99, 242)"
+                          ></span
+                          >Total Stock-In
+                        </li>
+                        <li class="custom-label">
+                          <span
+                            style="
+                              background-color: rgb(134, 142, 174) !important;
+                            "
+                          ></span
+                          >Total Stock-Out
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ends: .card-body -->
+            </div>
+          </div>
+
+          <!--  ====================== Total detail per month ========== ////  -->
+
+          <div class="col-md-12" style="margin-top: 30px">
+            <div class="row">
+              <div
+                class="col-sm-12 col-md-12 col-lg-3"
+                style="
+                  border-radius: 20px;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                "
+              >
+                <div class="forcast-cardbox">
+                  <h6 class="forcast-title">Net Profit</h6>
+                  <div class="forcast-details">
+                    <h1 class="forcast-value">$42.5k</h1>
+                    <p class="forcast-status">
+                      <span class="percentage color-success">
+                        <span data-feather="arrow-up"></span>
+                        <span>25%</span>
+                      </span>
+                      <span class="forcast-text">Since last month</span>
+                    </p>
+                  </div>
+                  <div class="forcast__chart">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas class=" forcart_canvas" ref="lineChartCanvas"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ends: .forcast-cardbox -->
+              </div>
+
+              <div
+                class="col-sm-12 col-md-12 col-lg-3"
+                style="
+                  border-radius: 20px;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                "
+              >
+                <div class="forcast-cardbox">
+                  <h6 class="forcast-title">Total Sale Value</h6>
+                  <div class="forcast-details">
+                    <h1 class="forcast-value">$42.5k</h1>
+                    <p class="forcast-status">
+                      <span class="percentage color-success">
+                        <span data-feather="arrow-up"></span>
+                        <span>25%</span>
+                      </span>
+                      <span class="forcast-text">Since last month</span>
+                    </p>
+                  </div>
+                  <div class="forcast__chart">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas class=" forcart_canvas" ref="lineChartCanvastvalue"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ends: .forcast-cardbox -->
+              </div>
+
+              <div
+                class="col-sm-12 col-md-12 col-lg-3"
+                style="
+                  border-radius: 20px;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                "
+              >
+                <div class="forcast-cardbox">
+                  <h6 class="forcast-title">Total Revenue</h6>
+                  <div class="forcast-details">
+                    <h1 class="forcast-value">$42.5k</h1>
+                    <p class="forcast-status">
+                      <span class="percentage color-success">
+                        <span data-feather="arrow-up"></span>
+                        <span>25%</span>
+                      </span>
+                      <span class="forcast-text">Since last month</span>
+                    </p>
+                  </div>
+                  <div class="forcast__chart">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas class=" forcart_canvas" ref="lineChartCanvastRevenue"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ends: .forcast-cardbox -->
+              </div>
+
+              <div
+                class="col-sm-12 col-md-12 col-lg-3"
+                style="
+                  border-radius: 20px;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                "
+              >
+                <div class="forcast-cardbox">
+                  <h6 class="forcast-title">Total Invoices</h6>
+                  <div class="forcast-details">
+                    <h1 class="forcast-value">$42.5k</h1>
+                    <p class="forcast-status">
+                      <span class="percentage color-success">
+                        <span data-feather="arrow-up"></span>
+                        <span>25%</span>
+                      </span>
+                      <span class="forcast-text">Since last month</span>
+                    </p>
+                  </div>
+                  <div class="forcast__chart">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas class=" forcart_canvas" ref="lineChartCanvastInvoices"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ends: .forcast-cardbox -->
+              </div>
+            </div>
+          </div>
         </div>
-      </div> -->
-
-
-
+      </div>
     </div>
-
   </div>
 </template>
+
 <script>
 "use strict";
 import "jquery";
@@ -854,6 +1146,7 @@ import DatePicker from "vue2-datepicker";
 import moment from "moment";
 import Chart from "chart.js/auto";
 
+// import Chart from 'chart.js';
 export default {
   data() {
     return {
@@ -867,64 +1160,9 @@ export default {
       store_currency: this.store.currency_code,
 
       stats_processing: false,
-      todays_order_count: {
-        raw: "-",
-        formatted: "-",
-        difference: "",
-      },
-      todays_order_value: {
-        raw: "-",
-        formatted: "-",
-        difference: "",
-      },
-      order_count: {
-        raw: "-",
-        formatted: "-",
-      },
-      order_value: {
-        raw: "-",
-        formatted: "-",
-      },
-      revenue_value: {
-        raw: "-",
-        formatted: "-",
-      },
-      customer_count: {
-        raw: "-",
-        formatted: "-",
-      },
-      expense: {
-        raw: "-",
-        formatted: "-",
-      },
-      net_profit_value: {
-        raw: "-",
-        formatted: "-",
-      },
-      purchase_order_count: {
-        raw: "-",
-        formatted: "-",
-      },
-      invoices_count: {
-        raw: "-",
-        formatted: "-",
-      },
-
-      target: {
-        income: "-",
-        income_width: 0,
-
-        expense: "-",
-        expense_width: 0,
-
-        sales: "-",
-        sales_width: 0,
-
-        net_profit: "-",
-        net_profit_width: 0,
-      },
 
       transactions: [],
+      chartData: [45, 35, 50, 20, 70, 40, 15],
 
       todays_sales_count_chart_color: "#1F6EEB",
       todays_sales_value_chart_color: "#FF6283",
@@ -1128,135 +1366,40 @@ export default {
           },
         },
       },
-
-      income_expense_chart: {
-        type: "pie",
-        // type: "doughnut",
-        data: {
-          datasets: [],
-          labels: ["LAPTOPS", "PC", "MOUSE", "CABLES"],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          legend: {
-            display: false,
-          },
-          title: {
-            display: false,
-            text: "",
-          },
-          animation: {
-            animateScale: true,
-            animateRotate: true,
-          },
-          layout: {
-            padding: {
-              top: 40,
-              bottom: 40,
-              left: 40,
-              right: 40,
-            },
-          },
-        },
-      },
-      income_expense_chart1: {
-        type: "pie",
-        // type: "doughnut",
-        data: {
-          datasets: [],
-          labels: ["KEYBOARDS", "MOUSES"],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          legend: {
-            display: false,
-          },
-          title: {
-            display: false,
-            text: "",
-          },
-          animation: {
-            animateScale: true,
-            animateRotate: true,
-          },
-          layout: {
-            padding: {
-              top: 40,
-              bottom: 40,
-              left: 40,
-              right: 40,
-            },
-          },
-        },
-      },
-
-      income_expense_chart2: {
-        type: "pie",
-        // type: "doughnut",
-        data: {
-          datasets: [],
-          labels: ["NET PROFITS"],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          legend: {
-            display: false,
-          },
-          title: {
-            display: false,
-            text: "",
-          },
-          animation: {
-            animateScale: true,
-            animateRotate: true,
-          },
-          layout: {
-            padding: {
-              top: 40,
-              bottom: 40,
-              left: 40,
-              right: 40,
-            },
-          },
-        },
-      },
     };
   },
   props: {
     store: [Array, Object],
     value: Number,
   },
-  directives: {
-    knob: {
-      inserted(el) {
-        const availableColors = ["#FF5733", "#C70039", "#900C3F", "#FFC300", "#3366FF", "#00CC66", "#8B008B", "#FF6347", "#9933CC", "#FF9900"];
-        const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
-        $(el).knob({
-          min: 0,
-          max: 9999,
-          readOnly: true,
-          width: 100,
-          height: 100,
-          fgColor: randomColor,
-        });
-      },
-      unbind(el) {
-        $(el).trigger("remove");
-      },
-    },
-  },
+
   mounted() {
-    console.log("Dashboard loaded");
-    this.fire_requests();
-    this.renderChart();
-    this.renderChartForTotalSales();
-    this.renderChartForTotalStockIn();
-    this.renderChartForTotalStockOut();
-    this.renderChartForTotalPurchase();
-    // console.log(this.getRandomColor);
+    this.renderLineChart_tInvoices();
+    this.renderLineChart_tRevenue();
+    this.renderLineChart_tvalue();
+
+    this.renderLineChart();
+    this.Chart6MonthExtra();
+    this.Chart6WeekExtra();
+    this.Chart6yearExtra();
+    this.Chart6TodayExtra();
+    this.initializeChart();
+    this.initializeChartM();
+    this.initializeChartw();
+    this.Chart6TExtra();
+    this.createChart_Y();
+    this.createChart_W();
+    this.initializeCashflowChart();
+
+    this.chartData = [45, 35, 50, 20, 40, 15];
+    this.staff();
+
+    this.chartData = [45, 35, 20, 70, 40, 15];
+    this.totalPurchase();
+    // this.chartData = [45, 35, 50, 20, 70, 40, 15];
+    this.createChart();
+
+    this.createBarChart();
 
     this.targetAchieveGraph();
     this.targetAchieveGraph1();
@@ -1268,750 +1411,1322 @@ export default {
       return date != "" ? moment(date).format("YYYY-MM") : "";
     },
 
+  
+   
 
+    createChart() {
+      const ctx = this.$refs.myChart;
 
-    renderChart() {
-      const ctx = document.getElementById("horizontal_chart").getContext("2d");
-
-      new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: ["Label 1", "Label 2", "Label 3", "Label 4"],
-          datasets: [
-            {
-              label: "Dataset Label",
-              backgroundColor: "rgba(75, 192, 192, 0.6)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-              data: [10, 20, 15, 30],
-            },
-          ],
-        },
-        options: {
-          scales: {
-            xAxes: [
+      if (ctx) {
+        const chart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            datasets: [
               {
-                ticks: {
-                  beginAtZero: true,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  reverse: true,
-                },
+                label: "New Contact",
+                data: this.chartData,
+                backgroundColor: "#FF69A520",
+                hoverBackgroundColor: "#FF69A5",
               },
             ],
           },
-        },
-      });
-    },
-
-    renderChartForTotalStockOut() {
-      const ctx = document
-        .getElementById("sale_stock_out_chart")
-        .getContext("2d");
-
-      new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // Add the labels for each month
-          datasets: [
-            {
-              label: "Dataset Label",
-              backgroundColor: "rgba(75, 192, 192, 0.6)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-              data: [10, 20, 15, 30, 10, 20, 15, 30, 10, 20, 15, 30],
+          options: {
+            maintainAspectRatio: true,
+            responsive: true,
+            legend: {
+              display: false,
+              labels: {
+                display: false,
+              },
             },
-          ],
-        },
-        options: {
-          scales: {
-            xAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
+            tooltips: {
+              mode: "label",
+              intersect: false,
+              position: "average",
+              enabled: false,
+              custom: this.customTooltips,
+              callbacks: {
+                label: (tooltipItem, data) => {
+                  const dataset = data.datasets[tooltipItem.datasetIndex];
+                  const yLabel = tooltipItem.yLabel;
+                  return `<span class="chart-data">${yLabel}</span> <span class="data-label">${dataset.label}</span>`;
+                },
+                labelColor: (tooltipItem, chart) => {
+                  const dataset =
+                    chart.config.data.datasets[tooltipItem.datasetIndex];
+                  return {
+                    backgroundColor: dataset.hoverBackgroundColor,
+                    borderColor: "transparent",
+                    usePointStyle: true,
+                  };
                 },
               },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  reverse: true,
+            },
+            scales: {
+              yAxes: [
+                {
+                  display: false,
+                  stacked: true,
+                  gridLines: {
+                    display: false, // Hide the y-axis grid lines
+                  },
+                  ticks: {
+                    display: false,
+                  },
                 },
+              ],
+              xAxes: [
+                {
+                  display: false,
+                  stacked: true,
+                  barPercentage: 1,
+
+                  ticks: {
+                    display: false,
+                  },
+                },
+              ],
+            },
+            plugins: {
+          legend: {
+            display: false,
+          },
+        },
+          },
+        });
+      }
+    },
+
+    createBarChart() {
+      const selector = "myChart13";
+      const bgColor = "#5F63F220";
+      const hBgColor = "#5F63F2";
+      const label = "New Deals";
+
+      const ctx = this.$refs.myChart13;
+      if (ctx) {
+        const chart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            datasets: [
+              {
+                label: label,
+                data: [45, 35, 50, 20, 70, 40, 15],
+                backgroundColor: bgColor,
+                hoverBackgroundColor: hBgColor,
               },
             ],
           },
+          options: {
+            maintainAspectRatio: true,
+            responsive: true,
+            legend: {
+              display: false,
+              labels: {
+                display: false,
+              },
+            },
+            tooltips: {
+              mode: "label",
+              intersect: false,
+              position: "average",
+              enabled: false,
+              custom: this.customTooltips,
+              callbacks: {
+                label: (tooltipItem, data) => {
+                  const dstLabel =
+                    data.datasets[tooltipItem.datasetIndex].label;
+                  const { yLabel } = tooltipItem;
+                  return `<span class="chart-data">${yLabel}</span> <span class="data-label">${dstLabel}</span>`;
+                },
+                labelColor: (tooltipItem, chart) => {
+                  const dataset =
+                    chart.config.data.datasets[tooltipItem.datasetIndex];
+                  return {
+                    backgroundColor: dataset.hoverBackgroundColor,
+                    borderColor: "transparent",
+                    usePointStyle: true,
+                  };
+                },
+              },
+            },
+            scales: {
+              yAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: false,
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  stacked: true,
+                  barPercentage: 1,
+                  gridLines: {
+                    display: false,
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              ],
+            },
+            plugins: {
+          legend: {
+            display: false,
+          },
         },
-      });
+          },
+        });
+      }
     },
 
-    renderChartForTotalStockIn() {
-      const ctx = document
-        .getElementById("sale_stock_in_chart")
-        .getContext("2d");
+    staff() {
+      const selector = "myChart14";
+      const bgColor = "#20C99720";
+      const hBgColor = "#20C997";
+      const label = "New Leads";
 
-      new Chart(ctx, {
+      const ctx = this.$refs.myChart14Ref;
+      if (ctx) {
+        const chart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            datasets: [
+              {
+                label: label,
+                data: this.chartData,
+                backgroundColor: bgColor,
+                hoverBackgroundColor: hBgColor,
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: true,
+            responsive: true,
+            legend: {
+              display: false,
+              labels: {
+                display: false,
+              },
+            },
+            tooltips: {
+              mode: "label",
+              intersect: false,
+              position: "average",
+              enabled: false,
+              custom: this.customTooltips,
+              callbacks: {
+                label: (tooltipItem, data) => {
+                  const dstLabel =
+                    data.datasets[tooltipItem.datasetIndex].label;
+                  const { yLabel } = tooltipItem;
+                  return `<span class="chart-data">${yLabel}</span> <span class="data-label">${dstLabel}</span>`;
+                },
+                labelColor: (tooltipItem, chart) => {
+                  const dataset =
+                    chart.config.data.datasets[tooltipItem.datasetIndex];
+                  return {
+                    backgroundColor: dataset.hoverBackgroundColor,
+                    borderColor: "transparent",
+                    usePointStyle: true,
+                  };
+                },
+              },
+            },
+            scales: {
+              yAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: false,
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  stacked: true,
+                  barPercentage: 1,
+                  gridLines: {
+                    display: false,
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              ],
+            },
+            plugins: {
+          legend: {
+            display: false,
+          },
+        },
+          },
+        });
+      }
+    },
+
+    totalPurchase() {
+  const selector = "myChart15Canvas";
+  const bgColor = "#2C99FF20";
+  const hBgColor = "#2C99FF";
+  const label = "Total";
+
+  const canvas = this.$refs.myChart15Canvas;
+  if (canvas) {
+    const chart = new Chart(canvas, {
+      type: "bar",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        datasets: [
+          {
+            label: label,
+            data: this.chartData,
+            backgroundColor: bgColor,
+            hoverBackgroundColor: hBgColor,
+          },
+        ],
+      },
+      options: {
+        maintainAspectRatio: true,
+        responsive: true,
+        legend: {
+          display: false,
+          labels: {
+            display: false,
+          },
+        },
+        tooltips: {
+          mode: "label",
+          intersect: false,
+          position: "average",
+          enabled: false,
+          custom: this.customTooltips,
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const dstLabel = data.datasets[tooltipItem.datasetIndex].label;
+              const { yLabel } = tooltipItem;
+              return `<span class="chart-data">${yLabel}</span> <span class="data-label">${dstLabel}</span>`;
+            },
+            labelColor: (tooltipItem, chart) => {
+              const dataset = chart.config.data.datasets[tooltipItem.datasetIndex];
+              return {
+                backgroundColor: dataset.hoverBackgroundColor,
+                borderColor: "transparent",
+                usePointStyle: true,
+              };
+            },
+          },
+        },
+        scales: {
+          yAxes: [
+            {
+              stacked: true,
+              gridLines: {
+                display: false, // Remove y-axis grid lines
+              },
+              ticks: {
+                display: false,
+              },
+            },
+          ],
+          xAxes: [
+            {
+              stacked: true,
+              barPercentage: 1,
+              gridLines: {
+                
+                display: false, // Remove x-axis grid lines
+              },
+              ticks: {
+                display: false,
+              },
+            },
+          ],
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
+  }
+},
+
+
+    initializeCashflowChart() {
+      const ctx = this.$refs.cashflowChartCanvas;
+      if (ctx) {
+        const data1 = [20, 60, 50, 45, 50, 60, 70, 40, 45, 35, 25, 30];
+        const data2 = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20];
+        const labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"];
+
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Dataset 1",
+                data: data1,
+                backgroundColor: "#2C99FF20",
+                borderColor: "#2C99FF25",
+                borderWidth: 1,
+                hoverBackgroundColor: "#2C99FF",
+              },
+              {
+                label: "Dataset 2",
+                data: data2,
+                backgroundColor: "#FF69A520",
+                borderColor: "#FF69A525",
+
+                borderWidth: 1,
+                hoverBackgroundColor: "#FF69A5",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+        });
+      }
+    },
+
+    createChart_W() {
+      const ctx = this.$refs.barChartCashflow_W;
+      if (ctx) {
+        const data1 = [20, 60, 50, 45, 50, 60, 70];
+        const data2 = [10, 40, 30, 40, 60, 55, 45];
+        const labels = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Dataset 1",
+                data: data1,
+                backgroundColor: "#2C99FF20",
+                borderColor: "#2C99FF25",
+                borderWidth: 1,
+                hoverBackgroundColor: "#2C99FF",
+              },
+              {
+                label: "Dataset 2",
+                data: data2,
+                backgroundColor: "#FF69A520",
+                borderColor: "#FF69A525",
+                borderWidth: 1,
+                hoverBackgroundColor: "#FF69A5",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+        });
+      }
+    },
+
+    createChart_Y() {
+      const ctx = document.getElementById("barChartCashflow_Y");
+      if (ctx) {
+        const data1 = [35, 55, 25, 72, 45, 58, 35, 45, 65, 38, 45, 48];
+        const data2 = [15, 35, 10, 16, 25, 44, 10, 5, 24, 18, 7, 36];
+        const labels = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Dataset 1",
+                data: data1,
+                backgroundColor: "#2C99FF20",
+                borderColor: "#2C99FF25",
+                borderWidth: 1,
+                hoverBackgroundColor: "#2C99FF",
+              },
+              {
+                label: "Dataset 2",
+                data: data2,
+                backgroundColor: "#FF69A520",
+                borderColor: "#FF69A525",
+
+                borderWidth: 1,
+                hoverBackgroundColor: "#FF69A5",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+        });
+      }
+    },
+
+    Chart6TExtra() {
+      const ctx = this.$refs.myChart6TExtra;
+      if (ctx) {
+        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
+        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const labels = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Combined Dataset",
+                data: data1,
+                borderColor: "#5f63f2",
+                backgroundColor: "rgba(44, 153, 255, 0.1)", // Fade blue background color for data1
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone", // Smooth curve for data1
+                fill: "origin", // Fill the area below data1 with red color
+                pointHoverBackgroundColor: "#5f63f2", // Point fill color on hover
+              },
+              {
+                data: data2,
+                borderColor: "#A9A9A9",
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderDash: [5, 5], // Dashed line for data2
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    },
+    initializeChartM() {
+      const ctx = this.$refs.myChart6MExtra;
+      if (ctx) {
+        const data1 = [55, 25, 45, 42, 40, 45, 42, 45, 35, 55, 40, 30];
+        const data2 = [45, 30, 35, 32, 35, 50, 32, 35, 25, 40, 30, 25];
+        const labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"];
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Combined Dataset",
+                data: data1,
+                borderColor: "#5f63f2",
+                backgroundColor: "rgba(44, 153, 255, 0.1)", // Fade blue background color for data1
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone", // Smooth curve for data1
+                fill: "origin", // Fill the area below data1 with red color
+                pointHoverBackgroundColor: "#5f63f2", // Point fill color on hover
+              },
+              {
+                data: data2,
+                borderColor: "#A9A9A9",
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderDash: [5, 5], // Dashed line for data2
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    },
+    initializeChartw() {
+      const ctx = this.$refs.myChart6WExtra;
+      if (ctx) {
+        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
+        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const labels = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Combined Dataset",
+                data: data1,
+                borderColor: "#5f63f2",
+                backgroundColor: "rgba(44, 153, 255, 0.1)", // Fade blue background color for data1
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone", // Smooth curve for data1
+                fill: "origin", // Fill the area below data1 with red color
+                pointHoverBackgroundColor: "#5f63f2", // Point fill color on hover
+              },
+              {
+                data: data2,
+                borderColor: "#A9A9A9",
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderDash: [5, 5], // Dashed line for data2
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    },
+    initializeChart() {
+      const ctx = this.$refs.myChart6Extra;
+      if (ctx) {
+        const data1 = [65, 35, 45, 42, 65, 60, 42, 45, 35, 55, 40, 65];
+        const data2 = [45, 20, 35, 32, 50, 45, 32, 35, 25, 40, 30, 55];
+        const labels = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Combined Dataset",
+                data: data1,
+                borderColor: "#5f63f2",
+                backgroundColor: "rgba(44, 153, 255, 0.1)",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone",
+                fill: "origin",
+                pointHoverBackgroundColor: "#5f63f2",
+              },
+              {
+                data: data2,
+                borderColor: "#A9A9A9",
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderDash: [5, 5],
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    },
+    Chart6TodayExtra() {
+      const ctx = this.$refs.myChart6TodayExtra;
+      if (ctx) {
+        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
+        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const labels = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+
+        new Chart(ctx, {
+          type: "bar", // Set the main chart type to bar
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Data1 (Bar)",
+                data: data1,
+                backgroundColor: "#2C99FF20",
+                borderColor: "#2C99FF25",
+
+                hoverBackgroundColor: "rgba(44, 133, 230, 0.8)",
+              },
+              {
+                label: "Data2 (Line)",
+                data: data2,
+                type: "line", // Set the chart type for this dataset to line
+                borderColor: "#A9A9A9",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    },
+    Chart6WeekExtra() {
+      const ctx = this.$refs.myChart6WeekExtra;
+      if (ctx) {
+        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
+        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const labels = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+
+        new Chart(ctx, {
+          type: "bar", // Set the main chart type to bar
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Data1 (Bar)",
+                data: data1,
+                backgroundColor: "#2C99FF20",
+                borderColor: "#2C99FF25",
+
+                hoverBackgroundColor: "rgba(44, 133, 230, 0.8)",
+              },
+              {
+                label: "Data2 (Line)",
+                data: data2,
+                type: "line", // Set the chart type for this dataset to line
+                borderColor: "#A9A9A9",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    },
+    Chart6MonthExtra() {
+      const ctx = this.$refs.myChart6MonthExtra;
+      if (ctx) {
+        const data1 = [55, 25, 45, 42, 40, 45, 42, 45, 35, 55, 40, 30];
+        const data2 = [45, 30, 35, 32, 35, 50, 32, 35, 25, 40, 30, 25];
+        const labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"];
+
+        new Chart(ctx, {
+          type: "bar", // Set the main chart type to bar
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Data1 (Bar)",
+                data: data1,
+                backgroundColor: "#2C99FF20",
+                borderColor: "#2C99FF25",
+
+                hoverBackgroundColor: "rgba(44, 133, 230, 0.8)",
+              },
+              {
+                label: "Data2 (Line)",
+                data: data2,
+                type: "line", // Set the chart type for this dataset to line
+                borderColor: "#A9A9A9",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    },
+
+    Chart6yearExtra() {
+      const ctx = this.$refs.myChart6yearExtra;
+      if (ctx) {
+        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
+        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const labels = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+
+        new Chart(ctx, {
+          type: "bar", // Set the main chart type to bar
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Data1 (Bar)",
+                data: data1,
+                backgroundColor: "#2C99FF20",
+                borderColor: "#2C99FF25",
+
+                hoverBackgroundColor: "rgba(44, 133, 230, 0.8)",
+              },
+              {
+                label: "Data2 (Line)",
+                data: data2,
+                type: "line", // Set the chart type for this dataset to line
+                borderColor: "#A9A9A9",
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                cubicInterpolationMode: "monotone",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category",
+                labels: labels,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                callbacks: {
+                  label: (context) => {
+                    const datasetLabel = context.dataset.label || "";
+                    return `${datasetLabel}: ${context.parsed.y}`;
+                  },
+                },
+                backgroundColor: "#000000", // Tooltip body background color
+              },
+            },
+          },
+        });
+      }
+    },
+
+    renderLineChart() {
+      const canvas = this.$refs.lineChartCanvas;
+      const chartData = {
+        labels: [
+          "Label 1",
+          "Label 2",
+          "Label 3",
+          "Label 4",
+          "Label 5",
+          "Label 6",
+          "Label 7",
+          "Label 8",
+          "Label 9",
+          "Label 10",
+        ],
+        datasets: [
+          {
+            borderColor: "#5F63F2",
+            fill: true,
+            backgroundColor: "rgba(95, 99, 242, 0.09)",
+            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            tension: 0.4,
+            label: "Line Chart dataset",
+          },
+        ],
+      };
+
+      const chartOptions = {
+        scales: {
+          x: {
+            display: false,
+          },
+          y: {
+            display: false,
+            beginAtZero: true,
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+          interaction: {
+            mode: "index",
+          },
+        },
+      };
+      new Chart(canvas, {
         type: "line",
-        data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // Add the labels for each month
-          datasets: [
-            {
-              label: "Dataset Label",
-              backgroundColor: "rgba(75, 192, 192, 0.6)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-              data: [10, 20, 15, 30, 10, 20, 15, 30, 10, 20, 15, 30],
-            },
-          ],
-        },
-        options: {
-          scales: {
-            xAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  reverse: true,
-                },
-              },
-            ],
-          },
-        },
+        data: chartData,
+        options: chartOptions,
       });
     },
+    renderLineChart_tvalue() {
+      const canvas = this.$refs.lineChartCanvastvalue;
+      const chartData = {
+        labels: [
+          "Label 1",
+          "Label 2",
+          "Label 3",
+          "Label 4",
+          "Label 5",
+          "Label 6",
+          "Label 7",
+          "Label 8",
+          "Label 9",
+          "Label 10",
+        ],
+        datasets: [
+          {
+            borderColor: "#FFA500",
+            fill: true,
+            backgroundColor: "rgba(255, 165, 0, 0.09)",
+            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            tension: 0.4,
+            label: "Line Chart dataset",
+          },
+        ],
+      };
 
-    renderChartForTotalSales() {
-      const ctx = document
-        .getElementById("sale_purchase_chart")
-        .getContext("2d");
-
-      new Chart(ctx, {
+      const chartOptions = {
+        scales: {
+          x: {
+            display: false,
+          },
+          y: {
+            display: false,
+            beginAtZero: true,
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+          interaction: {
+            mode: "index",
+          },
+        },
+      };
+      new Chart(canvas, {
         type: "line",
-        data: {
-          labels: ['January', 'February', 'March', 'April'], // Add the labels for each month
-          datasets: [
-            {
-              label: "Dataset Label",
-              backgroundColor: "rgba(75, 192, 192, 0.6)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-              data: [10, 20, 15, 30],
-            },
-          ],
-        },
-        options: {
-          scales: {
-            xAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  reverse: true,
-                },
-              },
-            ],
+        data: chartData,
+        options: chartOptions,
+      });
+    },
+    renderLineChart_tRevenue() {
+      const canvas = this.$refs.lineChartCanvastRevenue;
+      const chartData = {
+        labels: [
+          "Label 1",
+          "Label 2",
+          "Label 3",
+          "Label 4",
+          "Label 5",
+          "Label 6",
+          "Label 7",
+          "Label 8",
+          "Label 9",
+          "Label 10",
+        ],
+        datasets: [
+          {
+            borderColor: " #006400",
+            fill: true,
+            backgroundColor: "rgba(0, 100, 0, 0.09)",
+            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            tension: 0.4,
+            label: "Line Chart dataset",
+          },
+        ],
+      };
+
+      const chartOptions = {
+        scales: {
+          x: {
+            display: false,
+          },
+          y: {
+            display: false,
+            beginAtZero: true,
           },
         },
-      });
-    },
-
-
-    renderChartForTotalPurchase() {
-      const ctx = document
-        .getElementById("sale_purchase_chart1")
-        .getContext("2d");
-
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['January', 'February', 'March', 'April'], // Add the labels for each month
-          datasets: [
-            {
-              label: 'Dataset Label',
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-              data: [10, 20, 15, 30],
-            },
-          ],
-        },
-        options: {
-          scales: {
-            xAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                },
-                position: 'top', // Change the x-axis position to 'top'
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  reverse: true,
-                },
-                position: 'right', // Change the y-axis position to 'right'
-              },
-            ],
+        plugins: {
+          legend: {
+            display: false,
+          },
+          interaction: {
+            mode: "index",
           },
         },
+      };
+      new Chart(canvas, {
+        type: "line",
+        data: chartData,
+        options: chartOptions,
       });
-
     },
-
-    targetAchieveGraph1() {
-      const targetValues = [200, 300, 400]; // Replace with your target values
-      const achievedValues = [10, 200, 320]; // Replace with your achieved values
-      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
-      const ctx1 = document.getElementById('myChart1').getContext('2d');
-      const myChart1 = new Chart(ctx1, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Target',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            data: targetValues,
+    renderLineChart_tInvoices() {
+      const canvas = this.$refs.lineChartCanvastInvoices;
+      const chartData = {
+        labels: [
+          "Label 1",
+          "Label 2",
+          "Label 3",
+          "Label 4",
+          "Label 5",
+          "Label 6",
+          "Label 7",
+          "Label 8",
+          "Label 9",
+          "Label 10",
+        ],
+        datasets: [
+          {
+            borderColor: " #8B0000",
             fill: true,
-          }, {
-            label: 'Achieved',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            data: achievedValues,
-            fill: true,
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
+            backgroundColor: "rgba(139, 0, 0, 0.09)",
+            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            tension: 0.4,
+            label: "Line Chart dataset",
           },
-          plugins: {
-            annotation: {
-              annotations: [
-                {
-                  type: 'bar',
-                  mode: 'vertical',
-                  scaleID: 'x',
-                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
-                  borderColor: 'gray',
-                  borderWidth: 2,
-                  label: {
-                    enabled: true,
-                    content: 'Arrow',
-                    position: 'top'
-                  }
-                }
-              ]
-            }
-          }
-        }
-      });
-    },
-    targetAchieveGraph() {
-      const targetValues = [100, 200, 300]; // Replace with your target values
-      const achievedValues = [20, 100, 120]; // Replace with your achieved values
-      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
+        ],
+      };
 
-      const ctx = document.getElementById('myChart').getContext('2d');
-      const myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Target',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            data: targetValues,
-            fill: true,
-          }, {
-            label: 'Achieved',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            data: achievedValues,
-            fill: true,
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
+      const chartOptions = {
+        scales: {
+          x: {
+            display: false,
           },
-          plugins: {
-            annotation: {
-              annotations: [
-                {
-                  type: 'bar',
-                  mode: 'vertical',
-                  scaleID: 'x',
-                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
-                  borderColor: 'gray',
-                  borderWidth: 2,
-                  label: {
-                    enabled: true,
-                    content: 'Arrow',
-                    position: 'top'
-                  }
-                }
-              ]
-            }
-          }
-        }
-      });
-
-
-    },
-    targetAchieveGraph2() {
-      const targetValues = [200, 300, 400]; // Replace with your target values
-      const achievedValues = [110, 290, 390]; // Replace with your achieved values
-      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
-      const ctx1 = document.getElementById('myChart2').getContext('2d');
-      const myChart1 = new Chart(ctx1, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Target',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            data: targetValues,
-            fill: true,
-          }, {
-            label: 'Achieved',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            data: achievedValues,
-            fill: true,
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
+          y: {
+            display: false,
+            beginAtZero: true,
           },
-          plugins: {
-            annotation: {
-              annotations: [
-                {
-                  type: 'bar',
-                  mode: 'vertical',
-                  scaleID: 'x',
-                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
-                  borderColor: 'gray',
-                  borderWidth: 2,
-                  label: {
-                    enabled: true,
-                    content: 'Arrow',
-                    position: 'top'
-                  }
-                }
-              ]
-            }
-          }
-        }
-      });
-    },
-
-    targetAchieveGraph3() {
-      const targetValues = [200, 300, 400]; // Replace with your target values
-      const achievedValues = [110, 290, 390]; // Replace with your achieved values
-      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May']; // Replace with your labels
-      const ctx1 = document.getElementById('myChart3').getContext('2d');
-      const myChart1 = new Chart(ctx1, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Target',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            data: targetValues,
-            fill: true,
-          }, {
-            label: 'Achieved',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            data: achievedValues,
-            fill: true,
-          }]
         },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
+        plugins: {
+          legend: {
+            display: false,
           },
-          plugins: {
-            annotation: {
-              annotations: [
-                {
-                  type: 'bar',
-                  mode: 'vertical',
-                  scaleID: 'x',
-                  value: 'Feb', // Change to the appropriate label where you want to add an arrow
-                  borderColor: 'gray',
-                  borderWidth: 2,
-                  label: {
-                    enabled: true,
-                    content: 'Arrow',
-                    position: 'top'
-                  }
-                }
-              ]
-            }
-          }
-        }
+          interaction: {
+            mode: "index",
+          },
+        },
+      };
+      new Chart(canvas, {
+        type: "line",
+        data: chartData,
+        options: chartOptions,
       });
-    },
-
-
-
-    dashboard_month_change() {
-      this.dashboard_month_formatted = this.convert_date_format(
-        this.dashboard_month
-      );
-      this.fire_requests();
-    },
-
-    set_form_data() {
-      var formData = new FormData();
-      formData.append("access_token", window.settings.access_token);
-      formData.append(
-        "date",
-        this.convert_date_format(this.dashboard_month_formatted)
-      );
-      return formData;
-    },
-
-    fire_requests() {
-      this.get_dashboard_stats();
-
-      this.order_count_activity_chart();
-
-      this.get_recent_trasactions();
-
-      //this.trending_products();
-    },
-
-    get_dashboard_stats() {
-      var formData = this.set_form_data();
-
-      this.stats_processing = true;
-
-      axios
-        .post("/api/get_dashboard_stats", formData)
-        .then((response) => {
-          this.stats_processing = false;
-          if (response.data.status_code == 200) {
-            this.todays_order_count.raw =
-              response.data.data.todays_order_count.count_raw;
-            this.todays_order_count.formatted =
-              response.data.data.todays_order_count.count_formatted;
-            this.todays_order_count.difference =
-              response.data.data.todays_order_count.difference;
-
-            this.todays_order_value.raw =
-              response.data.data.todays_order_value.count_raw;
-            this.todays_order_value.formatted =
-              response.data.data.todays_order_value.count_formatted;
-            this.todays_order_value.difference =
-              response.data.data.todays_order_value.difference;
-
-            this.order_count.raw = response.data.data.order_count.count_raw;
-            this.order_count.formatted =
-              response.data.data.order_count.count_formatted;
-
-            this.order_value.raw = response.data.data.order_value.count_raw;
-            this.order_value.formatted =
-              response.data.data.order_value.count_formatted;
-
-            this.order_count.raw = response.data.data.order_count.count_raw;
-            this.order_count.formatted =
-              response.data.data.order_count.count_formatted;
-
-            this.revenue_value.raw = response.data.data.revenue_value.count_raw;
-            this.revenue_value.formatted =
-              response.data.data.revenue_value.count_formatted;
-
-            this.customer_count.raw =
-              response.data.data.customer_count.count_raw;
-            this.customer_count.formatted =
-              response.data.data.customer_count.count_formatted;
-
-            this.expense.raw = response.data.data.expense.count_raw;
-            this.expense.formatted = response.data.data.expense.count_formatted;
-
-            this.net_profit_value.raw =
-              response.data.data.net_profit_value.count_raw;
-            this.net_profit_value.formatted =
-              response.data.data.net_profit_value.count_formatted;
-
-            this.purchase_order_count.raw =
-              response.data.data.purchase_order_count.count_raw;
-            this.purchase_order_count.formatted =
-              response.data.data.purchase_order_count.count_formatted;
-
-            this.invoices_count.raw =
-              response.data.data.invoices_count.count_raw;
-            this.invoices_count.formatted =
-              response.data.data.invoices_count.count_formatted;
-
-            //stats
-            this.target.income = response.data.data.targets.income;
-            this.target.income_width =
-              (response.data.data.revenue_value.count_raw /
-                response.data.data.targets.income) *
-              100 +
-              "%";
-
-            this.target.expense = response.data.data.targets.expense;
-            this.target.expense_width =
-              (response.data.data.expense.count_raw /
-                response.data.data.targets.expense) *
-              100 +
-              "%";
-
-            this.target.sales = response.data.data.targets.sales;
-            this.target.sales_width =
-              (response.data.data.order_value.count_raw /
-                response.data.data.targets.sales) *
-              100 +
-              "%";
-
-            this.target.net_profit = response.data.data.targets.net_profit;
-            this.target.net_profit_width =
-              (response.data.data.net_profit_value.count_raw /
-                response.data.data.targets.net_profit) *
-              100 +
-              "%";
-
-            var today_sales_count_chart = this.create_chart(
-              "today_sales_count_chart",
-              this.todays_sales_count_chart_config
-            );
-            today_sales_count_chart.data.datasets = [];
-            today_sales_count_chart.data.labels =
-              response.data.data.todays_order_count.chart.x_axis;
-            today_sales_count_chart.data.datasets.push({
-              data: response.data.data.todays_order_count.chart.y_axis,
-              fill: true,
-              pointStyle: "circle",
-              pointRadius: 1,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "#3E3F42",
-              showLine: false,
-              backgroundColor: this.todays_sales_count_chart_color,
-            });
-            today_sales_count_chart.update();
-
-            var today_sales_value_chart = this.create_chart(
-              "today_sales_value_chart",
-              this.todays_sales_value_chart_config
-            );
-            today_sales_value_chart.data.datasets = [];
-            today_sales_value_chart.data.labels =
-              response.data.data.todays_order_value.chart.x_axis;
-            today_sales_value_chart.data.datasets.push({
-              data: response.data.data.todays_order_value.chart.y_axis,
-              fill: true,
-              pointStyle: "circle",
-              pointRadius: 1,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "#3E3F42",
-              showLine: false,
-              backgroundColor: this.todays_sales_value_chart_color,
-            });
-            today_sales_value_chart.update();
-
-            var income_expense_chart = this.create_chart(
-              "income_expense_chart",
-              this.income_expense_chart
-            );
-
-            var income_expense_chart1 = this.create_chart(
-              "income_expense_chart1",
-              this.income_expense_chart1
-            );
-
-            var income_expense_chart2 = this.create_chart(
-              "income_expense_chart2",
-              this.income_expense_chart2
-            );
-
-            income_expense_chart.data.datasets = [];
-            income_expense_chart.data.datasets.push({
-              backgroundColor: ["#FF5733", "#3366FF", "#900C3F", "#FFC300",],
-              borderColor: "#FFF",
-              data: [4, 5, 54, 34],
-            });
-            income_expense_chart.update();
-
-            income_expense_chart1.data.datasets = [];
-            income_expense_chart1.data.datasets.push({
-              backgroundColor: ["#3366FF", "#FF5733", "#FFC300", "#900C3F"],
-              borderColor: "#FFF",
-              data: [43, 3, 4, 34],
-            });
-            income_expense_chart1.update();
-
-            income_expense_chart2.data.datasets = [];
-            income_expense_chart2.data.datasets.push({
-              backgroundColor: [this.income_chart_fill_color],
-              borderColor: "#FFF",
-              data: [2030500],
-            });
-            income_expense_chart2.update();
-          } else {
-            this.todays_order_count.raw = "-";
-            this.todays_order_count.formatted = "-";
-
-            this.todays_order_value.raw = "-";
-            this.todays_order_value.formatted = "-";
-
-            this.order_count.raw = "-";
-            this.order_count.formatted = "-";
-
-            this.order_value.raw = "-";
-            this.order_value.formatted = "-";
-
-            this.order_count.raw = "-";
-            this.order_count.formatted = "-";
-
-            this.revenue_value.raw = "-";
-            this.revenue_value.formatted = "-";
-
-            this.customer_count.raw = "-";
-            this.customer_count.formatted = "-";
-
-            this.expense.raw = "-";
-            this.expense.formatted = "-";
-
-            this.net_profit_value.raw = "-";
-            this.net_profit_value.formatted = "-";
-
-            this.purchase_order_count.raw = "-";
-            this.purchase_order_count.formatted = "-";
-
-            this.invoices_count.raw = "-";
-            this.invoices_count.formatted = "-";
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-
-    create_chart(canvas_id, chart_data) {
-      var chart_exist = Chart.getChart(canvas_id);
-      if (chart_exist != undefined) chart_exist.destroy();
-
-      var ctx = document.getElementById(canvas_id);
-      var chart = new Chart(ctx, {
-        type: chart_data.type,
-        data: chart_data.data,
-        options: chart_data.options,
-      });
-      return chart;
-    },
-
-    order_count_activity_chart() {
-      var formData = this.set_form_data();
-      axios
-        .post("/api/get_order_chart_stats", formData)
-        .then((response) => {
-          if (response.data.status_code == 200) {
-            var pos_sales_count_activity_chart = this.create_chart(
-              "pos_sales_count_activity_chart",
-              this.pos_sales_count_activity_chart_config
-            );
-            var pos_sales_value_activity_chart = this.create_chart(
-              "pos_sales_value_activity_chart",
-              this.pos_sales_value_activity_chart_config
-            );
-
-            var pos_sales_value_activity_chart1 = this.create_chart(
-              "pos_sales_value_activity_chart1",
-              this.pos_sales_value_activity_chart_config
-            );
-
-            pos_sales_count_activity_chart.data.datasets = [];
-            pos_sales_count_activity_chart.data.labels =
-              response.data.data.x_axis;
-            pos_sales_count_activity_chart.data.datasets.push({
-              label: "Order Count",
-              data: response.data.data.y_axis.order_count,
-              fill: true,
-              pointStyle: "circle",
-              pointRadius: 1,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "#3E3F42",
-              showLine: false,
-              backgroundColor: this.pos_sales_count_activity_chart_fill_color,
-            });
-            pos_sales_count_activity_chart.update();
-
-            pos_sales_value_activity_chart.data.datasets = [];
-            pos_sales_value_activity_chart.data.labels =
-              response.data.data.x_axis;
-            pos_sales_value_activity_chart.data.datasets.push({
-              label: "Order Value (" + this.store_currency + ")",
-              data: response.data.data.y_axis.order_value,
-              fill: true,
-              pointStyle: "circle",
-              pointRadius: 1,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "#3E3F42",
-              showLine: false,
-              backgroundColor: this.pos_sales_value_activity_chart_fill_color,
-            });
-            pos_sales_value_activity_chart.update();
-
-            pos_sales_value_activity_chart1.data.datasets = [];
-            pos_sales_value_activity_chart1.data.labels =
-              response.data.data.x_axis;
-            pos_sales_value_activity_chart1.data.datasets.push({
-              label: "Order Value (" + this.store_currency + ")",
-              data: response.data.data.y_axis.order_value,
-              fill: true,
-              pointStyle: "circle",
-              pointRadius: 1,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "#3E3F42",
-              showLine: false,
-              backgroundColor: this.pos_sales_value_activity_chart_fill_color,
-            });
-            pos_sales_value_activity_chart1.update();
-          } else {
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-
-    get_recent_trasactions() {
-      var formData = this.set_form_data();
-
-      axios
-        .post("/api/get_recent_trasactions", formData)
-        .then((response) => {
-          if (response.data.status_code == 200) {
-            this.transactions = response.data.data;
-          } else {
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     },
   },
 };

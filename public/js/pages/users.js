@@ -13,6 +13,7 @@ class Users{
                 { name: 'users.user_code' },
                 { name: 'users.fullname' },
                 { name: 'users.email' },
+                { name: 'users.init_password' },
                 { name: 'users.phone' },
                 { name: 'roles.label' },
                 { name: 'master_status.label' },
@@ -22,7 +23,7 @@ class Users{
             ],
             order: [[ 6, "desc" ]],
             columnDefs: [
-                { "orderable": false, "targets": [9] }
+                { "orderable": false, "targets": [10] }
             ]
         });
     }

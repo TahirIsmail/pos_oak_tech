@@ -147,6 +147,11 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/get_product', 'API\Product@get_product');
     Route::post('/generate_barcodes', 'API\Product@generate_barcodes');
     Route::post('/load_product_for_po', 'API\Product@load_product_for_po');
+
+
+    Route::post('/fetchProducts', 'API\Product@fetch_products');
+
+
     Route::post('/load_product_for_stock_transfer', 'API\Product@load_product_for_stock_transfer');
     Route::post('/product/{slack}', 'API\Product@show');
     Route::post('/product_list', 'API\Product@list');
@@ -473,6 +478,9 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/fetchComplaintRecord','API\Complaints@fetchComplaintRecord');
 
     
+
+
+    Route::post('/fetchCategories', 'API\Category@fetch_categories');
 
 
     //Expenses
