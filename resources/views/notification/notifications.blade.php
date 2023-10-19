@@ -21,7 +21,7 @@
                         <span class="ml-4">List of all the notifications created by you and notifications for you.</span>
                     </div>
                 </div>
-                <div class="table-responsive my-4">
+                <div class="my-4">
                     <table id="listing-table" class="table display nowrap w-100">
                         <thead>
                             <tr>

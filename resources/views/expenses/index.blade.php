@@ -86,7 +86,7 @@
                 {{-- </div> --}}
             </div>
 
-            <div class="table-responsive">
+            <div class="">
 
 
                 <table id="Expense_listing" class="table display nowrap w-100">

@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
-                        <span class="text-title">{{ __('Users') }}</span>
+                        <span class="text-title">{{ __('Staff') }}</span>
                     </div>
                     <div class="">
                         @if (check_access(['A_ADD_USER'], true))

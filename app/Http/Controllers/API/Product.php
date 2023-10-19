@@ -934,7 +934,7 @@ class Product extends Controller
                 ->discountcodeJoin()
                 ->supplierActive()
                 ->taxcodeActive()
-                // ->where('quantity', 0)
+                ->where('quantity', 1)
                 ->where('suppliers.slack', $supplier_slack)
                 ->where(function ($query) use ($keywords) {
                     $query->where('products.product_code', 'like', $keywords . '%')
@@ -964,24 +964,33 @@ class Product extends Controller
     public function fetch_products(Request $request){
         // dd($request->all());
         $category_id = $request['category_id'] ?? null;
-        $sub_category_id = $request['subcategory_id'] ?? null;
+        $sub_category_id = $request['sub_category_id'] ?? null;
         $category_company_id = $request['category_company_id'] ?? null;
 
-        
+        // dd($request->all());
         // Use these values to filter the products
         $products = ProductModel::query()
-            ->when($category_id !== null, function ($query) use ($category_id) {
-                return $query->where('category_id', $category_id);
-            })
-            ->when($sub_category_id !== null, function ($query) use ($sub_category_id) {
-                return $query->where('sub_category_id', $sub_category_id);
-            })
-            // ->when($category_company_id !== null, function ($query) use ($category_company_id) {
-            //     return $query->where('category_company_id', $category_company_id);
-            // })
-            ->get();
-        // dd($products);
-
+        ->when($category_id !== "null", function ($query) use ($category_id) {
+            return $query->where('category_id', $category_id);
+        })
+        ->when($sub_category_id !== "null", function ($query) use ($sub_category_id) {
+            return $query->where('sub_category_id', $sub_category_id);
+        })
+        ->when($category_company_id !== "null", function ($query) use ($category_company_id) {
+            return $query->where('category_company_id', $category_company_id);
+        })
+        ->where('quantity', 1)
+        ->with('subcategory')
+        ->select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.purchase_amount_excluding_tax', 'tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
+        ->supplierJoin()
+        ->taxcodeJoin()
+        ->discountcodeJoin()
+        ->supplierActive()
+        ->taxcodeActive()
+        ->get();
+    
+    // dd($request->all());
+    
 
     if($products){
         return response()->json($this->generate_response(

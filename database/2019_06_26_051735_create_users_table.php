@@ -32,8 +32,10 @@ class CreateUsersTable extends Migration
             $table->integer('password_reset_max_tries')->default(0);
             $table->dateTime('password_reset_last_tried_on')->nullable();
             $table->string('phone', 15)->nullable();
+            $table->string('emergency_number', 15)->nullable();
             $table->string('country', 255)->nullable();
             $table->string('address', 255)->nullable();
+            $table->string('reference', 255)->nullable();
             $table->string('city', 255)->nullable();
 
             $table->string('bank_name', 255)->nullable();

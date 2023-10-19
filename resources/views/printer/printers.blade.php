@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
+                <div class="">
                     <table id="listing-table" class="table display nowrap w-100">
                         <thead>
                             <tr>

@@ -1,6 +1,8 @@
 <template>
     <div class="row">
-        {{ products }}
+        {{ sub_category }}
+
+        {{ company_id }}
         <div class="col-md-12">
             <div class="card">
                 <form @submit.prevent="submit_form" class="mb-3">
@@ -228,7 +230,7 @@
                             <input type="number" v-bind:name="'product.quantity_' + index" v-model="product.quantity"
                                 v-validate="'required|decimal|min_value:1'" data-vv-as="Quantity"
                                 class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
-                                v-on:input="calculate_price">
+                                v-on:input="calculate_price" readonly>
                             <span v-bind:class="{ 'error': errors.has('product.quantity_' + index) }">{{
                                 errors.first('product.quantity_' + index) }}</span>
                         </div>
@@ -437,6 +439,8 @@ export default {
         },
 
         fetchSub_Categories(){
+            this.sub_category = '';
+            this.brand_name = '';
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
             formData.append("category_id", this.category);
@@ -559,10 +563,11 @@ export default {
 
             axios.post('/api/fetchProducts', formData).then((response) => {
                 if (response.data.status_code == 200) {
-                   
+                    this.products = [];
+                    this.add_new_product();
                     response.data.data.forEach(element => {
-                        console.log(element);
-                        add_product_to_list(element);
+                        // this.product_list = element;
+                        this.add_product_to_list(element);
                     });
                     // this.products.push(response.data.data);
                 }
@@ -590,7 +595,7 @@ export default {
             var item_found = false;
             for (var i = 0; i < this.products.length; i++) {
                 if (this.products[i].slack == item.product_slack) {
-                    this.products[i].quantity++;
+                    // this.products[i].quantity++;
                     item_found = true;
                 }
             }

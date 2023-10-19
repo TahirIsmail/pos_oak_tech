@@ -12,7 +12,7 @@
                 </div>
 
 
-                <div class="table-responsive my-4">
+                <div class="my-4">
                     <table id="approve_leaves" class="table display nowrap w-100">
                         <thead>
                             <tr>

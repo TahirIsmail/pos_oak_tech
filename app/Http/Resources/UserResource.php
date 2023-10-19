@@ -30,16 +30,15 @@ class UserResource extends JsonResource
             'country' => $this->country,
             'city' => $this->city,
             'address' => $this->address,
+            'reference' => $this->reference,
             'email' => $this->email,
-            'init_password' => $this->init_password,
             'phone' => $this->phone,
+            'emergency_number' => $this->emergency_number,
             "bank_name" => $this->bank_name,
             "bank_code" => $this->bank_code,
             "account_title" => $this->account_title,
             "account_number" => $this->account_number,
             "iban_number" => $this->iban_number,
-
-
             'role' => new RoleResource($this->role),
             'status' => new MasterStatusResource($this->status_data),
             'profile_images' => $this->profile_image,

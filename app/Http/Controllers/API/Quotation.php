@@ -54,28 +54,59 @@ class Quotation extends Controller
 
             $filter_string = $request->search['value'];
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
-            
-            $query = QuotationModel::select('quotations.*', 'master_status.label as status_label', 'master_status.color as status_color', 'user_created.fullname')
-            ->take($limit)
-            ->skip($offset)
-            ->statusJoin()
-            ->createdUser()
+            // dd($request->logged_user_role_id, $request->logged_user_customer_id);
+            if($request->logged_user_role_id == 2){
+                $query = QuotationModel::select('quotations.*', 'master_status.label as status_label', 'master_status.color as status_color', 'user_created.fullname')
+                ->where('bill_to_id', $request->logged_user_customer_id)
+                ->take($limit)
+                ->skip($offset)
+                ->statusJoin()
+                ->createdUser()
 
-            ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
-                $query->orderBy($order_by_column, $order_direction);
-            }, function ($query) {
-                $query->orderBy('created_at', 'desc');
-            })
+                ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
+                    $query->orderBy($order_by_column, $order_direction);
+                }, function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                })
+    
+                ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
+                    $query->where(function ($query) use ($filter_string, $filter_columns){
+                        foreach($filter_columns as $filter_column){
+                            $query->orWhere($filter_column, 'like', '%'.$filter_string.'%');
+                        }
+                    });
+                })
+    
+                ->get();
 
-            ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
-                $query->where(function ($query) use ($filter_string, $filter_columns){
-                    foreach($filter_columns as $filter_column){
-                        $query->orWhere($filter_column, 'like', '%'.$filter_string.'%');
-                    }
-                });
-            })
+                
+            }
+            else{
 
-            ->get();
+                $query = QuotationModel::select('quotations.*', 'master_status.label as status_label', 'master_status.color as status_color', 'user_created.fullname')
+                ->take($limit)
+                ->skip($offset)
+                ->statusJoin()
+                ->createdUser()
+
+                ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
+                    $query->orderBy($order_by_column, $order_direction);
+                }, function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                })
+    
+                ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
+                    $query->where(function ($query) use ($filter_string, $filter_columns){
+                        foreach($filter_columns as $filter_column){
+                            $query->orWhere($filter_column, 'like', '%'.$filter_string.'%');
+                        }
+                    });
+                })
+    
+                ->get();
+            }
+
+           
 
             $quotations = QuotationResource::collection($query);
            
@@ -143,10 +174,12 @@ class Quotation extends Controller
             }
 
             $this->validate_request($request);
+            // dd($request->all());
 
             DB::beginTransaction();
 
             $quotation_data = $this->form_quotation_array($request);
+
             
             if(!empty($quotation_data['quotation_data'])){
                 
@@ -156,6 +189,7 @@ class Quotation extends Controller
                 $quotation['quotation_number'] = Str::random(6);
                 $quotation['created_at'] = now();
                 $quotation['created_by'] = $request->logged_user_id;
+
 
                 $quotation_id = QuotationModel::create($quotation)->id;
 
@@ -432,6 +466,7 @@ class Quotation extends Controller
 
             $action_response = QuotationModel::where('slack', $slack)
             ->update($quotation);
+            
 
             DB::commit();
 

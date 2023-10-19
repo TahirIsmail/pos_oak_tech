@@ -37,8 +37,8 @@ class Product extends Model
     }
 
     public function scopeCategoryJoin($query){
-        return $query->leftJoin('sub_categories', function ($join) {
-            $join->on('sub_categories.id', '=', 'products.sub_category_id');
+        return $query->leftJoin('category', function ($join) {
+            $join->on('category.id', '=', 'products.category_id');
         });
     }
 

@@ -10,14 +10,13 @@
                         <span class=" text-title">{{ __('Users') }}</span>
                     </div>
                 </div>
-                <div class="table-responsive my-4">
+                <div class="my-4">
                     <table id="listing-table" class="table display nowrap w-100">
                         <thead>
                             <tr>
                                 <th>{{ __('User Code') }}</th>
                                 <th>{{ __('Full Name') }}</th>
                                 <th>{{ __('Email') }}</th>
-                                <th>{{ __('Password') }}</th>
                                 <th>{{ __('Phone') }}</th>
                                 <th>{{ __('Role') }}</th>
                                 <th>{{ __('Status') }}</th>

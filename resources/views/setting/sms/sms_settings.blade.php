@@ -13,7 +13,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive my-4">
+                <div class="my-4">
                     <table id="listing-table" class="table display nowrap w-100">
                         <thead>
                             <tr>

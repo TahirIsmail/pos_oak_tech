@@ -36,9 +36,20 @@
                     <p>{{ user.phone }}</p>
                 </div>
                 <div class="form-group col-md-3">
+                    <label for="phone">{{ $t("Emergency Number") }}</label>
+                    <p>{{ user.emergency_number }}</p>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="phone">{{ $t("Reference") }}</label>
+                    <p>{{ user.reference }}</p>
+                </div>
+
+                <div class="form-group col-md-3">
                     <label for="role">{{ $t("Role") }}</label>
                     <p v-if="(user.role!=null)">{{ user.role.label }}</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
                 </div>
+                
                 <div class="form-group col-md-3">
                     <label for="created_by">{{ $t("Created By") }}</label>
                     <p>{{ (user.created_by == null)?'-':user.created_by['fullname']+' ('+user.created_by['user_code']+')' }}</p>
@@ -74,7 +85,7 @@
             <div class="mb-2">
                 <span class="text-subhead">{{ $t("Store Access") }}</span>
             </div>
-            <div class="table-responsive" v-if="user.stores !=''">
+            <div class="" v-if="user.stores !=''">
                 <table class="table display nowrap text-nowrap w-100">
                     <thead>
                         <tr>

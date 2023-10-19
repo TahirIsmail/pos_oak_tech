@@ -8,21 +8,21 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
 <head>
     <style>
         .backbg {
-
             height: 100%;
             width: 100%;
             background-image: url('{{ $first_bg_image }} ');
-            background-size: cover;
+            /* background-size: cover; */
             background-repeat: no-repeat;
-            background-position: center;
+            /* background-position: center; */
             position: relative;
 
 
         }
 
         .innercontent-div {
-            height: 350px;
-            width: 89.4%;
+            width: inherit !important;
+            height: 353px;
+            
             background-color: #0f243e;
             display: flex;
             justify-content: space-between;
@@ -86,9 +86,9 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
             height: 100%;
             width: 100%;
             background-image: url('{{ $sec_bg_image }} ');
-            background-size: cover;
+            /* background-size: cover; */
             background-repeat: no-repeat;
-            background-position: center;
+            /* background-position: center; */
             position: relative;
         }
 
@@ -190,7 +190,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
                 </td>
                 <td class='right'>
                     @if($logo_path != '')
-                    <img src="{{ $logo_path }}" class='h-50px' />
+                    {{-- <img src="{{ $logo_path }}" class='h-50px' /> --}}
                     @endif
                 </td>
             </tr>
@@ -199,7 +199,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
 
     <table class='w-100 mb-1rem'>
         <tr>
-            <td class='v-top w-50 pr-20px'>
+            {{-- <td class='v-top w-50 pr-20px'>
                 <div class='bold display-block'>Bill From </div>
                 <div class='display-block'>{{ $data->store->name }}</div>
                 <div>
@@ -224,9 +224,9 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
                 <div>Contact No 2: {{ $data->store->secondary_contact }}</div>
                 @endif
                 </div>
-            </td>
+            </td> --}}
             <td class='v-top w-50 pr-20px'>
-                <div class='bold display-block'>Bill To </div>
+                <div class='bold display-block'>Quotation To</div>
                 <div class='display-block'>{{ $data->bill_to_name }} @if ($data->bill_to_code != '')({{ $data->bill_to_code }}) @endif </div>
                 <div class='pr-100px'>
                     {{ $data->bill_to_address }}

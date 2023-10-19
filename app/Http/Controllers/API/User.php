@@ -176,7 +176,6 @@ class User extends Controller
                 $item_array[$key][] = $user['user_code'];
                 $item_array[$key][] = $user['fullname'];
                 $item_array[$key][] = $user['email'];
-                $item_array[$key][] = $user['init_password'];
                 $item_array[$key][] = $user['phone'];
                 $item_array[$key][] = (isset($user['role']['status']))?view('common.status_indicators', ['status' => $user['role']['status']])->render(). $user['role']['label']:'-';
                 $item_array[$key][] = (isset($user['status']['label']))?view('common.status', ['status_data' => ['label' => $user['status']['label'], "color" => $user['status']['color']]])->render():'-';
@@ -262,16 +261,16 @@ class User extends Controller
                 "cnic" => $request->cnic,
                 "gender" => $request->gender,
                 "phone" => $request->phone,
+                "emergency_number" => $request->emergency_number,
                 "country" => $request->country,
                 "city" => $request->city,
                 "address" => $request->address,
-
+                "reference" => $request->reference,
                 "bank_name" => $request->bank_name,
                 "bank_code" => $request->bank_code,
                 "account_title" => $request->account_title,
                 "account_number" => $request->account_number,
                 "iban_number" => $request->iban_number,
-
                 "role_id" => $role_data->id,
                 "line_manager" => $line_manager->id,
                 "status" => $request->status,
@@ -435,16 +434,16 @@ class User extends Controller
                 "cnic" => $request->cnic,
                 "gender" => $request->gender,
                 "phone" => $request->phone,
+                "emergency_number" => $request->emergency_number,
                 "country" => $request->country,
                 "address" => $request->address,
-                "city" => $request->city,
-                
+                "reference" => $request->reference,
+                "city" => $request->city,                
                 "bank_name" => $request->bank_name,
                 "bank_code" => $request->bank_code,
                 "account_title" => $request->account_title,
                 "account_number" => $request->account_number,
                 "iban_number" => $request->iban_number,
-
                 "role_id" => $role_data->id,
                 "line_manager" => $request->line_manager,
                 "status" => $request->status,

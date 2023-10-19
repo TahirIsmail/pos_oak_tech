@@ -62,7 +62,7 @@
 
 
             @if ($users)
-                <div class="table-responsive mt-5 p-4">
+                <div class="mt-5 p-4">
                     <table id="staff_listing" class="table">
                         <thead>
                             <th>#</th>

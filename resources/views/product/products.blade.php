@@ -1,4 +1,9 @@
 @extends('layouts.layout')
+<style>
+    .dataTables_scroll{
+        overflow: hidden !important;
+    }
+</style>
 
 @section('content')
     <div class="row">
@@ -30,8 +35,8 @@
             </div>
         </div> --}}
 
-        <div class="table-responsive my-4">
-            <table id="listing-table" class="display table nowrap">
+        <div class="my-4">
+            <table id="listing-table" class=" table nowrap">
                 <thead>
                     <tr>
                         <th>#</th>

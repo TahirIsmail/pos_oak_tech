@@ -3,6 +3,11 @@
 }
 
 
+.dataTables_scroll{
+  overflow: scroll;
+  overflow-y: hidden!important;
+}
+
 .cardd {
   position: relative;
   display: -webkit-box;

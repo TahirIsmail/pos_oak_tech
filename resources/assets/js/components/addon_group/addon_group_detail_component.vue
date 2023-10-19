@@ -54,7 +54,7 @@
             <div class="mb-2">
                 <span class="text-subhead">Product Information</span>
             </div>
-            <div class="table-responsive mb-2">
+            <div class="mb-2">
                 <table class="table table-striped display nowrap text-nowrap w-100">
                     <thead>
                         <tr>

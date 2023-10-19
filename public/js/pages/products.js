@@ -52,20 +52,13 @@ class Products{
         "use strict";
      
         var table = $('#listing-table').DataTable({
-            destroy: true,
-            processing: true,
-            serverSide: true, 
-            'scrollX': true,
-            autoWidth: false,
            
-            
             ajax: {
                 url: '/api/products',
                 type : 'POST',
                 data :  this.data
                
-            },           
-            
+            },            
             columns: [
                
                 {

@@ -41,6 +41,12 @@
                         <span v-bind:class="{ 'error' : errors.has('phone') }">{{ errors.first('phone') }}</span> 
                     </div>
                     <div class="form-group col-md-4">
+                        <label for="emergency_number">{{ $t("Emergency No.") }}</label><span style="color:red">*</span>
+                        <input type="number" name="emergency_number" v-model="emergency_number" v-validate="'required|min:10|max:11'" class="form-control form-control-custom" :placeholder="$t('Please enter Emergency Number')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('emergency_number') }">{{ errors.first('emergency_number') }}</span> 
+                    </div>
+
+                    <div class="form-group col-md-4">
                         <label for="cnic">{{ $t("CNIC NUMBER") }}</label><span style="color:red">*</span>
                         <input type="text" name="cnic" v-model="cnic" v-validate="'required|min:13|max:15'" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('cnic') }">{{ errors.first('cnic') }}</span> 
@@ -63,7 +69,14 @@
                         <label for="doj">{{ $t("Date of Joining") }}</label>
                         <input type="date" name="doj" v-model="doj" class="form-control form-control-custom" :placeholder="$t('Please Enter Date of Joining')" autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('doj') }">{{ errors.first('doj') }}</span> 
-                    </div>                    
+                    </div> 
+                    
+                    <div class="form-group col-md-4">
+                        <label for="reference">{{ $t("Reference") }}</label>
+                        <input type="text" name="reference" v-model="reference" class="form-control form-control-custom" :placeholder="$t('Please Enter Reference')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('reference') }">{{ errors.first('reference') }}</span> 
+                    </div> 
+
                 </div>               
 
                 <div class="mb-2 background_set">
@@ -276,6 +289,8 @@
                 address         : (this.user_data == null)?'':this.user_data.address,
                 dob             : (this.user_data == null)?'':this.user_data.dob,
                 doj             : (this.user_data == null)?'':this.user_data.doj,
+                emergency_number: (this.user_data == null)?'':this.user_data.emergency_number,
+                reference       : (this.user_data == null)?'':this.user_data.reference,
 
 
                 // account variables 
@@ -329,9 +344,11 @@
                             formData.append("cnic", (this.cnic == null)?'':this.cnic);
                             formData.append("email", (this.email == null)?'':this.email);
                             formData.append("phone", (this.phone == null)?'':this.phone);
+                            formData.append("emergency_number", (this.emergency_number == null)?'':this.emergency_number);
                             formData.append("country", (this.country == null)?'':this.country);
                             formData.append("city", (this.city == null)?'':this.city);
                             formData.append("address", (this.address == null)?'':this.address);
+                            formData.append("reference", (this.reference == null)?'':this.reference);
                             formData.append("role", (this.role == null)?'':this.role);
                             formData.append("line_manager", (this.line_manager == null)?'':this.line_manager);
                             formData.append("status", (this.status == null)?'':this.status);
