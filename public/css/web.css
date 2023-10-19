@@ -3,6 +3,24 @@
 }
 
 
+
+
+/* .dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar {
+ 
+  height: 4px !important;
+  width: 50% !important;
+  background-color: #ddd !important; 
+}
+
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb {
+
+  background-color: #014f99 !important; 
+} */
+
+
+
+
+
 .dataTables_scroll{
   overflow: scroll;
   overflow-y: hidden!important;
