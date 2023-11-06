@@ -18,6 +18,7 @@ class CreateCategorySpecificationsTable extends Migration
             $table->string('category_specification_label');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('sub_category_id')->nullable();
+            $table->unsignedBigInteger('child_category_id')->nullable();
             $table->timestamps();
         });
     }

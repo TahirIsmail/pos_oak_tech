@@ -17,6 +17,7 @@ use App\Models\Category as CategoryModel;
 
 use App\Http\Resources\Collections\CategoryCollection;
 use App\Models\CategoryCompany;
+use App\Models\ChildCategory;
 use App\Models\CategorySpecification;
 use App\Models\ProductName;
 use App\Models\SubCategory;
@@ -389,7 +390,9 @@ class Category extends Controller
         $data['specifications'] = [];
         $companies = CategoryCompany::where('sub_category_id', $request->sub_category_id)->get();
         $category_specifications = CategorySpecification::where('sub_category_id', $request->sub_category_id)->get();
-        // dd($category_specifications);
+        $childCategories = ChildCategory::where('sub_category_id', $request->sub_category_id)->get();
+        // dd($childCategories);
+        $data['child_categories'] = $childCategories;
         $product_names = ProductName::where('sub_category_id', $request->sub_category_id)->get();
         if($product_names){
             $data['product_names'] = $product_names;

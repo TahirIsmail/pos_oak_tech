@@ -1,5 +1,5 @@
 <template>
-  <div class="row">   
+  <div class="row">
     <div class="col-md-12">
       <div class="card">
       <form @submit.prevent="submit_form" class="mb-3">
@@ -241,7 +241,32 @@
 
 
 
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-3" v-if="childCategories.length > 0">
+            <label for="child_category_id">{{ $t("Child Category") }}</label>
+            <select
+              name="Child Category"
+              v-model="child_category_id" 
+              class="form-control form-control-custom custom-select"
+            >
+              <option value="" disabled>Select Child Category...</option>    
+              <option
+              v-for="childcategory in childCategories" :key="childcategory.id" :value="childcategory.id"
+              >
+              {{ childcategory.child_category }}
+            </option>
+               
+             
+            </select>
+         
+          </div>
+
+
+
+        
+
+
+
+          <!-- <div class="form-group col-md-3">
             <label for="sub_category_id">{{ $t("Brand Name") }}</label>
             <select
               name="Company Name"
@@ -264,10 +289,10 @@
             <span v-bind:class="{ error: errors.has('Company Name') }">{{
               errors.first("Company Name")
             }}</span>
-          </div>
+          </div> -->
 
 
-          <div class="form-group col-md-3">
+          <!-- <div class="form-group col-md-3">
             <label for="name">{{ $t("Product Name") }}</label>
             
 
@@ -299,7 +324,7 @@
               readonly
             />
             
-          </div>
+          </div> -->
 
 
 
@@ -587,6 +612,8 @@ export default {
   data() {
     return {
       subCategories: [],
+      childCategories: [],
+      child_category_id: '',
       category_specifications: [],
       sub_category_id: this.product_data == null
           ? ""
@@ -846,6 +873,7 @@ export default {
                   this.companies_name = response.data.data.companies;
                   this.category_specifications = response.data.data.specifications;
                   this.product_names = response.data.data.product_names;
+                  this.childCategories = response.data.data.child_categories;
                 }
               })
               .catch((error) => {
