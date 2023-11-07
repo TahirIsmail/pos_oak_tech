@@ -97,6 +97,7 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     Route::post('/fetchSubCategories', 'API\Category@fetch_sub_categories');
     Route::post('/fetchCompanies', 'API\Category@fetch_companies');
+    Route::post('/fetchCategorySpecifications', 'API\Category@fetch_category_specifications');
 
 
     //supplier

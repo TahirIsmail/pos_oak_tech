@@ -579,7 +579,633 @@ class CategorySpecificationSeeder extends Seeder
                 ],
 
 
-                
+                 // Computer Accessories Keyboard Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 3,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 3,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 3,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 3,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 3,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 3,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 3,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+                 // Computer Accessories Mouse Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 4,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 4,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 4,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 4,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 4,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 4,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 4,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+
+                 // Computer Accessories Combo Keyboard/Mouse Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 5,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 5,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 5,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 5,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 5,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 5,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 5,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+                 // Computer Accessories Graphic Card Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 11,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 11,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 11,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 11,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 11,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 11,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 11,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+                 // Computer Accessories Power Cable Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 8,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 8,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 8,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 8,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 8,
+                    'category_specification_label' => 'Length',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 8,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 8,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+                 // Computer Accessories Power Cable Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 9,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 9,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 9,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 9,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 9,
+                    'category_specification_label' => 'Length',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 9,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 9,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+                 // Computer Accessories WebCam Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 15,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 15,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 15,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 15,
+                    'category_specification_label' => 'Ports',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 15,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 15,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 15,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+
+                 // Computer Accessories Headphone Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 16,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 16,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 16,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 16,
+                    'category_specification_label' => 'Ports',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 16,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 16,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 16,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+                 // Computer Accessories External HDD/SSD Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 12,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 12,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 12,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 12,
+                    'category_specification_label' => 'Ports',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 12,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 12,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 12,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+                 // Computer Accessories SSD SATA 2.5 Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 18,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 18,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 18,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 18,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 18,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 18,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 18,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+                 // Computer Accessories Convertor Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'TO',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+
+                  // Computer Accessories CD DRIVE / CD-ROM Specification Labels
+
+                  [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 19,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 19,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 19,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 19,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 19,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 19,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 19,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+
+                 // Computer Accessories Netwrok Card / Lan Card Specification Labels
+
+                 [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Brand',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Model',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Product Name',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Type',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Capacity',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Conditions',
+                ],
+                [
+                    'category_id'                  => null,
+                    'sub_category_id'              => null,
+                    'child_category_id'            => 14,
+                    'category_specification_label' => 'Warranty',
+                ],
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

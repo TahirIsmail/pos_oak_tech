@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+    {{ category_specifications }}
     <div class="col-md-12">
       <div class="card">
       <form @submit.prevent="submit_form" class="mb-3">
@@ -246,6 +247,7 @@
             <select
               name="Child Category"
               v-model="child_category_id" 
+              @change="fetch_category_specification()"
               class="form-control form-control-custom custom-select"
             >
               <option value="" disabled>Select Child Category...</option>    
@@ -614,6 +616,7 @@ export default {
       subCategories: [],
       childCategories: [],
       child_category_id: '',
+
       category_specifications: [],
       sub_category_id: this.product_data == null
           ? ""
@@ -859,6 +862,7 @@ export default {
       // this.input_type = {};
       this.companies_name = [];
       this.product_names = [];
+      this.category_specifications = [];
       // this.product_name = '';
 
 
@@ -874,6 +878,23 @@ export default {
                   this.category_specifications = response.data.data.specifications;
                   this.product_names = response.data.data.product_names;
                   this.childCategories = response.data.data.child_categories;
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+    },
+
+    fetch_category_specification(){
+      this.category_specifications = [];
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("child_category_id", this.child_category_id);
+      axios
+              .post("/api/fetchCategorySpecifications", formData)
+              .then((response) => {
+                if (response.data.status_code == 200) {
+                  this.category_specifications = response.data.data.specifications;
                 }
               })
               .catch((error) => {

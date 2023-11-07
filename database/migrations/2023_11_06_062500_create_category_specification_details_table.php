@@ -15,6 +15,11 @@ class CreateCategorySpecificationDetailsTable extends Migration
     {
         Schema::create('category_specification_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('sub_category_id');
+            $table->unsignedBigInteger('child_category_id');
+            $table->unsignedBigInteger('category_specification_id');
+            $table->string('values');
             $table->timestamps();
         });
     }

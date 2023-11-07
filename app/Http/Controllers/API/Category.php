@@ -413,6 +413,22 @@ class Category extends Controller
     }
 
 
+    public function fetch_category_specifications(Request $request){
+        $data['specifications'] = [];
+        $category_specifications = CategorySpecification::where('child_category_id', $request->child_category_id)->get();
+        if($category_specifications){
+            $data['specifications'] = $category_specifications;
+    
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Category Specifications fetched successfully", 
+                    "data"    => $data,
+                ), 'SUCCESS'
+            ));
+        }
+    }
+
+
 
     /**
      * Display the specified resource.

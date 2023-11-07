@@ -20,4 +20,14 @@ class CategorySpecification extends Model
     public function sub_category(){
         return $this->belongsTo(SubCategory::class, 'sub_category_id');
     }
+
+
+    public function child_categories(){
+        return $this->belongsTo(ChildCategory::class, 'child_category_id');
+    }
+
+
+    public function category_specification_details(){
+        return $this->hasMany(CategorySpecificationDetails::class, 'category_specification_id');
+    }
 }
