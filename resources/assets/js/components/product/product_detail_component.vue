@@ -1,6 +1,5 @@
 <template>
     <div class="row">
-        
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -34,11 +33,11 @@
             </div>
             <div class="form-row mb-2">
                 <div class="form-group col-md-3">
-                    <label for="product_code">{{ $t("Product Code") }}</label>
+                    <label for="product_code">{{ $t("Serial No#") }}</label>
                     <p>{{ product.product_code }}</p>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="name">{{ $t("Name") }}</label>
+                    <label for="name">{{ $t("Product Name") }}</label>
                     <p>{{ product.name }}</p>
                 </div>
                 <div class="form-group col-md-3">
@@ -51,14 +50,10 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="phone">{{ $t("Sub Category") }}</label>
-                    <p v-if="(product.subcategory!= null)">{{ product.subcateory.sub_category_name }}</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
+                    <p v-if="(product.subcategory!= null)">{{ product.subcategory.sub_category_name }}</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
                 </div>
 
-                <div class="form-group col-md-3">
-                    <label for="phone">{{ $t("Brand Name") }}</label>
-                    <p v-if="(product.category_company != null)">{{ product.category_company.category_company_name }}</p><p v-else><i class="fas fa-info-circle text-danger"></i> Not Updated</p>
-                </div>
-
+               
 
                 <div class="form-group col-md-3">
                     <label for="created_by">{{ $t("Created By") }}</label>
@@ -72,12 +67,9 @@
                     <label for="created_on">{{ $t("Created On") }}</label>
                     <p>{{ product.created_at_label }}</p>
                 </div>
-                <div class="form-group col-md-3">
-                    <label for="updated_on">{{ $t("Updated On") }}</label>
-                    <p>{{ product.updated_at_label }}</p>
-                </div>
+                
             </div>
-            <div class="form-row mb-2">
+            <!-- <div class="form-row mb-2">
                 <div class="form-group col-md-3">
                     <label for="product_code">{{ $t("Add-on Product") }}</label>
                     <p>{{ is_addon_product }}</p>
@@ -86,7 +78,7 @@
                     <label for="name">{{ $t("Ingredient") }}</label>
                     <p>{{ is_ingredient }}</p>
                 </div>
-            </div>
+            </div> -->
             <hr>
 
             <div v-if="product.product_specifications.length > 0">
@@ -95,8 +87,11 @@
                 </div>
                 <div class="form-row mb-2">
                     <div class="form-group col-md-3" v-for="spec in product.product_specifications" :key="spec.id">
+                    <!-- <div v-if="spec.specification_label != 'Product Name'"> -->
                         <label for="">{{ spec.specification_label }}</label>
-                    <p>{{ spec.specification_details }}</p>
+                        <p v-if="spec.category_specification_details">{{ spec.category_specification_details.values }}</p>
+                        <p v-else>{{ spec.specification_details }}</p>
+                    <!-- </div> -->
                 </div>
                 </div>
             </div>

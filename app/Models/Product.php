@@ -13,7 +13,7 @@ class Product extends Model
 {
     protected $table = 'products';
     protected $hidden = ['store_id'];
-    protected $fillable = ['id', 'slack', 'store_id', 'product_code', 'name', 'product_name_id', 'category_id', 'category_company_id', 'description', 'sub_category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'slack', 'store_id', 'product_code', 'name', 'product_name_id', 'category_id', 'category_company_id', 'child_category_id', 'description', 'sub_category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
 
     protected static function boot()
     {
@@ -238,11 +238,12 @@ class Product extends Model
     public function category(){
         return $this->belongsTo(Category::class,'category_id');
     }
-    public function category_company(){
-        return $this->belongsTo(CategoryCompany::class,'category_company_id');
-    }
-    public function product_name(){
-        return $this->belongsTo(ProductName::class,'product_name_id');
-    }
+    
+    // public function category_company(){
+    //     return $this->belongsTo(CategoryCompany::class,'category_company_id');
+    // }
+    // public function product_name(){
+    //     return $this->belongsTo(ProductName::class,'product_name_id');
+    // }
     
 }

@@ -1,9 +1,9 @@
 @extends('layouts.layout')
-<style>
+{{-- <style>
     .dataTables_scroll{
         overflow: hidden !important;
     }
-</style>
+</style> --}}
 
 @section('content')
     <div class="row">
@@ -40,7 +40,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>{{ __("Product Code") }}</th>
+                        <th>{{ __("Serial No#") }}</th>
                         <th>{{ __("Name") }}</th>
                         <th>{{ __("Supplier") }}</th>
                         <th>{{ __("Category") }}</th>
@@ -49,9 +49,9 @@
                         <th>{{ __("Quantity") }}</th>
                         <th>{{ __("Amount") }}</th>
                         <th>{{ __("Status") }}</th>
-                        <th>{{ __("Product Status") }}</th>
+                        {{-- <th>{{ __("Product Status") }}</th>
                         <th>{{ __("Created On") }}</th>
-                        <th>{{ __("Updated On") }}</th>
+                        <th>{{ __("Updated On") }}</th> --}}
                         <th>{{ __("Created By") }}</th>
                         <th>{{ __("Action") }}</th>
                     </tr>

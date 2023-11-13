@@ -18,12 +18,13 @@ class CreateProductsTable extends Migration
             $table->string('slack', 30)->unique();
             $table->integer('store_id');
             $table->string('product_code', 30);
-            $table->string('name', 250);
+            $table->string('name', 250)->nullable();
             $table->text('description')->nullable();
 
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('sub_category_id')->nullable();
-            $table->unsignedBigInteger('category_company_id');
+            $table->unsignedBigInteger('category_company_id')->nullable();
+            $table->unsignedBigInteger('child_category_id')->nullable();
             $table->unsignedBigInteger('product_name_id')->nullable();
 
 

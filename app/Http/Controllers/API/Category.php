@@ -353,35 +353,28 @@ class Category extends Controller
     }
 
     public function fetch_sub_categories(Request $request){
-        
-        $data['companies'] = [];
+       
         $data['specifications'] = [];
-        $data['product_names'] = [];
+        $data['subCategories'] = [];
         $subCategories = SubCategory::where('category_id', $request->category_id)->get();
-        if(count($subCategories) == 0){
-            $companies = CategoryCompany::where('category_id', $request->category_id)->get();
-            $data['companies'] = $companies;
-        }
+      
         $category_specifications = CategorySpecification::where('category_id', $request->category_id)->get();
         if($category_specifications){
             $data['specifications'] = $category_specifications;
         }
-        $product_names = ProductName::where('category_id', $request->category_id)->get();
-        if($product_names){
-            $data['product_names'] = $product_names;
-        }
+      
         $data['subCategories'] = $subCategories;
 
         
-
-        if($subCategories){
+        // dd($data);
+        // if($subCategories){
             return response()->json($this->generate_response(
                 array(
                     "message" => "Sub Categories fetched successfully", 
                     "data"    => $data,
                 ), 'SUCCESS'
             ));
-        }
+        // }
     }
 
     public function fetch_companies(Request $request){
@@ -389,7 +382,7 @@ class Category extends Controller
         $data['product_names'] = [];
         $data['specifications'] = [];
         $companies = CategoryCompany::where('sub_category_id', $request->sub_category_id)->get();
-        $category_specifications = CategorySpecification::where('sub_category_id', $request->sub_category_id)->get();
+        $category_specifications = CategorySpecification::with('category_specification_details')->where('sub_category_id', $request->sub_category_id)->get();
         $childCategories = ChildCategory::where('sub_category_id', $request->sub_category_id)->get();
         // dd($childCategories);
         $data['child_categories'] = $childCategories;
@@ -415,7 +408,7 @@ class Category extends Controller
 
     public function fetch_category_specifications(Request $request){
         $data['specifications'] = [];
-        $category_specifications = CategorySpecification::where('child_category_id', $request->child_category_id)->get();
+        $category_specifications = CategorySpecification::with('category_specification_details')->where('child_category_id', $request->child_category_id)->get();
         if($category_specifications){
             $data['specifications'] = $category_specifications;
     

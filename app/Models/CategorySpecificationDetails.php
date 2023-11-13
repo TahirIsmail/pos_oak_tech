@@ -13,4 +13,9 @@ class CategorySpecificationDetails extends Model
     public function category_specification(){
         return $this->belongsTo(CategorySpecification::class, 'category_specification_id');
     }
+
+
+    public function product_specification(){
+        return $this->hasOne(ProductSpecifications::class, 'specification_details');
+    }
 }

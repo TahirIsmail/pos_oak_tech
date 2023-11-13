@@ -126,8 +126,8 @@ class ChildCategorySeeder extends Seeder
 
 
 
-         // Printer Child Categories (Accessories) Seeders Start
-         $childPrinterCategories = [
+        // Printer Child Categories (Accessories) Seeders Start
+        $childPrinterCategories = [
             'Toner',
             'Scanner',
             'Tray',
@@ -159,18 +159,12 @@ class ChildCategorySeeder extends Seeder
 
         // Security Child Categories (Accessories) Seeders Start
         $childSecurityCategories = [
-            'Toner',
-            'Scanner',
-            'Tray',
-            'Formatter Card',
-            'Sleeve',
-            'Heating Unit',
-            'Gear Set',
-            'Printer Head',
-            'Printer Cable',
-            'Roller',
-            'Pickup Roller',
-            'Front Panel',
+            "BNC Connector",
+            "CCTV Cable",
+            "Power Supply",
+            "Push Button",
+            "PTZ Controller",
+            "Locks"
         ];
         $SecurityChildcategoryData = [];
         foreach ($childSecurityCategories as $category) {

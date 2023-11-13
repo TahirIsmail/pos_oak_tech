@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
         $addon_groups = ProductAddonGroupResource::collection($this->addon_groups);
 
         $block_recurring_data = (isset($this->block_recurring_data))?$this->block_recurring_data:false;
+        
 
         $variants = [];
         $variants_by_options = [];
@@ -66,8 +67,8 @@ class ProductResource extends JsonResource
             'sale_amount_including_tax' => $this->sale_amount_including_tax,
             'category' => $this->category,
             'subcategory' => $this->subcategory,
-            'category_company' => $this->category_company,
-            'product_name' => $this->product_name,
+            // 'category_company' => $this->category_company,
+            // 'product_name' => $this->product_name,
             'product_specifications' => $this->product_specifications,
             'supplier' => new SupplierResource($this->supplier),
             'tax_code' => new TaxcodeResource($this->tax_code),

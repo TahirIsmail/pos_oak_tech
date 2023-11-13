@@ -1,8 +1,7 @@
 <template>
   <div class="row">
-    {{ category_specifications }}
     <div class="col-md-12">
-      <div class="card">
+      <div class="card shadow">
       <form @submit.prevent="submit_form" class="mb-3">
         <div class="card-header  d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -40,7 +39,7 @@
 
         <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
-        <div
+        <!-- <div
           v-if="
             typeof stock_transfer_product_slack != 'undefined' &&
             stock_transfer_product_slack != ''
@@ -84,17 +83,17 @@
               </p>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="d-flex flex-wrap mb-1">
+        <!-- <div class="d-flex flex-wrap mb-1">
           <div class="mr-auto">
             <span class="text-subhead">{{
               $t("Product Identifier Information (Optional)")
             }}</span>
           </div>
           <div class=""></div>
-        </div>
-
+        </div> -->
+<!-- 
         <div class="form-row mb-2">
           <div class="form-group col-md-6">
             <div class="custom-control custom-switch ml-1">
@@ -141,7 +140,7 @@
           </div>
         </div>
 
-        <hr />
+        <hr /> -->
 
         <div class="d-flex flex-wrap mb-1">
           <div class="mr-auto">
@@ -158,7 +157,7 @@
               type="text"
               name="product_code"
               v-model="product_code"
-              v-validate="'required|alpha_dash|max:30'"
+              v-validate="'required|alpha_dash|min:6'"
               class="form-control form-control-custom"
               :placeholder="$t('Please enter product code')"
               autocomplete="off"
@@ -330,7 +329,7 @@
 
 
 
-          <div class="form-group col-md-3">
+          <!-- <div class="form-group col-md-3">
             <label for="status">{{ $t("Status") }}</label>
             <select
               name="status"
@@ -350,14 +349,23 @@
             <span v-bind:class="{ error: errors.has('status') }">{{
               errors.first("status")
             }}</span>
-          </div>
+          </div> -->
 
         </div>
 
         <div class="form-row mb-2" v-if="category_specifications.length > 0">
     <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
       <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
-      <input type="text" v-model="input_type[spec.category_specification_label]" class="form-control" placeholder="Enter Specification">
+      <input type="text" v-if="spec.category_specification_details.length == 0" v-model="input_type[spec.category_specification_label]" class="form-control">
+      <select
+      v-else
+      v-model="input_type[spec.category_specification_label]"
+      class="form-control form-control-custom custom-select"
+      @change="add_product_name()"
+      >
+      <option selected disabled>Please Select {{ spec.category_specification_label }}</option>
+      <option v-for="details in spec.category_specification_details" :key="details.id" :value="details.id">{{ details.values }}</option>
+      </select>
     </div>
   </div>
 
@@ -700,7 +708,7 @@ export default {
         this.product_data == null
           ? ""
           : this.product_data.purchase_amount_excluding_tax,
-      status: this.product_data == null ? "" : this.product_data.status.value,
+      status: this.product_data == null ? "1" : this.product_data.status.value,
       images: this.product_data == null ? "" : this.product_data.images,
       currency_code: window.settings.currency_code,
 
@@ -829,25 +837,14 @@ export default {
       this.product_data.product_specifications.forEach(item => {
         this.input_type[item.specification_label+'_'+item.id] = item.id;
         this.input_type[item.specification_label] = item.specification_details;
-      });
-  
+      });  
       }
-
     if (this.product_data != null) {
       this.fetchSubCategorires();
-
     }
-
-    if(this.product_data != null && this.product_data.product_name_id > 0){
-      this.product_name_id = this.product_data.product_name.id;
-    }
-
     if(this.product_data != null && this.product_data.subcategory.id > 0){
       this.fetchCompanies();
-    }
-
-
-    
+    }    
   },
   created() {
     this.set_product_quantity_validation();
@@ -914,11 +911,17 @@ export default {
       };
     },
 
+    add_product_name(){
+      if(this.input_type["Product Name"]){
+        this.product_name = this.input_type["Product Name"];
+      }
+    },
+
     fetchSubCategorires(){
-      // this.input_type = {};
-      this.companies_name = [];
-      this.product_names = [];
-      // this.product_name = '';
+     
+      this.subCategories = [];
+      this.childCategories = [];
+      this.category_specifications = [];
       const selectedCategory = this.categories.find(category => category.id === this.category);
       if (selectedCategory) {
         this.categoryLabel = selectedCategory.label;
@@ -929,17 +932,20 @@ export default {
       axios
               .post("/api/fetchSubCategories", formData)
               .then((response) => {
+                console.log(response.data.data.subCategories);
                 if (response.data.status_code == 200) {
                   // this.company_id = '';
                   // this.sub_category_id = '';
+                  // alert('working');
                  
                   // console.log(response.data.data.companies);                 
-                  this.companies_name = response.data.data.companies;
+                  // this.companies_name = response.data.data.companies;
                   // this.show_response_message(response.data.msg, "Success");
+                  // console.log(response.data.data.subCategories);
                   this.subCategories = response.data.data.subCategories;
                   this.category_specifications = response.data.data.specifications;
 
-                  this.product_names = response.data.data.product_names;
+                  // this.product_names = response.data.data.product_names;
 
                 }
               })
@@ -956,7 +962,7 @@ export default {
         if (result) {
           this.show_modal = true;
           this.$on("submit", function () {
-            this.processing = true;
+            // this.processing = true;
 
 
 
@@ -978,7 +984,7 @@ export default {
             formData.append("access_token", window.settings.access_token);
             formData.append(
               "product_name",
-              this.product_name == '' ? this.productNameLabel : this.product_name
+              this.product_name
             );
             formData.append(
               "product_code",
@@ -1064,10 +1070,10 @@ export default {
                 ? ""
                 : this.parent_variant_option
             );
-
-
+            
             formData.append('category', this.category);
             formData.append("sub_category", this.sub_category_id == null ? null : this.sub_category_id);
+            formData.append("child_category_id", this.child_category_id);
             formData.append('category_company_id', this.company_id);
             formData.append('product_name_id', (this.product_name_id) ? this.product_name_id : null);
 

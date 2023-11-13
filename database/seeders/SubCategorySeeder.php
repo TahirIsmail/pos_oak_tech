@@ -226,6 +226,145 @@ class SubCategorySeeder extends Seeder
             ],
 
 
+
+
+
+            // Projectors subcategories starts 
+            [
+                'category_id' => 6,
+                'sub_category_name' => 'Projector',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 6,
+                'sub_category_name' => 'Project Screen',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 6,
+                'sub_category_name' => 'Projector Stands',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+
+
+
+            // Projectors subcategories ends 
+
+
+
+
+            // Scanners subcategories starts 
+             [                
+                'category_id' => 7,
+                'sub_category_name' => 'Scanners',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Scanners subcategories end 
+
+
+
+
+            // Mobile/Tablet subcategories starts 
+            [                
+                'category_id' => 8,
+                'sub_category_name' => 'Mobile/Tablet',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Mobile/Tablet subcategories end 
+
+
+
+
+
+
+             // Tools subcategories starts 
+            [                
+                'category_id' => 9,
+                'sub_category_name' => 'Tools',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Tools subcategories end 
+
+
+
+
+             // Electronics subcategories starts 
+             [                
+                'category_id' => 10,
+                'sub_category_name' => 'TV',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 10,
+                'sub_category_name' => 'Air Purifier',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 10,
+                'sub_category_name' => 'Digital Cameras',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Electronics subcategories end 
+
+
+
+
+              // PA SYSTEMS subcategories starts 
+            [                
+                'category_id' => 11,
+                'sub_category_name' => 'PA Speakers',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 11,
+                'sub_category_name' => 'Apmlifier',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 11,
+                'sub_category_name' => 'MIC',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // PA SYSTEMS subcategories end 
+
+
+
+              // Telephony subcategories starts 
+            [                
+                'category_id' => 12,
+                'sub_category_name' => 'Exchange',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 12,
+                'sub_category_name' => 'Telephone Set',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [                
+                'category_id' => 12,
+                'sub_category_name' => 'Video Conference',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Telephony subcategories end 
+
+
+
         ]);
     }
 }

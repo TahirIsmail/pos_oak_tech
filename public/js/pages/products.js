@@ -92,15 +92,15 @@ class Products{
                 {
                     data: 'status'
                 },
-                {
-                    data: 'product_status'
-                },
-                {
-                    data: 'created_at'
-                },                
-                {
-                    data: 'updated_at'
-                }, 
+                // {
+                //     data: 'product_status'
+                // },
+                // {
+                //     data: 'created_at'
+                // },                
+                // {
+                //     data: 'updated_at'
+                // }, 
                 {
                     data: 'created_by'
                 },    

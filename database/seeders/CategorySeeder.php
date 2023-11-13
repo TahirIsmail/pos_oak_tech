@@ -141,8 +141,8 @@ class CategorySeeder extends Seeder
             [
                 'slack' => $this->generate_slack('category'),
                 'store_id' => 1,
-                'category_code' => 'Telephony Equipement#101',
-                'label' => 'Telephony Equipement',
+                'category_code' => 'Telephone Equipement#101',
+                'label' => 'Telephone Equipement',
                 'display_on_qr_menu' => 1,
                 'status' => 0,
                 'created_by' => 1,

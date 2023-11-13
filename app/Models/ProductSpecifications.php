@@ -16,4 +16,8 @@ class ProductSpecifications extends Model
     public function product(){
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+    public function category_specification_details(){
+        return $this->belongsTo(CategorySpecificationDetails::class, 'specification_details');
+    }
 }

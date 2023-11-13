@@ -38,6 +38,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\AddonGroupResource;
 
 use App\Http\Resources\Collections\ProductCollection;
+use App\Models\CategorySpecificationDetails;
 use App\Models\ProductSpecifications;
 use Mpdf\Mpdf;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -95,20 +96,20 @@ class Product extends Controller
                             return 'InActive';
                         }
                     })
-                    ->addColumn('product_status', function ($row) {
-                        if ($row['is_addon_product'] == 1) {
-                            return '<span class="btn btn-primary rounded text-white">Addon Product</span>';
-                        } else if ($row['is_addon_product'] == 0 && $row['is_ingredient'] == 0) {
-                            return '<span class="btn btn-info rounded text-white">Billing Product</span>';
-                        } else {
-                        }
-                    })
+                    // ->addColumn('product_status', function ($row) {
+                    //     if ($row['is_addon_product'] == 1) {
+                    //         return '<span class="btn btn-primary rounded text-white">Addon Product</span>';
+                    //     } else if ($row['is_addon_product'] == 0 && $row['is_ingredient'] == 0) {
+                    //         return '<span class="btn btn-info rounded text-white">Billing Product</span>';
+                    //     } else {
+                    //     }
+                    // })
 
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;
                         return view('product.layouts.product_actions', $data)->render();
                     })
-                    ->rawColumns(['supplier_id', 'category', 'tax_code_id', 'discount_code_id', 'status', 'product_status', 'created_by', 'action'])
+                    ->rawColumns(['supplier_id', 'category', 'tax_code_id', 'discount_code_id', 'status', 'created_by', 'action'])
                     ->make(true);
             }
 
@@ -240,6 +241,12 @@ class Product extends Controller
 
             $this->validate_request($request);
 
+        
+           
+            $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
+          
+
+
             $product_data_exists = ProductModel::select('id')
                 ->where('product_code', '=', trim($request->product_code))
                 ->first();
@@ -305,13 +312,14 @@ class Product extends Controller
             $product = [
                 "slack" => $this->generate_slack("products"),
                 "store_id" => $request->logged_user_store_id,
-                "name" => $request->product_name,
+                "name" => $product_name->values,
                 "product_code" => strtoupper($request->product_code),
                 "description" => $request->description,
                 "category_id" => $request->category,
                 "sub_category_id" => $request->sub_category,
                 "category_company_id" => $request->category_company_id,
-                "product_name_id" => $request->product_name_id,
+                "child_category_id" => $request->child_category_id,
+                "product_name_id" => $request->product_name,
                 "supplier_id" => $supplier_data->id,
                 "tax_code_id" => $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
@@ -326,6 +334,10 @@ class Product extends Controller
                 "status" => $request->status,
                 "created_by" => $request->logged_user_id
             ];
+
+
+
+            // dd($product);
 
 
             $product_id = ProductModel::create($product)->id;
@@ -498,6 +510,7 @@ class Product extends Controller
             }
 
             $this->validate_request($request);
+            $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
 
             $product_data_exists = ProductModel::select('id')
                 ->where([
@@ -556,7 +569,7 @@ class Product extends Controller
             DB::beginTransaction();
 
             $product = [
-                "name" => $request->product_name,
+                "name" => $product_name->values,
                 "product_code" => strtoupper($request->product_code),
                 "description" => $request->description,
                 "category_id" => $request->category,
@@ -644,7 +657,7 @@ class Product extends Controller
         $request->merge(['variants' => json_decode($request->variants, true)]);
 
         $validation_array = [
-            'product_name' => $this->get_validation_rules("name_label", true),
+            'product_name' => 'required',
             'product_code' => $this->get_validation_rules("codes", true),
             'purchase_price' => $this->get_validation_rules("numeric", true),
             'quantity' => $this->get_validation_rules("numeric", true),
