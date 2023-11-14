@@ -5716,7 +5716,7 @@ class CategorySpecificationSeeder extends Seeder
 
 
 
-                 // Telephony (Telephone Set) SubCategories Values
+                 // Telephone (Telephone Set) SubCategories Values
 
 
                  [

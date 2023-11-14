@@ -2468,6 +2468,445 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        // Laptop subcategory values start
+        //   Brand values 
+
+        $laptop_subcategory_brand_values = [
+            "HP",
+            "Dell",
+            "Acer",
+            "Lenovo",
+            "Fujitsu",
+            "Samsung",
+            "Ease",
+            "IBM",
+            "Toshiba",
+            "Apple",
+            "Google Chrome",
+            "Other"
+
+        ];
+
+        $laptop_subcategory_brand_values_data = [];
+        foreach ($laptop_subcategory_brand_values as $brand) {
+            $laptop_subcategory_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 178,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_brand_values_data);
+
+
+
+        //   product values 
+
+        $laptop_subcategory_product_values = [
+            "Laptops",
+
+        ];
+
+        $laptop_subcategory_product_values_data = [];
+        foreach ($laptop_subcategory_product_values as $product) {
+            $laptop_subcategory_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 180,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_product_values_data);
+
+
+
+
+        //   core values 
+
+        $laptop_subcategory_core_values = [
+            "Core i3",
+            "Core i5",
+            "Core i7",
+            "Core i9",
+            "Core i11"
+
+        ];
+
+        $laptop_subcategory_core_values_data = [];
+        foreach ($laptop_subcategory_core_values as $core) {
+            $laptop_subcategory_core_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 181,
+                'values' => $core,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_core_values_data);
+
+
+
+        //   ram values 
+
+        $laptop_subcategory_ram_values = [
+            "2GB",
+            "4GB",
+            "6GB",
+            "8GB",
+            "12GB",
+            "16GB",
+            "32GB",
+            "64GB",
+            "128GB"
+
+        ];
+
+        $laptop_subcategory_ram_values_data = [];
+        foreach ($laptop_subcategory_ram_values as $ram) {
+            $laptop_subcategory_ram_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 182,
+                'values' => $ram,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_ram_values_data);
+
+
+
+        //   generation values 
+
+        $laptop_subcategory_generation_values = [
+            "1st",
+            "2nd",
+            "3rd",
+            "4th",
+            "5th",
+            "6th",
+            "7th",
+            "8th",
+            "9th",
+            "10th",
+            "11th",
+            "12th",
+            "13th",
+            "14th",
+            "15th",
+            "16th",
+            "17th",
+            "18th"
+
+        ];
+
+        $laptop_subcategory_generation_values_data = [];
+        foreach ($laptop_subcategory_generation_values as $generation) {
+            $laptop_subcategory_generation_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 183,
+                'values' => $generation,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_generation_values_data);
+
+
+
+        //   ssd values 
+
+        $laptop_subcategory_ssd_values = [
+            "120GB",
+            "128GB",
+            "160GB",
+            "240GB",
+            "256GB",
+            "480GB",
+            "512GB",
+            "1TB",
+            "2TB",
+            "3TB",
+            "4TB",
+            "5TB",
+            "6TB",
+            "8TB",
+            "10TB",
+            "N/A"
+
+        ];
+
+        $laptop_subcategory_ssd_values_data = [];
+        foreach ($laptop_subcategory_ssd_values as $ssd) {
+            $laptop_subcategory_ssd_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 184,
+                'values' => $ssd,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_ssd_values_data);
+
+
+
+
+        //   hdd values 
+
+        $laptop_subcategory_hdd_values = [
+            "250GB",
+            "320GB",
+            "500GB",
+            "750GB",
+            "1TB",
+            "2TB",
+            "3TB",
+            "4TB",
+            "5TB",
+            "6TB",
+            "8TB",
+            "10TB",
+            "N/A"
+
+        ];
+
+        $laptop_subcategory_hdd_values_data = [];
+        foreach ($laptop_subcategory_hdd_values as $hdd) {
+            $laptop_subcategory_hdd_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 185,
+                'values' => $hdd,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_hdd_values_data);
+
+
+
+
+
+        //   condition values 
+
+        $laptop_subcategory_condition_values = [
+            "USED",
+            "NEW",
+            "Refurbished",
+            "Open Box",
+            "Used A+",
+            "Used A",
+            "Used B",
+            "Minor Broken",
+            "Minor Issue"
+
+        ];
+
+        $laptop_subcategory_condition_values_data = [];
+        foreach ($laptop_subcategory_condition_values as $condition) {
+            $laptop_subcategory_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 186,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_condition_values_data);
+
+
+
+
+        //   warranty values 
+
+        $laptop_subcategory_warranty_values = [
+            "Check Warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years",
+            "International Warranty"
+
+        ];
+
+        $laptop_subcategory_warranty_values_data = [];
+        foreach ($laptop_subcategory_warranty_values as $warranty) {
+            $laptop_subcategory_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 187,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_warranty_values_data);
+
+
+
+        //   screen_size values 
+
+        $laptop_subcategory_screen_size_values = [
+            "13",
+            "13.3",
+            "14",
+            "14.2",
+            "14.6",
+            "15",
+            "15.6",
+            "16",
+            "17"
+
+        ];
+
+        $laptop_subcategory_screen_size_values_data = [];
+        foreach ($laptop_subcategory_screen_size_values as $screen_size) {
+            $laptop_subcategory_screen_size_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 188,
+                'values' => $screen_size,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_screen_size_values_data);
+
+
+
+        //   keyboard values 
+
+        $laptop_subcategory_keyboard_values = [
+            "Normal",
+            "Backlit"
+
+        ];
+
+        $laptop_subcategory_keyboard_values_data = [];
+        foreach ($laptop_subcategory_keyboard_values as $keyboard) {
+            $laptop_subcategory_keyboard_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 189,
+                'values' => $keyboard,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_keyboard_values_data);
+
+
+
+        //   fingerprint values 
+
+        $laptop_subcategory_fingerprint_values = [
+            "Yes",
+            "No"
+
+        ];
+
+        $laptop_subcategory_fingerprint_values_data = [];
+        foreach ($laptop_subcategory_fingerprint_values as $fingerprint) {
+            $laptop_subcategory_fingerprint_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 190,
+                'values' => $fingerprint,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_fingerprint_values_data);
+
+
+
+
+        //   battery values 
+
+        $laptop_subcategory_battery_values = [
+            "15 Min",
+            "30 Min",
+            "45 Min",
+            "1 Hour",
+            "1.30 Hours",
+            "2 Hours",
+            "2.30 Hours",
+            "3 Hours",
+            "3 Hours +"
+
+        ];
+
+        $laptop_subcategory_battery_values_data = [];
+        foreach ($laptop_subcategory_battery_values as $battery) {
+            $laptop_subcategory_battery_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 191,
+                'values' => $battery,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_battery_values_data);
+
+
+
+
+        //   type values 
+
+        $laptop_subcategory_type_values = [
+            "Touch",
+            "Convertible",
+            "Convertible & Touch",
+            "Standard"
+
+        ];
+
+        $laptop_subcategory_type_values_data = [];
+        foreach ($laptop_subcategory_type_values as $type) {
+            $laptop_subcategory_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 192,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($laptop_subcategory_type_values_data);
+
+
+
+        // Laptop subcategory values end
+
+
+
         // NEW LAPTOP Accessories RAM  ID = 22  values Start 
 
         //   Brand values 
@@ -8835,16 +9274,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -8968,16 +9397,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -9102,15 +9521,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Used",
             "Pulled",
 
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -9233,16 +9643,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -9368,15 +9768,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Used",
             "Pulled",
 
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -9499,16 +9890,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -9631,15 +10012,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
-
 
         ];
 
@@ -9766,16 +10138,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -9899,14 +10261,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
 
 
         ];
@@ -10034,15 +10388,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Used",
             "Pulled",
 
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -10167,15 +10512,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Used",
             "Pulled",
 
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -10299,16 +10635,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
