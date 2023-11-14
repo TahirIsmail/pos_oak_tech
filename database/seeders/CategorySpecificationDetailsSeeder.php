@@ -9270,15 +9270,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         //   Condition values 
 
-        $computer_accessories_condition_values = [
+        $computer_accessories_toner_condition_values = [
             "New",
             "Used",
             "Pulled",
         ];
 
         $computer_accessories_conditon_values_data = [];
-        foreach ($computer_accessories_condition_values as $condition) {
-            $computer_accessories_condition_values_data[] = [
+        foreach ($computer_accessories_toner_condition_values as $condition) {
+            $computer_accessories_conditon_values_data[] = [
                 'category_id'                  => null,
                 'sub_category_id'              => null,
                 'child_category_id'            => null,
@@ -9288,19 +9288,14 @@ class CategorySpecificationDetailsSeeder extends Seeder
                 'updated_at' => now(),
             ];
         }
-        DB::table('category_specification_details')->insert($computer_accessories_condition_values_data);
+        DB::table('category_specification_details')->insert($computer_accessories_conditon_values_data);
 
 
 
         //   Product Name values 
 
         $computer_accessories_product_values = [
-            "Toner",
-
-
-
-
-        ];
+            "Toner",];
 
         $computer_accessories_product_values_data = [];
         foreach ($computer_accessories_product_values as $product) {
@@ -9368,11 +9363,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Canon",
             "Plustek",
             "Others",
-
-
-
-
-        ];
+         ];
 
         $computer_accessories_brand_values_data = [];
         foreach ($computer_accessories_brand_values as $brand) {
