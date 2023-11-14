@@ -509,9 +509,14 @@ class Product extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
-            $this->validate_request($request);
-            $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
+            $this->update_validate_request($request);
+            $check_condition = false;
 
+            if (is_numeric($request->product_name)) {
+                $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
+                $check_condition = true;
+            }         
+            
             $product_data_exists = ProductModel::select('id')
                 ->where([
                     ['slack', '!=', $slack],
@@ -568,26 +573,50 @@ class Product extends Controller
             
             DB::beginTransaction();
 
-            $product = [
-                "name" => $product_name->values,
-                "product_code" => strtoupper($request->product_code),
-                "description" => $request->description,
-                "category_id" => $request->category,
-                "sub_category_id" => $request->sub_category,
-                "category_company_id" => $request->category_company_id,
-                "product_name_id" => $request->product_name_id,
-                "supplier_id" => $supplier_data->id,
-                "tax_code_id" => $taxcode_data->id,
-                "discount_code_id" => $discount_code_id,
-                "purchase_amount_excluding_tax" => $request->purchase_price,
-                "sale_amount_excluding_tax" => $sale_price,
-                "sale_amount_including_tax" => $sale_amount_including_tax,
-                "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
-                "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
-                "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
-                "status" => $request->status,
-            ];
-
+            if($check_condition){
+                $product = [
+                    "name" => $product_name->values,
+                    "product_code" => strtoupper($request->product_code),
+                    "description" => $request->description,
+                    "category_id" => $request->category,
+                    "sub_category_id" => $request->sub_category,
+                    "category_company_id" => $request->category_company_id,
+                    "product_name_id" => $request->product_name_id,
+                    "supplier_id" => $supplier_data->id,
+                    "tax_code_id" => $taxcode_data->id,
+                    "discount_code_id" => $discount_code_id,
+                    "purchase_amount_excluding_tax" => $request->purchase_price,
+                    "sale_amount_excluding_tax" => $sale_price,
+                    "sale_amount_including_tax" => $sale_amount_including_tax,
+                    "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
+                    "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
+                    "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
+                    "status" => $request->status,
+                ];
+    
+            }
+            else{
+                $product = [
+                    "product_code" => strtoupper($request->product_code),
+                    "description" => $request->description,
+                    "category_id" => $request->category,
+                    "sub_category_id" => $request->sub_category,
+                    "category_company_id" => $request->category_company_id,
+                    "product_name_id" => $request->product_name_id,
+                    "supplier_id" => $supplier_data->id,
+                    "tax_code_id" => $taxcode_data->id,
+                    "discount_code_id" => $discount_code_id,
+                    "purchase_amount_excluding_tax" => $request->purchase_price,
+                    "sale_amount_excluding_tax" => $sale_price,
+                    "sale_amount_including_tax" => $sale_amount_including_tax,
+                    "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
+                    "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
+                    "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
+                    "status" => $request->status,
+                ];
+    
+            }
+           
             $action_response = ProductModel::where('slack', $slack)
                 ->update($product);
 
@@ -651,6 +680,51 @@ class Product extends Controller
     }
 
     public function validate_request($request)
+    {
+        $request->merge(['ingredients' => json_decode($request->ingredients, true)]);
+        $request->merge(['addon_group_values' => json_decode($request->addon_group_values, true)]);
+        $request->merge(['variants' => json_decode($request->variants, true)]);
+
+        $validation_array = [
+            'product_name' => 'required',
+            'product_code' => 'required|unique:products',
+            // 'product_code' => $this->get_validation_rules("codes", true),
+            'purchase_price' => $this->get_validation_rules("numeric", true),
+            'quantity' => $this->get_validation_rules("numeric", true),
+            'alert_quantity' => $this->get_validation_rules("numeric", false),
+            'supplier' => $this->get_validation_rules("slack", true),
+            'category' => $this->get_validation_rules("slack", true),
+            'tax_code' => $this->get_validation_rules("slack", true),
+            'description' => $this->get_validation_rules("text", false),
+            'status' => $this->get_validation_rules("status", true),
+            'product_images.*' => $this->get_validation_rules("product_image", false)
+        ];
+
+        $taxcode_data = TaxcodeModel::select('tax_type')
+            ->where('slack', '=', trim($request->tax_code))
+            ->first();
+        if (!empty($taxcode_data)) {
+            if ($taxcode_data->tax_type == 'INCLUSIVE') {
+                $validation_array['sale_amount_including_tax'] = $this->get_validation_rules("numeric", true);
+            } else {
+                $validation_array['sale_price'] = $this->get_validation_rules("numeric", true);
+            }
+        }
+
+        if (!empty($request->variants) && count($request->variants) > 0) {
+            $validation_array['variants.*.variant_option_slack'] = $this->get_validation_rules("slack", true);
+            $validation_array['parent_variant_option'] = $this->get_validation_rules("slack", true);
+        }
+
+        $validator = Validator::make($request->all(), $validation_array);
+        $validation_status = $validator->fails();
+        if ($validation_status) {
+            throw new Exception($validator->errors());
+        }
+    }
+
+
+    public function update_validate_request($request)
     {
         $request->merge(['ingredients' => json_decode($request->ingredients, true)]);
         $request->merge(['addon_group_values' => json_decode($request->addon_group_values, true)]);

@@ -65,10 +65,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         // computer desktop 1 type values
         $computercategory_type_values = [
-            'Tower',
             'Desktop',
-            'NonBranded',
-            'Server',
         ];
 
         $computercategory_type_data = [];
@@ -308,19 +305,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         // computer tower 
         // computer tower -> id = 2   brand values
         $computercategory_brand_values = [
@@ -372,9 +356,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
         // computer tower 1 type values
         $computercategory_type_values = [
             'Tower',
-            'Desktop',
-            'NonBranded',
-            'Server',
         ];
 
         $computercategory_type_data = [];
@@ -675,10 +656,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         // computer nonbranded 1 type values
         $computercategory_type_values = [
-            'Tower',
-            'Desktop',
             'NonBranded',
-            'Server',
         ];
 
         $computercategory_type_data = [];
@@ -983,9 +961,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         // computer Server 1 type values
         $computercategory_type_values = [
-            'Tower',
-            'Desktop',
-            'NonBranded',
             'Server',
         ];
 
@@ -1765,8 +1740,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Sony",
             "Ease",
             "Others",
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -1967,9 +1940,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_type_values = [
             "SATA 2.5",
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -1992,9 +1962,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Computer SSD",
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -2027,7 +1994,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "3 TB",
             "4 TB",
             "6 TB",
-
 
         ];
 
@@ -2116,8 +2082,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Samsung",
             "Sony",
             "Others",
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -2142,9 +2106,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
         $computer_accessories_type_values = [
             "DVD Rom",
             "DVD R-W",
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -2167,9 +2128,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Computer CD Drive",
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -2191,26 +2149,23 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         //   Capacity values 
 
-        $computer_accessories_capacity_values = [
-            "N/A",
+        // $computer_accessories_capacity_values = [
+        //     "N/A",
+        // ];
 
-
-
-        ];
-
-        $computer_accessories_capacity_values_data = [];
-        foreach ($computer_accessories_capacity_values as $capacity) {
-            $computer_accessories_capacity_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 168,
-                'values' => $capacity,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
+        // $computer_accessories_capacity_values_data = [];
+        // foreach ($computer_accessories_capacity_values as $capacity) {
+        //     $computer_accessories_capacity_values_data[] = [
+        //         'category_id'                  => null,
+        //         'sub_category_id'              => null,
+        //         'child_category_id'            => null,
+        //         'category_specification_id'    => 168,
+        //         'values' => $capacity,
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ];
+        // }
+        // DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
 
 
 
@@ -2463,7 +2418,1935 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-        // computer Accessories SPEAKERS  ID = 1  values Start   missing
+        // computer Accessories Ram values Start   missing
+
+        //   brand values 
+
+        $computer_accessories_ram_brand_values = [
+            "Samsung",
+            "Toshiba",
+            "Kingston",
+            "Team Group",
+            "Dahua",
+            "Lexar",
+            "Skylink",
+            "HP",
+            "CORSAIR",
+            "HIKVISION",
+            "Transcend",
+            "Crucial",
+            "G.Skill",
+            "ADATA",
+            "SK Hynix",
+            "Other"
+        ];
+
+        $computer_accessories_ram_brand_values_data = [];
+        foreach ($computer_accessories_ram_brand_values as $brand) {
+            $computer_accessories_ram_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 52,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_ram_brand_values_data);
+
+
+        //   product values 
+
+        $computer_accessories_ram_product_values = [
+            "Computer Ram",
+        ];
+
+        $computer_accessories_ram_product_values_data = [];
+        foreach ($computer_accessories_ram_product_values as $product) {
+            $computer_accessories_ram_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 54,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_ram_product_values_data);
+
+
+        //   type values 
+
+        $computer_accessories_ram_type_values = [
+            "DDR 1",
+            "DDR 2",
+            "DDR 3",
+            "DDR 4",
+            "DDR 5",
+            "DDR 6",
+            "DDR 7",
+            "DDR 8"
+        ];
+
+        $computer_accessories_ram_type_values_data = [];
+        foreach ($computer_accessories_ram_type_values as $type) {
+            $computer_accessories_ram_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 55,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_ram_type_values_data);
+
+
+        //   capacity values 
+
+        $computer_accessories_ram_capacity_values = [
+            "DDR 1",
+            "DDR 2",
+            "DDR 3",
+            "DDR 4",
+            "DDR 5",
+            "DDR 6",
+            "DDR 7",
+            "DDR 8"
+        ];
+
+        $computer_accessories_ram_capacity_values_data = [];
+        foreach ($computer_accessories_ram_capacity_values as $capacity) {
+            $computer_accessories_ram_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 56,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_ram_capacity_values_data);
+
+
+
+        //   condition values 
+
+        $computer_accessories_ram_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled"
+        ];
+
+        $computer_accessories_ram_condition_values_data = [];
+        foreach ($computer_accessories_ram_condition_values as $condition) {
+            $computer_accessories_ram_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 57,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_ram_condition_values_data);
+
+
+        //   warranty values 
+
+        $computer_accessories_ram_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $computer_accessories_ram_warranty_values_data = [];
+        foreach ($computer_accessories_ram_warranty_values as $warranty) {
+            $computer_accessories_ram_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 58,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_ram_warranty_values_data);
+
+
+
+        // Computer Accessories Keyboard id = 3 
+
+        //   brand values 
+
+        $computer_accessories_keyboard_brand_values = [
+            "A4 Tech",
+            "Dell",
+            "HP",
+            "Lenovo",
+            "Non Branded",
+            "Logitech",
+            "Others"
+        ];
+
+        $computer_accessories_keyboard_brand_values_data = [];
+        foreach ($computer_accessories_keyboard_brand_values as $brand) {
+            $computer_accessories_keyboard_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 86,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_keyboard_brand_values_data);
+
+        //   product values 
+
+        $computer_accessories_keyboard_product_values = [
+            "Computer Keyboard",
+        ];
+
+        $computer_accessories_keyboard_product_values_data = [];
+        foreach ($computer_accessories_keyboard_product_values as $product) {
+            $computer_accessories_keyboard_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 88,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_keyboard_product_values_data);
+
+        //   type values 
+
+        $computer_accessories_keyboard_type_values = [
+            "USB Wired",
+            "WiFi"
+        ];
+
+        $computer_accessories_keyboard_type_values_data = [];
+        foreach ($computer_accessories_keyboard_type_values as $type) {
+            $computer_accessories_keyboard_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 89,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_keyboard_type_values_data);
+
+
+        //   condition values 
+
+        $computer_accessories_keyboard_condition_values = [
+            "NEW",
+            "USED"
+        ];
+
+        $computer_accessories_keyboard_condition_values_data = [];
+        foreach ($computer_accessories_keyboard_condition_values as $condition) {
+            $computer_accessories_keyboard_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 91,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_keyboard_condition_values_data);
+
+
+        //   warranty values 
+
+        $computer_accessories_keyboard_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $computer_accessories_keyboard_warranty_values_data = [];
+        foreach ($computer_accessories_keyboard_warranty_values as $warranty) {
+            $computer_accessories_keyboard_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 92,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_keyboard_warranty_values_data);
+
+
+
+
+        // Computer Accessories Mouse id 4 
+
+        //   brand values 
+
+        $computer_accessories_mouse_brand_values = [
+            "A4 Tech",
+            "Dell",
+            "HP",
+            "Lenovo",
+            "Non Branded",
+            "Logitech",
+            "Others"
+        ];
+
+        $computer_accessories_mouse_brand_values_data = [];
+        foreach ($computer_accessories_mouse_brand_values as $brand) {
+            $computer_accessories_mouse_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 93,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_brand_values_data);
+
+
+
+        //   product values 
+
+        $computer_accessories_mouse_product_values = [
+            "Computer Mouse",
+        ];
+
+        $computer_accessories_mouse_product_values_data = [];
+        foreach ($computer_accessories_mouse_product_values as $product) {
+            $computer_accessories_mouse_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 95,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_product_values_data);
+
+
+
+        //   type values 
+
+        $computer_accessories_mouse_type_values = [
+            "USB Wired",
+            "WiFi"
+        ];
+
+        $computer_accessories_mouse_type_values_data = [];
+        foreach ($computer_accessories_mouse_type_values as $type) {
+            $computer_accessories_mouse_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 96,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_type_values_data);
+
+
+
+        //   condition values 
+
+        $computer_accessories_mouse_condition_values = [
+            "New",
+            "Used"
+        ];
+
+        $computer_accessories_mouse_condition_values_data = [];
+        foreach ($computer_accessories_mouse_condition_values as $condition) {
+            $computer_accessories_mouse_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 98,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_condition_values_data);
+
+
+
+        //   warranty values 
+
+        $computer_accessories_mouse_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $computer_accessories_mouse_warranty_values_data = [];
+        foreach ($computer_accessories_mouse_warranty_values as $warranty) {
+            $computer_accessories_mouse_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 99,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+
+
+        // Computer Accessories Combo Mouse / Keyboard id 5 
+
+        //   brand values 
+
+        $computer_accessories_mouse_brand_values = [
+            "A4 Tech",
+            "Dell",
+            "HP",
+            "Lenovo",
+            "Non Branded",
+            "Logitech",
+            "Others"
+        ];
+
+        $computer_accessories_mouse_brand_values_data = [];
+        foreach ($computer_accessories_mouse_brand_values as $brand) {
+            $computer_accessories_mouse_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 100,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_brand_values_data);
+
+
+
+        //   product values 
+
+        $computer_accessories_mouse_product_values = [
+            "Computer Combo K/M",
+        ];
+
+        $computer_accessories_mouse_product_values_data = [];
+        foreach ($computer_accessories_mouse_product_values as $product) {
+            $computer_accessories_mouse_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 102,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_product_values_data);
+
+
+
+        //   type values 
+
+        $computer_accessories_mouse_type_values = [
+            "USB Wired",
+            "WiFi"
+        ];
+
+        $computer_accessories_mouse_type_values_data = [];
+        foreach ($computer_accessories_mouse_type_values as $type) {
+            $computer_accessories_mouse_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 103,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_type_values_data);
+
+
+
+        //   condition values 
+
+        $computer_accessories_mouse_condition_values = [
+            "New",
+            "Used"
+        ];
+
+        $computer_accessories_mouse_condition_values_data = [];
+        foreach ($computer_accessories_mouse_condition_values as $condition) {
+            $computer_accessories_mouse_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 105,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_condition_values_data);
+
+
+
+        //   warranty values 
+
+        $computer_accessories_mouse_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $computer_accessories_mouse_warranty_values_data = [];
+        foreach ($computer_accessories_mouse_warranty_values as $warranty) {
+            $computer_accessories_mouse_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 106,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_mouse_warranty_values_data);
+
+
+
+
+
+
+
+        // Computer Accessories Processor id = 6 
+
+
+        //   brand values 
+
+        $computer_accessories_processor_brand_values = [
+            "Intel",
+            "AMD",
+            "Ryzen",
+            "Others"
+        ];
+
+        $computer_accessories_processor_brand_values_data = [];
+        foreach ($computer_accessories_processor_brand_values as $brand) {
+            $computer_accessories_processor_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 66,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_brand_values_data);
+
+
+
+        //   product values 
+
+        $computer_accessories_processor_product_values = [
+            "Computer Processor",
+        ];
+
+        $computer_accessories_processor_product_values_data = [];
+        foreach ($computer_accessories_processor_product_values as $product) {
+            $computer_accessories_processor_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 68,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_product_values_data);
+
+
+
+        //   type values 
+
+        $computer_accessories_processor_type_values = [
+            "Core 2 Duo",
+            "Core i3",
+            "Core i5",
+            "Core i7",
+            "Core i9"
+        ];
+
+        $computer_accessories_processor_type_values_data = [];
+        foreach ($computer_accessories_processor_type_values as $type) {
+            $computer_accessories_processor_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 69,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_type_values_data);
+
+
+
+        //   generation values 
+
+        $computer_accessories_processor_generation_values = [
+            "1st",
+            "2nd",
+            "3rd",
+            "4th",
+            "5th",
+            "6th",
+            "7th",
+            "8th",
+            "9th",
+            "10th",
+            "11th",
+            "12th",
+            "13th",
+            "14th",
+            "15th",
+            "16th"
+        ];
+
+        $computer_accessories_processor_generation_values_data = [];
+        foreach ($computer_accessories_processor_generation_values as $generation) {
+            $computer_accessories_processor_generation_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 70,
+                'values' => $generation,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_generation_values_data);
+
+
+
+        //   warranty values 
+
+        $computer_accessories_processor_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $computer_accessories_processor_warranty_values_data = [];
+        foreach ($computer_accessories_processor_warranty_values as $warranty) {
+            $computer_accessories_processor_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 71,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_warranty_values_data);
+
+
+
+
+
+        // Computer Accessories Power Supply id = 7 
+
+
+        //   brand values 
+
+        $computer_accessories_power_supply_brand_values = [
+            "Corsair",
+            "Cooler Master",
+            "Antec",
+            "NZXT",
+            "Super Flower",
+            "XPG",
+            "OCZ",
+            "Sea Sonic",
+            "Thermaltake",
+            "FSP",
+            "Asus",
+            "Msi",
+            "Chieftec",
+            "Apevia",
+            "Evga",
+            "SilverStone",
+            "Rosewill",
+            "Branded",
+            "Others"
+        ];
+
+        $computer_accessories_power_supply_brand_values_data = [];
+        foreach ($computer_accessories_power_supply_brand_values as $brand) {
+            $computer_accessories_power_supply_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 79,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_power_supply_brand_values_data);
+
+
+
+        //   product values 
+
+        $computer_accessories_processor_product_values = [
+            "Computer Power Supply",
+        ];
+
+        $computer_accessories_processor_product_values_data = [];
+        foreach ($computer_accessories_processor_product_values as $product) {
+            $computer_accessories_processor_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 81,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_product_values_data);
+
+
+
+        //   type values 
+
+        $computer_accessories_processor_type_values = [
+            "Core 2 Duo",
+            "Core i3",
+            "Core i5",
+            "Core i7",
+            "Core i9"
+        ];
+
+        $computer_accessories_processor_type_values_data = [];
+        foreach ($computer_accessories_processor_type_values as $type) {
+            $computer_accessories_processor_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 82,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_type_values_data);
+
+
+
+        //   condition values 
+
+        $computer_accessories_power_supply_condition_values = [
+            "150",
+            "300",
+            "600",
+            "750",
+            "900"
+        ];
+
+        $computer_accessories_power_supply_condition_values_data = [];
+        foreach ($computer_accessories_power_supply_condition_values as $condition) {
+            $computer_accessories_power_supply_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 84,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_power_supply_condition_values_data);
+
+
+
+        //   warranty values 
+
+        $computer_accessories_power_supply_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $computer_accessories_power_supply_warranty_values_data = [];
+        foreach ($computer_accessories_power_supply_warranty_values as $warranty) {
+            $computer_accessories_power_supply_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 85,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_power_supply_warranty_values_data);
+
+
+
+
+
+        // Computer Accessories Power Cable
+
+
+        //   brand values 
+
+        $computer_accessories_power_cable_brand_values = [
+            "Branded",
+            "Chinese",
+            "Others"
+        ];
+
+        $computer_accessories_power_cable_brand_values_data = [];
+        foreach ($computer_accessories_power_cable_brand_values as $brand) {
+            $computer_accessories_power_cable_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 114,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_power_cable_brand_values_data);
+
+
+
+        //   product values 
+
+        $computer_accessories_processor_product_values = [
+            "Power Cable",
+        ];
+
+        $computer_accessories_processor_product_values_data = [];
+        foreach ($computer_accessories_processor_product_values as $product) {
+            $computer_accessories_processor_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 116,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_product_values_data);
+
+
+
+        //   type values 
+
+        $computer_accessories_processor_type_values = [
+            "2 Pin",
+            "Fuse Cable",
+            "3 Pin"
+        ];
+
+        $computer_accessories_processor_type_values_data = [];
+        foreach ($computer_accessories_processor_type_values as $type) {
+            $computer_accessories_processor_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 117,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_type_values_data);
+
+
+
+        //   length values 
+
+        $computer_accessories_processor_length_values = [
+            "1 M",
+            "2 M",
+            "3 M",
+            "4 M",
+            "5 M",
+            "10 M"
+        ];
+
+        $computer_accessories_processor_length_values_data = [];
+        foreach ($computer_accessories_processor_length_values as $length) {
+            $computer_accessories_processor_length_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 118,
+                'values' => $length,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_processor_length_values_data);
+
+
+
+        //   condition values 
+
+        $computer_accessories_power_supply_condition_values = [
+            "150",
+            "300",
+            "600",
+            "750",
+            "900"
+        ];
+
+        $computer_accessories_power_supply_condition_values_data = [];
+        foreach ($computer_accessories_power_supply_condition_values as $condition) {
+            $computer_accessories_power_supply_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 119,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_power_supply_condition_values_data);
+
+
+
+        //   warranty values 
+
+        $computer_accessories_power_supply_warranty_values = [
+            "Check warranty",
+        ];
+
+        $computer_accessories_power_supply_warranty_values_data = [];
+        foreach ($computer_accessories_power_supply_warranty_values as $warranty) {
+            $computer_accessories_power_supply_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 120,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_power_supply_warranty_values_data);
+
+
+
+         // REMAINING 5 COMPUTER TYPES ARE LISTED HERE
+        
+        
+        // VGA ID = 9
+
+        // brand name 
+
+        $video_conference_brand_values = [
+            "Branded",
+            "Chinese",
+            "Others",
+            
+        ];
+
+        $video_conference_brand_values_data = [];
+        foreach ($video_conference_brand_values as $brand) {
+            $video_conference_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 121,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_brand_values_data);
+
+
+
+
+
+        // product name 
+
+        $video_conference_product_values = [
+            "VGA Cable",
+        ];
+
+        $video_conference_product_values_data = [];
+        foreach ($video_conference_product_values as $product) {
+            $video_conference_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 123,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_product_values_data);
+
+
+
+
+
+
+        // type name 
+
+        $video_conference_type_values = [
+            "VGA to VGA",
+           
+
+        ];
+
+        $video_conference_type_values_data = [];
+        foreach ($video_conference_type_values as $type) {
+            $video_conference_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 124,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_type_values_data);
+
+
+
+
+
+        // condition name 
+
+        $video_conference_condition_values = [
+            "USED",
+            "NEW",
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 126,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+        // Length name 
+
+        $video_conference_condition_values = [
+            "1 M",
+            "1.5 M",
+            "2 M",
+            "3 M",
+            "4 M",
+            "5 M",
+            "10 M",
+            "15 M",
+            "20 M",
+            "30 M",
+            "40 M",
+            "50 M",
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 125,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+
+
+        // warranty name 
+
+        $video_conference_warranty_values = [
+            "Check warranty",
+            
+        ];
+
+        $video_conference_warranty_values_data = [];
+        foreach ($video_conference_warranty_values as $warranty) {
+            $video_conference_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 127,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_warranty_values_data);
+
+
+
+
+
+        // MotherBoard
+
+        //  brand name 
+
+        $video_conference_brand_values = [
+            "Asus",
+            "Intel",
+            "Gigabyte",
+            "Acer",
+            "Dell",
+            "Tyan",
+            "Xfx",
+            "Epox",
+            "Msi",
+            "Evga",
+            "Biostar",
+            "Zotac",
+            "Sony",
+            "IBM",
+            "Others",
+            
+        ];
+
+        $video_conference_brand_values_data = [];
+        foreach ($video_conference_brand_values as $brand) {
+            $video_conference_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 72,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_brand_values_data);
+
+
+
+
+
+        // product name 
+
+        $video_conference_product_values = [
+            "MotherBoard",
+        ];
+
+        $video_conference_product_values_data = [];
+        foreach ($video_conference_product_values as $product) {
+            $video_conference_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 74,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_product_values_data);
+
+
+
+
+
+
+        // type name 
+
+        $video_conference_type_values = [
+            "Micro ATX",
+            "E-ATX",
+            "LPX Motherboard",
+            "Micro ATX Motherboard",
+            "Mini ITX",
+            "PICO BTX Motherboard",
+            "Flex ATX",
+            "ATX",
+            "BTX",
+            "Nano ITX",
+           
+
+        ];
+
+        $video_conference_type_values_data = [];
+        foreach ($video_conference_type_values as $type) {
+            $video_conference_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 75,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_type_values_data);
+
+
+
+
+
+        // condition name 
+
+        $video_conference_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled",
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 77,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+        // Capacity name 
+
+        $video_conference_condition_values = [
+            "1 Gb",
+            "2 GB",
+            "4 GB",
+            "8 GB",
+            "16 GB",
+            "32 GB",
+            
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 76,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+
+
+        // warranty name 
+
+        $video_conference_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+            
+        ];
+
+        $video_conference_warranty_values_data = [];
+        foreach ($video_conference_warranty_values as $warranty) {
+            $video_conference_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 78,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_warranty_values_data);
+
+
+
+
+
+
+        // Graphics Card
+
+        //  brand name 
+
+        $video_conference_brand_values = [
+            "AMD",
+            "Nvidia",
+            "Gigabyte",
+            "Asus",
+            "Intel",
+            "ATI",
+            "PNY Technologies",
+            "Matrox",
+            "Msi",
+            "Zotac",
+            "Others",
+            
+        ];
+
+        $video_conference_brand_values_data = [];
+        foreach ($video_conference_brand_values as $brand) {
+            $video_conference_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 107,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_brand_values_data);
+
+
+
+
+
+        // product name 
+
+        $video_conference_product_values = [
+            "Graphic Card",
+        ];
+
+        $video_conference_product_values_data = [];
+        foreach ($video_conference_product_values as $product) {
+            $video_conference_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 109,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_product_values_data);
+
+
+
+
+
+
+        // type name 
+
+        $video_conference_type_values = [
+            "PCI",
+            "PCI E",
+           
+           
+
+        ];
+
+        $video_conference_type_values_data = [];
+        foreach ($video_conference_type_values as $type) {
+            $video_conference_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 110,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_type_values_data);
+
+
+
+
+
+        // condition name 
+
+        $video_conference_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled",
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 112,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+        // Capacity name 
+
+        $video_conference_condition_values = [
+            "1 Gb",
+            "2 GB",
+            "4 GB",
+            "6 GB",
+            "8 GB",
+            "10 GB",
+            "12 GB",
+            "14 GB",
+            "16 GB",
+            "18 GB",
+            "20 GB",
+            
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 111,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+
+
+        // warranty name 
+
+        $video_conference_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+            
+        ];
+
+        $video_conference_warranty_values_data = [];
+        foreach ($video_conference_warranty_values as $warranty) {
+            $video_conference_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 113,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_warranty_values_data);
+
+
+
+
+
+
+        // LAN Card
+
+        //  brand name 
+
+        $video_conference_brand_values = [
+            "TP-Link",
+            "D-Link",
+            "Others",
+            
+        ];
+
+        $video_conference_brand_values_data = [];
+        foreach ($video_conference_brand_values as $brand) {
+            $video_conference_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 171,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_brand_values_data);
+
+
+
+
+
+        // product name 
+
+        $video_conference_product_values = [
+            "Network Card",
+        ];
+
+        $video_conference_product_values_data = [];
+        foreach ($video_conference_product_values as $product) {
+            $video_conference_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 173,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_product_values_data);
+
+
+
+
+
+
+        // type name 
+
+        $video_conference_type_values = [
+            "PCI",
+            "PCI E",
+            "Wifi Card",
+            "USB Wifi Dongle",
+            "PCI Fiber Card",
+           
+           
+
+        ];
+
+        $video_conference_type_values_data = [];
+        foreach ($video_conference_type_values as $type) {
+            $video_conference_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 174,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_type_values_data);
+
+
+
+
+
+        // condition name 
+
+        $video_conference_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled",
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 176,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+        // Capacity name 
+
+        $video_conference_condition_values = [
+            "10/100",
+            "1 Giga",
+            "10 Giga",
+           
+            
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 175,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+
+
+        // warranty name 
+
+        $video_conference_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+            
+        ];
+
+        $video_conference_warranty_values_data = [];
+        foreach ($video_conference_warranty_values as $warranty) {
+            $video_conference_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 177,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_warranty_values_data);
+
+
+
+
+
+
+        // Hard Disk
+
+        //  brand name 
+
+        $video_conference_brand_values = [
+            "Western Digital",
+            "SeaGate",
+            "Toshiba",
+            "Others",
+            
+        ];
+
+        $video_conference_brand_values_data = [];
+        foreach ($video_conference_brand_values as $brand) {
+            $video_conference_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 59,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_brand_values_data);
+
+
+
+
+
+        // product name 
+
+        $video_conference_product_values = [
+            "Hard Disk",
+        ];
+
+        $video_conference_product_values_data = [];
+        foreach ($video_conference_product_values as $product) {
+            $video_conference_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 61,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_product_values_data);
+
+
+
+
+
+
+        // type name 
+
+        $video_conference_type_values = [
+            "SATA",
+            "E SATA", 
+           
+
+        ];
+
+        $video_conference_type_values_data = [];
+        foreach ($video_conference_type_values as $type) {
+            $video_conference_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 62,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_type_values_data);
+
+
+
+
+
+        // condition name 
+
+        $video_conference_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled",
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 64,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+        // Capacity name 
+
+        $video_conference_condition_values = [
+            "120 GB",
+            "250 GB",
+            "500 GB",
+            "750 GB",
+            "1 TB",
+            "2 TB",
+            "4 TB",
+            "8 TB",
+            "16 TB",
+            "32 TB",
+            "Manual",
+           
+           
+            
+            
+
+        ];
+
+        $video_conference_condition_values_data = [];
+        foreach ($video_conference_condition_values as $condition) {
+            $video_conference_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 63,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_condition_values_data);
+
+
+
+
+
+
+
+        // warranty name 
+
+        $video_conference_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+            
+        ];
+
+        $video_conference_warranty_values_data = [];
+        foreach ($video_conference_warranty_values as $warranty) {
+            $video_conference_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 65,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($video_conference_warranty_values_data);
+
+
+
+
+
+
 
 
 
@@ -8685,53 +10568,10 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_brand_values_data);
 
 
-
-
-        //   type values 
-
-        $computer_accessories_type_values = [
-            "Manual",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        ];
-
-        $computer_accessories_type_values_data = [];
-        foreach ($computer_accessories_type_values as $type) {
-            $computer_accessories_type_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 418,
-                'values' => $type,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
-
-
-
         //   Product Name values 
 
         $computer_accessories_product_values = [
             "Cable Tray",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -8839,21 +10679,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "40 x 40 mm",
             "40 x 60 mm",
             "80 x 60 mm",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -8955,9 +10780,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -8989,21 +10811,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "8 Inch",
             "10 Inch",
             "12 Inch",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9134,22 +10941,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Giga Dual Mode",
             "10 Giga Single Mode",
             "10 Giga Dual Mode",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9295,7 +11086,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Product Name values 
 
         $computer_accessories_product_values = [
-            "Toner",];
+            "Toner",
+        ];
 
         $computer_accessories_product_values_data = [];
         foreach ($computer_accessories_product_values as $product) {
@@ -9363,7 +11155,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Canon",
             "Plustek",
             "Others",
-         ];
+        ];
 
         $computer_accessories_brand_values_data = [];
         foreach ($computer_accessories_brand_values as $brand) {
