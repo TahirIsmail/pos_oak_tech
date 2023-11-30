@@ -76,7 +76,7 @@ class Product extends Controller
 
         $data['suppliers'] = SupplierModel::select('slack', 'supplier_code', 'name')->sortNameAsc()->active()->get();
 
-        $data['categories'] = CategoryModel::with('subcategories')->sortLabelAsc()->active()->get()->toArray();
+        $data['categories'] = CategoryModel::with('subcategories')->orderBy('id', 'asc')->active()->get()->toArray();
         // dd($data['categories']);
 
         $data['taxcodes'] = TaxcodeModel::select('slack', 'tax_code', 'label', 'tax_type', 'total_tax_percentage')->sortLabelAsc()->active()->get();

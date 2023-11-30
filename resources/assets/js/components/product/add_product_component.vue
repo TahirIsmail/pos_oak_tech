@@ -356,7 +356,7 @@
         <div class="form-row mb-2" v-if="category_specifications.length > 0">
     <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
       <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
-      <input type="text" v-if="spec.category_specification_details.length == 0" v-model="input_type[spec.category_specification_label]" class="form-control">
+      <input :type="(spec.category_specification_label == 'Quantity') ? 'number' : 'text'" v-if="spec.category_specification_details.length == 0" v-model="input_type[spec.category_specification_label]" class="form-control" @change="add_product_name()">
       <select
       v-else
       v-model="input_type[spec.category_specification_label]"
@@ -371,7 +371,6 @@
 
        
         <hr />
-
         <div class="d-flex flex-wrap mb-1">
           <div class="mr-auto">
             <span class="text-subhead">{{
@@ -387,7 +386,6 @@
             <select
               name="tax_code"
               v-model="tax_code"
-              v-validate="'required'"
               class="form-control form-control-custom custom-select"
               v-on:change="check_tax_type($event)"
             >
@@ -403,16 +401,13 @@
                 {{ taxcode.total_tax_percentage }}] ({{ taxcode.tax_type }})
               </option>
             </select>
-            <span v-bind:class="{ error: errors.has('tax_code') }">{{
-              errors.first("tax_code")
-            }}</span>
+           
           </div>
           <div class="form-group col-md-3">
             <label for="discount_code">{{ $t("Discount Code") }}</label>
             <select
               name="discount_code"
               v-model="discount_code"
-              v-validate="''"
               class="form-control form-control-custom custom-select"
             >
               <option value="">Choose Discount Code..</option>
@@ -623,7 +618,11 @@ export default {
     return {
       subCategories: [],
       childCategories: [],
-      child_category_id: '',
+      child_category_id: this.product_data == null
+          ? ""
+          : this.product_data.child_category_id == null
+          ? ""
+          : this.product_data.child_category_id,
 
       category_specifications: [],
       sub_category_id: this.product_data == null
@@ -694,7 +693,9 @@ export default {
           : this.product_data.discount_code == null
           ? ""
           : this.product_data.discount_code.slack,
-      quantity: 1,
+      quantity: this.product_data == null
+          ? 1
+          : this.product_data.quantity,
       alert_quantity:1,
       sale_price:
         this.product_data == null
@@ -845,6 +846,9 @@ export default {
     if(this.product_data != null && this.product_data.subcategory.id > 0){
       this.fetchCompanies();
     }    
+    if(this.product_data != null && this.product_data.child_category_id > 0){
+      this.fetch_category_specification();
+    }    
   },
   created() {
     this.set_product_quantity_validation();
@@ -856,11 +860,9 @@ export default {
   },
   methods: {
     fetchCompanies(){
-      // this.input_type = {};
       this.companies_name = [];
       this.product_names = [];
       this.category_specifications = [];
-      // this.product_name = '';
 
 
       var formData = new FormData();
@@ -915,6 +917,9 @@ export default {
       if(this.input_type["Product Name"]){
         this.product_name = this.input_type["Product Name"];
       }
+      if(this.input_type["Quantity"]){
+        this.quantity = this.input_type["Quantity"];
+      }
     },
 
     fetchSubCategorires(){
@@ -934,18 +939,9 @@ export default {
               .then((response) => {
                 console.log(response.data.data.subCategories);
                 if (response.data.status_code == 200) {
-                  // this.company_id = '';
-                  // this.sub_category_id = '';
-                  // alert('working');
-                 
-                  // console.log(response.data.data.companies);                 
-                  // this.companies_name = response.data.data.companies;
-                  // this.show_response_message(response.data.msg, "Success");
-                  // console.log(response.data.data.subCategories);
+                  
                   this.subCategories = response.data.data.subCategories;
                   this.category_specifications = response.data.data.specifications;
-
-                  // this.product_names = response.data.data.product_names;
 
                 }
               })
@@ -962,7 +958,7 @@ export default {
         if (result) {
           this.show_modal = true;
           this.$on("submit", function () {
-            // this.processing = true;
+            this.processing = true;
 
 
 

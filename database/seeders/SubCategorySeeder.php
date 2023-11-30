@@ -328,7 +328,7 @@ class SubCategorySeeder extends Seeder
             ],
             [                
                 'category_id' => 11,
-                'sub_category_name' => 'Apmlifier',
+                'sub_category_name' => 'Amplifier',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

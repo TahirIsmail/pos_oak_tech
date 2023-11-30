@@ -1271,6 +1271,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "HDMI VGA",
             "VGA DVI",
             "D-Port VGA",
+            "VGA",
 
         ];
 
@@ -1618,12 +1619,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Ports values 
 
         $computer_accessories_ports_values = [
-            "With Mic",
-            "without Mic",
-            "Single Headphones",
-            "Double Headphones",
-            "Rechargable",
-            "Noise Cancelling",
+            'Single Headphone with Mic',
+            'Double Headphone With Mic',
+            'Double Headphone Without Mic'
 
         ];
 
@@ -1939,7 +1937,10 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   type values 
 
         $computer_accessories_type_values = [
-            "SATA 2.5",
+            'SATA 2.5',
+            'NVME',
+            'M1',
+            'M2 SATA'
         ];
 
         $computer_accessories_type_values_data = [];
@@ -1994,6 +1995,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "3 TB",
             "4 TB",
             "6 TB",
+            '256GB',
+            '512GB'
 
         ];
 
@@ -2508,14 +2511,12 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   capacity values 
 
         $computer_accessories_ram_capacity_values = [
-            "DDR 1",
-            "DDR 2",
-            "DDR 3",
-            "DDR 4",
-            "DDR 5",
-            "DDR 6",
-            "DDR 7",
-            "DDR 8"
+            '2 GB',
+            '4 GB',
+            '8 GB',
+            '16 GB',
+            '32 GB',
+            '64 GB'
         ];
 
         $computer_accessories_ram_capacity_values_data = [];
@@ -2532,10 +2533,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
         }
         DB::table('category_specification_details')->insert($computer_accessories_ram_capacity_values_data);
 
-
-
-        //   condition values 
-
+        //   condition values
         $computer_accessories_ram_condition_values = [
             "USED",
             "NEW",
@@ -3130,25 +3128,25 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   brand values 
 
         $computer_accessories_power_supply_brand_values = [
-            "Corsair",
-            "Cooler Master",
-            "Antec",
-            "NZXT",
-            "Super Flower",
-            "XPG",
-            "OCZ",
-            "Sea Sonic",
-            "Thermaltake",
-            "FSP",
-            "Asus",
-            "Msi",
-            "Chieftec",
-            "Apevia",
-            "Evga",
-            "SilverStone",
-            "Rosewill",
-            "Branded",
-            "Others"
+            'Dell',
+            'Cooler Master',
+            'HP',
+            'Lenovo',
+            'Ease',
+            'Acer',
+            'OCZ',
+            'Sea Sony',
+            'Thermaltake',
+            'FSP',
+            'Asus',
+            'Msi',
+            'Chieftec',
+            'Apevia',
+            'Evga',
+            'SilverStone',
+            'Rosewill',
+            'Branded',
+            'Other'
         ];
 
         $computer_accessories_power_supply_brand_values_data = [];
@@ -3192,11 +3190,11 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   type values 
 
         $computer_accessories_processor_type_values = [
-            "Core 2 Duo",
-            "Core i3",
-            "Core i5",
-            "Core i7",
-            "Core i9"
+            'ATX',
+            '20 Pin',
+            '24 Pin',
+            '16 Pin',
+            '10 Pin'
         ];
 
         $computer_accessories_processor_type_values_data = [];
@@ -3215,14 +3213,41 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-        //   condition values 
+        //   capacity values 
 
-        $computer_accessories_power_supply_condition_values = [
+        $computer_accessories_power_supply_capacity_values = [
             "150",
             "300",
             "600",
             "750",
             "900"
+        ];
+
+        $computer_accessories_power_supply_capacity_values_data = [];
+        foreach ($computer_accessories_power_supply_capacity_values as $capacity) {
+            $computer_accessories_power_supply_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 83,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_power_supply_capacity_values_data);
+
+
+
+
+
+
+        //   condition values 
+
+        $computer_accessories_power_supply_condition_values = [
+            'Used',
+            'New',
+            'Pulled'
         ];
 
         $computer_accessories_power_supply_condition_values_data = [];
@@ -3376,11 +3401,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   condition values 
 
         $computer_accessories_power_supply_condition_values = [
-            "150",
-            "300",
-            "600",
-            "750",
-            "900"
+            "NEW",
+            "USED",
         ];
 
         $computer_accessories_power_supply_condition_values_data = [];
@@ -3421,9 +3443,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-         // REMAINING 5 COMPUTER TYPES ARE LISTED HERE
-        
-        
+        // REMAINING 5 COMPUTER TYPES ARE LISTED HERE
+
+
         // VGA ID = 9
 
         // brand name 
@@ -3432,7 +3454,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Branded",
             "Chinese",
             "Others",
-            
+
         ];
 
         $video_conference_brand_values_data = [];
@@ -3482,7 +3504,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $video_conference_type_values = [
             "VGA to VGA",
-           
+
 
         ];
 
@@ -3509,7 +3531,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
         $video_conference_condition_values = [
             "USED",
             "NEW",
-            
+
 
         ];
 
@@ -3546,7 +3568,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "30 M",
             "40 M",
             "50 M",
-            
+
 
         ];
 
@@ -3574,7 +3596,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $video_conference_warranty_values = [
             "Check warranty",
-            
+
         ];
 
         $video_conference_warranty_values_data = [];
@@ -3614,8 +3636,11 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Zotac",
             "Sony",
             "IBM",
+            'Dell',
+            'HP',
+            'Lenovo',
             "Others",
-            
+
         ];
 
         $video_conference_brand_values_data = [];
@@ -3674,7 +3699,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "ATX",
             "BTX",
             "Nano ITX",
-           
+
 
         ];
 
@@ -3702,7 +3727,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "USED",
             "NEW",
             "Pulled",
-            
+
 
         ];
 
@@ -3727,15 +3752,22 @@ class CategorySpecificationDetailsSeeder extends Seeder
         // Capacity name 
 
         $video_conference_condition_values = [
-            "1 Gb",
-            "2 GB",
-            "4 GB",
-            "8 GB",
-            "16 GB",
-            "32 GB",
-            
-            
-
+            '1st',
+            '2nd',
+            '3rd',
+            '4th',
+            '5th',
+            '6th',
+            '7th',
+            '8th',
+            '9th',
+            '10th',
+            '11th',
+            '12th',
+            '13th',
+            '14th',
+            '15th',
+            '16th'
         ];
 
         $video_conference_condition_values_data = [];
@@ -3770,7 +3802,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Year",
             "2 Years",
             "3 Years"
-            
+
         ];
 
         $video_conference_warranty_values_data = [];
@@ -3808,7 +3840,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Msi",
             "Zotac",
             "Others",
-            
+
         ];
 
         $video_conference_brand_values_data = [];
@@ -3859,8 +3891,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
         $video_conference_type_values = [
             "PCI",
             "PCI E",
-           
-           
+
+
 
         ];
 
@@ -3888,7 +3920,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "USED",
             "NEW",
             "Pulled",
-            
+
 
         ];
 
@@ -3924,8 +3956,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "16 GB",
             "18 GB",
             "20 GB",
-            
-            
+
+
 
         ];
 
@@ -3961,7 +3993,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Year",
             "2 Years",
             "3 Years"
-            
+
         ];
 
         $video_conference_warranty_values_data = [];
@@ -3991,7 +4023,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TP-Link",
             "D-Link",
             "Others",
-            
+
         ];
 
         $video_conference_brand_values_data = [];
@@ -4045,8 +4077,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Wifi Card",
             "USB Wifi Dongle",
             "PCI Fiber Card",
-           
-           
+
+
 
         ];
 
@@ -4074,7 +4106,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "USED",
             "NEW",
             "Pulled",
-            
+
 
         ];
 
@@ -4102,9 +4134,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "10/100",
             "1 Giga",
             "10 Giga",
-           
-            
-            
+
+
+
 
         ];
 
@@ -4140,7 +4172,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Year",
             "2 Years",
             "3 Years"
-            
+
         ];
 
         $video_conference_warranty_values_data = [];
@@ -4171,7 +4203,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "SeaGate",
             "Toshiba",
             "Others",
-            
+
         ];
 
         $video_conference_brand_values_data = [];
@@ -4221,8 +4253,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $video_conference_type_values = [
             "SATA",
-            "E SATA", 
-           
+            "E SATA",
+
 
         ];
 
@@ -4250,7 +4282,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "USED",
             "NEW",
             "Pulled",
-            
+
 
         ];
 
@@ -4286,10 +4318,10 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "16 TB",
             "32 TB",
             "Manual",
-           
-           
-            
-            
+
+
+
+
 
         ];
 
@@ -4325,7 +4357,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Year",
             "2 Years",
             "3 Years"
-            
+
         ];
 
         $video_conference_warranty_values_data = [];
@@ -5557,11 +5589,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Nickel Cadmium",
             "Nickel Metal Hydride",
             "Lethium",
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -5583,7 +5610,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Product Name values 
 
         $computer_accessories_product_values = [
-            "Laptop Keyboard",
+            "Battery",
 
 
 
@@ -5841,7 +5868,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
                 'category_id'                  => null,
                 'sub_category_id'              => null,
                 'child_category_id'            => null,
-                'category_specification_id'    => 223,
+                'category_specification_id'    => 226,
                 'values' => $condition,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -6201,8 +6228,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
         $computer_accessories_condition_values = [
             "New",
             "Used",
-
-
         ];
 
         $computer_accessories_condition_values_data = [];
@@ -6233,6 +6258,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "6 Months",
             "9 Months",
             "1 Year",
+            "2 Years",
+            "3 Years",
 
 
         ];
@@ -6934,36 +6961,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-
-
-        //   Warranty values 
-
-        $computer_accessories_warranty_values = [
-            "Check Warranty",
-
-
-
-        ];
-
-        $computer_accessories_warranty_values_data = [];
-        foreach ($computer_accessories_warranty_values as $warranty) {
-            $computer_accessories_warranty_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 276,
-                'values' => $warranty,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
-
-
-
-
-
-
         // NEW LAPTOP Accessories MOtherBoard  ID = 28  values Start 
 
         //   Brand values 
@@ -7007,12 +7004,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_type_values = [
             "Standard",
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -7035,9 +7026,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Laptop motherboard",
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -7126,7 +7114,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -7138,7 +7128,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
                 'category_id'                  => null,
                 'sub_category_id'              => null,
                 'child_category_id'            => null,
-                'category_specification_id'    => 276,
+                'category_specification_id'    => 283,
                 'values' => $warranty,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -7317,7 +7307,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -7471,8 +7463,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Refurb",
-
-
         ];
 
         $computer_accessories_condition_values_data = [];
@@ -7501,195 +7491,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
-        ];
-
-        $computer_accessories_warranty_values_data = [];
-        foreach ($computer_accessories_warranty_values as $warranty) {
-            $computer_accessories_warranty_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 297,
-                'values' => $warranty,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
-
-
-
-
-
-
-
-        // NEW LAPTOP Accessories CD ROM  ID = 31  values Start 
-
-        //   Brand values 
-
-        $computer_accessories_brand_values = [
-            "HP",
-            "Dell",
-            "Acer",
-            "Lenovo",
-            "Fujitsu",
-            "Samsung",
-            "Ease",
-            "IBM",
-            "Toshiba",
-            "Apple",
-            "Google Chrome",
-            "Others",
-
-
-
-        ];
-
-        $computer_accessories_brand_values_data = [];
-        foreach ($computer_accessories_brand_values as $brand) {
-            $computer_accessories_brand_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 291,
-                'values' => $brand,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_brand_values_data);
-
-
-
-
-        //   type values 
-
-        $computer_accessories_type_values = [
-            "CD ROM",
-            "DVD ROM",
-            "DVD RW",
-
-
-
-
-
-
-
-        ];
-
-        $computer_accessories_type_values_data = [];
-        foreach ($computer_accessories_type_values as $type) {
-            $computer_accessories_type_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 294,
-                'values' => $type,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
-
-
-
-        //   Product Name values 
-
-        $computer_accessories_product_values = [
-            "Laptop CD ROM",
-
-
-
-        ];
-
-        $computer_accessories_product_values_data = [];
-        foreach ($computer_accessories_product_values as $product) {
-            $computer_accessories_product_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 293,
-                'values' => $product,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
-
-
-
-
-        //   Size values 
-
-        $computer_accessories_size_values = [
-            "Normal",
-
-
-
-
-
-
-
-
-        ];
-
-        $computer_accessories_size_values_data = [];
-        foreach ($computer_accessories_size_values as $size) {
-            $computer_accessories_size_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 295,
-                'values' => $size,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_size_values_data);
-
-
-
-        //   Condition values 
-
-        $computer_accessories_condition_values = [
-            "New",
-            "Used",
-            "Refurb",
-
-
-        ];
-
-        $computer_accessories_condition_values_data = [];
-        foreach ($computer_accessories_condition_values as $condition) {
-            $computer_accessories_condition_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 296,
-                'values' => $condition,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_condition_values_data);
-
-
-
-
-
-        //   Warranty values 
-
-        $computer_accessories_warranty_values = [
-            "Check Warranty",
-            "15 Days",
-            "1 Month",
-            "3 Months",
-            "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -7760,17 +7564,11 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "100/100 Switch",
             "Giga Switch",
             "PoE Switch Gigabit",
+            "PoE Switch 10/100",
             "10 Giga Ethernet Switch",
             "10 Giga Poe Switch",
             "SFP Giga Switch",
             "SFP10 Giga Switch",
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -7793,9 +7591,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Network Switches",
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -7828,9 +7623,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "16 Ports",
             "24 Ports",
             "48 Ports",
-
-
-
         ];
 
         $computer_accessories_ports_values_data = [];
@@ -7860,6 +7652,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Ethernet 10Giga",
             "2 Ethernet 10Giga",
             "4 Ethernet 10Giga",
+            "N/A",
 
 
         ];
@@ -7891,6 +7684,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 SFP 10 GIGA",
             "2 SFP 10 GIGA",
             "4 SFP 10 GIGA",
+            "N/A",
 
 
         ];
@@ -7915,13 +7709,12 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Sub Type values 
 
         $computer_accessories_subtype_values = [
-            "Manageable",
-            "Non Manageable",
-            "Websmart",
-
-
-
-
+            'Manageable',
+            'Non Manageable',
+            'Websmart',
+            'PoE Manageable',
+            'PoE Non Manageable',
+            'Simple'
         ];
 
         $computer_accessories_subtype_values_data = [];
@@ -7948,12 +7741,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-            "2 YEars",
-            "3 YEars",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -8120,7 +7910,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -8295,10 +8087,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -8397,10 +8188,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Router",
-            "Gateway",
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -8429,14 +8216,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "600",
             "900",
             "1300",
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_capacity_values_data = [];
@@ -8455,12 +8234,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-
-
-
-
-
-
         //   Warranty values 
 
         $computer_accessories_warranty_values = [
@@ -8469,7 +8242,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -8482,6 +8257,154 @@ class CategorySpecificationDetailsSeeder extends Seeder
                 'sub_category_id'              => null,
                 'child_category_id'            => null,
                 'category_specification_id'    => 324,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+        // NETWORK MAIN CATEGORIES   Gateway  ID = 14  values Start 
+
+        //   Brand values 
+
+        $computer_accessories_brand_values = [
+            "HP",
+            "Cisco",
+            "D-Link",
+            "TP-Link",
+            "HIK-Vision",
+            "Dhaua",
+            "HT Network",
+            "Ubiquiti",
+            "Linksys",
+            "IP-Com",
+            "TG-Net",
+            "Aruba",
+            "Others",
+        ];
+
+        $computer_accessories_brand_values_data = [];
+        foreach ($computer_accessories_brand_values as $brand) {
+            $computer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 337,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_brand_values_data);
+
+
+
+
+        //   type values 
+
+        $computer_accessories_type_values = [
+            "Wired Router",
+            "Core Router",
+            "VPN Router",
+            "Wireless Router",
+            "Edge Router",
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 340,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
+
+
+
+        //   Product Name values 
+
+        $computer_accessories_product_values = [
+            "Gateway",
+        ];
+
+        $computer_accessories_product_values_data = [];
+        foreach ($computer_accessories_product_values as $product) {
+            $computer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 339,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
+
+
+
+
+        //   Capacity values 
+
+        $computer_accessories_capacity_values = [
+            "150",
+            "300",
+            "450",
+            "600",
+            "900",
+            "1300",
+        ];
+
+        $computer_accessories_capacity_values_data = [];
+        foreach ($computer_accessories_capacity_values as $capacity) {
+            $computer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 341,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
+
+
+        //   Warranty values 
+
+        $computer_accessories_warranty_values = [
+            "Check Warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years",
+        ];
+
+        $computer_accessories_warranty_values_data = [];
+        foreach ($computer_accessories_warranty_values as $warranty) {
+            $computer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 342,
                 'values' => $warranty,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -8639,7 +8562,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -8683,9 +8608,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Iogear",
             "Kramer Electronics",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -8704,46 +8626,10 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-
-        //   type values 
-
-        $computer_accessories_type_values = [
-            "Core Load Balancer",
-
-
-
-
-
-
-
-
-
-        ];
-
-        $computer_accessories_type_values_data = [];
-        foreach ($computer_accessories_type_values as $type) {
-            $computer_accessories_type_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 334,
-                'values' => $type,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
-
-
-
         //   Product Name values 
 
         $computer_accessories_product_values = [
-            "Router",
-
-
-
-
+            "KVM Switch",
         ];
 
         $computer_accessories_product_values_data = [];
@@ -8769,15 +8655,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "100/100",
             "1 Giga",
             "10 Giga",
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_capacity_values_data = [];
@@ -8795,13 +8672,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
 
 
-
-
-
-
-
-
-
         //   Warranty values 
 
         $computer_accessories_warranty_values = [
@@ -8810,10 +8680,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -8883,15 +8752,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "3 Meters",
             "5 Meters",
             "10 Meters",
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -8914,10 +8774,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Patch Cable",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -8949,7 +8805,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -9022,15 +8880,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Cat 5",
             "Rj 11",
 
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9053,9 +8902,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "i/o Jack",
-
-
-
 
         ];
 
@@ -9088,10 +8934,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -9133,8 +8978,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Aruba",
             "Others",
 
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -9159,17 +9002,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
         $computer_accessories_type_values = [
             "Single Face",
             "Double Face",
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9192,10 +9024,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Face Plate",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -9227,10 +9055,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -9270,9 +9097,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -9297,17 +9121,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
         $computer_accessories_type_values = [
             "3x3",
             "6x6",
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9330,10 +9143,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Back Box",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -9365,10 +9174,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -9408,9 +9216,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -9436,17 +9241,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Cat 6",
             "Cat 5",
             "Cat 7",
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9469,10 +9263,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "RJ-45 Connector",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -9504,10 +9294,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -9571,20 +9360,14 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   type values 
 
         $computer_accessories_type_values = [
-            "Fiber to RJ45 100/100",
-            "Fiber to RJ45 Giga",
-            "Fiber Converter AB 100/100",
-            "Fiber Converter AB Giga",
-
-
-
-
-
-
-
-
-
-
+            'Fiber to RJ45 10/100',
+            'Fiber to RJ45 Giga',
+            'Fiber Converter AB 10/100',
+            'Fiber to Fiber',
+            'Copper to Fiber',
+            'Unmanaged',
+            'Managed',
+            'Fiber Converter AB Giga'
 
         ];
 
@@ -9608,10 +9391,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Media Converter",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -9643,10 +9422,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -9687,9 +9465,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -9716,17 +9491,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Cat 6",
             "Cat 5",
             "Cat 7",
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9749,10 +9513,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Cable Roll",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -9784,10 +9544,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -9827,9 +9586,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -9865,16 +9621,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Floor Rack 37U",
             "Floor Rack 42U",
 
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -9897,10 +9643,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Network Rack",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -9932,10 +9674,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -9976,9 +9717,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -9997,24 +9735,12 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-
         //   type values 
 
         $computer_accessories_type_values = [
-            "100/100",
-            "Giga",
-
-
-
-
-
-
-
-
-
-
-
-
+            '12V',
+            '24V',
+            '48V'
         ];
 
         $computer_accessories_type_values_data = [];
@@ -10031,16 +9757,33 @@ class CategorySpecificationDetailsSeeder extends Seeder
         }
         DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
+        //   capacity values 
+
+        $computer_accessories_capacity_values = [
+            "100/100",
+            "Giga",
+        ];
+
+        $computer_accessories_capacity_values_data = [];
+        foreach ($computer_accessories_capacity_values as $capacity) {
+            $computer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 395,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
+
 
 
         //   Product Name values 
 
         $computer_accessories_product_values = [
-            "Network Rack",
-
-
-
-
+            "PoE Injector",
         ];
 
         $computer_accessories_product_values_data = [];
@@ -10072,10 +9815,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -10115,9 +9857,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -10146,19 +9885,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "16 Ports Unloaded",
             "24 Ports Loaded",
             "24 Ports Unloaded",
-
-
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -10181,10 +9907,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Patch Panel",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -10216,7 +9938,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -10258,9 +9982,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -10287,20 +10008,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "6",
             "9",
             "12",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ];
 
         $computer_accessories_type_values_data = [];
@@ -10323,10 +10030,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Cable Tie",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -10358,10 +10061,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -10402,9 +10104,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -10422,28 +10121,13 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_brand_values_data);
 
 
-
-
         //   type values 
 
         $computer_accessories_type_values = [
-            "1 U",
-            "2 U",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            'Finger Duct',
+            'D-Ring',
+            'Brushed',
+            'Telephone Line'
         ];
 
         $computer_accessories_type_values_data = [];
@@ -10461,15 +10145,33 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
+        //   capacity values 
+
+        $computer_accessories_capacity_values = [
+            "1 U",
+            "2 U",
+        ];
+
+        $computer_accessories_capacity_values_data = [];
+        foreach ($computer_accessories_capacity_values as $capacity) {
+            $computer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 413,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
+
+
 
         //   Product Name values 
 
         $computer_accessories_product_values = [
             "Cable Manager",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -10501,10 +10203,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -10520,13 +10221,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             ];
         }
         DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
-
-
-
-
-
-
-
 
 
 
@@ -10548,9 +10242,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -10592,6 +10283,55 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type values 
+
+        $computer_accessories_type_values = [
+            'Ladder Cable Tray',
+            'Cable Tray Supporting System',
+            'Cable Duct',
+            'Cable Trunking'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 418,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
+
+
+
+        //   capacity values 
+
+        $computer_accessories_capacity_values = [
+            '2\'\' Inch',
+            '4\'\' Inch',
+            '6\'\' Inch',
+            '8\'\' Inch',
+            '12\'\' Inch'
+        ];
+
+        $computer_accessories_capacity_values_data = [];
+        foreach ($computer_accessories_capacity_values as $capacity) {
+            $computer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 419,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
+
 
 
 
@@ -10603,10 +10343,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -10622,10 +10361,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             ];
         }
         DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
-
-
-
-
 
 
 
@@ -10697,14 +10432,34 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+
+        //   length values 
+
+        $computer_accessories_length_values = [
+            '3 meter',
+            '6 meter'
+        ];
+
+        $computer_accessories_length_values_data = [];
+        foreach ($computer_accessories_length_values as $length) {
+            $computer_accessories_length_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 424,
+                'values' => $length,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_length_values_data);
+
+
+
         //   Product Name values 
 
         $computer_accessories_product_values = [
             "PVC DUCT",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -10736,10 +10491,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -10833,10 +10587,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "PVC DUCT",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -10855,6 +10605,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   length values 
+
+        $computer_accessories_length_values = [
+            '3 meter',
+            '6 meter'
+        ];
+
+        $computer_accessories_length_values_data = [];
+        foreach ($computer_accessories_length_values as $length) {
+            $computer_accessories_length_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 431,
+                'values' => $length,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_length_values_data);
 
 
 
@@ -10868,9 +10638,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
         ];
 
@@ -10912,9 +10682,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "TG-Net",
             "Aruba",
             "Others",
-
-
-
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -10962,11 +10729,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Product Name values 
 
         $computer_accessories_product_values = [
-            "PVC DUCT",
-
-
-
-
+            "SFP Module",
         ];
 
         $computer_accessories_product_values_data = [];
@@ -10985,9 +10748,53 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type values 
+
+        $computer_accessories_type_values = [
+            'Single Module',
+            'Multi Module',
+            'Pair Module'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 454,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
+
+        //   capacity values 
+
+        $computer_accessories_capacity_values = [
+            '1 Giga Single Mode',
+            '1 Giga Dual Mode',
+            '10 Giga Single Mode',
+            '10 Giga Dual Mode'
+        ];
+
+        $computer_accessories_capacity_values_data = [];
+        foreach ($computer_accessories_capacity_values as $capacity) {
+            $computer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 455,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_capacity_values_data);
 
 
         //   Warranty values 
@@ -10998,10 +10805,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -11021,7 +10827,971 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        // ======================  printer accessories start    ======================
 
+        // LaserJet
+        //   brand values 
+
+        $printer_accessories_brand_values = [
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Others'
+        ];
+
+        $printer_accessories_brand_values_data = [];
+        foreach ($printer_accessories_brand_values as $brand) {
+            $printer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 457,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_brand_values_data);
+
+        //   product values 
+
+        $printer_accessories_product_values = [
+            'Printer',
+        ];
+
+        $printer_accessories_product_values_data = [];
+        foreach ($printer_accessories_product_values as $product) {
+            $printer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 459,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_product_values_data);
+
+        //   type values 
+
+        $printer_accessories_type_values = [
+            'LaserJet',
+        ];
+
+        $printer_accessories_type_values_data = [];
+        foreach ($printer_accessories_type_values as $type) {
+            $printer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 460,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_type_values_data);
+
+        //   capacity values 
+
+        $printer_accessories_capacity_values = [
+            'Single Printer',
+            '3 in 1',
+            '4 in 1'
+        ];
+
+        $printer_accessories_capacity_values_data = [];
+        foreach ($printer_accessories_capacity_values as $capacity) {
+            $printer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 461,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_capacity_values_data);
+
+
+        //   condition values 
+
+        $printer_accessories_condition_values = [
+            'USED',
+            'NEW',
+            'Pulled'
+        ];
+
+        $printer_accessories_condition_values_data = [];
+        foreach ($printer_accessories_condition_values as $condition) {
+            $printer_accessories_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 462,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_condition_values_data);
+
+        //   warranty values 
+
+        $printer_accessories_warranty_values = [
+            'Check warranty',
+            '15 Days',
+            '1 Month',
+            '3 Months',
+            '6 Months',
+            '9 Months',
+            '1 Year',
+            '2 Years',
+            '3 Years'
+        ];
+
+        $printer_accessories_warranty_values_data = [];
+        foreach ($printer_accessories_warranty_values as $warranty) {
+            $printer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 463,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Dotmatrix
+        //   brand values 
+
+        $printer_accessories_brand_values = [
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Others'
+        ];
+
+        $printer_accessories_brand_values_data = [];
+        foreach ($printer_accessories_brand_values as $brand) {
+            $printer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 464,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_brand_values_data);
+
+        //   product values 
+
+        $printer_accessories_product_values = [
+            'Printer',
+        ];
+
+        $printer_accessories_product_values_data = [];
+        foreach ($printer_accessories_product_values as $product) {
+            $printer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 466,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_product_values_data);
+
+        //   type values 
+
+        $printer_accessories_type_values = [
+            'Dotmatrix',
+        ];
+
+        $printer_accessories_type_values_data = [];
+        foreach ($printer_accessories_type_values as $type) {
+            $printer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 467,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_type_values_data);
+
+        //   capacity values 
+
+        $printer_accessories_capacity_values = [
+            'Single Printer',
+            '3 in 1',
+            '4 in 1'
+        ];
+
+        $printer_accessories_capacity_values_data = [];
+        foreach ($printer_accessories_capacity_values as $capacity) {
+            $printer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 468,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_capacity_values_data);
+
+
+        //   condition values 
+
+        $printer_accessories_condition_values = [
+            'USED',
+            'NEW',
+            'Pulled'
+        ];
+
+        $printer_accessories_condition_values_data = [];
+        foreach ($printer_accessories_condition_values as $condition) {
+            $printer_accessories_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 469,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_condition_values_data);
+
+        //   warranty values 
+
+        $printer_accessories_warranty_values = [
+            'Check warranty',
+            '15 Days',
+            '1 Month',
+            '3 Months',
+            '6 Months',
+            '9 Months',
+            '1 Year',
+            '2 Years',
+            '3 Years'
+        ];
+
+        $printer_accessories_warranty_values_data = [];
+        foreach ($printer_accessories_warranty_values as $warranty) {
+            $printer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 470,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_warranty_values_data);
+
+
+
+
+
+
+
+
+
+        // Label Printer
+        //   brand values 
+
+        $printer_accessories_brand_values = [
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Others'
+        ];
+
+        $printer_accessories_brand_values_data = [];
+        foreach ($printer_accessories_brand_values as $brand) {
+            $printer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 478,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_brand_values_data);
+
+        //   product values 
+
+        $printer_accessories_product_values = [
+            'Printer',
+        ];
+
+        $printer_accessories_product_values_data = [];
+        foreach ($printer_accessories_product_values as $product) {
+            $printer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 480,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_product_values_data);
+
+        //   type values 
+
+        $printer_accessories_type_values = [
+            'Label Printer',
+        ];
+
+        $printer_accessories_type_values_data = [];
+        foreach ($printer_accessories_type_values as $type) {
+            $printer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 481,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_type_values_data);
+
+        //   capacity values 
+
+        $printer_accessories_capacity_values = [
+            'Single Printer',
+            '3 in 1',
+            '4 in 1'
+        ];
+
+        $printer_accessories_capacity_values_data = [];
+        foreach ($printer_accessories_capacity_values as $capacity) {
+            $printer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 482,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_capacity_values_data);
+
+
+        //   condition values 
+
+        $printer_accessories_condition_values = [
+            'USED',
+            'NEW',
+            'Pulled'
+        ];
+
+        $printer_accessories_condition_values_data = [];
+        foreach ($printer_accessories_condition_values as $condition) {
+            $printer_accessories_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 483,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_condition_values_data);
+
+        //   warranty values 
+
+        $printer_accessories_warranty_values = [
+            'Check warranty',
+            '15 Days',
+            '1 Month',
+            '3 Months',
+            '6 Months',
+            '9 Months',
+            '1 Year',
+            '2 Years',
+            '3 Years'
+        ];
+
+        $printer_accessories_warranty_values_data = [];
+        foreach ($printer_accessories_warranty_values as $warranty) {
+            $printer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 484,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // LaserJet
+        //   brand values 
+
+        $printer_accessories_brand_values = [
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Others'
+        ];
+
+        $printer_accessories_brand_values_data = [];
+        foreach ($printer_accessories_brand_values as $brand) {
+            $printer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 471,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_brand_values_data);
+
+        //   product values 
+
+        $printer_accessories_product_values = [
+            'Printer',
+        ];
+
+        $printer_accessories_product_values_data = [];
+        foreach ($printer_accessories_product_values as $product) {
+            $printer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 473,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_product_values_data);
+
+        //   type values 
+
+        $printer_accessories_type_values = [
+            'Deskjet',
+        ];
+
+        $printer_accessories_type_values_data = [];
+        foreach ($printer_accessories_type_values as $type) {
+            $printer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 474,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_type_values_data);
+
+        //   capacity values 
+
+        $printer_accessories_capacity_values = [
+            'Single Printer',
+            '3 in 1',
+            '4 in 1'
+        ];
+
+        $printer_accessories_capacity_values_data = [];
+        foreach ($printer_accessories_capacity_values as $capacity) {
+            $printer_accessories_capacity_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 475,
+                'values' => $capacity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_capacity_values_data);
+
+
+        //   condition values 
+
+        $printer_accessories_condition_values = [
+            'USED',
+            'NEW',
+            'Pulled'
+        ];
+
+        $printer_accessories_condition_values_data = [];
+        foreach ($printer_accessories_condition_values as $condition) {
+            $printer_accessories_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 476,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_condition_values_data);
+
+        //   warranty values 
+
+        $printer_accessories_warranty_values = [
+            'Check warranty',
+            '15 Days',
+            '1 Month',
+            '3 Months',
+            '6 Months',
+            '9 Months',
+            '1 Year',
+            '2 Years',
+            '3 Years'
+        ];
+
+        $printer_accessories_warranty_values_data = [];
+        foreach ($printer_accessories_warranty_values as $warranty) {
+            $printer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 477,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($printer_accessories_warranty_values_data);
+
+        // ======================  printer accessories end    ======================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // FLEXIABLE BOX 
+        //   Brand values 
+
+        $computer_accessories_brand_values = [
+            "HP",
+            "Cisco",
+            "D-Link",
+            "TP-Link",
+            "HIK-Vision",
+            "Dhaua",
+            "HT Network",
+            "Ubiquiti",
+            "Linksys",
+            "IP-Com",
+            "TG-Net",
+            "Aruba",
+            "Others",
+        ];
+
+        $computer_accessories_brand_values_data = [];
+        foreach ($computer_accessories_brand_values as $brand) {
+            $computer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 433,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_brand_values_data);
+
+
+        //   Product Name values 
+
+        $computer_accessories_product_values = [
+            "Flexible Pipe",
+        ];
+
+        $computer_accessories_product_values_data = [];
+        foreach ($computer_accessories_product_values as $product) {
+            $computer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 435,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
+
+
+
+
+
+        //   type values 
+
+        $computer_accessories_type_values = [
+            '1 Inch',
+            '2 Inch',
+            '3 Inch',
+            '4 Inch',
+            '5 Inch',
+            '6 Inch',
+            '7 Inch',
+            '8 Inch',
+            '9 Inch',
+            '10 Inch'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 436,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
+
+
+
+
+        //   length values 
+
+        $computer_accessories_length_values = [
+            '10 meter',
+            '20 meter',
+            '25 meter'
+        ];
+
+        $computer_accessories_length_values_data = [];
+        foreach ($computer_accessories_length_values as $length) {
+            $computer_accessories_length_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 437,
+                'values' => $length,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_length_values_data);
+
+
+        //   Warranty values 
+
+        $computer_accessories_warranty_values = [
+            "Check Warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years",
+        ];
+
+        $computer_accessories_warranty_values_data = [];
+        foreach ($computer_accessories_warranty_values as $warranty) {
+            $computer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 438,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
+
+
+
+
+
+
+        // SCREW BOX 
+        //   Brand values 
+
+        $computer_accessories_brand_values = [
+            "HP",
+            "Cisco",
+            "D-Link",
+            "TP-Link",
+            "HIK-Vision",
+            "Dhaua",
+            "HT Network",
+            "Ubiquiti",
+            "Linksys",
+            "IP-Com",
+            "TG-Net",
+            "Aruba",
+            "Others",
+        ];
+
+        $computer_accessories_brand_values_data = [];
+        foreach ($computer_accessories_brand_values as $brand) {
+            $computer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 439,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_brand_values_data);
+
+
+        //   Product Name values 
+
+        $computer_accessories_product_values = [
+            "Screw Box",
+        ];
+
+        $computer_accessories_product_values_data = [];
+        foreach ($computer_accessories_product_values as $product) {
+            $computer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 441,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
+
+
+        //   Warranty values 
+
+        $computer_accessories_warranty_values = [
+            "Check Warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years",
+        ];
+
+        $computer_accessories_warranty_values_data = [];
+        foreach ($computer_accessories_warranty_values as $warranty) {
+            $computer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 444,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
+
+
+
+
+
+        // Rawal Plug Box 
+        //   Brand values 
+
+        $computer_accessories_brand_values = [
+            "HP",
+            "Cisco",
+            "D-Link",
+            "TP-Link",
+            "HIK-Vision",
+            "Dhaua",
+            "HT Network",
+            "Ubiquiti",
+            "Linksys",
+            "IP-Com",
+            "TG-Net",
+            "Aruba",
+            "Others",
+        ];
+
+        $computer_accessories_brand_values_data = [];
+        foreach ($computer_accessories_brand_values as $brand) {
+            $computer_accessories_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 445,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_brand_values_data);
+
+
+        //   Product Name values 
+
+        $computer_accessories_product_values = [
+            "Rawal Plug Box",
+        ];
+
+        $computer_accessories_product_values_data = [];
+        foreach ($computer_accessories_product_values as $product) {
+            $computer_accessories_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 447,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
+
+
+
+
+        //   type values 
+
+        $computer_accessories_type_values = [
+            '6 M',
+            '8 M',
+            '10 M',
+            '12 M',
+            '14 M',
+            '16 M',
+            '18 M',
+            '20 M'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 448,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
+
+
+        //   Warranty values 
+
+        $computer_accessories_warranty_values = [
+            "Check Warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years",
+        ];
+
+        $computer_accessories_warranty_values_data = [];
+        foreach ($computer_accessories_warranty_values as $warranty) {
+            $computer_accessories_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 450,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_warranty_values_data);
 
 
 
@@ -11030,16 +11800,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -11105,9 +11874,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type Name values 
 
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
 
-
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 488,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
         //   Warranty values 
@@ -11118,10 +11904,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -11149,12 +11934,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -11202,10 +11990,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Scanner",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -11225,6 +12009,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 495,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -11237,7 +12041,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -11268,12 +12074,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
 
 
 
@@ -11326,10 +12135,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Tray",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -11348,6 +12153,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 502,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -11361,7 +12186,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -11391,12 +12218,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
 
 
 
@@ -11448,10 +12278,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Formatter Card",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -11469,6 +12295,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 509,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -11483,7 +12329,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
+            "1 Year",
+            "2 Years",
+            "3 Years",
 
 
 
@@ -11506,22 +12354,20 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-
-
-
-
         // Printer Accessories  ID= 17  Sleeve ID = 58     values Start 
 
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
 
 
 
@@ -11573,10 +12419,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Sleeve",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -11594,10 +12436,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
 
 
+        //   type Name values 
 
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
 
-
-
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 516,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
         //   Warranty values 
@@ -11608,10 +12466,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -11638,16 +12495,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -11695,10 +12551,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Heating Unit",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -11716,10 +12568,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
 
 
+        //   type Name values 
 
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
 
-
-
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 523,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
         //   Warranty values 
@@ -11730,10 +12598,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -11760,16 +12627,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -11818,10 +12684,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Gear Set",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -11840,6 +12702,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 530,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -11853,10 +12735,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -11886,16 +12767,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -11943,10 +12823,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Printer Head",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -11965,6 +12841,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 537,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -11978,10 +12874,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -12009,16 +12904,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -12044,8 +12938,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -12068,10 +12960,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Printer Cable",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -12089,6 +12977,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 544,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -12103,10 +13011,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -12135,16 +13042,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -12170,7 +13076,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "New",
             "Used",
             "Pulled",
-
         ];
 
         $computer_accessories_conditon_values_data = [];
@@ -12193,10 +13098,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Roller",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -12214,6 +13115,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 551,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -12228,10 +13149,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -12259,16 +13179,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -12317,10 +13236,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
         $computer_accessories_product_values = [
             "Pickup Roller",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -12338,6 +13253,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
         DB::table('category_specification_details')->insert($computer_accessories_product_values_data);
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 558,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -12352,10 +13287,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -12383,16 +13317,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         //   Brand values 
 
         $computer_accessories_brand_values = [
-            "Samsung",
-            "Hp",
-            "Epson",
-            "Canon",
-            "Plustek",
-            "Others",
-
-
-
-
+            'Samsung',
+            'HP',
+            'Epson',
+            'Canon',
+            'Plustek',
+            'Panasonic',
+            'Dell',
+            'Toshiba',
+            'HP Laser Jet'
         ];
 
         $computer_accessories_brand_values_data = [];
@@ -12436,14 +13369,10 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-        //   Product Name values 
+        //  Product Name values 
 
         $computer_accessories_product_values = [
             "Front Panel",
-
-
-
-
         ];
 
         $computer_accessories_product_values_data = [];
@@ -12462,6 +13391,26 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        //   type Name values 
+
+        $computer_accessories_type_values = [
+            'Original',
+            'China Copy'
+        ];
+
+        $computer_accessories_type_values_data = [];
+        foreach ($computer_accessories_type_values as $type) {
+            $computer_accessories_type_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 565,
+                'values' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($computer_accessories_type_values_data);
 
 
 
@@ -12475,10 +13424,9 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "1 Month",
             "3 Months",
             "6 Months",
-            "1 YEar",
-
-
-
+            "1 Year",
+            "2 Years",
+            "3 Years",
         ];
 
         $computer_accessories_warranty_values_data = [];
@@ -12518,7 +13466,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "D-Link",
             "Samsung",
             "Honeywell",
-            "Panasonic"
+            "Panasonic",
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -12705,7 +13654,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "D-Link",
             "Samsung",
             "Honeywell",
-            "Panasonic"
+            "Panasonic",
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -13117,36 +14067,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
-        // Capacity name 
-
-        $security_Capacity_values = [
-            "500GB",
-            "750GB",
-            "1TB",
-            "2TB",
-            "4TB",
-            "8TB",
-            "16TB",
-            "32TB"
-        ];
-
-        $security_Capacity_values_data = [];
-        foreach ($security_Capacity_values as $Capacity) {
-            $security_Capacity_values_data[] = [
-                'category_id'                  => null,
-                'sub_category_id'              => null,
-                'child_category_id'            => null,
-                'category_specification_id'    => 594,
-                'values' => $Capacity,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        DB::table('category_specification_details')->insert($security_Capacity_values_data);
-
-
-
-
         // condition name 
 
         $security_condition_values = [
@@ -13453,7 +14373,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "ZK Teco",
             "AMT",
             "Garrett",
-            "Digital Persona"
+            "Digital Persona",
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -13592,7 +14513,8 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "AMT",
             "Garrett",
             "Digital Persona",
-            "Local"
+            "Local",
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -13733,7 +14655,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "AMT",
             "Garrett",
             "Digital Persona",
-            "Local"
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -13861,7 +14783,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "AMT",
             "Garrett",
             "Digital Persona",
-            "Local"
+            "Other",
         ];
 
         $security_brand_values_data = [];
@@ -13987,7 +14909,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "AMT",
             "Garrett",
             "Digital Persona",
-            "Local"
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -14113,7 +15035,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "AMT",
             "Garrett",
             "Digital Persona",
-            "Local"
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -14244,7 +15166,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "AMT",
             "Garrett",
             "Digital Persona",
-            "Local"
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -14370,7 +15292,7 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "AMT",
             "Garrett",
             "Digital Persona",
-            "Local"
+            "Other"
         ];
 
         $security_brand_values_data = [];
@@ -15211,6 +16133,19 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Nokia",
             "Apple",
             "Sony",
+            'MI',
+            'Lenovo',
+            'Infinix',
+            'Microsoft',
+            'Tecno',
+            'Vivo',
+            '1 Plus',
+            'Sony',
+            'Q Mobile',
+            'HTC',
+            'OPPO',
+            'Haier',
+            'BlackBerry',
             "Others"
         ];
 
@@ -15283,15 +16218,84 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+        // ram name 
+
+        $mobile_tablet_ram_values = [
+            '2GB',
+            '4GB',
+            '6GB',
+            '8GB',
+            '12GB',
+            '16GB',
+            '20GB',
+            '24GB',
+            '28GB',
+            '32GB'
+        ];
+
+        $mobile_tablet_ram_values_data = [];
+        foreach ($mobile_tablet_ram_values as $ram) {
+            $mobile_tablet_ram_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 817,
+                'values' => $ram,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($mobile_tablet_ram_values_data);
+
+
+
+
+        // storage name 
+
+        $mobile_tablet_storage_values = [
+            '4GB',
+            '8GB',
+            '16GB',
+            '32GB',
+            '64GB',
+            '128GB',
+            '256GB',
+            '512GB',
+            '1TB'
+        ];
+
+        $mobile_tablet_storage_values_data = [];
+        foreach ($mobile_tablet_storage_values as $storage) {
+            $mobile_tablet_storage_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 818,
+                'values' => $storage,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($mobile_tablet_storage_values_data);
+
+
+
+
 
         // size name 
 
         $mobile_tablet_size_values = [
-            "Touch Screen",
-            "Keypad",
-            "Wifi Only",
-            "4G",
-            "5G"
+            "3.2",
+            "4",
+            "5.2",
+            "5.9",
+            "6.1",
+            "6.8",
+            "7.1",
+            "8.2",
+            "9.2",
+            "10.2",
+            "others"
         ];
 
         $mobile_tablet_size_values_data = [];
@@ -15333,10 +16337,6 @@ class CategorySpecificationDetailsSeeder extends Seeder
             ];
         }
         DB::table('category_specification_details')->insert($mobile_tablet_condition_values_data);
-
-
-
-
 
         // warranty name 
 
@@ -15452,7 +16452,10 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "Tuser",
             "Tuser Set",
             "Paper Cutter",
-            "Other"
+            'Tone Generator',
+            'LoopBack Adapter',
+            'Heat Gun for Shrink Tubing',
+            "Other",
         ];
 
         $tool_type_values_data = [];
@@ -15949,12 +16952,15 @@ class CategorySpecificationDetailsSeeder extends Seeder
         // pixel name 
 
         $electronics_pixel_values = [
-            "2 Mega",
-            "4 Mega",
-            "6 Mega",
-            "8 Mega",
-            "10 Mega",
-            "12 Mega"
+            '2 Mega',
+            '4 Mega',
+            '6 Mega',
+            '8 Mega',
+            '10 Mega',
+            '12 Mega',
+            '20.8 Mega',
+            '24.5 Mega',
+            '45.7 Mega'
         ];
 
         $electronics_pixel_values_data = [];
@@ -16558,7 +17564,10 @@ class CategorySpecificationDetailsSeeder extends Seeder
             "3 Months",
             "6 Months",
             "9 Months",
-            "1 Year"
+            "1 Year",
+            "2 Years",
+            "3 Years"
+
         ];
 
         $pa_system_warranty_values_data = [];
@@ -17056,6 +18065,660 @@ class CategorySpecificationDetailsSeeder extends Seeder
 
 
 
+
+        // ========================== Scanners Accessories start here =========================
+
+        // Glass Plate
+
+
+        // brand name 
+
+        $scanners_brand_values = [
+            'Samsung',
+            'Plustek',
+            'Epson',
+            'HP',
+            'Canon',
+            'Others'
+        ];
+
+        $scanners_brand_values_data = [];
+        foreach ($scanners_brand_values as $brand) {
+            $scanners_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 822,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_brand_values_data);
+
+        // product name 
+        $scanners_product_values = [
+            "Glass Plate",
+        ];
+
+        $scanners_product_values_data = [];
+        foreach ($scanners_product_values as $product) {
+            $scanners_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 824,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_product_values_data);
+
+
+        // condition name 
+
+        $scanners_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled"
+
+        ];
+
+        $scanners_condition_values_data = [];
+        foreach ($scanners_condition_values as $condition) {
+            $scanners_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 826,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_condition_values_data);
+
+        // warranty name 
+
+        $scanners_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $scanners_warranty_values_data = [];
+        foreach ($scanners_warranty_values as $warranty) {
+            $scanners_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 827,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+
+        // Scan Head
+
+
+        // brand name 
+
+        $scanners_brand_values = [
+            'Samsung',
+            'Plustek',
+            'Epson',
+            'HP',
+            'Canon',
+            'Others'
+        ];
+
+        $scanners_brand_values_data = [];
+        foreach ($scanners_brand_values as $brand) {
+            $scanners_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 828,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_brand_values_data);
+
+        // product name 
+        $scanners_product_values = [
+            "Scan Head",
+        ];
+
+        $scanners_product_values_data = [];
+        foreach ($scanners_product_values as $product) {
+            $scanners_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 830,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_product_values_data);
+
+
+        // condition name 
+
+        $scanners_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled"
+
+        ];
+
+        $scanners_condition_values_data = [];
+        foreach ($scanners_condition_values as $condition) {
+            $scanners_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 832,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_condition_values_data);
+
+        // warranty name 
+
+        $scanners_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $scanners_warranty_values_data = [];
+        foreach ($scanners_warranty_values as $warranty) {
+            $scanners_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 833,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Covers
+
+
+        // brand name 
+
+        $scanners_brand_values = [
+            'Samsung',
+            'Plustek',
+            'Epson',
+            'HP',
+            'Canon',
+            'Others'
+        ];
+
+        $scanners_brand_values_data = [];
+        foreach ($scanners_brand_values as $brand) {
+            $scanners_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 834,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_brand_values_data);
+
+        // product name 
+        $scanners_product_values = [
+            "Cover",
+        ];
+
+        $scanners_product_values_data = [];
+        foreach ($scanners_product_values as $product) {
+            $scanners_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 836,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_product_values_data);
+
+
+        // condition name 
+
+        $scanners_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled"
+
+        ];
+
+        $scanners_condition_values_data = [];
+        foreach ($scanners_condition_values as $condition) {
+            $scanners_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 838,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_condition_values_data);
+
+        // warranty name 
+
+        $scanners_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $scanners_warranty_values_data = [];
+        foreach ($scanners_warranty_values as $warranty) {
+            $scanners_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 839,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+
+        // Filters
+
+
+        // brand name 
+
+        $scanners_brand_values = [
+            'Samsung',
+            'Plustek',
+            'Epson',
+            'HP',
+            'Canon',
+            'Others'
+        ];
+
+        $scanners_brand_values_data = [];
+        foreach ($scanners_brand_values as $brand) {
+            $scanners_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 840,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_brand_values_data);
+
+        // product name 
+        $scanners_product_values = [
+            "Filters",
+        ];
+
+        $scanners_product_values_data = [];
+        foreach ($scanners_product_values as $product) {
+            $scanners_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 842,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_product_values_data);
+
+
+        // condition name 
+
+        $scanners_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled"
+
+        ];
+
+        $scanners_condition_values_data = [];
+        foreach ($scanners_condition_values as $condition) {
+            $scanners_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 844,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_condition_values_data);
+
+        // warranty name 
+
+        $scanners_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $scanners_warranty_values_data = [];
+        foreach ($scanners_warranty_values as $warranty) {
+            $scanners_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 845,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+        // Data Cable
+
+
+        // brand name 
+
+        $scanners_brand_values = [
+            'Samsung',
+            'Plustek',
+            'Epson',
+            'HP',
+            'Canon',
+            'Others'
+        ];
+
+        $scanners_brand_values_data = [];
+        foreach ($scanners_brand_values as $brand) {
+            $scanners_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 846,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_brand_values_data);
+
+        // product name 
+        $scanners_product_values = [
+            "Data Cable",
+        ];
+
+        $scanners_product_values_data = [];
+        foreach ($scanners_product_values as $product) {
+            $scanners_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 848,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_product_values_data);
+
+
+        // condition name 
+
+        $scanners_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled"
+
+        ];
+
+        $scanners_condition_values_data = [];
+        foreach ($scanners_condition_values as $condition) {
+            $scanners_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 850,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_condition_values_data);
+
+        // warranty name 
+
+        $scanners_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $scanners_warranty_values_data = [];
+        foreach ($scanners_warranty_values as $warranty) {
+            $scanners_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 851,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_warranty_values_data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Scaning Unit Cable
+
+
+        // brand name 
+
+        $scanners_brand_values = [
+            'Samsung',
+            'Plustek',
+            'Epson',
+            'HP',
+            'Canon',
+            'Others'
+        ];
+
+        $scanners_brand_values_data = [];
+        foreach ($scanners_brand_values as $brand) {
+            $scanners_brand_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 852,
+                'values' => $brand,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_brand_values_data);
+
+        // product name 
+        $scanners_product_values = [
+            "Scaning Unit Cable",
+        ];
+
+        $scanners_product_values_data = [];
+        foreach ($scanners_product_values as $product) {
+            $scanners_product_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 856,
+                'values' => $product,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_product_values_data);
+
+
+        // condition name 
+
+        $scanners_condition_values = [
+            "USED",
+            "NEW",
+            "Pulled"
+
+        ];
+
+        $scanners_condition_values_data = [];
+        foreach ($scanners_condition_values as $condition) {
+            $scanners_condition_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 856,
+                'values' => $condition,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_condition_values_data);
+
+        // warranty name 
+
+        $scanners_warranty_values = [
+            "Check warranty",
+            "15 Days",
+            "1 Month",
+            "3 Months",
+            "6 Months",
+            "9 Months",
+            "1 Year",
+            "2 Years",
+            "3 Years"
+        ];
+
+        $scanners_warranty_values_data = [];
+        foreach ($scanners_warranty_values as $warranty) {
+            $scanners_warranty_values_data[] = [
+                'category_id'                  => null,
+                'sub_category_id'              => null,
+                'child_category_id'            => null,
+                'category_specification_id'    => 857,
+                'values' => $warranty,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('category_specification_details')->insert($scanners_warranty_values_data);
+
+        // ========================== Scanners Accessories end here =========================
 
 
 

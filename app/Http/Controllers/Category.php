@@ -48,7 +48,6 @@ class Category extends Controller
         return view('category.add_category', $data);
     }
 
-    //This is the function that loads the detail page
     public function detail($slack)
     {
         $data['menu_key'] = 'MM_STOCK';
@@ -56,31 +55,14 @@ class Category extends Controller
         $data['action_key'] = 'A_DETAIL_CATEGORY';
         check_access([$data['action_key']]);
 
-        // $category = CategoryModel::with('subcategories', 'product_names', 'category_companies')->where('slack', '=', $slack)->first();
-        $category = CategoryModel::with(['subcategories.product_names','subcategories.category_companies','category_companies', 'category_specifications', 'subcategories.category_specifications'])
+        $category = CategoryModel::with(['subcategories'])
             ->where('slack', '=', $slack)
             ->first();
-
-        if (is_null($category) || is_null($category->product_names)) {
-            $category = CategoryModel::with(['subcategories.product_names', 'subcategories.category_companies', 'subcategories.category_specifications'])
-                ->where('slack', '=', $slack)
-                ->whereHas('subcategories.product_names', function ($query) {
-                    // Add your specific condition here if needed
-                })
-                ->first();
-        }
-        // dd($category);
 
         if (empty($category)) {
             abort(404);
         }
-
-        // $category_data = new CategoryResource($category);
-
-        // dd($category);
         $data['category_data'] = $category;
-
-        // dd($data['category_data']);
 
         $data['delete_access'] = check_access(['A_DELETE_CATEGORY'], true);
         return view('category.category_detail', $data);

@@ -98,7 +98,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/customer/{slack}', "Customer@detail")->name('customer');
     Route::get('/add_customer', "Customer@add_customer")->name('add_customer');
     Route::get('/edit_customer/{slack?}', "Customer@add_customer")->name('edit_customer');
-/// /app_settings
+    /// /app_settings
     //product
     Route::get('/products', "Product@index")->name('products');
     Route::get('/product/{slack}', "Product@detail")->name('product');

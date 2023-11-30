@@ -66,8 +66,10 @@ class Product extends Controller
             if ($request->ajax()) {
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
-                $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User')->where('quantity', '>', 0)->orderBy('id', 'desc')->get();
-                // dd($data);
+                $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User')
+                ->where('quantity', '>', 0)
+                ->orderBy('id', 'desc')
+                ->get();
                 return Datatables::of($data)
                     ->addIndexColumn()
 
@@ -78,16 +80,22 @@ class Product extends Controller
                         return $row['category']->label . '(' . $row['category']->category_code . ')';
                     })
                     ->addColumn('tax_code_id', function ($row) {
-                        return ($row['tax_code']->label . ' - ' . $row['tax_code']->tax_code);
-                    })
+                        if(isset($row['tax_code'])){
+                            return ($row['tax_code']->label . ' - ' . $row['tax_code']->tax_code);
 
+                        }
+                        else{
+                            return '--';
+                        }
+                    })
                     ->addColumn('discount_code_id', function ($row) {
-                        return ($row['discount_code']->label . ' - ' . $row['discount_code']->discount_code);
-                    })
+                        if(isset($row['discount_code'])){
+                            return ($row['discount_code']->label . ' - ' . $row['discount_code']->discount_code);
 
-                    ->addColumn('created_by', function ($row) {
-                        return ($row['User']->fullname . ' - ' . $row['User']->user_code);
-                    })
+                        }else{
+                            return '--';
+                        }
+                    })                  
 
                     ->addColumn('status', function ($row) {
                         if ($row['status'] == 1) {
@@ -96,19 +104,12 @@ class Product extends Controller
                             return 'InActive';
                         }
                     })
-                    // ->addColumn('product_status', function ($row) {
-                    //     if ($row['is_addon_product'] == 1) {
-                    //         return '<span class="btn btn-primary rounded text-white">Addon Product</span>';
-                    //     } else if ($row['is_addon_product'] == 0 && $row['is_ingredient'] == 0) {
-                    //         return '<span class="btn btn-info rounded text-white">Billing Product</span>';
-                    //     } else {
-                    //     }
-                    // })
 
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;
                         return view('product.layouts.product_actions', $data)->render();
                     })
+
                     ->rawColumns(['supplier_id', 'category', 'tax_code_id', 'discount_code_id', 'status', 'created_by', 'action'])
                     ->make(true);
             }
@@ -143,7 +144,7 @@ class Product extends Controller
                 ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
                     $query->orderBy($order_by_column, $order_direction);
                 }, function ($query) {
-                    $query->orderBy('created_at', 'desc');
+                    $query->orderBy('id', 'desc');
                 })
 
                 ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
@@ -239,11 +240,24 @@ class Product extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
-            $this->validate_request($request);
 
-        
+            
+            
+            $this->validate_request($request);
+            
+            if (is_numeric($request->product_name))
+            { 
+                $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
+
+                $name = $product_name ? $product_name->values : null;
+                
+            }else{
+                $name = $request->product_name;
+            }
+            
+            
+            
            
-            $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
           
 
 
@@ -267,24 +281,31 @@ class Product extends Controller
 
             $sale_price = 0;
             $sale_amount_including_tax = 0;
-
-            $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
-                ->where('slack', '=', trim($request->tax_code))
-                //->active()
-                ->first();
-            if (empty($taxcode_data)) {
-                throw new Exception("Taxcode not found or inactive in the system", 400);
-            } else {
-                if ($taxcode_data->tax_type == 'INCLUSIVE') {
-                    $sale_amount_including_tax = $request->sale_amount_including_tax;
-                    $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
-                    $sale_price = $request->sale_amount_including_tax - $tax_amount;
+            $taxcode_data = [];
+            if(isset($request->tax_code)){
+                $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
+                    ->where('slack', '=', trim($request->tax_code))
+                    //->active()
+                    ->first();
+                if (empty($taxcode_data)) {
+                    throw new Exception("Taxcode not found or inactive in the system", 400);
                 } else {
-                    $sale_price = $request->sale_price;
-                    $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
-                    $sale_amount_including_tax = $sale_price + $tax_amount;
+                    if ($taxcode_data->tax_type == 'INCLUSIVE') {
+                        $sale_amount_including_tax = $request->sale_amount_including_tax;
+                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
+                        $sale_price = $request->sale_amount_including_tax - $tax_amount;
+                    } else {
+                        $sale_price = $request->sale_price;
+                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
+                        $sale_amount_including_tax = $sale_price + $tax_amount;
+                    }
                 }
             }
+            else{
+                $taxcode_data = [];
+                $sale_price = $request->sale_price;
+            }
+
 
             $discount_code_id = NULL;
             if (isset($request->discount_code)) {
@@ -312,7 +333,7 @@ class Product extends Controller
             $product = [
                 "slack" => $this->generate_slack("products"),
                 "store_id" => $request->logged_user_store_id,
-                "name" => $product_name->values,
+                "name" => $name,
                 "product_code" => strtoupper($request->product_code),
                 "description" => $request->description,
                 "category_id" => $request->category,
@@ -321,9 +342,10 @@ class Product extends Controller
                 "child_category_id" => $request->child_category_id,
                 "product_name_id" => $request->product_name,
                 "supplier_id" => $supplier_data->id,
-                "tax_code_id" => $taxcode_data->id,
+                "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
                 "quantity" => $request->quantity,
+                "at_start_quantity" => $request->quantity,
                 "alert_quantity" => (!isset($request->alert_quantity)) ? 0.00 : $request->alert_quantity,
                 "purchase_amount_excluding_tax" => $request->purchase_price,
                 "sale_amount_excluding_tax" => $sale_price,
@@ -512,10 +534,21 @@ class Product extends Controller
             $this->update_validate_request($request);
             $check_condition = false;
 
-            if (is_numeric($request->product_name)) {
+            // if (is_numeric($request->product_name)) {
+            //     $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
+            //     $check_condition = true;
+            // }   
+            
+            
+            if (is_numeric($request->product_name))
+            { 
                 $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
-                $check_condition = true;
-            }         
+
+                $name = $product_name ? $product_name->values : null;
+                
+            }else{
+                $name = $request->product_name;
+            }
             
             $product_data_exists = ProductModel::select('id')
                 ->where([
@@ -538,23 +571,30 @@ class Product extends Controller
             $sale_price = 0;
             $sale_amount_including_tax = 0;
 
-            $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
-                ->where('slack', '=', trim($request->tax_code))
-                //->active()
-                ->first();
-            if (empty($taxcode_data)) {
-                throw new Exception("Taxcode not found or inactive in the system", 400);
-            } else {
-                if ($taxcode_data->tax_type == 'INCLUSIVE') {
-                    $sale_amount_including_tax = $request->sale_amount_including_tax;
-                    $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
-                    $sale_price = $sale_amount_including_tax - $tax_amount;
-                    $request->is_ingredient_price = false;
+          
+            if(isset($request->tax_code)){
+                $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
+                    ->where('slack', '=', trim($request->tax_code))
+                    //->active()
+                    ->first();
+                if (empty($taxcode_data)) {
+                    throw new Exception("Taxcode not found or inactive in the system", 400);
                 } else {
-                    $sale_price = $request->sale_price;
-                    $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
-                    $sale_amount_including_tax = $sale_price + $tax_amount;
+                    if ($taxcode_data->tax_type == 'INCLUSIVE') {
+                        $sale_amount_including_tax = $request->sale_amount_including_tax;
+                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
+                        $sale_price = $sale_amount_including_tax - $tax_amount;
+                        $request->is_ingredient_price = false;
+                    } else {
+                        $sale_price = $request->sale_price;
+                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
+                        $sale_amount_including_tax = $sale_price + $tax_amount;
+                    }
                 }
+            }
+            else{
+                $taxcode_data = [];
+                $sale_price = $request->sale_price;
             }
 
             $discount_code_id = NULL;
@@ -573,17 +613,19 @@ class Product extends Controller
             
             DB::beginTransaction();
 
-            if($check_condition){
+            // if($check_condition){
                 $product = [
-                    "name" => $product_name->values,
+                    "name" => $name,
                     "product_code" => strtoupper($request->product_code),
                     "description" => $request->description,
                     "category_id" => $request->category,
                     "sub_category_id" => $request->sub_category,
                     "category_company_id" => $request->category_company_id,
                     "product_name_id" => $request->product_name_id,
+                    "quantity" => $request->quantity,
+                    "at_start_quantity" => $request->quantity,
                     "supplier_id" => $supplier_data->id,
-                    "tax_code_id" => $taxcode_data->id,
+                    "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
                     "discount_code_id" => $discount_code_id,
                     "purchase_amount_excluding_tax" => $request->purchase_price,
                     "sale_amount_excluding_tax" => $sale_price,
@@ -594,58 +636,80 @@ class Product extends Controller
                     "status" => $request->status,
                 ];
     
-            }
-            else{
-                $product = [
-                    "product_code" => strtoupper($request->product_code),
-                    "description" => $request->description,
-                    "category_id" => $request->category,
-                    "sub_category_id" => $request->sub_category,
-                    "category_company_id" => $request->category_company_id,
-                    "product_name_id" => $request->product_name_id,
-                    "supplier_id" => $supplier_data->id,
-                    "tax_code_id" => $taxcode_data->id,
-                    "discount_code_id" => $discount_code_id,
-                    "purchase_amount_excluding_tax" => $request->purchase_price,
-                    "sale_amount_excluding_tax" => $sale_price,
-                    "sale_amount_including_tax" => $sale_amount_including_tax,
-                    "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
-                    "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
-                    "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
-                    "status" => $request->status,
-                ];
+            // }
+            // else{
+            //     $product = [
+            //         "product_code" => strtoupper($request->product_code),
+            //         "description" => $request->description,
+            //         "category_id" => $request->category,
+            //         "sub_category_id" => $request->sub_category,
+            //         "category_company_id" => $request->category_company_id,
+            //         "product_name_id" => $request->product_name_id,
+            //         "supplier_id" => $supplier_data->id,
+            //         "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
+            //         "discount_code_id" => $discount_code_id,
+            //         "purchase_amount_excluding_tax" => $request->purchase_price,
+            //         "sale_amount_excluding_tax" => $sale_price,
+            //         "sale_amount_including_tax" => $sale_amount_including_tax,
+            //         "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
+            //         "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
+            //         "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
+            //         "status" => $request->status,
+            //     ];
     
-            }
+            // }
            
             $action_response = ProductModel::where('slack', $slack)
                 ->update($product);
+            $productModel = ProductModel::where('slack', $slack)->first();
+
+                // dd($productModel->id);
 
                 if($action_response){
                     $p_specifications = [];
                     $keys = array_keys($request->input_type);
-                    
+                    // dd(count($keys));
                     for ($i = 0; $i < count($keys); $i += 2) {
-                        $key1 = $keys[$i];
-                        $key2 = $keys[$i + 1];
+                        
+                        if(isset($keys[$i + 1])){
+                            $key1 = $keys[$i];
+                            $key2 = $keys[$i + 1];
+                        }
+                        else{
+                            $key1 = null;
+                            $key2 = $keys[$i];
+                        }
                     
-                        $value1 = $request->input_type[$key2];
-                        $value2 = $request->input_type[$key1];
-                    
+                        $value1 = isset($request->input_type[$key2]) ? $request->input_type[$key2] : null;
+                        $value2 = isset($request->input_type[$key1]) ? $request->input_type[$key1] : null;
+
                         $p_specifications[] = [
                             "id" => $value2,
                             "specification_label" => $key2,
                             "specification_details" => $value1,
                         ];
                     }
+
+                    // dd($p_specifications);
         
                     foreach($p_specifications as $spec){
-                        $productSpecification = ProductSpecifications::find($spec['id']);
-                        // dd($productSpecification);
-                        if ($productSpecification) {                    
-                            $productSpecification->update([
+
+                        if ($spec['id'] === null) {
+                            ProductSpecifications::create([
+                                'product_id' => $productModel->id,
                                 'specification_label' => $spec['specification_label'],
                                 'specification_details' => $spec['specification_details'],
                             ]);
+                            // dd($spec);
+                        }else{
+                            $productSpecification = ProductSpecifications::find($spec['id']);
+                            // dd($productSpecification);
+                            if ($productSpecification) {                    
+                                $productSpecification->update([
+                                    'specification_label' => $spec['specification_label'],
+                                    'specification_details' => $spec['specification_details'],
+                                ]);
+                            }
                         }
                     }
                 }
@@ -694,20 +758,21 @@ class Product extends Controller
             'alert_quantity' => $this->get_validation_rules("numeric", false),
             'supplier' => $this->get_validation_rules("slack", true),
             'category' => $this->get_validation_rules("slack", true),
-            'tax_code' => $this->get_validation_rules("slack", true),
             'description' => $this->get_validation_rules("text", false),
             'status' => $this->get_validation_rules("status", true),
             'product_images.*' => $this->get_validation_rules("product_image", false)
         ];
 
-        $taxcode_data = TaxcodeModel::select('tax_type')
-            ->where('slack', '=', trim($request->tax_code))
-            ->first();
-        if (!empty($taxcode_data)) {
-            if ($taxcode_data->tax_type == 'INCLUSIVE') {
-                $validation_array['sale_amount_including_tax'] = $this->get_validation_rules("numeric", true);
-            } else {
-                $validation_array['sale_price'] = $this->get_validation_rules("numeric", true);
+        if($request->tax_code != null){
+            $taxcode_data = TaxcodeModel::select('tax_type')
+                ->where('slack', '=', trim($request->tax_code))
+                ->first();
+            if (!empty($taxcode_data)) {
+                if ($taxcode_data->tax_type == 'INCLUSIVE') {
+                    $validation_array['sale_amount_including_tax'] = $this->get_validation_rules("numeric", true);
+                } else {
+                    $validation_array['sale_price'] = $this->get_validation_rules("numeric", true);
+                }
             }
         }
 
@@ -738,20 +803,21 @@ class Product extends Controller
             'alert_quantity' => $this->get_validation_rules("numeric", false),
             'supplier' => $this->get_validation_rules("slack", true),
             'category' => $this->get_validation_rules("slack", true),
-            'tax_code' => $this->get_validation_rules("slack", true),
             'description' => $this->get_validation_rules("text", false),
             'status' => $this->get_validation_rules("status", true),
             'product_images.*' => $this->get_validation_rules("product_image", false)
         ];
 
-        $taxcode_data = TaxcodeModel::select('tax_type')
-            ->where('slack', '=', trim($request->tax_code))
-            ->first();
-        if (!empty($taxcode_data)) {
-            if ($taxcode_data->tax_type == 'INCLUSIVE') {
-                $validation_array['sale_amount_including_tax'] = $this->get_validation_rules("numeric", true);
-            } else {
-                $validation_array['sale_price'] = $this->get_validation_rules("numeric", true);
+        if($request->tax_code){
+            $taxcode_data = TaxcodeModel::select('tax_type')
+                ->where('slack', '=', trim($request->tax_code))
+                ->first();
+            if (!empty($taxcode_data)) {
+                if ($taxcode_data->tax_type == 'INCLUSIVE') {
+                    $validation_array['sale_amount_including_tax'] = $this->get_validation_rules("numeric", true);
+                } else {
+                    $validation_array['sale_price'] = $this->get_validation_rules("numeric", true);
+                }
             }
         }
 

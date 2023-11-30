@@ -89,9 +89,24 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/update_subcategory', 'API\Category@update_subcategory');
 
 
-    Route::post('/submit_category_company', 'API\Category@submit_category_company');
-    Route::post('/submit_product_name', 'API\Category@submit_product_name');
+    Route::post('/submit_child_category', 'API\Category@submit_child_category');
+    Route::post('/submit_specification_values', 'API\Category@submit_specification_values');
     Route::post('/categorySpecifications', 'API\Category@submit_specifications');
+
+
+
+    Route::post('/fetch_child_categories', 'API\Category@fetch_child_categories');
+    Route::post('/fetch_category_specifications', 'API\Category@category_specifications');
+
+
+
+
+
+    Route::post('/view_child_or_specifications_categories', 'API\Category@view_child_or_specifications_categories');
+    Route::post('/view_specifications_categories', 'API\Category@view_specifications_categories');
+    Route::post('/view_specifications_values', 'API\Category@view_specifications_values');
+    Route::post('/update_category_portion', 'API\Category@edit_categories_portion');
+
 
 
 

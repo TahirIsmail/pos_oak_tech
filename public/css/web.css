@@ -22,11 +22,11 @@
 
 
 .dataTables_scroll{
-  overflow: scroll;
+  /* overflow: scroll; */
   overflow-y: hidden!important;
 }
 
-.cardd {
+.card {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;

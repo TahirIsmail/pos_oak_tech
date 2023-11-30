@@ -67,6 +67,7 @@ class ProductResource extends JsonResource
             'sale_amount_including_tax' => $this->sale_amount_including_tax,
             'category' => $this->category,
             'subcategory' => $this->subcategory,
+            'child_category_id' => $this->child_category_id,
             // 'category_company' => $this->category_company,
             // 'product_name' => $this->product_name,
             'product_specifications' => $this->product_specifications,
