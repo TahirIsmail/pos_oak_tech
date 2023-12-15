@@ -118,7 +118,7 @@
             <th>Action</th>
           </thead>
           <tbody>
-            <tr>
+
             <tr v-for="(subcategory, index) in sub_categories" :key="subcategory.id">
               <td>{{ index + 1 }}</td>
               <td>{{ subcategory.sub_category_name }}</td>
@@ -155,7 +155,6 @@
         </template>
       </modalcomponent>
 
-      <!-- Modal for editing subcategory -->
       <!-- Modal for editing subcategory -->
       <div v-if="editModalVisible" class="modal-overlay">
         <div class="modal modal_style">

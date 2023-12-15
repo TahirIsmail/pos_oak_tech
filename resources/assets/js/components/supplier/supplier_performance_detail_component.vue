@@ -98,7 +98,7 @@
             class="form-control form-control-custom"
             rows="5"
             disabled
-          >{{ supplier.delivery_timeline }}</textarea>
+          > {{ supplier.delivery_timeline }} </textarea>
 
         </div>
         <div class="form-group col-sm-12 col-md-4">

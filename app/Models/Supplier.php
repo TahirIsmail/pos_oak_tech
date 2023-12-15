@@ -11,7 +11,7 @@ class Supplier extends Model
 {
     protected $table = 'suppliers';
     // protected $hidden = ['id'];
-    protected $fillable = ['id', 'slack', 'store_id', 'supplier_code', 'name', 'email', 'phone', 'address','city', 'country', 'gender', 'pincode', 'status', 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'slack', 'store_id', 'supplier_code', 'supplier_id', 'name', 'email', 'phone', 'address','city', 'country', 'gender', 'pincode', 'status', 'created_by', 'updated_by'];
 
     protected static function boot()
     {
@@ -66,5 +66,17 @@ class Supplier extends Model
 
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
+    }
+
+    public function bank_details(){
+        return $this->hasMany(SupplierBankDetails::class);
+    }
+
+    public function business_type(){
+        return $this->hasMany(BusinessType::class);
+    }
+
+    public function contact_persons(){
+        return $this->hasMany(ContactPerson::class);
     }
 }

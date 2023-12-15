@@ -17,6 +17,7 @@ class Customers{
                 { name: 'customers.created_at' },
                 { name: 'customers.updated_at' },
                 { name: 'user_created.fullname' },
+                { name: 'customers.action' },
             ],
             order: [[ 4, "desc" ]],
             columnDefs: [

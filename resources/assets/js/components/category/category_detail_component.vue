@@ -39,12 +39,10 @@
                     <label for="label">{{ $t("Category Name") }}</label>
                     <p>{{ category.label }}</p>
                 </div>
-
                 <div class="form-group col-md-2">
                     <label for="label">{{ $t("Sub Category Name") }}</label>
                     <p style="font-weight: 600;" v-for="cate in category.subcategories" :key="cate.id">{{ cate.sub_category_name }}</p>
                 </div>
-
                 <div class="form-group col-md-2">
                     <label for="created_on">{{ $t("Created On") }}</label>
                     <p>{{ category.created_at }}</p>
@@ -52,11 +50,10 @@
                 <div class="form-group col-md-2">
                     <label for="updated_on">{{ $t("Updated On") }}</label>
                     <p>{{ category.updated_at }}</p>
-                </div>
-            
+                </div>            
                 <div class="form-group col-md-6">
                     <label for="description">{{ $t("Description") }}</label>
-                    <p>{{ (category.description)?category.description:'-' }}</p>
+                    <p>{{ (category.description) ? category.description: '--' }}</p>
                 </div>
             </div>
             <div class="form-row mb-2">
@@ -99,8 +96,7 @@
                         <tbody>
                             <tr>
                             <th colspan="7" class="text-center">Select From Option To View</th>                            
-                            </tr>
-                           
+                            </tr>                           
                         </tbody>
                     </table>
 

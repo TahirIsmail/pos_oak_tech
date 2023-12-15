@@ -22,6 +22,14 @@
                     </div>
                     <div class="form-row mb-2">
                         <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                            <label for="supplier_id">{{ $t("Supplier/Vendor ID") }}</label><span style="color:red">*</span>
+                            <input type="text" name="Supplier/Vendor ID" v-model="supplier_id" v-validate="'required|max:250'"
+                                class="form-control form-control-custom" :placeholder="$t('Please Enter Supplier/Vendor ID')"
+                                autocomplete="off">
+                            <span v-bind:class="{ 'error': errors.has('Supplier/Vendor ID') }">{{ errors.first('Supplier/Vendor ID')
+                            }}</span>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-10 col-lg-4">
                             <label for="supplier_name">{{ $t("Supplier Name") }}</label><span style="color:red">*</span>
                             <input type="text" name="supplier_name" v-model="supplier_name" v-validate="'required|max:250'"
                                 class="form-control form-control-custom" :placeholder="$t('Please enter supplier name')"
@@ -47,19 +55,18 @@
                         <div class="form-group col-md-4">
                         <label for="gender">{{ $t("Gender") }}</label><span style="color:red">*</span>
                         <select name="status" v-model="gender" v-validate="'required'" class="form-control form-control-custom custom-select">
-                            <option value="" selected>Choose Gender..</option>
+                            <option value="" selected disabled>Choose Gender..</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('gender') }">{{ errors.first('gender') }}</span> 
                         </div>
-                        <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <!-- <div class="form-group col-sm-12 col-md-10 col-lg-4">
                             <label for="pincode">{{ $t("Pincode") }}</label><span style="color:red">*</span>
                             <input type="text" name="pincode" v-model="pincode" v-validate="'max:15'"
                                 class="form-control form-control-custom" :placeholder="$t('Enter Pincode')">
                             <span v-bind:class="{ 'error': errors.has('pincode') }">{{ errors.first('pincode') }}</span>
-                        </div>
-
+                        </div> -->
                         <div class="form-group col-sm-12 col-md-10 col-lg-4">
                             <label for="status">{{ $t("Status") }}</label><span style="color:red">*</span>
                             <select name="status" v-model="status" v-validate="'required|numeric'"
@@ -70,6 +77,41 @@
                                 </option>
                             </select>
                             <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                            <label>{{ $t("Supplier Business Type") }}</label>
+                            <div>
+                            <input type="checkbox" id="Manufacturer" value="Manufacturer" v-model="businessTypes">
+                            <label for="Manufacturer">Manufacturer</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="Distributor" value="Distributor" v-model="businessTypes">
+                            <label for="Distributor">Distributor</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="Reseller" value="Reseller" v-model="businessTypes">
+                            <label for="Reseller">Reseller</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="Partner" value="Partner" v-model="businessTypes">
+                            <label for="Partner">Partner</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="Importer" value="Importer" v-model="businessTypes">
+                            <label for="Importer">Importer</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="Shop" value="Shop" v-model="businessTypes">
+                            <label for="Shop">Shop</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="Online Store" value="Online Store" v-model="businessTypes">
+                            <label for="Online Store">Online Store</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="Other" value="Other" v-model="businessTypes">
+                            <label for="Other">Other</label>
+                            </div>
                         </div>
                        
                     </div>
@@ -95,11 +137,124 @@
                                 class="form-control form-control-custom" rows="1"
                                 :placeholder="$t('Enter Address')"></textarea>
                             <span v-bind:class="{ 'error': errors.has('address') }">{{ errors.first('address') }}</span>
-                        </div>
-                        
+                        </div>                        
                     </div>
 
+                    <div class="mb-2 background_set">
+                        <span class="text-subhead">Bank Details</span>
+                    </div>
+                    <div id="main_dev">
+                    <div v-for="(bank, index) in banks" :key="index" class="form-row mb-2">
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Bank Name ${index}`">{{ $t("Bank Name") }}</label>
+                        <input
+                        :name="`Bank Name ${index}`"
+                        v-model="bank.bank_name"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Bank Name')"
+                        />
+                        <span :class="{ 'error': errors.has(`Bank Name ${index}`) }">{{ errors.first(`Bank Name ${index}`) }}</span>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Account Title ${index}`">{{ $t("Account Title") }}</label>
+                        <input
+                        :name="`Account Title ${index}`"
+                        v-model="bank.account_title"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Account Title')"
+                        />
+                        <span :class="{ 'error': errors.has(`Account Title ${index}`) }">{{ errors.first(`Account Title ${index}`) }}</span>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Account Number ${index}`">{{ $t("Account Number") }}</label>
+                        <input
+                        :name="`Account Number ${index}`"
+                        v-model="bank.account_number"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Account Number')"
+                        />
+                        <span :class="{ 'error': errors.has(`Account Number ${index}`) }">{{ errors.first(`Account Number ${index}`) }}</span>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`IBAN Number ${index}`">{{ $t("IBAN Number") }}</label>
+                        <input
+                        :name="`IBAN Number ${index}`"
+                        v-model="bank.iban_number"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter IBAN Number')"
+                        />
+                        <span :class="{ 'error': errors.has(`IBAN Number ${index}`) }">{{ errors.first(`IBAN Number ${index}`) }}</span>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Branch Code ${index}`">{{ $t("Branch Code") }}</label>
+                        <input
+                        :name="`Branch Code ${index}`"
+                        v-model="bank.branch_code"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Branch Code')"
+                        />
+                        <span :class="{ 'error': errors.has(`Branch Code ${index}`) }">{{ errors.first(`Branch Code ${index}`) }}</span>
+                    </div>
+                    
+                    </div>
+                    <div class="w-100 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary mr-5 mb-2" @click="addFormRow">Add More Accounts</button>
+                    </div>
+                </div>
 
+                <div class="mb-2 background_set">
+                    <span class="text-subhead">Contact Persons</span>
+                </div>
+                <div id="main_2dev">
+                    <div v-for="(person, index) in contact_persons" :key="index" class="form-row mb-2">
+                        <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`position ${index}`">{{ $t("Job Post") }}</label>
+                        <select :name="`position ${index}`" v-model="person.position"
+                                class="form-control form-control-custom custom-select">
+                                <option selected disabled>Choose Employer Post..</option>
+                                <option value="Sales Person">Sales Person</option>
+                                <option value="Accountant">Accountant</option>
+                                <option value="Point of Content">Point of Content</option>
+                                <option value="Other">Other</option>                                
+                            </select>
+                        <span :class="{ 'error': errors.has(`position ${index}`) }">{{ errors.first(`position ${index}`) }}</span>
+                      </div>
+
+                      <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Name ${index}`">{{ $t("Name") }}</label>
+                        <input
+                        :name="`Name ${index}`"
+                        v-model="person.name"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Name')"
+                        />
+                        <span :class="{ 'error': errors.has(`Name ${index}`) }">{{ errors.first(`Name ${index}`) }}</span>
+                      </div>
+                      <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Email ${index}`">{{ $t("Email") }}</label>
+                        <input
+                        :name="`Email ${index}`"
+                        v-model="person.email"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Email')"
+                        />
+                        <span :class="{ 'error': errors.has(`Email ${index}`) }">{{ errors.first(`Email ${index}`) }}</span>
+                      </div>
+                      <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Mobile ${index}`">{{ $t("Mobile") }}</label>
+                        <input
+                        :name="`Mobile ${index}`"
+                        v-model="person.mobile"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Mobile')"
+                        />
+                        <span :class="{ 'error': errors.has(`Mobile ${index}`) }">{{ errors.first(`Mobile ${index}`) }}</span>
+                      </div>
+                    </div>
+                    <div class="w-100 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary mr-5 mb-2" @click="addContactPerson">Add More Persons</button>
+                    </div>
+                </div>
 
                 </form>
 
@@ -131,6 +286,27 @@
 export default {
     data() {
         return {
+            banks: (this.supplier_data == null) ? 
+            [
+        {
+          bank_name: "",
+          account_title: "",
+          account_number: "",
+          iban_number: "",
+          branch_code: ""         
+        },
+      ]
+            : this.supplier_data.banks,
+            contact_persons: (this.supplier_data == null) ? [
+                {
+                    position: "",
+                    name: "",
+                    email: "",
+                    mobile: "",
+                }
+            ] : this.supplier_data.contact_people,
+            businessTypes: [],
+            businessTypesOptions: [],
             server_errors: "",
             error_class: "",
             processing: false,
@@ -139,6 +315,7 @@ export default {
             api_link: (this.supplier_data == null) ? '/api/add_supplier' : '/api/update_supplier/' + this.supplier_data.slack,
 
             supplier_slack: (this.supplier_data == null) ? "" : this.supplier_data.slack,
+            supplier_id: (this.supplier_data == null) ? "" : this.supplier_data.supplier_id,
             supplier_name: (this.supplier_data == null) ? "" : this.supplier_data.name,
             status: (this.supplier_data == null) ? "" : (this.supplier_data.status == null) ? '' : this.supplier_data.status.value,
             address: (this.supplier_data == null) ? [] : this.supplier_data.address,
@@ -156,19 +333,49 @@ export default {
     },
     mounted() {
         console.log('Add supplier page loaded');
+        if(this.supplier_data != null && this.supplier_data.business_type.length > 0){
+           // Assuming this.supplier_data is the array of business types fetched from the server
+            this.businessTypesOptions = this.supplier_data.business_type.map(item => item.business_type);
+
+            // Set initial selected values based on the received data
+            this.businessTypes = this.supplier_data.business_type.map(item => item.business_type);
+        }
     },
     methods: {
+        addFormRow() {
+      this.banks.push({
+        bank_name: "",
+        account_title: "",
+        account_number: "",
+        iban_number: "",
+         branch_code: ""       
+      });
+    },
+    addContactPerson(){
+        this.contact_persons.push({
+            position: "",
+            name: "",
+            email: "",
+            mobile: ""
+        });
+    },
         submit_form() {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.show_modal = true;
                     this.$on("submit", function () {
 
-                        this.processing = true;
+
+                        // this.processing = true;
+
+                        const banks = JSON.stringify(this.banks);
+                        const persons = JSON.stringify(this.contact_persons);
+
                         var formData = new FormData();
 
                         formData.append("access_token", window.settings.access_token);
                         formData.append("supplier_name", (this.supplier_name == null) ? '' : this.supplier_name);
+                        formData.append("supplier_id", (this.supplier_id == null) ? '' : this.supplier_id);
                         formData.append("address", (this.address == null) ? '' : this.address);
                         formData.append("country", (this.address == null) ? '' : this.country);
                         formData.append("city", (this.address == null) ? '' : this.city);
@@ -177,6 +384,10 @@ export default {
                         formData.append("email", (this.email == null) ? '' : this.email);
                         formData.append("pincode", (this.pincode == null) ? '' : this.pincode);
                         formData.append("status", (this.status == null) ? '' : this.status);
+                        formData.append("banks", banks);
+                        formData.append('businessTypes', JSON.stringify(this.businessTypes));
+                        formData.append('contact_people', persons);
+
 
                         axios.post(this.api_link, formData).then((response) => {
 

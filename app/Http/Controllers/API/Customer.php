@@ -164,14 +164,22 @@ class Customer extends Controller
             $customer = [
                 "slack" => $this->generate_slack("customers"),
                 'customer_type' => 'CUSTOM',
+                'customer_id' => $request->customer_id,
                 "name" => $request->name,
+                "father_name" => $request->father_name,
                 "email" => $request->email,
                 "phone" => $request->phone,
+                "gender" => $request->gender,
                 "address" => $request->address,
+                "country" => $request->country,
+                "city" => $request->city,
                 "dob" => $request->dob,
+                "cnic" => $request->cnic,
                 "status" => $request->status,                
                 "created_by" => $request->logged_user_id
             ];
+
+
 
 
             
@@ -364,10 +372,16 @@ class Customer extends Controller
             DB::beginTransaction();
 
             $customer = [
+                "customer_id" => $request->customer_id,
                 "name" => $request->name,
+                "father_name" => $request->father_name,
                 "email" => $request->email,
                 "phone" => $request->phone,
                 "address" => $request->address,
+                "country" => $request->country,
+                "city" => $request->city,
+                "cnic" => $request->cnic,
+                "gender" => $request->gender,
                 "dob" => $request->dob,
                 "status" => $request->status,
                 "updated_by" => $request->logged_user_id
@@ -508,6 +522,7 @@ class Customer extends Controller
     public function validate_request($request)
     {
         $validator = Validator::make($request->all(), [
+            'customer_id' => 'required',
             'email'  => 'required_if:phone,""' . '|' . $this->get_validation_rules("email", false),
             'phone'  => 'required_if:email,""' . '|' . $this->get_validation_rules("phone", false),
             'name'   => $this->get_validation_rules("fullname", true),

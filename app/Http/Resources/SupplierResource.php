@@ -19,6 +19,7 @@ class SupplierResource extends JsonResource
         return [
             'slack' => $this->slack,
             'supplier_code' => $this->supplier_code,
+            'supplier_id' => $this->supplier_id,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
@@ -27,6 +28,9 @@ class SupplierResource extends JsonResource
             'country' => $this->country,
             'gender' => $this->gender,
             'pincode' => $this->pincode,
+            'banks' => $this->bank_details,
+            'business_type' => $this->business_type,
+            'contact_people' => $this->contact_persons,
             'status' => new MasterStatusResource($this->status_data),
             'detail_link' => (check_access(['A_DETAIL_SUPPLIER'], true))?route('supplier', ['slack' => $this->slack]):'',
             'created_at_label' => $this->parseDate($this->created_at),

@@ -16,13 +16,10 @@
             </div>
 
             <div class="d-flex flex-wrap mb-4">
-
-                <p v-html="server_errors" v-bind:class="[error_class]"></p>
-                
+                <p v-html="server_errors" v-bind:class="[error_class]"></p>                
                 <div class="ml-auto">
                     <button type="submit" class="btn btn-danger mr-1" v-if="delete_access == true" v-on:click="delete_supplier()" v-bind:disabled="delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="delete_processing == true"></i> {{ $t("Delete Supplier") }}</button>
                 </div>
-
             </div>
             <hr>
 
@@ -70,10 +67,66 @@
                     <label for="address">{{ $t("Address") }}</label>
                     <p>{{ supplier.address }}</p>
                 </div>
-                <div class="form-group col-md-3">
+                <!-- <div class="form-group col-md-3">
                     <label for="pincode">{{ $t("Pincode") }}</label>
                     <p>{{ supplier.pincode }}</p>
+                </div> -->
+            </div>
+
+
+
+            <div class="mb-2">
+                <span class="text-subhead">{{ $t("Bank Details") }}</span>
+            </div>
+
+            <div class="form-row mb-2" v-for="bank in supplier.banks" :key="bank.id">
+                <div class="form-group col-md-3">
+                    <label for="bank_name">{{ $t("Bank Name") }}</label>
+                    <p>{{ bank.bank_name }}</p>
                 </div>
+                <div class="form-group col-md-3">
+                    <label for="">{{ $t("Account Title") }}</label>
+                    <p>{{ bank.account_title }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="">{{ $t("Account Number") }}</label>
+                    <p>{{ bank.account_number }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="">{{ $t("IBAN Number") }}</label>
+                    <p>{{ bank.iban_number }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="">{{ $t("Branch Code") }}</label>
+                    <p>{{ bank.branch_code }}</p>
+                </div>
+            </div>
+
+
+
+
+            <div class="mb-2">
+                <span class="text-subhead">{{ $t("Contact Information") }}</span>
+            </div>
+
+            <div class="form-row mb-2" v-for="person in supplier.contact_people" :key="person.id">
+                <div class="form-group col-md-3">
+                    <label for="person_name">{{ $t("Job Post") }}</label>
+                    <p>{{ person.position }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="">{{ $t("Name") }}</label>
+                    <p>{{ person.name }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="">{{ $t("Email") }}</label>
+                    <p>{{ person.email }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="">{{ $t("Mobile") }}</label>
+                    <p>{{ person.mobile }}</p>
+                </div>
+                
             </div>
  
 

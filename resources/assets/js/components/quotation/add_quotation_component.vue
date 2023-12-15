@@ -174,7 +174,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <!-- <div class="form-group col-sm-12 col-md-4 col-lg-4">
                         <label for="brand_name">{{ $t("Brand Name") }}</label>
                         <select name="brand_name" v-model="brand_name" class="form-control form-control-custom custom-select">
                             <option value="" disabled>Choose Brand Name...</option>
@@ -186,7 +186,7 @@
                             {{ company.category_company_name }}
                             </option>
                         </select>
-                    </div>
+                    </div> -->
                     
                 </div>
 

@@ -23,6 +23,13 @@
                     </div>
                     <div class="form-row mb-2">
                         <div class="form-group col-md-4">
+                            <label for="customer_id">{{ $t("Customer ID") }}</label><span style="color:red">*</span>
+                            <input type="text" name="Customer ID" v-model="customer_id" v-validate="'required|max:250'"
+                                class="form-control form-control-custom" :placeholder="$t('Please enter Customer ID')"
+                                autocomplete="off">
+                            <span v-bind:class="{ 'error': errors.has('Customer ID') }">{{ errors.first('Customer ID') }}</span>
+                        </div>
+                        <div class="form-group col-md-4">
                             <label for="name">{{ $t("Fullname") }}</label><span style="color:red">*</span>
                             <input type="text" name="name" v-model="name" v-validate="'required|max:250'"
                                 class="form-control form-control-custom" :placeholder="$t('Please enter fullname')"
@@ -164,21 +171,16 @@ export default {
             api_link: (this.customer_data == null) ? '/api/add_customer' : '/api/update_customer/' + this.customer_data.slack,
 
             customer_slack: (this.customer_data == null) ? '' : this.customer_data.slack,
+            customer_id: (this.customer_data == null) ? '' : this.customer_data.customer_id,
             email: (this.customer_data == null) ? '' : this.customer_data.email,
             name: (this.customer_data == null) ? '' : this.customer_data.name,
             phone: (this.customer_data == null) ? '' : this.customer_data.phone,
             address: (this.customer_data == null) ? '' : this.customer_data.address,
             city: (this.customer_data == null) ? '' : this.customer_data.city,
             country: (this.customer_data == null) ? '' : this.customer_data.country,
-
-
             gender: (this.customer_data == null) ? '' : this.customer_data.gender,
             father_name: (this.customer_data == null) ? '' : this.customer_data.father_name,
             cnic: (this.customer_data == null) ? '' : this.customer_data.cnic,
-
-
-
-
             dob: (this.customer_data == null) ? '' : (this.customer_data.dob_raw != null) ? new Date(this.customer_data.dob_raw) : '',
             status: (this.customer_data == null) ? '' : (this.customer_data.status == null) ? '' : this.customer_data.status.value,
         }
@@ -224,6 +226,7 @@ export default {
                         var formData = new FormData();
 
                         formData.append("access_token", window.settings.access_token);
+                        formData.append("customer_id", (this.customer_id == null) ? '' : this.customer_id);
                         formData.append("name", (this.name == null) ? '' : this.name);
                         formData.append("email", (this.email == null) ? '' : this.email);
                         formData.append("phone", (this.phone == null) ? '' : this.phone);

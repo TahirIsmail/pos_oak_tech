@@ -1,8 +1,6 @@
 @extends('layouts.layout')
 <style>
-    .dataTables_scroll{
-        overflow: hidden !important;
-    }
+   
 </style>
 @section('content')
     <div class="row">

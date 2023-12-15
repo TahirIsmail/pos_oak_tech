@@ -69,19 +69,16 @@ class Supplier extends Controller
         $data['sub_menu_key'] = 'SM_SUPPLIERS';
         $data['action_key'] = ($slack == null)?'A_ADD_SUPPLIER':'A_EDIT_SUPPLIER';
         check_access(array($data['action_key']));
-
         $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('SUPPLIER_STATUS')->active()->sortValueAsc()->get();
-
         $data['supplier_data'] = null;
-        if(isset($slack)){
-            
-            $supplier = SupplierModel::where('slack', '=', $slack)->first();
+        if(isset($slack)){    
+            $supplier = SupplierModel::with('bank_details')->where('slack', '=', $slack)->first();
             if (empty($supplier)) {
                 abort(404);
             }
-
             $supplier_data = new SupplierResource($supplier);
             $data['supplier_data'] = $supplier_data;
+            // dd($data['supplier_data']);
         }
 
         return view('supplier.add_supplier', $data);
@@ -103,6 +100,8 @@ class Supplier extends Controller
         $supplier_data = new SupplierResource($supplier);
         
         $data['supplier_data'] = $supplier_data;
+
+        // dd($data['supplier_data']);
 
         $data['delete_access'] = check_access(['A_DELETE_SUPPLIER'], true);
 

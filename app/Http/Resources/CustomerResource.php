@@ -17,6 +17,7 @@ class CustomerResource extends JsonResource
         return [
             'slack' => $this->slack,
             'type' => $this->customer_type,
+            'customer_id' => $this->customer_id,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
