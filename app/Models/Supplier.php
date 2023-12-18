@@ -79,4 +79,8 @@ class Supplier extends Model
     public function contact_persons(){
         return $this->hasMany(ContactPerson::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class, "id", "supplier_id");
+    }
 }

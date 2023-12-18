@@ -236,12 +236,10 @@ class Customer extends Controller
             $user_email_exists = UserModel::where('email', $user['email'])->first();
             if ($user_email_exists) {
                 throw new Exception("Email is already added, try signing in");
-            }       
-            
+            }           
 
         //    dd($request);
-
-            DB::beginTransaction();   
+            DB::beginTransaction();  
             
             $user_id = UserModel::create($user)->id;
             $user_data['id'] = $user_id; 

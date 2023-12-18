@@ -269,7 +269,7 @@ class Supplier extends Controller
                 "created_by" => $request->logged_user_id
             ];
 
-            //  $user_data   = $this->SupplierAddInUser($request, $user);
+             $user_data   = $this->SupplierAddInUser($request, $user);
             DB::commit();
 
             return response()->json($this->generate_response(

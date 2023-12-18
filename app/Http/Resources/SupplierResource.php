@@ -29,6 +29,7 @@ class SupplierResource extends JsonResource
             'gender' => $this->gender,
             'pincode' => $this->pincode,
             'banks' => $this->bank_details,
+            'user' => $this->user,
             'business_type' => $this->business_type,
             'contact_people' => $this->contact_persons,
             'status' => new MasterStatusResource($this->status_data),

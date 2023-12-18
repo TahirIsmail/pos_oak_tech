@@ -1,8 +1,6 @@
 @extends('layouts.layout')
 <style>
-    .dataTables_scroll{
-        overflow: hidden !important;
-    }
+ 
 </style>
 @section('content')
     <div class="row">
@@ -65,8 +63,6 @@
         background-color: rgba(0, 0, 0, .03);
         border-bottom: 1px solid rgba(0, 0, 0, .125);
     }
-
-
     .card {
         position: relative;
         display: -ms-flexbox;

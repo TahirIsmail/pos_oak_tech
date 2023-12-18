@@ -29,6 +29,7 @@ class CustomerResource extends JsonResource
             'cnic' => $this->cnic,
             'dob' => $this->parseDateOnly($this->dob),
             'dob_raw' => $this->dob,
+            'user' => $this->user,
             'status' => new MasterStatusResource($this->status_data),
             'detail_link' => (check_access(['A_DETAIL_CUSTOMER'], true))?route('customer', ['slack' => $this->slack]):'',
             'created_at_label' => $this->parseDate($this->created_at),

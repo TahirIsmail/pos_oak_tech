@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
 
             <div class="d-flex flex-wrap mb-4">
@@ -66,6 +67,10 @@
                 <div class="form-group col-md-3">
                     <label for="address">{{ $t("Address") }}</label>
                     <p>{{ supplier.address }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="address">{{ $t("Password") }}</label>
+                    <p>{{ supplier.user.init_password }}</p>
                 </div>
                 <!-- <div class="form-group col-md-3">
                     <label for="pincode">{{ $t("Pincode") }}</label>

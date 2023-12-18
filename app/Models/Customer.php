@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Customer extends Model
 {
     use HasFactory, SoftDeletes;
@@ -73,9 +74,9 @@ class Customer extends Model
         return ($date != null) ? Carbon::parse($date)->format(config("app.date_time_format")) : null;
     }
    
-    public function user(){
-        return $this->hasOne('App\Models\User', 'id', 'user_id');
-    }
+    // public function user(){
+    //     return $this->hasOne('App\Models\User', 'id', 'user_id');
+    // }
 
 
     public function complaint(){
@@ -85,6 +86,11 @@ class Customer extends Model
 
     public function orders(){
         return $this->hasMany(Order::class, 'customer_id', 'id');
+    }
+
+
+    public function user(){
+    return $this->belongsTo(User::class, "id", "customer_id");
     }
 
     

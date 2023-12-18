@@ -126,9 +126,7 @@ class User extends Model
 
     public function role(){
         return $this->hasOne('App\Models\Role', 'id', 'role_id');
-    }
-
-    
+    }   
     
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
@@ -150,6 +148,14 @@ class User extends Model
 
     public function assignComplaints(){
         return $this->hasMany(Complaints::class, 'assign_to_lab_staff_id', 'id');
+    }
+
+    public function supplier(){
+        return $this->hasOne(Supplier::class, 'supplier_id');
+    }
+
+    public function customer(){
+        return $this->hasOne(Customer::class, 'customer_id');
     }
     
 }

@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
 
             <div class="d-flex flex-wrap mb-4">
@@ -37,6 +38,10 @@
                 <div class="form-group col-md-3">
                     <label for="email">{{ $t("Email") }}</label>
                     <p>{{ (customer.email == '' || customer.email == null)?'-':customer.email }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="password">{{ $t("Password") }}</label>
+                    <p>{{ customer.user.init_password }}</p>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="phone">{{ $t("Phone") }}</label>
