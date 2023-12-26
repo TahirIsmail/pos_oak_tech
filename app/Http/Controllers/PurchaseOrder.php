@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Config;
 
 use Mpdf\Mpdf;
+use App\Models\User;
 
 class PurchaseOrder extends Controller
 {
@@ -127,8 +128,9 @@ class PurchaseOrder extends Controller
         $purchase_order_data = new PurchaseOrderResource($purchase_order);
 
         $print_logo_path = config("app.invoice_print_logo");
+        $contact_person = User::with('role')->whereNotNull('company_contact_person')->get();
         
-        $print_data = view('purchase_order.invoice.po_print', ['data' => json_encode($purchase_order_data), 'logo_path' => $print_logo_path])->render();
+        $print_data = view('purchase_order.invoice.po_print', ['data' => json_encode($purchase_order_data), 'logo_path' => $print_logo_path, 'contact_person' => $contact_person])->render();
 
         $mpdf_config = [
             'mode'          => 'utf-8',

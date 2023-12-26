@@ -23,19 +23,19 @@ use App\Models\SettingApp as SettingAppModel;
 use App\Models\SettingSms as SettingSmsModel;
 use App\Models\AppActivation;
 use App\Models\Customer as CustomerModel;
-
+use App\Models\User;
 use App\Providers\MailServiceProvider;
 
 use App\Mail\TestEmail;
 
 class Setting extends Controller
 {
-    
+
     public function add_setting_email(Request $request)
     {
         try {
 
-            if(!check_access(['A_EDIT_EMAIL_SETTING'], true)){
+            if (!check_access(['A_EDIT_EMAIL_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
@@ -46,7 +46,7 @@ class Setting extends Controller
             Artisan::call('config:clear');
 
             DB::beginTransaction();
-            
+
             $email_setting = [
                 "slack" => $this->generate_slack("setting_mail"),
                 "type" => $request->type,
@@ -68,12 +68,12 @@ class Setting extends Controller
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Email settings added successfully", 
+                    "message" => "Email settings added successfully",
                     "data"    => $email_setting['slack']
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -87,17 +87,17 @@ class Setting extends Controller
     {
         try {
 
-            if(!check_access(['A_EDIT_EMAIL_SETTING'], true)){
+            if (!check_access(['A_EDIT_EMAIL_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
-            
+
             $this->validate_email_setting_request($request);
 
             $email_setting_data_exists = SettingEmailModel::select('id')
-            ->where([
-                ['slack', '=', $slack]
-            ])
-            ->first();
+                ->where([
+                    ['slack', '=', $slack]
+                ])
+                ->first();
             if (empty($email_setting_data_exists)) {
                 throw new Exception("Trying to update invalid email setting", 400);
             }
@@ -107,7 +107,7 @@ class Setting extends Controller
             Artisan::call('config:clear');
 
             DB::beginTransaction();
-            
+
             $email_setting = [
                 "type" => $request->type,
                 "driver" => $request->driver,
@@ -123,18 +123,18 @@ class Setting extends Controller
             ];
 
             $action_response = SettingEmailModel::where('slack', $slack)
-            ->update($email_setting);
+                ->update($email_setting);
 
             DB::commit();
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Email settings updated successfully", 
+                    "message" => "Email settings updated successfully",
                     "data"    => $slack
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -148,21 +148,25 @@ class Setting extends Controller
     {
         try {
 
-            if(!check_access(['A_EDIT_APP_SETTING'], true)){
+            if (!check_access(['A_EDIT_APP_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
-            
+
+
+
             $this->validate_app_setting_request($request);
 
             Artisan::call('config:clear');
 
-            $app_setting = SettingAppModel::select('*')->first();
-            $company_logo_file = (isset($app_setting->company_logo))?$app_setting->company_logo:'';
-            $invoice_print_logo_file = (isset($app_setting->invoice_print_logo))?$app_setting->invoice_print_logo:'';
-            $navbar_logo_file = (isset($app_setting->navbar_logo))?$app_setting->navbar_logo:'';
-            $favicon_file = (isset($app_setting->favicon))?$app_setting->favicon:'';
 
-            if($request->hasFile('company_logo')){
+
+            $app_setting = SettingAppModel::select('*')->first();
+            $company_logo_file = (isset($app_setting->company_logo)) ? $app_setting->company_logo : '';
+            $invoice_print_logo_file = (isset($app_setting->invoice_print_logo)) ? $app_setting->invoice_print_logo : '';
+            $navbar_logo_file = (isset($app_setting->navbar_logo)) ? $app_setting->navbar_logo : '';
+            $favicon_file = (isset($app_setting->favicon)) ? $app_setting->favicon : '';
+
+            if ($request->hasFile('company_logo')) {
 
                 $remove_company_logo_file = $company_logo_file;
 
@@ -176,19 +180,19 @@ class Setting extends Controller
                 $company_logo = $request->company_logo;
 
                 $extension = $company_logo->getClientOriginalExtension();
-                $company_logo_file_name = 'logo_company'.'.'.$extension;
+                $company_logo_file_name = 'logo_company' . '.' . $extension;
                 $path = Storage::disk('company')->putFileAs('/', $company_logo, $company_logo_file_name);
                 $company_logo_file_name = basename($path);
 
                 $image = Image::make($company_logo);
-                $file_path = $upload_dir.$company_logo_file_name;
+                $file_path = $upload_dir . $company_logo_file_name;
                 $image->save($file_path);
                 $image->destroy();
 
-                $company_logo_file = (isset($company_logo_file_name))?$company_logo_file_name:'';
+                $company_logo_file = (isset($company_logo_file_name)) ? $company_logo_file_name : '';
             }
 
-            if($request->hasFile('invoice_print_logo')){
+            if ($request->hasFile('invoice_print_logo')) {
                 $remove_invoice_print_logo_file = $invoice_print_logo_file;
 
                 Storage::disk('company')->delete(
@@ -201,20 +205,19 @@ class Setting extends Controller
                 $invoice_print_logo = $request->invoice_print_logo;
 
                 $extension = $invoice_print_logo->getClientOriginalExtension();
-                $invoice_print_logo_file_name = 'logo_invoice_print'.'.'.$extension;
+                $invoice_print_logo_file_name = 'logo_invoice_print' . '.' . $extension;
                 $path = Storage::disk('company')->putFileAs('/', $invoice_print_logo, $invoice_print_logo_file_name);
                 $invoice_print_logo_file_name = basename($path);
 
                 $image = Image::make($invoice_print_logo);
-                $file_path = $upload_dir.$invoice_print_logo_file_name;
-                //$image->resize(160, 80);
+                $file_path = $upload_dir . $invoice_print_logo_file_name;
                 $image->save($file_path);
                 $image->destroy();
 
-                $invoice_print_logo_file = (isset($invoice_print_logo_file_name))?$invoice_print_logo_file_name:'';
+                $invoice_print_logo_file = (isset($invoice_print_logo_file_name)) ? $invoice_print_logo_file_name : '';
             }
 
-            if($request->hasFile('navbar_logo')){
+            if ($request->hasFile('navbar_logo')) {
 
                 $remove_navbar_logo_file = $navbar_logo_file;
 
@@ -228,19 +231,19 @@ class Setting extends Controller
                 $navbar_logo = $request->navbar_logo;
 
                 $extension = $navbar_logo->getClientOriginalExtension();
-                $navbar_logo_file_name = 'logo_navbar'.'.'.$extension;
+                $navbar_logo_file_name = 'logo_navbar' . '.' . $extension;
                 $path = Storage::disk('company')->putFileAs('/', $navbar_logo, $navbar_logo_file_name);
                 $navbar_logo_file_name = basename($path);
 
                 $image = Image::make($navbar_logo);
-                $file_path = $upload_dir.$navbar_logo_file_name;
+                $file_path = $upload_dir . $navbar_logo_file_name;
                 $image->save($file_path);
                 $image->destroy();
 
-                $navbar_logo_file = (isset($navbar_logo_file_name))?$navbar_logo_file_name:'';
+                $navbar_logo_file = (isset($navbar_logo_file_name)) ? $navbar_logo_file_name : '';
             }
 
-            if($request->hasFile('favicon')){
+            if ($request->hasFile('favicon')) {
 
                 $remove_favicon_file = $favicon_file;
 
@@ -254,16 +257,16 @@ class Setting extends Controller
                 $favicon = $request->favicon;
 
                 $extension = $favicon->getClientOriginalExtension();
-                $favicon_file_name = 'favicon'.'.'.$extension;
+                $favicon_file_name = 'favicon' . '.' . $extension;
                 $path = Storage::disk('company')->putFileAs('/', $favicon, $favicon_file_name);
                 $favicon_file_name = basename($path);
 
                 $image = Image::make($favicon);
-                $file_path = $upload_dir.$favicon_file_name;
+                $file_path = $upload_dir . $favicon_file_name;
                 $image->save($file_path);
                 $image->destroy();
 
-                $favicon_file = (isset($favicon_file_name))?$favicon_file_name:'';
+                $favicon_file = (isset($favicon_file_name)) ? $favicon_file_name : '';
             }
 
             SettingAppModel::truncate();
@@ -287,25 +290,35 @@ class Setting extends Controller
 
             file_put_contents("timezone_config.txt", $request->timezone);
 
-            $customer = [
-                "name" => trim($request->name),
-                "email" => trim($request->email),
-                "phone" => trim($request->phone),
-                "updated_by" => $request->logged_user_id
-            ];
+            // $customer = [
+            //     "name" => trim($request->name),
+            //     "email" => trim($request->email),
+            //     "phone" => trim($request->phone),
+            //     "updated_by" => $request->logged_user_id
+            // ];
 
-            CustomerModel::where('customer_type', 'DEFAULT')
-            ->update($customer);
-            
+            // CustomerModel::where('customer_type', 'DEFAULT')
+            //     ->update($customer);
+            // Set company_contact_person to null for all users
+            User::query()->update(['company_contact_person' => null]);
+            if ($request->filled('company_contact_person')) {
+                $user = User::find($request->company_contact_person);
+                if ($user) {
+                    $user->update(['company_contact_person' => 1]);
+                }
+                
+            }
+
+
             DB::commit();
 
             return response()->json($this->generate_response(
                 array(
                     "message" => "App settings updated successfully",
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -319,79 +332,79 @@ class Setting extends Controller
     {
         try {
 
-            if(!check_access(['A_EDIT_APP_SETTING'], true)){
+            if (!check_access(['A_EDIT_APP_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $type = $request->type;
             $app_setting = SettingAppModel::select('company_name', 'company_logo', 'invoice_print_logo', 'navbar_logo', 'favicon')->first();
 
-            switch($type){
+            switch ($type) {
                 case 'company_logo':
-                    if($app_setting->company_logo != ''){
+                    if ($app_setting->company_logo != '') {
                         Storage::disk('company')->delete(
                             [
                                 $app_setting->company_logo
                             ]
                         );
                     }
-        
-                    $app_setting_array = [        
+
+                    $app_setting_array = [
                         'company_logo' => '',
                     ];
-                break;
+                    break;
                 case 'invoice_print_logo':
-                    if($app_setting->invoice_print_logo != ''){
+                    if ($app_setting->invoice_print_logo != '') {
                         Storage::disk('company')->delete(
                             [
                                 $app_setting->invoice_print_logo
                             ]
                         );
                     }
-        
-                    $app_setting_array = [        
+
+                    $app_setting_array = [
                         'invoice_print_logo' => '',
                     ];
-                break;
+                    break;
                 case 'navbar_logo':
-                    if($app_setting->navbar_logo != ''){
+                    if ($app_setting->navbar_logo != '') {
                         Storage::disk('company')->delete(
                             [
                                 $app_setting->navbar_logo
                             ]
                         );
                     }
-        
-                    $app_setting_array = [        
+
+                    $app_setting_array = [
                         'navbar_logo' => '',
                     ];
-                break;
+                    break;
                 case 'favicon':
-                    if($app_setting->favicon != ''){
+                    if ($app_setting->favicon != '') {
                         Storage::disk('company')->delete(
                             [
                                 $app_setting->favicon
                             ]
                         );
                     }
-        
-                    $app_setting_array = [        
+
+                    $app_setting_array = [
                         'favicon' => '',
                     ];
-                break;
+                    break;
             }
-            
+
 
             $data = SettingAppModel::where('company_name', $app_setting->company_name)->update($app_setting_array);
-        
+
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Company Logo removed successfully", 
+                    "message" => "Company Logo removed successfully",
                     "data"    => $data
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -404,7 +417,7 @@ class Setting extends Controller
     public function clear_app_cache(Request $request)
     {
         try {
-            if(!check_access(['A_EDIT_APP_SETTING'], true)){
+            if (!check_access(['A_EDIT_APP_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
@@ -413,9 +426,10 @@ class Setting extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Cache has been cleared successfully"
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -428,34 +442,34 @@ class Setting extends Controller
     public function clear_app_storage(Request $request)
     {
         try {
-            if(!check_access(['A_EDIT_APP_SETTING'], true)){
+            if (!check_access(['A_EDIT_APP_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $days = 259200; // 3 days
             $folder_list = ['storage/order', 'storage/reports'];
 
-            foreach($folder_list as $folder_list_item){
+            foreach ($folder_list as $folder_list_item) {
 
                 $files_list = [];
-    
+
                 $limit = time() - $days;
                 $dir = realpath($folder_list_item);
                 if (!is_dir($dir)) {
                     return;
                 }
-                
+
                 $folder_directory = opendir($dir);
                 if ($folder_directory === false) {
                     return;
                 }
-                
+
                 while (($file = readdir($folder_directory)) !== false) {
                     $file = $dir . '/' . $file;
                     if (!is_file($file)) {
                         continue;
                     }
-                    
+
                     if (filemtime($file) < $limit) {
                         $list[] = $file;
                         unlink($file);
@@ -467,9 +481,10 @@ class Setting extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Old Storage has been cleared successfully"
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -492,7 +507,7 @@ class Setting extends Controller
             'status' => $this->get_validation_rules("status", true),
         ]);
         $validation_status = $validator->fails();
-        if($validation_status){
+        if ($validation_status) {
             throw new Exception($validator->errors());
         }
     }
@@ -513,7 +528,7 @@ class Setting extends Controller
             'phone' => $this->get_validation_rules("phone", false),
         ]);
         $validation_status = $validator->fails();
-        if($validation_status){
+        if ($validation_status) {
             throw new Exception($validator->errors());
         }
     }
@@ -521,7 +536,7 @@ class Setting extends Controller
     public function send_test_email(Request $request)
     {
         try {
-            if(!check_access(['A_EDIT_EMAIL_SETTING'], true)){
+            if (!check_access(['A_EDIT_EMAIL_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
@@ -529,7 +544,7 @@ class Setting extends Controller
                 'email' => $this->get_validation_rules("email", true),
             ]);
             $validation_status = $validator->fails();
-            if($validation_status){
+            if ($validation_status) {
                 throw new Exception($validator->errors());
             }
 
@@ -538,10 +553,10 @@ class Setting extends Controller
             $server = $request->getHttpHost();
 
             $email_setting_data_exists = SettingEmailModel::select('id')
-            ->where([
-                ['slack', '=', $slack]
-            ])
-            ->first();
+                ->where([
+                    ['slack', '=', $slack]
+                ])
+                ->first();
             if (empty($email_setting_data_exists)) {
                 throw new Exception("Email setting is not configured", 400);
             }
@@ -551,9 +566,10 @@ class Setting extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Test Email sent successfully"
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -566,11 +582,11 @@ class Setting extends Controller
     public function deactivate_app(Request $request)
     {
         try {
-            if(!check_access(['A_EDIT_APP_SETTING'], true)){
+            if (!check_access(['A_EDIT_APP_SETTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
-            if($request->logged_user_role_id != 1){
+            if ($request->logged_user_role_id != 1) {
                 throw new Exception("Invalid request", 400);
             }
 
@@ -578,7 +594,7 @@ class Setting extends Controller
                 'pcode' => 'required',
             ]);
             $validation_status = $validator->fails();
-            if($validation_status){
+            if ($validation_status) {
                 throw new Exception($validator->errors());
             }
 
@@ -587,7 +603,7 @@ class Setting extends Controller
             $cip = trim($request->cip);
 
             $activation_data = AppActivation::select('activation_code')->first();
-            if(isset($activation_data->activation_code) && $activation_data->activation_code != ''){
+            if (isset($activation_data->activation_code) && $activation_data->activation_code != '') {
                 $client = new Client();
                 $response = $client->post(config('app.deactivate_link'), [
                     'form_params' => [
@@ -599,26 +615,26 @@ class Setting extends Controller
                 ]);
                 $response_body = $response->getBody();
                 $response_body_array = json_decode($response_body, true);
-                if($response_body_array['status_code'] == 200){
+                if ($response_body_array['status_code'] == 200) {
                     DB::beginTransaction();
-                    
+
                     AppActivation::where('activation_code', $activation_data->activation_code)->delete();
-                    
+
                     DB::commit();
 
                     return response()->json($this->generate_response(
                         array(
                             "message" => $response_body_array['msg']
-                        ), 'SUCCESS'
+                        ),
+                        'SUCCESS'
                     ));
-                }else{
+                } else {
                     throw new Exception($response_body_array['msg'], 400);
                 }
-            }else{
+            } else {
                 throw new Exception("Invalid request", 400);
             }
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -628,14 +644,15 @@ class Setting extends Controller
         }
     }
 
-    public function check_activation(Request $request){
-        try{
+    public function check_activation(Request $request)
+    {
+        try {
             $activation_data = AppActivation::select('activation_code')->first();
-            $code_exists = (isset($activation_data->activation_code) && $activation_data->activation_code != '')?true:false;
+            $code_exists = (isset($activation_data->activation_code) && $activation_data->activation_code != '') ? true : false;
             $activated = false;
-            if($code_exists){
+            if ($code_exists) {
                 $segments_counter = count(explode('.', $activation_data->activation_code));
-                if($segments_counter === 3){
+                if ($segments_counter === 3) {
                     $activated = true;
                 }
             }
@@ -646,10 +663,10 @@ class Setting extends Controller
                         "active" => $activated,
                         "installation_helper_link" => $installation_helper_link
                     ]
-                ], 'SUCCESS'
+                ],
+                'SUCCESS'
             ));
-           
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),

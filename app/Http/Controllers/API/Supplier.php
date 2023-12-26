@@ -415,7 +415,7 @@ class Supplier extends Controller
             }
 
             $banks = json_decode($request->input('banks'), true);
-             $contact_persons = json_decode($request->input('contact_people'), true);
+            $contact_persons = json_decode($request->input('contact_people'), true);
             $businessTypes = json_decode($request->input('businessTypes'), true);
 
             $this->validate_request($request);

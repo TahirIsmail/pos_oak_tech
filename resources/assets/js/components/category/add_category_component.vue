@@ -154,7 +154,6 @@
           </button>
         </template>
       </modalcomponent>
-
       <!-- Modal for editing subcategory -->
       <div v-if="editModalVisible" class="modal-overlay">
         <div class="modal modal_style">
@@ -247,7 +246,6 @@ export default {
   mounted() {
     console.log("Add category page loaded");
   },
-
   methods: {
     handleTagsChanged(newTags) {
       this.tags = newTags.map(tag => tag.text);

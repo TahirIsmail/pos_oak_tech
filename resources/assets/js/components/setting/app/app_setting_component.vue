@@ -61,7 +61,28 @@
                         <p><img :src="favicon" class="company-logo-image"></p>
                     </div>
                 </div>
-                <!-- <hr> -->
+                <hr>
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Contact Person Information") }}</span>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-3">
+                        <label for="updated_on">{{ $t("Name") }}</label>
+                        <p>{{ contact_person[0].fullname }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="updated_on">{{ $t("Email") }}</label>
+                        <p>{{ contact_person[0].email }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="updated_on">{{ $t("Phone") }}</label>
+                        <p>{{ contact_person[0].phone }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="updated_on">{{ $t("Job Post") }}</label>
+                        <p>{{ contact_person[0].role.label }}</p>
+                    </div>
+                </div>
                 <!-- <div class="mb-2">
                     <span class="text-subhead">{{ $t("Default Customer Details") }}</span>
                 </div>
@@ -113,6 +134,7 @@ export default {
     },
     props: {
         app_setting: Array,
+        contact_person: [Array, Object],
         // customer: [Array, Object],
     },
     mounted() {

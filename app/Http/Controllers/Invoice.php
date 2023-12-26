@@ -36,7 +36,7 @@ class Invoice extends Controller
     }
 
     //This is the function that loads the add/edit page
-    public function add_invoice($slack = null){
+    public function add_invoice(Request $request, $slack = null){
         //check access
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_INVOICES';
@@ -65,6 +65,8 @@ class Invoice extends Controller
             $invoice_data = new InvoiceResource($invoice);
             $data['invoice_data'] = $invoice_data;
         }
+
+        $data['invoice_type'] = $request->input('type');
 
         return view('invoice.add_invoice', $data);
     }

@@ -44,8 +44,8 @@ class User extends Controller
 
         $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('USER_STATUS')->active()->sortValueAsc()->get();
 
-        $data['roles'] = RoleModel::select('slack', 'label')->resolveSuperAdminRole()->CustomerRole()->active()->sortLabelAsc()->get();
-        $data['users'] = UserModel::where('role_id', '!=', 2)->get();
+        $data['roles'] = RoleModel::select('slack', 'label')->resolveSuperAdminRole()->CustomerRole()->SupplierRole()->active()->sortLabelAsc()->get();
+        $data['users'] = UserModel::whereNotIn('role_id', [2, 3])->get();
         // dd($data['users']);
         $data['stores'] =  StoreModel::select('slack', 'store_code', 'name', 'address')
         ->active()

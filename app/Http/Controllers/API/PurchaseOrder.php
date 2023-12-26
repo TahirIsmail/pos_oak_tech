@@ -76,7 +76,13 @@ class PurchaseOrder extends Controller
                 });
             })
 
+            ->when($request->logged_user_role_id == 3, function ($query) use ($request) {
+                $query->where('purchase_orders.supplier_id', $request->supplier_id);
+            })
+            
             ->get();
+
+            // dd($request->supplier_id);
 
             $purchase_orders = PurchaseOrderResource::collection($query);
            
