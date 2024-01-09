@@ -25,6 +25,7 @@ use App\Models\AppActivation;
 use App\Models\Customer as CustomerModel;
 use App\Models\User;
 use App\Providers\MailServiceProvider;
+use App\Models\Supplier;
 
 use App\Mail\TestEmail;
 
@@ -290,24 +291,26 @@ class Setting extends Controller
 
             file_put_contents("timezone_config.txt", $request->timezone);
 
-            // $customer = [
-            //     "name" => trim($request->name),
-            //     "email" => trim($request->email),
-            //     "phone" => trim($request->phone),
-            //     "updated_by" => $request->logged_user_id
-            // ];
+            $customer = [
+                "name" => trim($request->name),
+                "email" => trim($request->email),
+                "phone" => trim($request->phone),
+                "updated_by" => $request->logged_user_id
+            ];
 
-            // CustomerModel::where('customer_type', 'DEFAULT')
-            //     ->update($customer);
-            // Set company_contact_person to null for all users
-            User::query()->update(['company_contact_person' => null]);
-            if ($request->filled('company_contact_person')) {
-                $user = User::find($request->company_contact_person);
-                if ($user) {
-                    $user->update(['company_contact_person' => 1]);
-                }
-                
-            }
+            CustomerModel::where('customer_type', 'DEFAULT')
+                ->update($customer);
+
+
+            $supplier = [
+                "name" => trim($request->supplier_name),
+                "email" => trim($request->supplier_email),
+                "phone" => trim($request->supplier_phone),
+                "updated_by" => $request->logged_user_id
+            ];
+
+            Supplier::where('supplier_type', 'DEFAULT')->update($supplier);
+           
 
 
             DB::commit();
@@ -526,6 +529,10 @@ class Setting extends Controller
             'name' => $this->get_validation_rules("name_label", false),
             'email' => $this->get_validation_rules("email", false),
             'phone' => $this->get_validation_rules("phone", false),
+
+            'supplier_name' => $this->get_validation_rules("name_label", false),
+            'supplier_email' => $this->get_validation_rules("email", false),
+            'supplier_phone' => $this->get_validation_rules("phone", false),
         ]);
         $validation_status = $validator->fails();
         if ($validation_status) {

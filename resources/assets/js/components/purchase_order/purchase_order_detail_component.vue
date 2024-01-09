@@ -1,7 +1,9 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
-            <div class="d-flex flex-wrap mb-4">
+            <div class="card p-4">
+                <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">
                         <div>
@@ -24,12 +26,16 @@
 
                     <a class="btn btn-outline-primary mr-1" v-bind:href="'/print_purchase_order/'+slack" target="_blank">{{ $t("PDF") }}</a>
 
-                    <button type="button" class="btn btn-outline-primary mr-1"  v-if="create_invoice_from_po_access == true" v-on:click="generate_invoice()" v-bind:disabled="generate_invoice_processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="generate_invoice_processing == true"></i> {{ $t("Generate Invoice") }}</button>
-
-                    <button type="submit" class="btn btn-danger mr-1" v-show="!block_delete_po.includes(po_basic.status.constant)" v-if="delete_po_access == true" v-on:click="delete_po()" v-bind:disabled="po_delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="po_delete_processing == true"></i> {{ $t("Delete Purchase Order") }}</button>
-
+                    <span v-if="po_basic.status.label == 'Approved' && po_basic.po_from_customer == 1 && !is_customer">
+                        <button type="button" class="btn btn-outline-primary mr-1"  v-if="create_invoice_from_po_access == true" v-on:click="generate_invoice()" v-bind:disabled="generate_invoice_processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="generate_invoice_processing == true"></i> {{ $t("Generate Invoice") }}</button>
+                    </span>
+                    <span v-if="po_basic.status.label == 'Approved' && po_basic.po_from_customer == 0 && is_supplier">
+                        <button type="button" class="btn btn-outline-primary mr-1"  v-if="create_invoice_from_po_access == true" v-on:click="generate_invoice()" v-bind:disabled="generate_invoice_processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="generate_invoice_processing == true"></i> {{ $t("Generate Invoice") }}</button>
+                    </span>
+                    <span v-if="!is_supplier"><button type="submit" class="btn btn-danger mr-1" v-show="!block_delete_po.includes(po_basic.status.constant)" v-if="delete_po_access == true" v-on:click="delete_po()" v-bind:disabled="po_delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="po_delete_processing == true"></i> {{ $t("Delete Purchase Order") }}</button>
+                    </span>
                     <div class="dropdown d-inline">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="po_action" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button v-if="!is_customer" class="btn btn-primary dropdown-toggle" type="button" id="po_action" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ $t("Change Status") }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="po_action">
@@ -69,18 +75,18 @@
                     <label for="created_on">{{ $t("Created On") }}</label>
                     <p>{{ po_basic.created_at_label }}</p>
                 </div>
-                <div class="form-group col-md-3">
+                <!-- <div class="form-group col-md-3">
                     <label for="updated_on">{{ $t("Updated On") }}</label>
                     <p>{{ po_basic.updated_at_label }}</p>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="updated_on">{{ $t("Update Product Stock") }}</label>
                     <p>{{ update_stock }}</p>
-                </div>
+                </div> -->
             </div>
             <hr>
 
-            <div class="mb-3">
+            <div class="mb-3" v-if="is_customer == true && po_basic.po_from_customer === 1"> 
                 
                 <div class="mb-2">
                     <span class="text-subhead">{{ $t("Supplier Information") }}</span>
@@ -93,6 +99,49 @@
                     <div class="form-group col-md-3">
                         <label for="supplier_address">{{ $t("Address") }}</label>
                         <p>{{ po_basic.supplier_address }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="currency_name">{{ $t("Currency") }}</label>
+                        <p>{{ po_basic.currency_name }} ({{ po_basic.currency_code }})</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="mb-3" v-if="is_customer == false && po_basic.po_from_customer === 0"> 
+                
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Supplier Information") }}</span>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-3">
+                        <label for="supplier_name">{{ $t("Supplier Name") }}</label>
+                        <p>{{ po_basic.supplier_name }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="supplier_address">{{ $t("Address") }}</label>
+                        <p>{{ po_basic.supplier_address }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="currency_name">{{ $t("Currency") }}</label>
+                        <p>{{ po_basic.currency_name }} ({{ po_basic.currency_code }})</p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="mb-3" v-if="is_customer == false && po_basic.po_from_customer === 1"> 
+                
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Customer Information") }}</span>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-3">
+                        <label for="supplier_name">{{ $t("Customer Name") }}</label>
+                        <p>{{ po_basic.po_from_name }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="supplier_address">{{ $t("Address") }}</label>
+                        <p>{{ po_basic.po_from_address }}</p>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="currency_name">{{ $t("Currency") }}</label>
@@ -194,6 +243,7 @@
                     <p class='custom-pre'>{{ (po_basic.terms != null)?po_basic.terms:'-' }}</p>
                 </div>
             </div>
+            </div>
         </div>
 
         <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
@@ -263,7 +313,9 @@
             po_statuses: Array,
             delete_po_access: Boolean,
             create_invoice_from_po_access: Boolean,
-            printnode_enabled: Boolean
+            printnode_enabled: Boolean,
+            is_supplier: Boolean,
+            is_customer: Boolean,
         },
         mounted() {
             console.log('PO detail page loaded');
@@ -355,6 +407,7 @@
 
                     var formData = new FormData();
                     formData.append("access_token", window.settings.access_token);
+                    formData.append("is_supplier", this.is_supplier);
 
                     axios.post(this.generate_invoice_from_po_api_link, formData).then((response) => {
 

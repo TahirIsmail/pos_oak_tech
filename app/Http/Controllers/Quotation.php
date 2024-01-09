@@ -12,6 +12,7 @@ use App\Models\Country as CountryModel;
 use App\Models\MasterStatus as MasterStatusModel;
 use App\Models\MasterTaxOption as MasterTaxOptionModel;
 use App\Models\Store as StoreModel;
+use App\Models\User;
 
 use App\Http\Resources\QuotationResource;
 
@@ -23,70 +24,84 @@ use Mpdf\Mpdf;
 class Quotation extends Controller
 {
     //This is the function that loads the listing page
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         //check access
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_QUOTATIONS';
-        check_access(array($data['menu_key'],$data['sub_menu_key']));
-        
+        check_access(array($data['menu_key'], $data['sub_menu_key']));
+
         return view('quotation.quotations', $data);
     }
 
     //This is the function that loads the add/edit page
-    public function add_quotation($slack = null){
+    public function add_quotation(Request $request, $slack = null)
+    {
         //check access
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_QUOTATIONS';
-        $data['action_key'] = ($slack == null)?'A_ADD_QUOTATION':'A_EDIT_QUOTATION';
+        $data['action_key'] = ($slack == null) ? 'A_ADD_QUOTATION' : 'A_EDIT_QUOTATION';
         check_access(array($data['action_key']));
 
         $data['currency_list'] = CountryModel::select('currency_code', 'currency_name')
-        ->where('currency_code', '!=', '')
-        ->whereNotNull('currency_code')
-        ->active()
-        ->groupBy('currency_code')
-        ->get();
+            ->where('currency_code', '!=', '')
+            ->whereNotNull('currency_code')
+            ->active()
+            ->groupBy('currency_code')
+            ->get();
 
         $data['tax_options'] = MasterTaxOptionModel::select('tax_option_constant', 'label')
-        ->active()
-        ->get();
+            ->active()
+            ->get();
 
         $data['quotation_data'] = null;
-        if(isset($slack)){
-            
+        if (isset($slack)) {
+
             $quotation = QuotationModel::where('slack', '=', $slack)->first();
             if (empty($quotation)) {
                 abort(404);
             }
-            
+
             $quotation_data = new QuotationResource($quotation);
             $data['quotation_data'] = $quotation_data;
         }
+
+
+        if($request->logged_user_role_id == 3){
+            $is_supplier = true;
+        }
+        else{
+            $is_supplier = false;
+        }
+
+        $data['is_supplier'] = $is_supplier;
+
 
         return view('quotation.add_quotation', $data);
     }
 
     //This is the function that loads the detail page
-    public function detail($slack){
+    public function detail(Request $request, $slack)
+    {
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_QUOTATIONS';
         $data['action_key'] = 'A_DETAIL_QUOTATION';
         check_access([$data['action_key']]);
 
         $quotation = QuotationModel::where('slack', '=', $slack)->first();
-        
+
         if (empty($quotation)) {
             abort(404);
         }
 
         $quotation_data = new QuotationResource($quotation);
-        
+
         $data['quotation_data'] = $quotation_data;
-        
+
         $quotation_statuses = [];
-        
-        if(check_access(['A_EDIT_STATUS_QUOTATION'] ,true)){
-            $quotation_statuses = MasterStatusModel::select('label','value_constant')->where([
+
+        if (check_access(['A_EDIT_STATUS_QUOTATION'], true)) {
+            $quotation_statuses = MasterStatusModel::select('label', 'value_constant')->where([
                 ['value_constant', '!=', strtoupper('PENDING')],
                 ['key', '=', 'QUOTATION_STATUS'],
                 ['status', '=', '1']
@@ -95,16 +110,33 @@ class Quotation extends Controller
 
         $data['quotation_statuses'] = $quotation_statuses;
 
-        $data['delete_quotation_access'] = check_access(['A_DELETE_QUOTATION'] ,true);
+        $data['delete_quotation_access'] = check_access(['A_DELETE_QUOTATION'], true);
 
         $store_data = StoreModel::select('printnode_enabled')
-        ->where([
-            ['stores.id', '=', request()->logged_user_store_id]
-        ])
-        ->active()
-        ->first();
+            ->where([
+                ['stores.id', '=', request()->logged_user_store_id]
+            ])
+            ->active()
+            ->first();
 
-        $data['printnode_enabled'] = (isset($store_data->printnode_enabled) && $store_data->printnode_enabled == 1)?true:false;
+        $data['printnode_enabled'] = (isset($store_data->printnode_enabled) && $store_data->printnode_enabled == 1) ? true : false;
+        if($request->logged_user_role_id == 3){
+            $is_supplier = true;
+        }
+        else{
+            $is_supplier = false;
+        }
+
+
+        if($request->logged_user_role_id == 2){
+            $is_customer = true;
+        }
+        else{
+            $is_customer = false;
+        }
+
+        $data['is_supplier'] = $is_supplier;
+        $data['is_customer'] = $is_customer;
 
         return view('quotation.quotation_detail', $data);
     }
@@ -116,7 +148,7 @@ class Quotation extends Controller
     //     check_access([$data['sub_menu_key']]);
 
     //     $quotation = QuotationModel::where('slack', '=', $slack)->first();
-        
+
     //     if (empty($quotation)) {
     //         abort(404);
     //     }
@@ -124,8 +156,8 @@ class Quotation extends Controller
     //     $quotation_data = new QuotationResource($quotation);
 
     //     $print_logo_path = config("app.invoice_print_logo");
-        
-       
+
+
     //     $print_data = view('quotation.invoice.quotation_print', ['data' => json_encode($quotation_data), 'logo_path' => $print_logo_path])->render();
 
     //     $mpdf_config = [
@@ -171,13 +203,16 @@ class Quotation extends Controller
     // }
 
 
-    public function print_quotation(Request $request, $slack, $type = 'INLINE', $full_path = false){
+    public function print_quotation(Request $request, $slack, $type = 'INLINE', $full_path = false)
+    {
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_QUOTATIONS';
         check_access([$data['sub_menu_key']]);
 
-        $quotation = QuotationModel::where('slack', '=', $slack)->first();
-        
+        $quotation = QuotationModel::where('slack', $slack)->first();
+
+       
+
         if (empty($quotation)) {
             abort(404);
         }
@@ -188,11 +223,36 @@ class Quotation extends Controller
 
         $first_bg_image = public_path('images/bg_Oak.png');
         $sec_bg_image = public_path('images/bg-page2.PNG');
-        $third_bg_image = public_path('images/third-bg.png');     
+        $third_bg_image = public_path('images/third-bg.png');
 
-        // dd($print_logo_path);
-       
-        $print_data = view('quotation.invoice.quotation_print', ['data' => json_encode($quotation_data), 'logo_path' => $print_logo_path, 'first_bg_image' => $first_bg_image ,'sec_bg_image' => $sec_bg_image ,'third_bg_image' => $third_bg_image])->render();
+
+        if($request->logged_user_role_id == 3){
+            $is_supplier = true;
+        }
+        else{
+            $is_supplier = false;
+        }
+
+
+        // dd($quotation_data);
+        
+        
+        if ($quotation) {
+            $createdByUser = User::find($quotation->created_by);
+            
+            // dd($createdByUser['fullname']);
+            if ($createdByUser && $createdByUser->supplier_id !== null) {
+
+                $print_data = view('quotation.invoice.supplier_quotation_print', ['data' => json_encode($quotation_data), 'is_supplier' => json_decode($is_supplier), 'supplier' => json_encode($createdByUser), 'logo_path' => $print_logo_path, 'first_bg_image' => $first_bg_image, 'sec_bg_image' => $sec_bg_image, 'third_bg_image' => $third_bg_image])->render();
+              
+            }
+            else{
+                $print_data = view('quotation.invoice.quotation_print', ['data' => json_encode($quotation_data), 'logo_path' => $print_logo_path, 'first_bg_image' => $first_bg_image, 'sec_bg_image' => $sec_bg_image, 'third_bg_image' => $third_bg_image])->render();
+
+            }
+        }
+
+
 
         $mpdf_config = [
             'mode'          => 'utf-8',
@@ -202,20 +262,20 @@ class Quotation extends Controller
             'margin_right'  => 7,
             'margin_top'    => 7,
             'margin_bottom' => 7,
-            'tempDir' => storage_path()."/pdf_temp" 
+            'tempDir' => storage_path() . "/pdf_temp"
         ];
 
-        $cache_params = '?='.uniqid();
+        $cache_params = '?=' . uniqid();
 
         $stylesheet = File::get(public_path('css/quotation_print_invoice.css'));
         $mpdf = new Mpdf($mpdf_config);
         $mpdf->SetDisplayMode('real');
-        $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->SetHTMLFooter('<div class="footer">Page: {PAGENO}/{nb}</div>');
         $mpdf->WriteHTML($print_data);
         header('Content-Type: application/pdf');
 
-        $filename = 'quotation_'.$quotation_data['quotation_number'].'.pdf';
+        $filename = 'quotation_' . $quotation_data['quotation_number'] . '.pdf';
 
         Storage::disk('quotation')->delete(
             [
@@ -223,18 +283,16 @@ class Quotation extends Controller
             ]
         );
 
-        if($type == 'INLINE'){
-            $mpdf->Output($filename.$cache_params, \Mpdf\Output\Destination::INLINE);
-        }else{
+        if ($type == 'INLINE') {
+            $mpdf->Output($filename . $cache_params, \Mpdf\Output\Destination::INLINE);
+        } else {
             $view_path = Config::get('constants.upload.quotation.view_path');
             $upload_dir = Storage::disk('quotation')->getAdapter()->getPathPrefix();
 
-            $mpdf->Output($upload_dir.$filename, \Mpdf\Output\Destination::FILE);
+            $mpdf->Output($upload_dir . $filename, \Mpdf\Output\Destination::FILE);
 
-            $download_link = ($full_path == false)?$view_path.$filename.$cache_params:$upload_dir.$filename;
-            return $download_link; 
+            $download_link = ($full_path == false) ? $view_path . $filename . $cache_params : $upload_dir . $filename;
+            return $download_link;
         }
     }
-    
-    
 }

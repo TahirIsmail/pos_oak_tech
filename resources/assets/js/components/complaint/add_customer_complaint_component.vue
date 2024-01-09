@@ -1,16 +1,16 @@
 <template>
-    <div>
+    <div class="card p-4">
         <form @submit.prevent="submit_form">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
-                    <span class="text-title" v-if="complaint_slack == null">{{
+                    <span class="text-title" v-if="complaint_slack == ''">{{
                         $t("Add Customer Complaint")
                     }}</span>
                     <span class="text-title" v-else>{{ $t("Edit Customer Complaint") }}
                     </span>
                 </div>
                 <div class="">
-                    <button v-if="complaint_slack == null" type="submit" class="btn btn-primary"
+                    <button v-if="complaint_slack == ''" type="submit" class="btn btn-primary"
                         v-bind:disabled="processing == true">
                         <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
                         {{ $t("Save") }}
@@ -33,7 +33,7 @@
 
                         <option v-for="(customer_item, index) in customer_list" :value="customer_item.slack"
                             placeholder="Choose Customers.." :key="index">
-                            {{ customer_item.name }} - {{ customer_item.email }}
+                            {{ customer_item.fullname }} - {{ customer_item.email }}
                         </option>
                     </select>
                     <span v-bind:class="{ 'error': errors.has('selectedCustomer') }">{{ errors.first('selectedCustomer')
@@ -160,7 +160,6 @@ export default {
                 const formData = new FormData();
                 formData.append("access_token", window.settings.access_token);
                 formData.append("customer_slack", this.selectedCustomer);
-                console.log(...formData);
                 axios.post('/api/customer_orders', formData)
                     .then(response => {
                         this.customerOrders = response.data.data;

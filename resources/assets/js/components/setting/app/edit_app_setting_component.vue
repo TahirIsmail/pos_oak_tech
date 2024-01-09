@@ -123,7 +123,7 @@
                     </div>
                 </div>
 
-                <hr> 
+                <!-- <hr> 
                <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Select Contact Persons") }}</span>
@@ -137,7 +137,7 @@
                             <option v-for="user in users" :key="user.id" :value="user.id"> {{ `${user.fullname} (${user.role.label})` }}</option>                           
                         </select>
                         </div>
-                </div>
+                </div> -->
 
                <!-- <hr> 
                <div class="d-flex flex-wrap mb-1">
@@ -196,7 +196,7 @@
                     </div>
                 </div> -->
 
-                 <!-- <div class="d-flex flex-wrap mb-1">
+                 <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Default Customer Details") }}</span>
                     </div>
@@ -220,9 +220,45 @@
                         <input type="text" name="phone" v-model="phone" v-validate="{ min: 10, max: 15 }" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('phone') }">{{ errors.first('phone') }}</span> 
                     </div>
-                </div> -->
+                </div>
 
                 <hr>
+
+
+
+                <div class="d-flex flex-wrap mb-1">
+                    <div class="mr-auto">
+                        <span class="text-subhead">{{ $t("Default Supplier Details") }}</span>
+                    </div>
+                    <div class="">
+                        
+                    </div>
+                </div>
+                 <div class="form-row mb-2">
+                    <div class="form-group col-md-3">
+                        <label for="supplier_name">{{ $t("Name") }}</label>
+                        <input type="text" name="supplier_name" v-model="supplier_name" v-validate="'max:250'" class="form-control form-control-custom" :placeholder="$t('Please enter name')"  autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('supplier_name') }">{{ errors.first('supplier_name') }}</span> 
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="supplier_email">{{ $t("Email") }}</label>
+                        <input type="text" name="supplier_email" v-model="supplier_email" v-validate="{ email: true, max: 150 }" class="form-control form-control-custom" :placeholder="$t('Please enter email')"  autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('supplier_email') }">{{ errors.first('supplier_email') }}</span> 
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="supplier_phone">{{ $t("Contact No.") }}</label>
+                        <input type="text" name="supplier_phone" v-model="supplier_phone" v-validate="{ min: 10, max: 15 }" class="form-control form-control-custom" :placeholder="$t('Please enter Contact Number')" autocomplete="off">
+                        <span v-bind:class="{ 'error' : errors.has('supplier_phone') }">{{ errors.first('supplier_phone') }}</span> 
+                    </div>
+                </div>
+
+                <hr>
+
+
+
+
+
+
 
                 <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
@@ -310,7 +346,7 @@
                 modal           : false,
                 show_modal      : false,
                 api_link        : '/api/update_setting_app',
-                contact_person: (this.company_contact_person == null) ? '' : this.company_contact_person[0].id,
+                // contact_person: (this.company_contact_person == null) ? '' : this.company_contact_person[0].id,
                 company_name    : (this.setting_data.length == 0)?'':this.setting_data.company_name,
                 app_title    : (this.setting_data.length == 0)?'':this.setting_data.app_title,
                 app_timezone    : (this.setting_data.length == 0)?'':this.setting_data.timezone,
@@ -335,15 +371,21 @@
                 show_deactivation_modal: false,
                 deactivate_processing : false,
 
-                // name: (this.customer.length == 0)?'':this.customer.name,
-                // email: (this.customer.length == 0)?'':this.customer.email,
-                // phone: (this.customer.length == 0)?'':this.customer.phone,
+                name: (this.customer.length == 0)?'':this.customer.name,
+                email: (this.customer.length == 0)?'':this.customer.email,
+                phone: (this.customer.length == 0)?'':this.customer.phone,
+
+
+                supplier_name: (this.supplier.length == 0)?'':this.supplier.name,
+                supplier_email: (this.supplier.length == 0)?'':this.supplier.email,
+                supplier_phone: (this.supplier.length == 0)?'':this.supplier.phone,
+
             }
         },
         props: {
             setting_data: [Array, Object],
             users: [Array, Object],
-            company_contact_person: [Array, Object],
+           // company_contact_person: [Array, Object],
             date_time_formats: Array,
             date_formats: Array,
             timezones: [Array, Object],
@@ -351,7 +393,8 @@
             chost: String,
             cip: String,
 
-            // customer: [Array, Object],
+            customer: [Array, Object],
+            supplier: [Array, Object],
         },
         mounted() {
             console.log('Edit App setting page loaded');
@@ -381,7 +424,14 @@
                             formData.append("invoice_print_logo", invoice_print_logo_file);
                             formData.append("navbar_logo", navbar_logo_file);
                             formData.append("favicon", favicon_file);
-                            formData.append("company_contact_person", this.contact_person);
+                            formData.append("name", this.name);
+                            formData.append("email", this.email);
+                            formData.append("phone", this.phone);
+
+                            formData.append("supplier_name", this.supplier_name);
+                            formData.append("supplier_email", this.supplier_email);
+                            formData.append("supplier_phone", this.supplier_phone);
+                            // formData.append("company_contact_person", this.contact_person);
 
                             axios.post(this.api_link, formData).then((response) => {
                                 

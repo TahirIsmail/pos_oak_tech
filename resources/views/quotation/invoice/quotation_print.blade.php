@@ -242,6 +242,11 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
     </table>
 
 
+    @if($data->gst_tax_option == 'GST')
+    <div style="width:100%">
+        <h3 style="text-align: center">GST INVOICE</h3>
+    </div>
+    @endif
     <div class="mb-1rem">
         <table class="w-100 product-table mb-1rem">
             <thead>
@@ -272,6 +277,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
                     <td class="right">{{ $quotation_products->discount_amount }}<br>({{ $quotation_products->discount_percentage }}%)</td>
 
 
+                    <td class="right">{{ $quotation_products->tax_amount }} ( {{ $quotation_products->tax_percentage }}% )</td>
 
                     <td class="right">{{ $quotation_products->subtotal_amount_excluding_tax }}</td>
                 </tr>
@@ -307,6 +313,9 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
                 </tr>
             </tbody>
         </table>
+        <div class="mb-1">
+            <i class=""><span style="color:red">*</span>{{ $data->gst_tax_option }}</i>
+        </div>
         @if($data->currency_code != '')
         <div>
             <small>All prices are in {{ $data->currency_name }} ({{ $data->currency_code }})</small>

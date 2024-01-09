@@ -3,7 +3,7 @@
         <a href="#" class="nav-link nav-link-dark dropdown-toggle text-bold" id="user_store_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="selected_store.length != 0">
             <span class="text-muted pr-1">{{  $t("Choose Store") }}</span> {{ selected_store.name  | truncate(45) }}
         </a>
-        <div class="dropdown-menu dropdown-menu-left store-selector-dropdown" aria-labelledby="user_store_dropdown">
+        <div class="dropdown-menu dropdown-menu-left store-selector-dropdown" style="z-index: 9999999999999999999999;" aria-labelledby="user_store_dropdown">
             <small class="dropdown-header">Choose from {{ stores.length }} store(s)</small>
             <a class="dropdown-item mb-2" href="#" v-for="(store, index) in stores" v-bind:value="store.store_slack" v-bind:key="index" v-on:click="select_store(store.store_slack)" v-bind:class="{'border-left border-primary bg-light': store.store_slack == selected_store.store_slack}">
                 <span class="mr-2 text-primary" v-if="store.store_slack == selected_store.store_slack"><i class="fas fa-check-circle"></i></span>

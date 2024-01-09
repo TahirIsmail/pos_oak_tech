@@ -32,7 +32,7 @@
 .menu-toggler>div{
     width: 20px;
     height: 2px;
-    background-color: black;
+    background-color: #fff;
     margin: 4px 0;
 }
 
@@ -47,4 +47,14 @@
 
 .btn-primary{
     font-weight: 600 !important;
+    background-image:  linear-gradient(to right, #1850a5, #3277e0) !important;
+
+    border-radius: 5px !important;
 }
+.btn-primary:hover {
+    background-image:  linear-gradient(to left, #1850a5, #3277e0) !important;
+   
+
+
+}
+

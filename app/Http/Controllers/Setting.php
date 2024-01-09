@@ -19,6 +19,7 @@ use App\Http\Resources\SettingEmailResource;
 use App\Http\Resources\SettingSmsResource;
 use App\Http\Resources\SettingAppResource;
 use App\Models\User;
+use App\Models\Supplier;
 
 class Setting extends Controller
 {
@@ -78,9 +79,14 @@ class Setting extends Controller
         $contact_person = User::with('role')->whereNotNull('company_contact_person')->get();
         $data['contact_person'] = $contact_person;
 
-        // $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
+        $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
+
+
+        $data['supplier'] = Supplier::where('supplier_type', 'DEFAULT')->first();
+
 
         // dd($data['customer']);
+        // dd($data);
 
         return view('setting.app.app_setting', $data);
     }
@@ -112,9 +118,13 @@ class Setting extends Controller
 
         $data['timezones'] = timezone_identifiers_list();
 
-        // $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
+        $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
 
-       // $activation_data = AppActivation::select('activation_code')->first();
+        $data['supplier'] = Supplier::where('supplier_type', 'DEFAULT')->first();
+
+
+
+       $activation_data = AppActivation::select('activation_code')->first();
 
         $data['deactivation_eligible'] = ($request->logged_user_role_id == 1)?true:false;
         

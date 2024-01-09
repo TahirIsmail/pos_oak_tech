@@ -67,9 +67,9 @@ class Product extends Controller
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
                 $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User')
-                ->where('quantity', '>', 0)
-                ->orderBy('id', 'desc')
-                ->get();
+                    ->where('quantity', '>', 0)
+                    ->orderBy('id', 'desc')
+                    ->get();
                 return Datatables::of($data)
                     ->addIndexColumn()
 
@@ -80,22 +80,19 @@ class Product extends Controller
                         return $row['category']->label . '(' . $row['category']->category_code . ')';
                     })
                     ->addColumn('tax_code_id', function ($row) {
-                        if(isset($row['tax_code'])){
+                        if (isset($row['tax_code'])) {
                             return ($row['tax_code']->label . ' - ' . $row['tax_code']->tax_code);
-
-                        }
-                        else{
+                        } else {
                             return '--';
                         }
                     })
                     ->addColumn('discount_code_id', function ($row) {
-                        if(isset($row['discount_code'])){
+                        if (isset($row['discount_code'])) {
                             return ($row['discount_code']->label . ' - ' . $row['discount_code']->discount_code);
-
-                        }else{
+                        } else {
                             return '--';
                         }
-                    })                  
+                    })
 
                     ->addColumn('status', function ($row) {
                         if ($row['status'] == 1) {
@@ -241,24 +238,22 @@ class Product extends Controller
             }
 
 
-            
-            
+
+
             $this->validate_request($request);
-            
-            if (is_numeric($request->product_name))
-            { 
+
+            if (is_numeric($request->product_name)) {
                 $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
 
                 $name = $product_name ? $product_name->values : null;
-                
-            }else{
+            } else {
                 $name = $request->product_name;
             }
-            
-            
-            
-           
-          
+
+
+
+
+
 
 
             $product_data_exists = ProductModel::select('id')
@@ -282,7 +277,7 @@ class Product extends Controller
             $sale_price = 0;
             $sale_amount_including_tax = 0;
             $taxcode_data = [];
-            if(isset($request->tax_code)){
+            if (isset($request->tax_code)) {
                 $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
                     ->where('slack', '=', trim($request->tax_code))
                     //->active()
@@ -300,8 +295,7 @@ class Product extends Controller
                         $sale_amount_including_tax = $sale_price + $tax_amount;
                     }
                 }
-            }
-            else{
+            } else {
                 $taxcode_data = [];
                 $sale_price = $request->sale_price;
             }
@@ -365,13 +359,13 @@ class Product extends Controller
             $product_id = ProductModel::create($product)->id;
 
             $productSpecifications = [];
-            if($request->input_type){
+            if ($request->input_type) {
                 foreach ($request->input_type as $label => $value) {
                     $productSpec = new ProductSpecifications();
                     $productSpec->specification_label = $label;
                     $productSpec->specification_details = $value;
                     $productSpec->product_id = $product_id;
-    
+
                     $productSpec->save();
                 }
             }
@@ -538,18 +532,16 @@ class Product extends Controller
             //     $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
             //     $check_condition = true;
             // }   
-            
-            
-            if (is_numeric($request->product_name))
-            { 
+
+
+            if (is_numeric($request->product_name)) {
                 $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
 
                 $name = $product_name ? $product_name->values : null;
-                
-            }else{
+            } else {
                 $name = $request->product_name;
             }
-            
+
             $product_data_exists = ProductModel::select('id')
                 ->where([
                     ['slack', '!=', $slack],
@@ -571,8 +563,8 @@ class Product extends Controller
             $sale_price = 0;
             $sale_amount_including_tax = 0;
 
-          
-            if(isset($request->tax_code)){
+
+            if (isset($request->tax_code)) {
                 $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
                     ->where('slack', '=', trim($request->tax_code))
                     //->active()
@@ -591,8 +583,7 @@ class Product extends Controller
                         $sale_amount_including_tax = $sale_price + $tax_amount;
                     }
                 }
-            }
-            else{
+            } else {
                 $taxcode_data = [];
                 $sale_price = $request->sale_price;
             }
@@ -609,33 +600,33 @@ class Product extends Controller
                 $discount_code_id = $discount_code_data->id;
             }
 
-           
-            
+
+
             DB::beginTransaction();
 
             // if($check_condition){
-                $product = [
-                    "name" => $name,
-                    "product_code" => strtoupper($request->product_code),
-                    "description" => $request->description,
-                    "category_id" => $request->category,
-                    "sub_category_id" => $request->sub_category,
-                    "category_company_id" => $request->category_company_id,
-                    "product_name_id" => $request->product_name_id,
-                    "quantity" => $request->quantity,
-                    "at_start_quantity" => $request->quantity,
-                    "supplier_id" => $supplier_data->id,
-                    "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
-                    "discount_code_id" => $discount_code_id,
-                    "purchase_amount_excluding_tax" => $request->purchase_price,
-                    "sale_amount_excluding_tax" => $sale_price,
-                    "sale_amount_including_tax" => $sale_amount_including_tax,
-                    "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
-                    "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
-                    "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
-                    "status" => $request->status,
-                ];
-    
+            $product = [
+                "name" => $name,
+                "product_code" => strtoupper($request->product_code),
+                "description" => $request->description,
+                "category_id" => $request->category,
+                "sub_category_id" => $request->sub_category,
+                "category_company_id" => $request->category_company_id,
+                "product_name_id" => $request->product_name_id,
+                "quantity" => $request->quantity,
+                "at_start_quantity" => $request->quantity,
+                "supplier_id" => $supplier_data->id,
+                "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
+                "discount_code_id" => $discount_code_id,
+                "purchase_amount_excluding_tax" => $request->purchase_price,
+                "sale_amount_excluding_tax" => $sale_price,
+                "sale_amount_including_tax" => $sale_amount_including_tax,
+                "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
+                "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
+                "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
+                "status" => $request->status,
+            ];
+
             // }
             // else{
             //     $product = [
@@ -656,63 +647,62 @@ class Product extends Controller
             //         "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
             //         "status" => $request->status,
             //     ];
-    
+
             // }
-           
+
             $action_response = ProductModel::where('slack', $slack)
                 ->update($product);
             $productModel = ProductModel::where('slack', $slack)->first();
 
-                // dd($productModel->id);
+            // dd($productModel->id);
 
-                if($action_response){
-                    $p_specifications = [];
-                    $keys = array_keys($request->input_type);
-                    // dd(count($keys));
-                    for ($i = 0; $i < count($keys); $i += 2) {
-                        
-                        if(isset($keys[$i + 1])){
-                            $key1 = $keys[$i];
-                            $key2 = $keys[$i + 1];
-                        }
-                        else{
-                            $key1 = null;
-                            $key2 = $keys[$i];
-                        }
-                    
-                        $value1 = isset($request->input_type[$key2]) ? $request->input_type[$key2] : null;
-                        $value2 = isset($request->input_type[$key1]) ? $request->input_type[$key1] : null;
+            if ($action_response) {
+                $p_specifications = [];
+                $keys = array_keys($request->input_type);
+                // dd(count($keys));
+                for ($i = 0; $i < count($keys); $i += 2) {
 
-                        $p_specifications[] = [
-                            "id" => $value2,
-                            "specification_label" => $key2,
-                            "specification_details" => $value1,
-                        ];
+                    if (isset($keys[$i + 1])) {
+                        $key1 = $keys[$i];
+                        $key2 = $keys[$i + 1];
+                    } else {
+                        $key1 = null;
+                        $key2 = $keys[$i];
                     }
 
-                    // dd($p_specifications);
-        
-                    foreach($p_specifications as $spec){
+                    $value1 = isset($request->input_type[$key2]) ? $request->input_type[$key2] : null;
+                    $value2 = isset($request->input_type[$key1]) ? $request->input_type[$key1] : null;
 
-                        if ($spec['id'] === null) {
-                            ProductSpecifications::create([
-                                'product_id' => $productModel->id,
+                    $p_specifications[] = [
+                        "id" => $value2,
+                        "specification_label" => $key2,
+                        "specification_details" => $value1,
+                    ];
+                }
+
+                // dd($p_specifications);
+
+                foreach ($p_specifications as $spec) {
+
+                    if ($spec['id'] === null) {
+                        ProductSpecifications::create([
+                            'product_id' => $productModel->id,
+                            'specification_label' => $spec['specification_label'],
+                            'specification_details' => $spec['specification_details'],
+                        ]);
+                        // dd($spec);
+                    } else {
+                        $productSpecification = ProductSpecifications::find($spec['id']);
+                        // dd($productSpecification);
+                        if ($productSpecification) {
+                            $productSpecification->update([
                                 'specification_label' => $spec['specification_label'],
                                 'specification_details' => $spec['specification_details'],
                             ]);
-                            // dd($spec);
-                        }else{
-                            $productSpecification = ProductSpecifications::find($spec['id']);
-                            // dd($productSpecification);
-                            if ($productSpecification) {                    
-                                $productSpecification->update([
-                                    'specification_label' => $spec['specification_label'],
-                                    'specification_details' => $spec['specification_details'],
-                                ]);
-                            }
                         }
                     }
                 }
+            }
 
 
 
@@ -763,7 +753,7 @@ class Product extends Controller
             'product_images.*' => $this->get_validation_rules("product_image", false)
         ];
 
-        if($request->tax_code != null){
+        if ($request->tax_code != null) {
             $taxcode_data = TaxcodeModel::select('tax_type')
                 ->where('slack', '=', trim($request->tax_code))
                 ->first();
@@ -808,7 +798,7 @@ class Product extends Controller
             'product_images.*' => $this->get_validation_rules("product_image", false)
         ];
 
-        if($request->tax_code){
+        if ($request->tax_code) {
             $taxcode_data = TaxcodeModel::select('tax_type')
                 ->where('slack', '=', trim($request->tax_code))
                 ->first();
@@ -1086,7 +1076,7 @@ class Product extends Controller
                 ->taxcodeJoin()
                 ->discountcodeJoin()
                 ->supplierActive()
-                ->taxcodeActive()
+                // ->taxcodeActive()
                 ->where('quantity', 1)
                 ->where('suppliers.slack', $supplier_slack)
                 ->where(function ($query) use ($keywords) {
@@ -1114,49 +1104,65 @@ class Product extends Controller
     }
 
 
-    public function fetch_products(Request $request){
-        // dd($request->all());
+    public function fetch_products(Request $request)
+    {
+        
         $category_id = $request['category_id'] ?? null;
         $sub_category_id = $request['sub_category_id'] ?? null;
-        $category_company_id = $request['category_company_id'] ?? null;
+        $child_category_id = $request['child_category_id'] ?? null;
 
-        // dd($request->all());
         // Use these values to filter the products
         $products = ProductModel::query()
-        ->when($category_id !== "null", function ($query) use ($category_id) {
-            return $query->where('category_id', $category_id);
-        })
-        ->when($sub_category_id !== "null", function ($query) use ($sub_category_id) {
-            return $query->where('sub_category_id', $sub_category_id);
-        })
-        ->when($category_company_id !== "null", function ($query) use ($category_company_id) {
-            return $query->where('category_company_id', $category_company_id);
-        })
-        ->where('quantity', 1)
-        ->with('subcategory')
-        ->select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.purchase_amount_excluding_tax', 'tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
-        ->supplierJoin()
-        ->taxcodeJoin()
-        ->discountcodeJoin()
-        ->supplierActive()
-        ->taxcodeActive()
-        ->get();
-    
-    // dd($request->all());
-    
+            ->when($category_id !== "null", function ($query) use ($category_id) {
+                return $query->where('category_id', $category_id);
+            })
+            ->when($sub_category_id !== "null", function ($query) use ($sub_category_id) {
+                return $query->where('sub_category_id', $sub_category_id);
+            })
+            ->when($child_category_id !== "null", function ($query) use ($child_category_id) {
+                return $query->where('child_category_id', $child_category_id);
+            })
+            ->where('quantity', 1)
+            ->with(['subcategory', 'product_specifications.category_specification_details','discountCode', 'taxCode'])
+            ->get();
 
-    if($products){
-        return response()->json($this->generate_response(
-            array(
-                "message" => "Product listed successfully",
-                "data"    => $products
-            ),
-            'SUCCESS'
-        ));
-    }
+        $specification = [];
+        $main_products = $products->map(function ($product) {
+            foreach ($product->product_specifications as $spec) {
+                $specification[] = [
+                    "Label" => $spec->specification_label,
+                    "value" => $spec->category_specification_details ? $spec->category_specification_details->values : $spec->specification_details,
+                ];
+            }
+            $outputArray = array_column($specification, 'value', 'Label');
+            $resultString = implode(', ', array_map(fn ($key, $value) => "$key: $value", array_keys($outputArray), $outputArray));
+
+            return [
+                'product_slack' => $product->slack,
+                'product_code' => $product->product_code,
+                'label' => $product->name  . ' (' . $resultString . ' )',
+                'purchase_amount_excluding_tax' => $product->sale_amount_excluding_tax,
+                'tax_percentage' => optional($product->taxCode)->total_tax_percentage,
+                'tax_type' => optional($product->taxCode)->tax_type,
+                'discount_percentage' => optional($product->discountCode)->discount_percentage,
+            ];
+        });
+
+
+        //    dd($main_products);
 
 
 
+
+        if ($main_products) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Product listed successfully",
+                    "data"    => $main_products
+                ),
+                'SUCCESS'
+            ));
+        }
     }
 
     public function load_product_for_stock_transfer(Request $request)

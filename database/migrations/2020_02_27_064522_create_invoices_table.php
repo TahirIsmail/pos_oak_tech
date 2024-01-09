@@ -56,10 +56,7 @@ class CreateInvoicesTable extends Migration
             $table->index(['store_id', 'invoice_reference', 'bill_to', 'bill_to_id', 'status'], 'invoice_indexes');
         });
 
-        Artisan::call('db:seed', [
-            '--class' => invoice_requirement_seeder::class,
-            '--force' => true
-        ]);
+       
     }
 
     /**

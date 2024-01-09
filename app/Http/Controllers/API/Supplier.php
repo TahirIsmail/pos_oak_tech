@@ -57,6 +57,7 @@ class Supplier extends Controller
                 ->take($limit)
                 ->skip($offset)
                 ->statusJoin()
+                ->SkipDefaultSupplier()
                 ->createdUser()
 
                 ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
@@ -609,12 +610,18 @@ class Supplier extends Controller
             $keywords = $request->keywords;
 
             $supplier_data = SupplierModel::select('slack', DB::raw("CONCAT(supplier_code,' - ',name) as label"))
-                ->where(function ($query) use ($keywords) {
-                    $query->where('name', 'like', $keywords . '%')
-                        ->orWhere('supplier_code', 'like', $keywords . '%');
-                })
-                ->active()
-                ->get();
+            ->where(function ($query) use ($keywords) {
+                $query->where('name', 'like', $keywords . '%')
+                    ->orWhere('supplier_code', 'like', $keywords . '%');
+            })
+            ->when($request->logged_user_role_id == 2, function ($query) {
+                $query->where('supplier_type', 'DEFAULT');
+            }, function ($query) {
+                $query->skipDefaultSupplier();
+            })
+            ->active()
+            ->get();
+        
 
             return response()->json($this->generate_response(
                 array(

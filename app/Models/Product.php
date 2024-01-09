@@ -42,6 +42,7 @@ class Product extends Model
         });
     }
 
+
     public function scopeSupplierJoin($query){
         return $query->leftJoin('suppliers', function ($join) {
             $join->on('suppliers.id', '=', 'products.supplier_id');
@@ -54,10 +55,19 @@ class Product extends Model
         });
     }
 
+    public function taxCode()
+    {
+        return $this->belongsTo(Taxcode::class, 'tax_code_id');
+    }
+
     public function scopeDiscountcodeJoin($query){
         return $query->leftJoin('discount_codes', function ($join) {
             $join->on('discount_codes.id', '=', 'products.discount_code_id');
         });
+    }
+    public function discountCode()
+    {
+        return $this->belongsTo(Discountcode::class, 'discount_code_id');
     }
 
     public function scopeCategoryActive($query){
@@ -224,12 +234,11 @@ class Product extends Model
     }
 
 
-    public function product_specifications(){
-        return $this->hasMany(ProductSpecifications::class, 'product_id');
+    public function product_specifications()
+    {
+        return $this->hasMany(ProductSpecifications::class, 'product_id', 'id');
     }
     
-
-
     public function subcategory()
     {
         return $this->belongsTo(SubCategory::class, 'sub_category_id');

@@ -126,6 +126,7 @@ Vue.component('productquantityalertcomponent', require('./components/report/prod
 Vue.component('storestockchartcomponent', require('./components/report/store_stock_chart_component.vue').default);
 
 Vue.component('addpurchaseordercomponent', require('./components/purchase_order/add_purchase_order_component.vue').default);
+Vue.component('makepurchaseordercomponent', require('./components/purchase_order/make_purchase_order_component.vue').default);
 Vue.component('purchaseorderdetailcomponent', require('./components/purchase_order/purchase_order_detail_component.vue').default);
 
 Vue.component('emailsettingcomponent', require('./components/setting/email/email_setting_component.vue').default);

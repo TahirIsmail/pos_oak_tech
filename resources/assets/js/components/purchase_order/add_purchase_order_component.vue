@@ -59,7 +59,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('currency') }">{{ errors.first('currency') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-3" v-if="tax_status">
                         <label for="tax_option">{{ $t("Tax Option") }}</label>
                         <select name="tax_option" v-model="tax_option" v-validate="''" class="form-control form-control-custom custom-select">
                             <option value="">Choose Tax Option..</option>
@@ -121,7 +121,7 @@
                     <div class="form-group col-md-1 mb-1">
                         <label for="tax_type">{{ $t("Tax Type") }}</label>  
                     </div>
-                    <div class="form-group col-md-1 mb-1">
+                    <div class="form-group col-md-1 mb-1" v-if="tax_option == 'GST'">
                         <label for="tax_percentage">{{ $t("Tax %") }}</label>  
                     </div>
                      <div class="form-group col-md-2 mb-1">
@@ -155,7 +155,7 @@
                         <span v-bind:class="{ 'error' : errors.has('product.tax_type_'+index) }">{{ errors.first('product.tax_type_'+index) }}</span> 
                     </div>
                     <div class="form-group col-md-1">
-                        <input type="number" v-bind:name="'product.tax_percentage_'+index" v-model="product.tax_percentage" v-validate="'decimal|min_value:0'" data-vv-as="Tax %" class="form-control form-control-custom" autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
+                        <input type="number" v-bind:name="'product.tax_percentage_'+index" v-model="product.tax_percentage" v-validate="'decimal|min_value:0'" data-vv-as="Tax %" class="form-control form-control-custom" autocomplete="off" step="0.01" min="0" v-on:input="calculate_price" v-if="tax_option == 'GST'">
                         <span v-bind:class="{ 'error' : errors.has('product.tax_percentage_'+index) }">{{ errors.first('product.tax_percentage_'+index) }}</span> 
                     </div>
                     <div class="form-group col-md-2">
@@ -244,6 +244,7 @@
                 supplier_list   : [],
                 product_list   : [],
                 search_product : '',
+                tax_status: false,
                 
                 supplier : (this.purchase_order_data == null)?'':this.purchase_order_data.supplier.slack,
                 supplier_name : (this.purchase_order_data == null)?'':this.purchase_order_data.supplier.supplier_code+' - '+this.purchase_order_data.supplier.name,
@@ -253,7 +254,7 @@
                 order_date : (this.purchase_order_data == null)?'':(this.purchase_order_data.order_date_raw != null)?new Date(this.purchase_order_data.order_date_raw):'',
                 order_due_date : (this.purchase_order_data == null)?'':(this.purchase_order_data.order_due_date_raw != null)?new Date(this.purchase_order_data.order_due_date_raw):'',
                 currency : (this.purchase_order_data == null)?'':(this.purchase_order_data.currency_code != null)?this.purchase_order_data.currency_code:'',
-                tax_option : (this.purchase_order_data == null)?'':(this.purchase_order_data.tax_option_data != null)?this.purchase_order_data.tax_option_data.tax_option_constant:'',
+                tax_option : (this.purchase_order_data == null)?'DEFAULT_TAX':(this.purchase_order_data.tax_option_data != null)?this.purchase_order_data.tax_option_data.tax_option_constant:'',
                 update_stock : (this.purchase_order_data == null)?false:(this.purchase_order_data.update_stock != null)?((this.purchase_order_data.update_stock == 1)?true:false):false,
 
                 shipping_charge: (this.purchase_order_data == null)?'':(this.purchase_order_data.shipping_charge != null)?this.purchase_order_data.shipping_charge:'',

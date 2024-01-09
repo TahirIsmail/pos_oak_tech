@@ -55,6 +55,7 @@ class ProductResource extends JsonResource
         }
 
         return [
+            'id' => $this->id,
             'slack' => $this->slack,
             'product_code' => $this->product_code,
             'name' => $this->name,

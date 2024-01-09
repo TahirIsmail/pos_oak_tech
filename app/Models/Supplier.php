@@ -22,6 +22,19 @@ class Supplier extends Model
     public function scopeActive($query){
         return $query->where('status', 1);
     }
+
+    public function scopeSkipDefaultSupplier($query)
+    {
+        return $query->where('supplier_type', '!=', 'DEFAULT');
+    }
+
+
+    public function scopeDefaultSupplier($query)
+    {
+        return $query->where('supplier_type', '==', 'DEFAULT');
+    }
+
+
     public function supplierPerformances()
     {
         return $this->hasMany(SupplierPerformance::class, 'supplier_id');

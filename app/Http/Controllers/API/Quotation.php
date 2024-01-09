@@ -76,7 +76,6 @@ class Quotation extends Controller
                         }
                     });
                 })
-    
                 ->get();
 
                 
@@ -102,14 +101,15 @@ class Quotation extends Controller
                         }
                     });
                 })
+
+                ->when($request->logged_user_role_id == 3, function ($query) use ($request) {
+                    $query->where('quotations.created_by', $request->logged_user_id);
+                })
     
                 ->get();
-            }
-
-           
-
-            $quotations = QuotationResource::collection($query);
-           
+            }           
+            // dd($query);
+            $quotations = QuotationResource::collection($query);            
             $total_count = QuotationModel::select("id")->get()->count();
 
             $item_array = [];
@@ -528,6 +528,13 @@ class Quotation extends Controller
             $bill_to_email = $customer_data->email;
             $bill_to_contact = $customer_data->phone;
             $bill_to_address = $customer_data->address;
+
+            if($request->is_supplier){
+                $quotation_from_supplier = 1;
+            }
+            else{
+                $quotation_from_supplier = 0;
+            }
         }
 
         $quotation_number_details = QuotationModel::where([
@@ -593,13 +600,13 @@ class Quotation extends Controller
             if($product_slack != ''){
                 $product_data = ProductModel::select('products.id', 'products.slack', 'products.product_code')
                 ->where('products.slack', '=', $product_slack)
-                ->categoryJoin()
+                // ->categoryJoin()
                 ->supplierJoin()
-                ->taxcodeJoin()
-                ->discountcodeJoin()
-                ->categoryActive()
+                // ->taxcodeJoin()
+                // ->discountcodeJoin()
+                // ->categoryActive()
                 ->supplierActive()
-                ->taxcodeActive()
+                // ->taxcodeActive()
                 ->first();
                 if (empty($product_data)) {
                     throw new Exception("Product ".$product_name." is not currently available", 400);
@@ -651,6 +658,7 @@ class Quotation extends Controller
             "quotation_date" => $request->quotation_date,
             "quotation_due_date" => $request->quotation_due_date,
             "bill_to" => $request->bill_to,
+            "quotation_from_supplier" => $quotation_from_supplier,
             "bill_to_id" => $bill_to_id,
             "bill_to_code" => $bill_to_code,
             "bill_to_name" => $bill_to_name,
@@ -667,6 +675,7 @@ class Quotation extends Controller
             "packing_charge" => $packing_charge,
             "total_order_amount" => $total_order_amount,
             "tax_option_id" => $tax_option_data['tax_option_id'],
+            "gst_tax_option" => $request->tax_option,
             "notes" => $request->notes,
         ];
 

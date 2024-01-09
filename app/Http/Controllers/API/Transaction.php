@@ -76,6 +76,11 @@ class Transaction extends Controller
                 });
             })
 
+
+            ->when($request->logged_user_role_id == 3, function ($query) use ($request) {
+                $query->where('transactions.invoice_created_by_supplier', 1);
+                $query->where('transactions.bill_to_id', $request->supplier_id);
+            })
             ->get();
 
             $transactions = TransactionResource::collection($query);
@@ -89,7 +94,9 @@ class Transaction extends Controller
 
                 $item_array[$key][] = $transaction['transaction_code'];
                 $item_array[$key][] = $transaction['transaction_date'];
-                $item_array[$key][] = (isset($transaction['transaction_type_data']['label']))?$transaction['transaction_type_data']['label']:'-';
+
+                $item_array[$key][] = ($request->logged_user_role_id == 2 && isset($transaction['transaction_from_customer'])) ? 'Expense/Debit' : ((isset($transaction['transaction_type_data']['label']))?$transaction['transaction_type_data']['label']:'-');
+
                 $item_array[$key][] = (isset($transaction['account']['label']))?$transaction['account']['label']:'-';
                 $item_array[$key][] = $transaction['payment_method'];
                 $item_array[$key][] = str_replace('_', ' ', Str::title($transaction['bill_to']));
@@ -144,7 +151,9 @@ class Transaction extends Controller
             }
 
             $this->validate_request($request);
-            
+            $invoice_created_by_supplier = 0;
+            $transaction_from_customer = 0;
+
             if($request->bill_to == 'SUPPLIER'){
                 $supplier_data = SupplierModel::select('id', 'name', 'supplier_code', 'email', 'phone', 'address', 'pincode')
                 ->where('slack', '=', trim($request->bill_to_slack))
@@ -172,18 +181,57 @@ class Transaction extends Controller
                 $bill_to_name = $customer_data->name;
                 $bill_to_contact = implode(', ',[$customer_data->phone, $customer_data->email]);
                 $bill_to_address = $customer_data->address;
+                
+
             }else if($request->bill_to == 'INVOICE'){
-                $invoice_data = InvoiceModel::select('id', 'bill_to_id', 'bill_to_name', 'bill_to_email', 'bill_to_contact', 'bill_to_address')
-                ->where('slack', '=', trim($request->bill_to_slack))
-                ->first();
-                if (empty($invoice_data)) {
-                    throw new Exception("Invalid invoice selected", 400);
+                
+                if($request->created_by_supplier == "true"){
+                    $invoice_data = InvoiceModel::where('slack', '=', trim($request->bill_to_slack))
+                    ->first();
+                    if (empty($invoice_data)) {
+                        throw new Exception("Invalid invoice selected", 400);
+                    }
+                    
+                    
+                    $bill_to_id = $invoice_data->id;
+                    $bill_to_name = $invoice_data->bill_from_name;
+                    $bill_to_contact = implode(', ',[$invoice_data->bill_from_contact, $invoice_data->bill_from_email]);
+                    $bill_to_address = $invoice_data->bill_from_address;
+                    $invoice_created_by_supplier = 1;
+                    $calculation_for_income_expense = 'Expense';
+
                 }
-    
-                $bill_to_id = $invoice_data->id;
-                $bill_to_name = $invoice_data->bill_to_name;
-                $bill_to_contact = implode(', ',[$invoice_data->bill_to_contact, $invoice_data->bill_to_email]);
-                $bill_to_address = $invoice_data->bill_to_address;
+                else if($request->invoice_against_po_from_customer == 1){
+                    $invoice_data = InvoiceModel::where('slack', '=', trim($request->bill_to_slack))
+                    ->first();
+                    if (empty($invoice_data)) {
+                        throw new Exception("Invalid invoice selected", 400);
+                    }
+                    
+                    
+                    $bill_to_id = $invoice_data->id;
+                    $bill_to_name = $invoice_data->bill_from_name;
+                    $bill_to_contact = implode(', ',[$invoice_data->bill_from_contact, $invoice_data->bill_from_email]);
+                    $bill_to_address = $invoice_data->bill_from_address;
+                    $invoice_created_by_supplier = 0;
+                    $transaction_from_customer = 1;
+                    $calculation_for_income_expense = 'Income';
+                }
+                else{
+                    $invoice_data = InvoiceModel::select('id', 'bill_to_id', 'bill_to_name', 'bill_to_email', 'bill_to_contact', 'bill_to_address')
+                    ->where('slack', '=', trim($request->bill_to_slack))
+                    ->first();
+                    if (empty($invoice_data)) {
+                        throw new Exception("Invalid invoice selected", 400);
+                    }
+                    
+                    
+                    $bill_to_id = $invoice_data->id;
+                    $bill_to_name = $invoice_data->bill_to_name;
+                    $bill_to_contact = implode(', ',[$invoice_data->bill_to_contact, $invoice_data->bill_to_email]);
+                    $bill_to_address = $invoice_data->bill_to_address;
+                    
+                }
             }else if($request->bill_to == 'STAFF'){
                 $user_data = UserModel::select('id', 'fullname', 'email', 'phone')
                 ->where('slack', '=', trim($request->bill_to_slack))
@@ -199,11 +247,14 @@ class Transaction extends Controller
                 $bill_to_address = '';
             }
 
-            $account_data = AccountModel::select('id')
-            ->where('slack', '=', trim($request->account))
-            ->first();
-            if (empty($account_data)) {
-                throw new Exception("Invalid account selected", 400);
+            if($request->account)
+            {
+                $account_data = AccountModel::select('id')
+                ->where('slack', '=', trim($request->account))
+                ->first();
+                if (empty($account_data)) {
+                    throw new Exception("Invalid account selected", 400);
+                }
             }
 
             $transaction_type_data = MasterTransactionTypeModel::select('id')
@@ -231,26 +282,58 @@ class Transaction extends Controller
             }
 
             DB::beginTransaction();
-            
-            $transaction = [
-                "slack" => $this->generate_slack("transactions"),
-                "store_id" => $request->logged_user_store_id,
-                "transaction_code" => Str::random(6),
-                "account_id" => $account_data->id,
-                "transaction_type" => $transaction_type_data->id,
-                "payment_method_id" => $payment_method_data->id,
-                "payment_method" => $payment_method_data->label,
-                "bill_to" => $request->bill_to,
-                "bill_to_id" => $bill_to_id,
-                "bill_to_name" => $bill_to_name,
-                "bill_to_contact" => $bill_to_contact,
-                "bill_to_address" => $bill_to_address,
-                "currency_code" => $store_data->currency_code,
-                "amount" => $request->amount,
-                "notes" => $request->notes,
-                "transaction_date" => $request->transaction_date,
-                "created_by" => $request->logged_user_id
-            ];
+            if($request->logged_user_role_id == 2){
+                $transaction = [
+                    "slack" => $this->generate_slack("transactions"),
+                    "store_id" => $request->logged_user_store_id,
+                    "transaction_code" => Str::random(6),
+                    "account_id" => isset($account_data) ? $account_data->id : $request->account,
+                    "transaction_type" => 1,
+                    "payment_method_id" => $payment_method_data->id,
+                    "payment_method" => $payment_method_data->label,
+                    "bill_to" => $request->bill_to,
+                    "invoice_created_by_supplier" => $invoice_created_by_supplier,
+                    "calculation_for_income_expense" => $calculation_for_income_expense,
+                    "transaction_from_customer" => $transaction_from_customer,
+                    "bill_to_id" => $bill_to_id,
+                    "bill_to_name" => $bill_to_name,
+                    "bill_to_contact" => $bill_to_contact,
+                    "bill_to_address" => $bill_to_address,
+                    "currency_code" => $store_data->currency_code,
+                    "amount" => $request->amount,
+                    "notes" => $request->notes,
+                    "transaction_date" => $request->transaction_date,
+                    "created_by" => $request->logged_user_id
+                ];
+            }
+            else{
+                
+                $transaction = [
+                    "slack" => $this->generate_slack("transactions"),
+                    "store_id" => $request->logged_user_store_id,
+                    "transaction_code" => Str::random(6),
+                    "account_id" => isset($account_data) ? $account_data->id : $request->account,
+                    "transaction_type" => $transaction_type_data->id,
+                    "payment_method_id" => $payment_method_data->id,
+                    "payment_method" => $payment_method_data->label,
+                    "bill_to" => $request->bill_to,
+                    "invoice_created_by_supplier" => $invoice_created_by_supplier,
+                    "calculation_for_income_expense" => $calculation_for_income_expense,
+                    "transaction_from_customer" => $transaction_from_customer,
+                    "bill_to_id" => $bill_to_id,
+                    "bill_to_name" => $bill_to_name,
+                    "bill_to_contact" => $bill_to_contact,
+                    "bill_to_address" => $bill_to_address,
+                    "currency_code" => $store_data->currency_code,
+                    "amount" => $request->amount,
+                    "notes" => $request->notes,
+                    "transaction_date" => $request->transaction_date,
+                    "created_by" => $request->logged_user_id
+                ];
+
+            }
+       
+
             
             $transaction_id = TransactionModel::create($transaction)->id;
 
@@ -447,15 +530,31 @@ class Transaction extends Controller
 
     public function validate_request($request)
     {
-        $validator = Validator::make($request->all(), [
-            'bill_to_slack' => $this->get_validation_rules("slack", true),
-            'bill_to' => $this->get_validation_rules("string", true),
-            'transaction_date' => 'date|required',
-            'account' => $this->get_validation_rules("slack", true),
-            'transaction_type' => $this->get_validation_rules("string", true),
-            'amount' => $this->get_validation_rules("numeric", true),
-            'payment_method' => $this->get_validation_rules("slack", true),
-        ]);
+
+        
+        if($request->created_by_supplier){
+            $validator = Validator::make($request->all(), [
+                'bill_to_slack' => $this->get_validation_rules("slack", true),
+                'bill_to' => $this->get_validation_rules("string", true),
+                'transaction_date' => 'date|required',
+                'transaction_type' => $this->get_validation_rules("string", true),
+                'amount' => $this->get_validation_rules("numeric", true),
+                'payment_method' => $this->get_validation_rules("slack", true),
+            ]);
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'bill_to_slack' => $this->get_validation_rules("slack", true),
+                'bill_to' => $this->get_validation_rules("string", true),
+                'transaction_date' => 'date|required',
+                'account' => $this->get_validation_rules("slack", true),
+                'transaction_type' => $this->get_validation_rules("string", true),
+                'amount' => $this->get_validation_rules("numeric", true),
+                'payment_method' => $this->get_validation_rules("slack", true),
+            ]);
+
+        }
+      
         $validation_status = $validator->fails();
         if($validation_status){
             throw new Exception($validator->errors());

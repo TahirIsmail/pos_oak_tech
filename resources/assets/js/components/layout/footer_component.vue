@@ -1,6 +1,6 @@
 <template>
-    <footer class="container-fluid p-3" v-bind:class="fixed_footer">
-        <div class="d-flex justify-content-between">
+    <footer class="container-fluid" v-bind:class="fixed_footer" style="background-color: #e9e9e9;">
+        <div style="display: flex;justify-content: space-between;align-items: center;">
             <span>&nbsp;© {{ year }} {{ company }} &middot; <span class="text-muted">{{ version }}</span></span>
             <languageswitchercomponent :languages="languages" :selected_language="selected_language"></languageswitchercomponent>
         </div>

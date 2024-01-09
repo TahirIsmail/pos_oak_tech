@@ -221,7 +221,7 @@ class Category extends Controller
 
     public function view_child_or_specifications_categories(Request $request){
         $child_categories = ChildCategory::where('sub_category_id', $request->subCategoryId)->get();
-        $category_specifications = CategorySpecification::where('sub_category_id', $request->subCategoryId)->get();
+        $category_specifications = CategorySpecification::with('category_specification_details')->where('sub_category_id', $request->subCategoryId)->get();
         $data['child_categories'] = $child_categories;
         $data['category_specifications'] = $category_specifications;
         return response()->json($this->generate_response([
@@ -231,7 +231,7 @@ class Category extends Controller
     }
 
     public function view_specifications_categories(Request $request){
-        $category_specifications = CategorySpecification::where('child_category_id', $request->childCategoryId)->get();
+        $category_specifications = CategorySpecification::with('category_specification_details')->where('child_category_id', $request->childCategoryId)->get();
         $data['specifications'] = $category_specifications;
         return response()->json($this->generate_response([
             "message" => "Category Specification successfully",

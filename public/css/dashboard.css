@@ -3,7 +3,12 @@
     max-height: 50%;
     overflow-y: hidden;
 }
-
+.card {
+    border-radius: 10px !important;
+}
+.cardd {
+    border-radius: 10px !important;
+}
 .stat-value{
     position: absolute;
     bottom: 15px;

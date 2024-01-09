@@ -21,11 +21,11 @@
                     <div><strong>Purchase Order Number: <br></strong> {{ $data->po_number }}</div>
                     <div><strong>Purchase Order Date: <br></strong> {{ $data->order_date }}</div>
                     <div><strong>OAK Contact Person: <br></strong> 
-                        {{ $contact_person[0]->fullname }}
+                        {{ $contact_person[0]->fullname ?? $data->supplier_name }}
                         <br>
-                        {{ $contact_person[0]->email }}
+                        {{ (isset($contact_person[0]->email)) ? $contact_person[0]->email : '' }}
                         <br>
-                        {{ $contact_person[0]->phone }}
+                        {{ (isset($contact_person[0]->phone)) ? $contact_person[0]->phone : '' }}
 
                     </div>
 

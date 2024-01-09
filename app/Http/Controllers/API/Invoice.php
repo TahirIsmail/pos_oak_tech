@@ -78,7 +78,15 @@ class Invoice extends Controller
                 });
             })
 
+
+            ->when($request->logged_user_role_id == 3, function ($query) use ($request) {
+                $query->where('invoices.created_by', $request->logged_user_id);
+                $query->orWhere('invoices.bill_to_id', $request->supplier_id);
+            })
+
             ->get();
+
+            
 
             $invoices = InvoiceResource::collection($query);
            
@@ -149,7 +157,19 @@ class Invoice extends Controller
 
             DB::beginTransaction();
 
-            $invoice_data = $this->form_invoice_array($request);
+
+            if(isset($request->po_from_customer) && $request->po_from_customer == 1){
+               
+                $invoice_data = $this->invoice_from_oak_to_customer($request);
+            }
+            else{
+                if (isset($request->is_supplier) && $request->is_supplier == "true") {
+                    $invoice_data = $this->invoice_from_supplier_array($request);
+                } else {
+                    $invoice_data = $this->form_invoice_array($request);
+                }
+
+            }
             
             if(!empty($invoice_data['invoice_data'])){
                 
@@ -175,6 +195,19 @@ class Invoice extends Controller
             if(!empty($invoice_data['invoice_products'])){
                 
                 $invoice_products = $invoice_data['invoice_products'];
+
+                if(isset($request->po_from_customer) && $request->po_from_customer == 1){
+               
+                    foreach ($invoice_products as $productData) {
+                        $product = ProductModel::find($productData['product_id']);
+                    
+                        if ($product) {
+                            $product->update([
+                                'quantity' => 0,
+                            ]);
+                        }
+                    }
+                }
 
                 array_walk($invoice_products, function (&$item, $key) use ($invoice_id, $request){
                     
@@ -468,6 +501,7 @@ class Invoice extends Controller
         if( empty((array) $products) ){
             throw new Exception("Product list cannot be empty");
         }
+        
 
         if($request->bill_to == 'SUPPLIER'){
             $supplier_data = SupplierModel::select('id', 'name', 'supplier_code', 'email', 'phone', 'address', 'pincode')
@@ -667,6 +701,461 @@ class Invoice extends Controller
         ];
     }
 
+
+
+    public function invoice_from_supplier_array($request){
+        
+        $invoice_slack = $request->invoice_slack;
+
+        $products = $request->products;
+
+        if( empty((array) $products) ){
+            throw new Exception("Product list cannot be empty");
+        }
+       
+
+        // dd($request);
+
+        if($request->bill_to == 'SUPPLIER'){
+            $supplier_data = SupplierModel::select('id', 'name', 'supplier_code', 'email', 'phone', 'address', 'pincode')
+            ->where('slack', '=', trim($request->bill_to_slack))
+            ->active()
+            ->first();
+
+
+            $oak = UserModel::where('id', $request->invoice_to)->first();
+
+            
+
+            if (empty($oak)) {
+                throw new Exception("Invalid Customer selected", 400);
+            }
+
+            if (empty($supplier_data)) {
+                throw new Exception("Invalid supplier selected", 400);
+            }
+
+
+
+            $bill_to_id = $oak->id;
+            $bill_to_code = $oak->user_code;
+            $bill_to_name = $oak->fullname;
+            $bill_to_email = $oak->email;
+            $bill_to_contact = $oak->phone;
+            $bill_to_address = $oak->address;
+
+
+
+            $bill_from_id = $supplier_data->id;
+            $bill_from_code = $supplier_data->supplier_code;
+            $bill_from_name = $supplier_data->name;
+            $bill_from_email = $supplier_data->email;
+            $bill_from_contact = $supplier_data->phone;
+            $bill_from_address = $supplier_data->address . ','.$supplier_data->pincode;
+
+        }
+
+
+        // dd($bill_to_id);
+
+        $invoice_number_details = InvoiceModel::where([
+            ['invoice_reference', '=', trim($request->invoice_reference)],
+            ['status', '!=', 0],
+        ])
+        ->when($invoice_slack, function ($query, $invoice_slack) {
+            return $query->where('slack', '!=', $invoice_slack);
+        })->first();
+        if(!empty($invoice_number_details)){
+            throw new Exception("Invoice reference no ".trim($request->invoice_reference)." is already used");
+        }
+
+        $invoice_ref_details = InvoiceModel::where([
+            ['invoice_number', '=', trim($request->invoice_number)],
+            ['status', '!=', 0],
+        ])->when($invoice_slack, function ($query, $invoice_slack) {
+            return $query->where('slack', '!=', $invoice_slack);
+        })->first();
+        if(!empty($invoice_ref_details)){
+            throw new Exception("Invoice no ".trim($request->invoice_number)." is already used");
+        }
+
+        $currency_data = CountryModel::select('currency_code', 'currency_name')
+        ->where('currency_code', '=', trim($request->currency))
+        ->active()
+        ->first();
+        if (empty($currency_data)) {
+            throw new Exception("Invalid currency selected", 400);
+        }
+
+        $tax_option_data = $this->calculate_tax_component($request->tax_option);
+
+        foreach($products as $product_key => $product_value){
+
+            $product_slack = $product_value['slack'];
+            $product_name = $product_value['name'];
+            $unit_price = (isset($product_value['unit_price']) && $product_value['unit_price'] != '')?$product_value['unit_price']:0.00;
+            $quantity = (isset($product_value['quantity']) && $product_value['quantity'] != '')?$product_value['quantity']:0.00;
+            $discount_percentage = (isset($product_value['discount_percentage']) && $product_value['discount_percentage'] != '')?$product_value['discount_percentage']:0.00;
+            $tax_percentage = (isset($product_value['tax_percentage']) && $product_value['tax_percentage'] != '')?$product_value['tax_percentage']:0.00;
+            $tax_type = $product_value['tax_type'];
+
+            if($tax_type == 'INCLUSIVE'){
+                $subtotal_amount_including_tax = $unit_price*$quantity;
+                $tax_amount = $this->calculate_tax($subtotal_amount_including_tax, $tax_percentage);
+
+                $subtotal_amount_excluding_tax = $subtotal_amount_including_tax-$tax_amount;
+
+                $discount_amount = $this->calculate_discount($subtotal_amount_excluding_tax, $discount_percentage);
+
+                $total_amount_after_discount = ($subtotal_amount_excluding_tax-$discount_amount);
+                
+                $item_total = $total_amount_after_discount;
+            }else{
+
+                $subtotal_amount_excluding_tax = $unit_price*$quantity;
+
+                $discount_amount = $this->calculate_discount($subtotal_amount_excluding_tax, $discount_percentage);
+
+                $total_amount_after_discount = ($subtotal_amount_excluding_tax-$discount_amount);
+
+                $tax_amount = $this->calculate_tax($total_amount_after_discount, $tax_percentage);
+                
+                $item_total = ($total_amount_after_discount+$tax_amount);
+            }
+
+            $tax_components = $tax_option_data['tax_components'];
+            if(count($tax_components)>0){
+                foreach($tax_components as $key => $tax_component){
+                    $tax_eligible_amount = ($tax_type == 'INCLUSIVE')?$subtotal_amount_including_tax:$total_amount_after_discount;
+                    $tax_component_percentage = ($tax_percentage/count($tax_components));
+                    $tax_component_amount = $this->calculate_tax($tax_eligible_amount, $tax_component_percentage);
+                    $tax_components[$key]['tax_percentage'] = $tax_component_percentage;
+                    $tax_components[$key]['tax_amount'] = number_format((float)$tax_component_amount, 2, '.', '');
+                }
+            }
+
+            if($product_slack != ''){
+                $product_data = ProductModel::select('products.id', 'products.slack', 'products.product_code')
+                ->where('products.slack', '=', $product_slack)
+                ->categoryJoin()
+                ->supplierJoin()
+                ->taxcodeJoin()
+                ->discountcodeJoin()
+                // ->categoryActive()
+                ->supplierActive()
+                ->taxcodeActive()
+                ->first();
+                if (empty($product_data)) {
+                    throw new Exception("Product ".$product_name." is not currently available", 400);
+                }
+            }
+            
+            $invoice_products[] = [
+                'invoice_id' => 0,
+                'product_slack' => ($product_slack != '')?$product_data->slack:NULL,
+                'product_id' => ($product_slack != '')?$product_data->id:NULL,
+                'product_code' => ($product_slack != '')?$product_data->product_code:NULL,
+                'name' => isset($product_name)?$product_name:NULL,
+                
+                'quantity' => $quantity,
+                'amount_excluding_tax' => $unit_price,
+                'subtotal_amount_excluding_tax' => $subtotal_amount_excluding_tax,
+                'discount_percentage' => $discount_percentage,
+                
+                'tax_type' => $tax_type,
+                'tax_percentage' => $tax_percentage,
+                'discount_amount' => $discount_amount,
+                'total_after_discount' => $total_amount_after_discount,
+
+                'tax_amount' => $tax_amount,
+                'tax_components' => (count($tax_components)>0)?json_encode($tax_components):'',
+                'total_amount' => $item_total,
+            ];
+        }
+
+        $total_amount_excluding_tax_array = data_get($invoice_products, '*.subtotal_amount_excluding_tax', 0);
+        $total_amount_excluding_tax = array_sum($total_amount_excluding_tax_array);
+
+        $total_discount_amount_array = data_get($invoice_products, '*.discount_amount', 0);
+        $total_discount_amount = array_sum($total_discount_amount_array);
+
+        $total_after_discount_amount_array = data_get($invoice_products, '*.total_after_discount', 0);
+        $total_after_discount_amount = array_sum($total_after_discount_amount_array);
+
+        $total_tax_amount_array = data_get($invoice_products, '*.tax_amount', 0);
+        $total_tax_amount = array_sum($total_tax_amount_array);
+
+        $shipping_charge = (isset($request->shipping_charge))?$request->shipping_charge:0.00;
+        $packing_charge = (isset($request->packing_charge))?$request->packing_charge:0.00;
+
+        $total_order_amount = ($total_after_discount_amount+$total_tax_amount+$shipping_charge+$packing_charge);
+
+        $invoice_data = [
+            "store_id" => $request->logged_user_store_id,
+            "invoice_reference" => $request->invoice_reference,
+            "invoice_type" => $request->invoice_type,
+            "invoice_date" => $request->invoice_date,
+            "invoice_due_date" => $request->invoice_due_date,
+            "parent_po_id" => (isset($request->parent_po_id) && $request->parent_po_id != '')?$request->parent_po_id:NULL,
+            "bill_to" => "OAK TECHNOLOGY",
+            "bill_to_id" => $bill_to_id,
+            "bill_to_code" => $bill_to_code,
+            "bill_to_name" => $bill_to_name,
+            "bill_to_email" => $bill_to_email,
+            "bill_to_contact" => $bill_to_contact,
+            "bill_to_address" => $bill_to_address,
+
+            "bill_from_id" => $bill_from_id,
+            "bill_from_code" => $bill_from_code,
+            "bill_from_name" => $bill_from_name,
+            "bill_from_email" => $bill_from_email,
+            "bill_from_contact" => $bill_from_contact,
+            "bill_from_address" => $bill_from_address,
+
+            
+            "currency_name" => $currency_data->currency_name,
+            "currency_code" => $currency_data->currency_code,
+            "subtotal_excluding_tax" => $total_amount_excluding_tax,
+            "total_discount_amount" => $total_discount_amount,
+            "total_after_discount" => $total_after_discount_amount,
+            "total_tax_amount" => $total_tax_amount,
+            "shipping_charge" => $shipping_charge,
+            "packing_charge" => $packing_charge,
+            "total_order_amount" => $total_order_amount,
+            "tax_option_id" => $tax_option_data['tax_option_id'],
+            "terms" => $request->terms,
+        ];
+
+        return [
+            'invoice_data' => $invoice_data,
+            'invoice_products' => $invoice_products
+        ];
+    }
+
+
+    
+    public function invoice_from_oak_to_customer($request){
+        
+        $invoice_slack = $request->invoice_slack;
+
+        $products = $request->products;
+
+        if( empty((array) $products) ){
+            throw new Exception("Product list cannot be empty");
+        }
+       
+        if($request->bill_to == 'CUSTOMER'){
+            $bill_from = SupplierModel::select('id', 'name', 'supplier_code', 'email', 'phone', 'address', 'pincode')
+            ->where('slack', '=', trim($request->invoice_from))
+            ->active()
+            ->first();
+
+
+            $bill_to = UserModel::with('customer')->where('id', $request->invoice_to)->first();
+
+            if (empty($bill_to)) {
+                throw new Exception("Invalid Customer selected", 400);
+            }
+
+            if (empty($bill_from)) {
+                throw new Exception("Invalid supplier selected", 400);
+            }
+
+
+
+            $bill_to_id = $bill_to->id;
+            $bill_to_code = $bill_to->user_code;
+            $bill_to_name = $bill_to->fullname;
+            $bill_to_email = $bill_to->email;
+            $bill_to_contact = $bill_to->phone;
+            $bill_to_address = $bill_to->address;
+
+
+
+            $bill_from_id = $bill_from->id;
+            $bill_from_code = $bill_from->supplier_code;
+            $bill_from_name = $bill_from->name;
+            $bill_from_email = $bill_from->email;
+            $bill_from_contact = $bill_from->phone;
+            $bill_from_address = $bill_from->address . ','.$bill_from->pincode;
+
+        }
+
+        $invoice_number_details = InvoiceModel::where([
+            ['invoice_reference', '=', trim($request->invoice_reference)],
+            ['status', '!=', 0],
+        ])
+        ->when($invoice_slack, function ($query, $invoice_slack) {
+            return $query->where('slack', '!=', $invoice_slack);
+        })->first();
+        if(!empty($invoice_number_details)){
+            throw new Exception("Invoice reference no ".trim($request->invoice_reference)." is already used");
+        }
+
+        $invoice_ref_details = InvoiceModel::where([
+            ['invoice_number', '=', trim($request->invoice_number)],
+            ['status', '!=', 0],
+        ])->when($invoice_slack, function ($query, $invoice_slack) {
+            return $query->where('slack', '!=', $invoice_slack);
+        })->first();
+        if(!empty($invoice_ref_details)){
+            throw new Exception("Invoice no ".trim($request->invoice_number)." is already used");
+        }
+
+        $currency_data = CountryModel::select('currency_code', 'currency_name')
+        ->where('currency_code', '=', trim($request->currency))
+        ->active()
+        ->first();
+        if (empty($currency_data)) {
+            throw new Exception("Invalid currency selected", 400);
+        }
+
+        $tax_option_data = $this->calculate_tax_component($request->tax_option);
+
+        foreach($products as $product_key => $product_value){
+
+            $product_slack = $product_value['slack'];
+            $product_name = $product_value['name'];
+            $unit_price = (isset($product_value['unit_price']) && $product_value['unit_price'] != '')?$product_value['unit_price']:0.00;
+            $quantity = (isset($product_value['quantity']) && $product_value['quantity'] != '')?$product_value['quantity']:0.00;
+            $discount_percentage = (isset($product_value['discount_percentage']) && $product_value['discount_percentage'] != '')?$product_value['discount_percentage']:0.00;
+            $tax_percentage = (isset($product_value['tax_percentage']) && $product_value['tax_percentage'] != '')?$product_value['tax_percentage']:0.00;
+            $tax_type = $product_value['tax_type'];
+
+            if($tax_type == 'INCLUSIVE'){
+                $subtotal_amount_including_tax = $unit_price*$quantity;
+                $tax_amount = $this->calculate_tax($subtotal_amount_including_tax, $tax_percentage);
+
+                $subtotal_amount_excluding_tax = $subtotal_amount_including_tax-$tax_amount;
+
+                $discount_amount = $this->calculate_discount($subtotal_amount_excluding_tax, $discount_percentage);
+
+                $total_amount_after_discount = ($subtotal_amount_excluding_tax-$discount_amount);
+                
+                $item_total = $total_amount_after_discount;
+            }else{
+
+                $subtotal_amount_excluding_tax = $unit_price*$quantity;
+
+                $discount_amount = $this->calculate_discount($subtotal_amount_excluding_tax, $discount_percentage);
+
+                $total_amount_after_discount = ($subtotal_amount_excluding_tax-$discount_amount);
+
+                $tax_amount = $this->calculate_tax($total_amount_after_discount, $tax_percentage);
+                
+                $item_total = ($total_amount_after_discount+$tax_amount);
+            }
+
+            $tax_components = $tax_option_data['tax_components'];
+            if(count($tax_components)>0){
+                foreach($tax_components as $key => $tax_component){
+                    $tax_eligible_amount = ($tax_type == 'INCLUSIVE')?$subtotal_amount_including_tax:$total_amount_after_discount;
+                    $tax_component_percentage = ($tax_percentage/count($tax_components));
+                    $tax_component_amount = $this->calculate_tax($tax_eligible_amount, $tax_component_percentage);
+                    $tax_components[$key]['tax_percentage'] = $tax_component_percentage;
+                    $tax_components[$key]['tax_amount'] = number_format((float)$tax_component_amount, 2, '.', '');
+                }
+            }
+
+            if($product_slack != ''){
+                $product_data = ProductModel::select('products.id', 'products.slack', 'products.product_code')
+                ->where('products.slack', '=', $product_slack)
+                ->categoryJoin()
+                ->supplierJoin()
+                // ->taxcodeJoin()
+                // ->discountcodeJoin()
+                // ->categoryActive()
+                ->supplierActive()
+                // ->taxcodeActive()
+                ->first();
+                if (empty($product_data)) {
+                    throw new Exception("Product ".$product_name." is not currently available", 400);
+                }
+            }
+            
+            $invoice_products[] = [
+                'invoice_id' => 0,
+                'product_slack' => ($product_slack != '')?$product_data->slack:NULL,
+                'product_id' => ($product_slack != '')?$product_data->id:NULL,
+                'product_code' => ($product_slack != '')?$product_data->product_code:NULL,
+                'name' => isset($product_name)?$product_name:NULL,
+                
+                'quantity' => $quantity,
+                'amount_excluding_tax' => $unit_price,
+                'subtotal_amount_excluding_tax' => $subtotal_amount_excluding_tax,
+                'discount_percentage' => $discount_percentage,
+                
+                'tax_type' => $tax_type,
+                'tax_percentage' => $tax_percentage,
+                'discount_amount' => $discount_amount,
+                'total_after_discount' => $total_amount_after_discount,
+
+                'tax_amount' => $tax_amount,
+                'tax_components' => (count($tax_components)>0)?json_encode($tax_components):'',
+                'total_amount' => $item_total,
+            ];
+        }
+
+        $total_amount_excluding_tax_array = data_get($invoice_products, '*.subtotal_amount_excluding_tax', 0);
+        $total_amount_excluding_tax = array_sum($total_amount_excluding_tax_array);
+
+        $total_discount_amount_array = data_get($invoice_products, '*.discount_amount', 0);
+        $total_discount_amount = array_sum($total_discount_amount_array);
+
+        $total_after_discount_amount_array = data_get($invoice_products, '*.total_after_discount', 0);
+        $total_after_discount_amount = array_sum($total_after_discount_amount_array);
+
+        $total_tax_amount_array = data_get($invoice_products, '*.tax_amount', 0);
+        $total_tax_amount = array_sum($total_tax_amount_array);
+
+        $shipping_charge = (isset($request->shipping_charge))?$request->shipping_charge:0.00;
+        $packing_charge = (isset($request->packing_charge))?$request->packing_charge:0.00;
+
+        $total_order_amount = ($total_after_discount_amount+$total_tax_amount+$shipping_charge+$packing_charge);
+
+        $invoice_data = [
+            "store_id" => $request->logged_user_store_id,
+            "invoice_reference" => $request->invoice_reference,
+            "invoice_type" => $request->invoice_type,
+            "invoice_date" => $request->invoice_date,
+            "invoice_due_date" => $request->invoice_due_date,
+            "parent_po_id" => (isset($request->parent_po_id) && $request->parent_po_id != '')?$request->parent_po_id:NULL,
+            "bill_to" => "CUSTOMER",
+            "invoice_against_po_from_customer" => 1,
+            "bill_to_id" => $bill_to_id,
+            "bill_to_code" => $bill_to_code,
+            "bill_to_name" => $bill_to_name,
+            "bill_to_email" => $bill_to_email,
+            "bill_to_contact" => $bill_to_contact,
+            "bill_to_address" => $bill_to_address,
+
+            "bill_from_id" => $bill_from_id,
+            "bill_from_code" => $bill_from_code,
+            "bill_from_name" => $bill_from_name,
+            "bill_from_email" => $bill_from_email,
+            "bill_from_contact" => $bill_from_contact,
+            "bill_from_address" => $bill_from_address,
+
+            
+            "currency_name" => $currency_data->currency_name,
+            "currency_code" => $currency_data->currency_code,
+            "subtotal_excluding_tax" => $total_amount_excluding_tax,
+            "total_discount_amount" => $total_discount_amount,
+            "total_after_discount" => $total_after_discount_amount,
+            "total_tax_amount" => $total_tax_amount,
+            "shipping_charge" => $shipping_charge,
+            "packing_charge" => $packing_charge,
+            "total_order_amount" => $total_order_amount,
+            "tax_option_id" => $tax_option_data['tax_option_id'],
+            "terms" => $request->terms,
+        ];
+
+        return [
+            'invoice_data' => $invoice_data,
+            'invoice_products' => $invoice_products
+        ];
+    }
+
     public function calculate_tax($item_total, $tax_percentage){
         $tax_amount = ($tax_percentage/100)*$item_total;
         return $tax_amount;
@@ -717,7 +1206,7 @@ class Invoice extends Controller
             if($type == ""){
                 return;
             }
-            
+            // dd();
             if($type == "SUPPLIER"){
                 $list_data = SupplierModel::select('slack','id', DB::raw("CONCAT(COALESCE(supplier_code, ''),' - ',COALESCE(name, '')) as label"))
                 ->where('name', 'like', $keywords.'%')
@@ -725,13 +1214,28 @@ class Invoice extends Controller
                 ->active()
                 ->get();
             }else if($type == "CUSTOMER"){
-                $list_data = CustomerModel::select('slack','id', DB::raw("CONCAT(COALESCE(name, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
-                ->where('name', 'like', $keywords.'%')
-                ->orWhere('email', 'like', $keywords.'%')
-                ->orWhere('phone', 'like', $keywords.'%')
-                ->active()
-                ->skipDefaultCustomer()
-                ->get();
+                if($request->logged_user_role_id == 3){
+                    // dd('supplier');
+                    $list_data = CustomerModel::select('slack', 'id', DB::raw("CONCAT(COALESCE(name, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
+                    ->where(function ($query) use ($keywords) {
+                        $query->where('name', 'like', $keywords.'%')
+                            ->orWhere('email', 'like', $keywords.'%')
+                            ->orWhere('phone', 'like', $keywords.'%');
+                    })
+                    ->where('customer_type', '=', 'DEFAULT')
+                    ->active()
+                    ->get();
+                
+                }
+                else{
+                    $list_data = CustomerModel::select('slack','id', DB::raw("CONCAT(COALESCE(name, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
+                    ->where('name', 'like', $keywords.'%')
+                    ->orWhere('email', 'like', $keywords.'%')
+                    ->orWhere('phone', 'like', $keywords.'%')
+                    ->active()
+                    ->skipDefaultCustomer()
+                    ->get();
+                }
             }else if($type == "STAFF"){
                 $list_data = UserModel::select('slack','id', DB::raw("CONCAT(COALESCE(fullname, ''), ',', COALESCE(email, ''), ',', COALESCE(phone, '')) as label"))
                 ->where('fullname', 'like', $keywords.'%')
@@ -744,6 +1248,7 @@ class Invoice extends Controller
                 ->get();
             }
            
+            // dd($list_data);
             return response()->json($this->generate_response(
                 array(
                     "message" => "List filtered successfully", 

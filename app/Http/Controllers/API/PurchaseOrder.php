@@ -25,6 +25,8 @@ use App\Models\MasterTaxOption as MasterTaxOptionModel;
 use App\Http\Resources\Collections\PurchaseOrderCollection;
 
 use App\Http\Controllers\API\Invoice as InvoiceAPI;
+use App\Models\Customer;
+use App\Models\User;
 
 class PurchaseOrder extends Controller
 {
@@ -79,10 +81,15 @@ class PurchaseOrder extends Controller
             ->when($request->logged_user_role_id == 3, function ($query) use ($request) {
                 $query->where('purchase_orders.supplier_id', $request->supplier_id);
             })
+
+
+            ->when($request->logged_user_role_id == 2, function ($query) use ($request) {
+                $query->where('purchase_orders.po_from_id', $request->customer_id);
+                $query->orWhere('purchase_orders.created_by', $request->logged_user_id);
+            })
+
             
             ->get();
-
-            // dd($request->supplier_id);
 
             $purchase_orders = PurchaseOrderResource::collection($query);
            
@@ -149,10 +156,7 @@ class PurchaseOrder extends Controller
             }
 
             $this->validate_request($request);
-
-            // dd($request->all());
-            DB::beginTransaction();
-
+            
             $po_data = $this->form_po_array($request);
             
             if(!empty($po_data['po_data'])){
@@ -466,10 +470,46 @@ class PurchaseOrder extends Controller
             throw new Exception("Product list cannot be empty");
         }
 
+        // dd($request->all());
         $supplier_data = SupplierModel::select('id', 'name', 'supplier_code', 'name', 'address', 'pincode')
         ->where('slack', '=', trim($request->supplier))
         ->active()
         ->first();
+
+        // dd($request->created_by_customer, $request->quotation_from_supplier);
+
+        if (isset($request->created_by_customer) && $request->created_by_customer == 'true') {
+        
+            $purchase_order_from = Customer::where('id', $request->customer_id)->get();
+            $po_from_id = $purchase_order_from[0]->id;
+            $po_from_code = $purchase_order_from[0]->email;
+            $po_from_name = $purchase_order_from[0]->name;
+            $po_from_address = $purchase_order_from[0]->address;
+            $po_from_customer = 1;
+            
+        }
+        elseif (isset($request->created_by_customer) && $request->created_by_customer == 'false' && $request->quotation_from_supplier == 1) {
+            $purchase_order_from = User::where('id', $request->logged_user_id)->get();
+
+            $po_from_id = $purchase_order_from[0]->id;
+            $po_from_code = $purchase_order_from[0]->email;
+            $po_from_name = $purchase_order_from[0]->fullname;
+            $po_from_address = $purchase_order_from[0]->address;
+            $po_from_customer = 0;
+            
+         
+        }
+        else{
+           
+            $po_from_id = null;
+            $po_from_code = null;
+            $po_from_name = null;
+            $po_from_address = null;
+            $po_from_customer = 0;
+        }
+
+
+
         if (empty($supplier_data)) {
             throw new Exception("Invalid supplier selected", 400);
         }
@@ -559,7 +599,7 @@ class PurchaseOrder extends Controller
                 ->discountcodeJoin()
                 // ->categoryActive()
                 ->supplierActive()
-                ->taxcodeActive()
+                // ->taxcodeActive()
                 ->first();
             // dd($product_data);
 
@@ -618,6 +658,14 @@ class PurchaseOrder extends Controller
             "supplier_code" => $supplier_data->supplier_code,
             "supplier_name" => $supplier_data->name,
             "supplier_address" => $supplier_data->address .', '.$supplier_data->pincode,
+
+            "po_from_id" => $po_from_id,
+            "po_from_code" => $po_from_code,
+            "po_from_name" => $po_from_name,
+            "po_from_address" => $po_from_address,
+            "po_from_customer" => $po_from_customer,
+
+
             "currency_name" => $currency_data->currency_name,
             "currency_code" => $currency_data->currency_code,
             "subtotal_excluding_tax" => $total_amount_excluding_tax,
@@ -631,6 +679,9 @@ class PurchaseOrder extends Controller
             "total_order_amount" => $total_order_amount,
             "tax_option_id" => $tax_option_data['tax_option_id'],
         ];
+
+        // dd($purchase_order);
+        
 
         return [
             'po_data' => $purchase_order,
@@ -813,11 +864,17 @@ class PurchaseOrder extends Controller
     }
 
     public function generate_invoice_from_po(Request $request, $slack){
+
         try {
             $purchase_order = PurchaseOrderModel::where('slack', '=', $slack)->first()->makeVisible(['id']);
             
+
+
             $purchase_order_id = $purchase_order->id;
             
+
+            // dd($purchase_order->created_by, $request->all());
+
             if (empty($purchase_order)) {
                 throw new Exception("Unable to fetch purchase order details");
             }
@@ -825,19 +882,42 @@ class PurchaseOrder extends Controller
             $purchase_order_data = new PurchaseOrderResource($purchase_order);
             $purchase_order_data_decoded = json_decode(json_encode($purchase_order_data, true));
             
-            $request->request->add([
-                'parent_po_id' => $purchase_order_id,
-                'bill_to' => 'SUPPLIER',
-                'bill_to_slack' => $purchase_order_data_decoded->supplier->slack,
-                'currency' => $purchase_order_data_decoded->currency_code,
-                'invoice_date' => $purchase_order_data_decoded->order_date_raw,
-                'invoice_due_date' => $purchase_order_data_decoded->order_due_date_raw,
-                'invoice_reference' => 'FPO-'. strtoupper(Str::random(6)),
-                'packing_charge' => $purchase_order_data_decoded->packing_charge,
-                'shipping_charge' => $purchase_order_data_decoded->shipping_charge,
-                'tax_option' => ($purchase_order_data_decoded->tax_option_data != null)?$purchase_order_data_decoded->tax_option_data->tax_option_constant:'DEFAULT_TAX',
-                'terms' => $purchase_order_data_decoded->terms
-            ]);
+            
+            if($purchase_order->po_from_customer){
+                $request->request->add([
+                    'parent_po_id' => $purchase_order_id,
+                    'bill_to' => 'CUSTOMER',
+                    'bill_to_slack' => $purchase_order_data_decoded->supplier->slack,
+                    'po_from_customer' => $purchase_order_data_decoded->po_from_customer,
+                    'currency' => $purchase_order_data_decoded->currency_code,
+                    'invoice_date' => $purchase_order_data_decoded->order_date_raw,
+                    'invoice_due_date' => $purchase_order_data_decoded->order_due_date_raw,
+                    'invoice_reference' => 'FPO-'. strtoupper(Str::random(6)),
+                    'packing_charge' => $purchase_order_data_decoded->packing_charge,
+                    'shipping_charge' => $purchase_order_data_decoded->shipping_charge,
+                    'tax_option' => ($purchase_order_data_decoded->tax_option_data != null)?$purchase_order_data_decoded->tax_option_data->tax_option_constant:'DEFAULT_TAX',
+                    'terms' => $purchase_order_data_decoded->terms,
+                    "invoice_to" => $purchase_order->created_by,
+                    "invoice_from" => $purchase_order_data_decoded->supplier->slack,
+                ]);
+            }
+            else{
+                $request->request->add([
+                    'parent_po_id' => $purchase_order_id,
+                    'bill_to' => 'SUPPLIER',
+                    'bill_to_slack' => $purchase_order_data_decoded->supplier->slack,
+                    'currency' => $purchase_order_data_decoded->currency_code,
+                    'invoice_date' => $purchase_order_data_decoded->order_date_raw,
+                    'invoice_due_date' => $purchase_order_data_decoded->order_due_date_raw,
+                    'invoice_reference' => 'FPO-'. strtoupper(Str::random(6)),
+                    'packing_charge' => $purchase_order_data_decoded->packing_charge,
+                    'shipping_charge' => $purchase_order_data_decoded->shipping_charge,
+                    'tax_option' => ($purchase_order_data_decoded->tax_option_data != null)?$purchase_order_data_decoded->tax_option_data->tax_option_constant:'DEFAULT_TAX',
+                    'terms' => $purchase_order_data_decoded->terms,
+                    "invoice_to" => $purchase_order->created_by,
+                ]);
+
+            }
 
             $po_products = collect($purchase_order_data_decoded->products);
             
@@ -858,6 +938,7 @@ class PurchaseOrder extends Controller
                 'products' => json_encode($products)
             ]);
             
+            // dd($request);
             $invoice_api = new InvoiceAPI();
             $response = $invoice_api->store($request);
             $response = $response->getData();

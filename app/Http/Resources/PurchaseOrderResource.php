@@ -31,6 +31,15 @@ class PurchaseOrderResource extends JsonResource
             'supplier_code' => $this->supplier_code,
             'supplier_name' => $this->supplier_name,
             'supplier_address' => $this->supplier_address,
+
+            "po_from_id" => $this->po_from_id,
+            "po_from_code" => $this->po_from_code,
+            "po_from_name" => $this->po_from_name,
+            "po_from_address" => $this->po_from_address,
+            "po_from_customer" => $this->po_from_customer,
+
+
+
             'supplier' => new SupplierResource($this->supplier),
             'currency_name' => $this->currency_name,
             'currency_code' => $this->currency_code,

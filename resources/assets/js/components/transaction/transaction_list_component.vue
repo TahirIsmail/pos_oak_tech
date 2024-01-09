@@ -1,5 +1,6 @@
 <template>
     <div>
+      
         <div class="mb-2">
             <span class="text-subhead">{{ $t("Transactions") }}</span>
         </div>
@@ -11,10 +12,10 @@
                         <th scope="col">{{ $t("Transaction Code") }}</th>
                         <th scope="col">{{ $t("Transaction Date") }}</th>
                         <th scope="col">{{ $t("Transaction Type") }}</th>
-                        <th scope="col">{{ $t("Account") }}</th>
+                        <th scope="col" v-if="!to_supplier">{{ $t("Account") }}</th>
                         <th scope="col">{{ $t("Payment Method") }}</th>
                         <th scope="col" class="text-right">{{ $t("Amount") }}</th>
-                        <th scope="col" class="text-right">{{ $t("Received Amount") }}</th>
+                        <!-- <th scope="col" class="text-right"  v-if="!to_supplier">{{ $t("Received Amount") }}</th> -->
                         <th scope="col">{{ $t("Created On") }}</th>
                         <th scope="col">{{ $t("Created By") }}</th>
                         <th scope="col">{{ $t("Action") }}</th>
@@ -25,11 +26,16 @@
                          <th scope="col">{{ key+1 }}</th>
                          <td>{{ transaction.transaction_code }}</td>
                         <td>{{ transaction.transaction_date }}</td>
-                        <td>{{ transaction.transaction_type_data.label }}</td>
-                        <td>{{ transaction.account.label }}</td>
+                        
+                        <td v-if="is_customer">
+                        <span v-if="transaction.transaction_from_customer == 1">Expense/Debit</span>
+                        <span v-else>{{ transaction.transaction_type_data.label }}</span>
+                        </td>
+                        <td v-else>{{ transaction.transaction_type_data.label }}</td>
+                        <td v-if="!to_supplier">{{ transaction.account.label }}</td>
                         <td>{{ transaction.payment_method }}</td>
                         <td class="text-right">{{ transaction.amount }}</td>
-                        <td class="text-center">{{ transaction.received_amount }}</td>
+                        <!-- <td class="text-center"  v-if="!to_supplier">{{ transaction.received_amount }}</td> -->
                         <td>{{ transaction.created_at_label }}</td>
                         <td>{{ (transaction.created_by != null)?transaction.created_by.fullname:'-' }}</td>
                         <td>
@@ -59,10 +65,13 @@
         data(){
             return{
                 transactions : this.transaction_list,
+                to_supplier: this.created_by_supplier,
             }
         },
         props: {
-            transaction_list: [Array, Object]
+            transaction_list: [Array, Object],
+            created_by_supplier: Boolean,
+            is_customer: Boolean,
         },
         mounted() {
             console.log('Transaction listing component loaded');

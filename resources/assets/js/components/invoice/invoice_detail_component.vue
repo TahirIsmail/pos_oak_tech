@@ -1,8 +1,10 @@
 <template>
     <div class="row">
+       
         <div class="col-md-12">
 
-            <div class="d-flex flex-wrap mb-4">
+            <div class="card p-4">
+                <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">
                         <div>
@@ -25,10 +27,10 @@
 
                     <a class="btn btn-outline-primary mr-1" v-bind:href="'/print_invoice/'+slack" target="_blank">{{ $t("PDF") }}</a>
 
-                    <button type="submit" class="btn btn-danger mr-1" v-show="!block_delete_invoice.includes(invoice_basic.status.constant)" v-if="delete_invoice_access == true" v-on:click="delete_invoice()" v-bind:disabled="invoice_delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="invoice_delete_processing == true"></i> {{ $t("Delete Invoice") }}</button>
-
-                    <button type="submit" class="btn btn-outline-primary mr-1" v-on:click="show_payment_modal = true" v-show="!block_make_payment.includes(invoice_basic.status.constant)" v-if="make_payment_access == true"> {{ $t("Record Payment") }}</button>
-
+                    <span v-if="!is_supplier"><button type="submit" class="btn btn-danger mr-1" v-show="!block_delete_invoice.includes(invoice_basic.status.constant)" v-if="delete_invoice_access == true" v-on:click="delete_invoice()" v-bind:disabled="invoice_delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="invoice_delete_processing == true"></i> {{ $t("Delete Invoice") }}</button>
+                    </span>
+                    <span v-if="!is_supplier"><button type="submit" class="btn btn-outline-primary mr-1" v-on:click="show_payment_modal = true" v-show="!block_make_payment.includes(invoice_basic.status.constant)" v-if="make_payment_access == true"> {{ $t("Record Payment") }}</button>
+                    </span>
                     <div class="dropdown d-inline" v-if="invoice_statuses != ''">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="invoice_action" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ $t("Change Status") }}
@@ -80,7 +82,7 @@
             <div class="mb-3">
                 
                 <div class="mb-2">
-                    <span class="text-subhead">Bill To Information</span>
+                    <span class="text-subhead" >Bill Information</span>
                 </div>
                 <div class="form-row mb-2" v-show="invoice_basic.bill_to == 'SUPPLIER'">
                     <div class="form-group col-md-3">
@@ -128,6 +130,62 @@
                     <div class="form-group col-md-3">
                         <label for="supplier_address">{{ $t("Customer Address") }}</label>
                         <p class='custom-pre'>{{ (invoice_basic.bill_to_address != null)?invoice_basic.bill_to_address:'-' }}</p>
+                    </div>
+                </div>
+                <div v-if="is_supplier">
+                    <div class="form-row mb-2" v-show="invoice_basic.bill_to == 'OAK TECHNOLOGY'">
+                        <div class="form-group col-md-3">
+                            <label for="bill_to">{{ $t("Bill To") }}</label>
+                            <p>{{ invoice_basic.bill_to }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_code">{{ $t("User Code") }}</label>
+                            <p>{{ invoice_basic.bill_to_code }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_name">{{ $t("User Name") }}</label>
+                            <p>{{ invoice_basic.bill_to_name }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_email">{{ $t("User Email") }}</label>
+                            <p>{{ (invoice_basic.bill_to_email != null)?invoice_basic.bill_to_email:'-' }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_phone">{{ $t("User Phone") }}</label>
+                            <p>{{ (invoice_basic.bill_to_contact != null)?invoice_basic.bill_to_contact:'-' }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_address">{{ $t("User Address") }}</label>
+                            <p class='custom-pre'>{{ (invoice_basic.bill_to_address != null)?invoice_basic.bill_to_address:'-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!is_supplier">
+                    <div class="form-row mb-2" v-show="invoice_basic.bill_to == 'OAK TECHNOLOGY'">
+                        <div class="form-group col-md-3">
+                            <label for="bill_to">{{ $t("Bill From") }}</label>
+                            <p>Supplier</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_code">{{ $t("Supplier Code") }}</label>
+                            <p>{{ invoice_basic.bill_from_code }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_name">{{ $t("Supplier Name") }}</label>
+                            <p>{{ invoice_basic.bill_from_name }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_email">{{ $t("Supplier Email") }}</label>
+                            <p>{{ (invoice_basic.bill_from_email != null)?invoice_basic.bill_to_email:'-' }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_phone">{{ $t("Supplier Phone") }}</label>
+                            <p>{{ (invoice_basic.bill_from_contact != null)?invoice_basic.bill_to_contact:'-' }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="supplier_address">{{ $t("Supplier Address") }}</label>
+                            <p class='custom-pre'>{{ (invoice_basic.bill_from_address != null)?invoice_basic.bill_from_address:'-' }}</p>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row mb-2">
@@ -216,7 +274,8 @@
                 </div>
             </div>
 
-            <transactionlistcomponent :transaction_list="transactions"></transactionlistcomponent>
+            <transactionlistcomponent :is_customer="is_customer" :transaction_list="transactions" :created_by_supplier="created_by_supplier"></transactionlistcomponent>
+            </div>
         </div>
 
         <modalcomponent v-if="show_payment_modal" v-on:close="show_payment_modal = false" :modal_width="'modal-container-md'">
@@ -224,7 +283,7 @@
                 Record Payment
             </template>
             <template v-slot:modal-body>
-                <addtransactionwidgetcomponent :transaction_type_data="transaction_type_data" :accounts="accounts" :payment_methods="payment_methods" :invoice_slack="slack" :bill_to_prop="'INVOICE'" :currency_codes="currency_codes" :default_transaction_type="default_transaction_type"></addtransactionwidgetcomponent>
+                <addtransactionwidgetcomponent :invoice_against_po_from_customer="invoice_data.invoice_against_po_from_customer" :created_by_supplier="created_by_supplier" :transaction_type_data="transaction_type_data" :accounts="accounts" :payment_methods="payment_methods" :invoice_slack="slack" :bill_to_prop="'INVOICE'" :currency_codes="currency_codes" :default_transaction_type="default_transaction_type"></addtransactionwidgetcomponent>
             </template>
             <template v-slot:modal-footer>
                 <button type="button" class="btn btn-light" @click="cancel_transaction">Cancel</button>
@@ -294,7 +353,10 @@
 
             delete_invoice_access: Boolean,
             make_payment_access: Boolean,
-            printnode_enabled: Boolean
+            printnode_enabled: Boolean,
+            is_supplier: Boolean,
+            is_customer: Boolean,
+            created_by_supplier: Boolean,
         },
         mounted() {
             console.log('Invoice detail page loaded');

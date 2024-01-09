@@ -9,6 +9,7 @@ use App\Models\User as UserModel;
 use App\Models\Customer as CustomerModel;
 use Pusher\Pusher;
 use Illuminate\Support\Facades\File;
+use App\Models\User;
 
 
 use Illuminate\Support\Facades\Storage;
@@ -53,16 +54,16 @@ class ComplaintsController extends Controller
         }
         
         if($request->logged_user_role_id == 2){
-            $customers = CustomerModel::has('orders')->with('orders')->where('id', $request->logged_user_customer_id)->get();
+            $customers = User::where('id', $request->logged_user_id)->get();
         }
         else{
-            $customers = CustomerModel::has('orders')->with('orders')->get();
+            $customers = User::where('role_id', 2)->get();
         }
 
-        // dd($customers);
         $data['customers_list'] = $customers;
 
         return view('complaints.add_customer_complaint', $data);
+
     }
 
     public function view_complaints(Request $request, $slack = null)

@@ -11,7 +11,7 @@ class Invoice extends Model
 {
     protected $table = 'invoices';
     protected $hidden = ['id', 'store_id', 'invoice_to_id'];
-    protected $fillable = ['slack', 'store_id', 'invoice_number', 'invoice_reference', 'invoice_date', 'invoice_due_date', 'parent_po_id', 'bill_to', 'bill_to_id', 'bill_to_code', 'bill_to_name', 'bill_to_email', 'bill_to_contact', 'bill_to_address', 'currency_name', 'currency_code', 'tax_option_id', 'subtotal_excluding_tax', 'total_discount_amount', 'total_after_discount', 'total_tax_amount', 'shipping_charge', 'packing_charge', 'total_order_amount', 'notes', 'terms', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = ['slack', 'store_id', 'invoice_number', 'invoice_reference', 'invoice_date', 'invoice_due_date', 'parent_po_id', 'bill_to', 'invoice_against_po_from_customer', 'bill_to_id', 'bill_to_code', 'bill_to_name', 'bill_to_email', 'bill_to_contact', 'bill_to_address', 'bill_from_id', 'bill_from_code', 'bill_from_name', 'bill_from_email', 'bill_from_contact', 'bill_from_address', 'currency_name', 'currency_code', 'tax_option_id', 'subtotal_excluding_tax', 'total_discount_amount', 'total_after_discount', 'total_tax_amount', 'shipping_charge', 'packing_charge', 'total_order_amount', 'notes', 'terms', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
     protected static function boot()
     {
@@ -66,6 +66,10 @@ class Invoice extends Model
 
     public function supplier(){
         return $this->hasOne('App\Models\Supplier', 'id', 'bill_to_id');
+    }
+
+    public function user(){
+        return $this->hasOne('App\Models\User', 'id', 'bill_to_id');
     }
 
     public function products(){

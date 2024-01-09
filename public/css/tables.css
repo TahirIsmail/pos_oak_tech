@@ -35,6 +35,11 @@ th{
 
 .pagination .paginate_button{
     border: none;
+    
+}
+.page-item.active .page-link {
+    background-image:  linear-gradient(to right, #1850a5, #2161c1) !important;
+
 }
 
 .page-item:hover {
@@ -63,4 +68,10 @@ div.dataTables_filter input{
 .dataTables_processing{
     background-color: #FFF !important;
     z-index: 999;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #003559;
+    border-color: #003559;
 }

@@ -64,7 +64,7 @@ class Transaction extends Controller
     }
 
     //This is the function that loads the detail page
-    public function detail($slack){
+    public function detail(Request $request, $slack){
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_TRANSACTIONS';
         $data['action_key'] = 'A_DETAIL_TRANSACTION';
@@ -82,6 +82,14 @@ class Transaction extends Controller
         $data['transaction_data'] = $transaction_data;
 
         $data['delete_transaction_access'] = check_access(['A_DELETE_TRANSACTION'] ,true);
+
+        if($request->logged_user_role_id == 2){
+            $is_customer = true;
+        }
+        else{
+            $is_customer = false;
+        }
+        $data['is_customer'] = $is_customer;
 
         return view('transaction.transaction_detail', $data);
     }

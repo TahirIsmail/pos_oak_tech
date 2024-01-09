@@ -65,7 +65,9 @@
     font-size: 20px;
     font-weight: 500;
     vertical-align: text-top;
+    color: #003559 !important;
 }
+
 
 .text-subtitle{
     font-size: 18px;
@@ -73,7 +75,7 @@
 }
 
 .text-subhead{
-    color: var(--label-sub-head);
+    color: #003559 !important;
     font-weight: 500;
     font-size: 15px;
 }

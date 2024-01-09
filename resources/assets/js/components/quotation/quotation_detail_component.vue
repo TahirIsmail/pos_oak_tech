@@ -2,7 +2,8 @@
     <div class="row">
         <div class="col-md-12">
 
-            <div class="d-flex flex-wrap mb-4">
+            <div class="card p-4">
+                <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">
                         <div>
@@ -27,7 +28,12 @@
 
                     <button type="submit" class="btn btn-danger mr-1" v-show="!block_delete_quotation.includes(quotation_basic.status.constant)" v-if="delete_quotation_access == true" v-on:click="delete_quotation()" v-bind:disabled="quotation_delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="quotation_delete_processing == true"></i> {{ $t("Delete Quotation") }}</button>
 
-                    <div class="dropdown d-inline">
+                    <span v-if="quotation_basic.status.label == 'Accepted'">
+                        <span v-if="is_customer || quotation_basic.quotation_from_supplier == 1">                        
+                            <a class="btn btn-outline-primary mr-1" v-bind:href="'/make_purchase_order/'+slack" target="_blank">{{ $t("Make Purchase Order") }}</a>                       
+                        </span>                    
+                    </span>
+                    <div class="dropdown d-inline" v-if="!is_supplier">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="quotation_action" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ $t("Change Status") }}
                         </button>
@@ -60,7 +66,7 @@
                     <label for="created_by">{{ $t("Created By") }}</label>
                     <p>{{ (quotation_basic.created_by == null)?'-':quotation_basic.created_by['fullname']+' ('+quotation_basic.created_by['user_code']+')' }}</p>
                 </div>
-                <div class="form-group col-md-3">
+                <!-- <div class="form-group col-md-3">
                     <label for="updated_by">{{ $t("Updated By") }}</label>
                     <p>{{ (quotation_basic.updated_by == null)?'-':quotation_basic.updated_by['fullname']+' ('+quotation_basic.updated_by['user_code']+')' }}</p>
                 </div>
@@ -71,7 +77,7 @@
                 <div class="form-group col-md-3">
                     <label for="updated_on">{{ $t("Updated On") }}</label>
                     <p>{{ quotation_basic.updated_at_label }}</p>
-                </div>
+                </div> -->
             </div>
             <hr>
 
@@ -202,6 +208,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="mb-1">
+                <i class=""><span style="color:red">*</span>{{ quotation_basic.gst_tax_option }}</i>
+            </div>
             </div>
             <hr>
 
@@ -212,6 +221,7 @@
                 <div class="form-group col-md-12">
                     <p class='custom-pre'>{{ (quotation_basic.notes != null)?quotation_basic.notes:'-' }}</p>
                 </div>
+            </div>
             </div>
         </div>
 
@@ -256,14 +266,19 @@
                 tax_component_array  : (this.quotation_data.tax_option_data != null)?this.quotation_data.tax_option_data.component_array:[],
                 table_colspan   : parseInt(8)+((this.quotation_data.tax_option_data != null)?parseInt(this.quotation_data.tax_option_data.component_count):1),
 
-                block_delete_quotation : ['ACCEPTED']
+                block_delete_quotation : ['ACCEPTED'],
+
+
+                purchase_order_processing: false,
             }
         },
         props: {
             quotation_data: [Array, Object],
             quotation_statuses: Array,
             delete_quotation_access: Boolean,
-            printnode_enabled: Boolean
+            printnode_enabled: Boolean,
+            is_supplier: Boolean,
+            is_customer: Boolean,
         },
         mounted() {
             console.log('Quotation detail page loaded');

@@ -1,8 +1,5 @@
 <template>
     <div class="row">
-        {{ sub_category }}
-
-        {{ company_id }}
         <div class="col-md-12">
             <div class="card">
                 <form @submit.prevent="submit_form" class="mb-3">
@@ -28,10 +25,11 @@
                                 class="form-control form-control-custom custom-select">
                                 <option value="">Choose Bill To..</option>
                                 <option v-for="(bill_to_item, index) in bill_to_master_list" v-bind:value="bill_to_item"
-                                    v-bind:key="index">
+                                    v-bind:key="index" v-if="bill_to_item !== 'SUPPLIER'">
                                     {{ bill_to_item }}
                                 </option>
                             </select>
+                            
                             <span v-bind:class="{ 'error': errors.has('bill_to') }">{{ errors.first('bill_to') }}</span>
                         </div>
                         <div class="form-group col-md-4">
@@ -101,12 +99,28 @@
                                     v-bind:value="tax_option.tax_option_constant" v-bind:key="index">
                                     {{ tax_option.label }}
                                 </option>
+                               
                             </select>
                             <span v-bind:class="{ 'error': errors.has('tax_option') }">{{ errors.first('tax_option')
                             }}</span>
                         </div>
 
-                    
+
+
+
+                        <!-- <div class="form-group col-md-4">
+                            <label for="gst_tax_option">{{ $t("GST Tax Option") }}</label>
+                            <select name="gst_tax_option" v-model="gst_tax_option"
+                                class="form-control form-control-custom custom-select">
+                                <option value="">Choose Tax Option..</option>
+                                <option value="5% GST will be applied">5% GST will be applied</option>
+                                <option value="10% GST will be applied">10% GST will be applied</option>
+                                <option value="15% GST will be applied">15% GST will be applied</option>
+                            </select>
+                            
+                        </div>
+
+                     -->
                         
                     
 
@@ -123,7 +137,7 @@
                     </div>
 
 
-                <div class="d-flex flex-wrap mb-1">
+                <!-- <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead ml-3">{{ $t("Products") }}</span>
                     </div>
@@ -142,59 +156,77 @@
                         <label for="barcode">{{ $t("Search and Add Products") }}</label>
                         <cool-select type="text" v-model="search_product"  autocomplete="off" inputForTextClass="form-control form-control-custom" :items="product_list" item-text="label" itemValue='label' :resetSearchOnBlur="false" disable-filtering-by-search @search='load_products' @select='add_product_to_list' :placeholder="$t('Start Typing..')"></cool-select>
                     </div>
-                </div>
+                </div> -->
+                <div v-if="!is_supplier">
+                    <div v-show="bill_to == 'CUSTOMER'">
+                        <div class="form-row mb-2">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                                <label for="category">{{ $t("Category") }}</label>
+                                <select name="category" v-model="category"  @change="fetchSub_Categories()" class="form-control form-control-custom custom-select">
+                                    <option value="" disabled>Choose Category..</option>
+                                    <option
+                                    v-for="category in categories"
+                                    :key="category.id"
+                                    :value="category.id"
+                                   
+                                    >
+                                    {{ category.label }} ({{ category.category_code }})
+                                    </option>
+                                        
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                                <label for="sub_category">{{ $t("Sub Category") }}</label>
+                                <select name="sub_category" v-model="sub_category" @change="ViewChildCategoryF()" class="form-control form-control-custom custom-select">
+                                    <option value="" disabled>Choose Sub Category...</option>
+                                    <option
+                                    v-for="scategory in subCategories"
+                                    :key="scategory.id"
+                                    :value="scategory.id"                           
+                                    >
+                                    {{ scategory.sub_category_name }}
+                                    </option>
+                                </select>
+                            </div>
 
-                <div v-show="bill_to == 'CUSTOMER'">
-                    <div class="form-row mb-2">
-                        <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                            <label for="category">{{ $t("Category") }}</label>
-                            <select name="category" v-model="category"  @change="fetchSub_Categories()" class="form-control form-control-custom custom-select">
-                                <option value="" disabled>Choose Category..</option>
-                                <option
-                                v-for="category in categories"
-                                :key="category.id"
-                                :value="category.id"
-                               
-                                >
-                                {{ category.label }} ({{ category.category_code }})
-                                </option>
-                                    
-                            </select>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                                <label for="sub_category">{{ $t("Child Category") }}</label>
+                                <select name="child_category_id" v-model="child_category_id" @change="ViewCategorySpecificationF()" class="form-control form-control-custom custom-select">
+                                    <option value="" disabled>Choose Child Category...</option>
+                                    <option
+                                    v-for="c_category in childCategories"
+                                    :key="c_category.id"
+                                    :value="c_category.id"                           
+                                    >
+                                    {{ c_category.child_category }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- <div class="form-row mb-2" v-if="category_specifications.length > 0">
+                                    <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
+                                    <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
+                                    <input :type="(spec.category_specification_label == 'Quantity') ? 'number' : 'text'" v-if="spec.category_specification_details.length == 0" v-model="input_type[spec.category_specification_label]" class="form-control" >
+                                    <select
+                                    v-else
+                                    v-model="input_type[spec.category_specification_label]"
+                                    class="form-control form-control-custom custom-select"
+                                    >
+                                    <option selected disabled>Please Select {{ spec.category_specification_label }}</option>
+                                    <option v-for="details in spec.category_specification_details" :key="details.id" :value="details.id">{{ details.values }}</option>
+                                    </select>
+                                    </div>
+                            </div> -->
+                                            
                         </div>
-                        <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                            <label for="sub_category">{{ $t("Sub Category") }}</label>
-                            <select name="sub_category" v-model="sub_category" @change="fetch_companies()" class="form-control form-control-custom custom-select">
-                                <option value="" disabled>Choose Sub Category...</option>
-                                <option
-                                v-for="scategory in subCategories"
-                                :key="scategory.id"
-                                :value="scategory.id"                           
-                                >
-                                {{ scategory.sub_category_name }}
-                                </option>
-                            </select>
+        
+                        <div class="form-row mb-2">
+                            <div class="form-group col-12 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" @click="fetchProducts()">Search Product</button>
+                            </div>
                         </div>
-                        <!-- <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                            <label for="brand_name">{{ $t("Brand Name") }}</label>
-                            <select name="brand_name" v-model="brand_name" class="form-control form-control-custom custom-select">
-                                <option value="" disabled>Choose Brand Name...</option>
-                                <option
-                                v-for="company in companies"
-                                :key="company.id"
-                                :value="company.id"  
-                                >
-                                {{ company.category_company_name }}
-                                </option>
-                            </select>
-                        </div> -->                    
-                    </div>
     
-                    <div class="form-row mb-2">
-                        <div class="form-group col-12 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" @click="fetchProducts()">Search Product</button>
-                        </div>
                     </div>
-
                 </div>
 
 
@@ -211,8 +243,8 @@
                         <div class="form-group col-md-1 mb-1">
                             <label for="discount_percentage">{{ $t("Discount %") }}</label>
                         </div>
-                        <div class="form-group col-md-1 mb-1">
-                            <label for="tax_percentage">{{ $t("Tax %") }}</label>
+                        <div class="form-group col-md-1 mb-1" v-if="tax_option == 'GST'">
+                            <label for="tax_percentage">{{ $t("GST Tax %") }}</label>
                         </div>
                         <div class="form-group col-md-2 mb-1">
                             <label for="amount">{{ $t("Amount") }}</label>
@@ -231,7 +263,7 @@
                             <input type="number" v-bind:name="'product.quantity_' + index" v-model="product.quantity"
                                 v-validate="'required|decimal|min_value:1'" data-vv-as="Quantity"
                                 class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
-                                v-on:input="calculate_price">
+                                v-on:input="calculate_price" :readonly="!is_supplier">
                             <span v-bind:class="{ 'error': errors.has('product.quantity_' + index) }">{{
                                 errors.first('product.quantity_' + index) }}</span>
                         </div>
@@ -251,7 +283,7 @@
                             <span v-bind:class="{ 'error': errors.has('product.discount_percentage_' + index) }">{{
                                 errors.first('product.discount_percentage_' + index) }}</span>
                         </div>
-                        <div class="form-group col-md-1">
+                        <div class="form-group col-md-1" v-if="tax_option == 'GST'">
                             <input type="number" v-bind:name="'product.tax_percentage_' + index"
                                 v-model="product.tax_percentage" v-validate="'decimal|min_value:0'" data-vv-as="Tax %"
                                 class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
@@ -349,11 +381,15 @@ export default {
                 lang: 'en',
                 format: "YYYY-MM-DD",
             },
+            category_specifications: [],
+            input_type:{},
             categories: [],
             subCategories: [],
+            childCategories: [],
             companies: [],
             category: '',
             sub_category: '',
+            child_category_id: '',
             brand_name: '',
             server_errors: '',
             error_class: '',
@@ -368,6 +404,7 @@ export default {
             search_product: '',
             supplier: '',
             supplier_list: [],
+            tax_status: false,
 
             bill_to: (this.quotation_data == null) ? '' : this.quotation_data.bill_to,
             bill_to_slack: (this.quotation_data == null) ? '' : (this.quotation_data.bill_to == 'SUPPLIER') ? this.quotation_data.supplier.slack : this.quotation_data.customer.slack,
@@ -378,7 +415,7 @@ export default {
             quotation_date: (this.quotation_data == null) ? '' : (this.quotation_data.quotation_date_raw != null) ? new Date(this.quotation_data.quotation_date_raw) : '',
             quotation_due_date: (this.quotation_data == null) ? '' : (this.quotation_data.quotation_due_date_raw != null) ? new Date(this.quotation_data.quotation_due_date_raw) : '',
             currency: (this.quotation_data == null) ? '' : (this.quotation_data.currency_code != null) ? this.quotation_data.currency_code : '',
-            tax_option: (this.quotation_data == null) ? '' : (this.quotation_data.tax_option_data != null) ? this.quotation_data.tax_option_data.tax_option_constant : '',
+            tax_option: (this.quotation_data == null) ? 'GST' : (this.quotation_data.tax_option_data != null) ? this.quotation_data.tax_option_data.tax_option_constant : '',
 
             shipping_charge: (this.quotation_data == null) ? '' : (this.quotation_data.shipping_charge != null) ? this.quotation_data.shipping_charge : '',
             packing_charge: (this.quotation_data == null) ? '' : (this.quotation_data.packing_charge != null) ? this.quotation_data.packing_charge : '',
@@ -406,6 +443,7 @@ export default {
         currency_list: Array,
         quotation_data: [Array, Object],
         tax_options: [Array, Object],
+        is_supplier: Boolean,
     },
 
     watch: {
@@ -450,6 +488,8 @@ export default {
                 if (response.data.status_code == 200) {
                    this.subCategories = response.data.data.subCategories;
                    this.companies = response.data.data.companies;
+                //    this.category_specifications = response.data.data.category_specifications;
+
                 }
             })
             .catch((error) => {
@@ -466,6 +506,7 @@ export default {
                 if (response.data.status_code == 200) {
                  
                    this.companies = response.data.data.companies;
+                   this.category_specifications = response.data.data.category_specifications;
                 }
             })
             .catch((error) => {
@@ -481,12 +522,54 @@ export default {
                 if (response.data.status_code == 200) {
                     console.log(response.data);
                     this.categories = response.data.data;
+
                 }
             })
             .catch((error) => {
                 console.log(error);
             });
         },
+
+        ViewChildCategoryF(){
+                this.categorySpecificationId = '';
+                this.specificationValueId = '';
+                var formData = new FormData();
+                formData.append("access_token", window.settings.access_token);
+                formData.append("subCategoryId", this.sub_category);
+                axios.post('/api/view_child_or_specifications_categories', formData).then((response) => {
+
+                if(response.data.status_code == 200) {
+                    console.log(response.data.data);
+                  this.childCategories = response.data.data.child_categories;
+                  this.category_specifications = response.data.data.category_specifications;
+
+
+                }
+                })
+                .catch((error) => {
+                console.log(error);
+                });
+            },
+
+            ViewCategorySpecificationF(){
+                this.specificationValueId = '';
+                var formData = new FormData();
+                formData.append("access_token", window.settings.access_token);
+                formData.append("childCategoryId", this.child_category_id);
+                axios.post('/api/view_specifications_categories', formData).then((response) => {
+
+                if(response.data.status_code == 200) {
+                    if (response.data.data.specifications && response.data.data.specifications.length > 0) {                        
+                        console.log(response.data.data);
+                        this.category_specifications = response.data.data.specifications;
+
+                    }
+                }
+                })
+                .catch((error) => {
+                console.log(error);
+                });
+            },
 
         load_bill_to_list(keywords) {
             if (typeof keywords != 'undefined') {
@@ -496,6 +579,7 @@ export default {
                     formData.append("access_token", window.settings.access_token);
                     formData.append("keywords", keywords);
                     formData.append("type", this.bill_to);
+                    formData.append("is_supplier", this.is_supplier);
 
                     axios.post('/api/load_bill_to_list', formData).then((response) => {
                         if (response.data.status_code == 200) {
@@ -560,7 +644,7 @@ export default {
 
             formData.append("category_id", (this.category != '') ? this.category : null);
             formData.append("sub_category_id", (this.sub_category != '') ? this.sub_category : null);
-            formData.append("category_company_id", (this.brand_name != '') ? this.brand_name : null);
+            formData.append("child_category_id", (this.child_category_id != '') ? this.child_category_id : null);
 
             axios.post('/api/fetchProducts', formData).then((response) => {
                 if (response.data.status_code == 200) {
@@ -581,6 +665,7 @@ export default {
         },
 
         add_product_to_list(item) {
+            console.log(item);
             if (item.product_slack != '') {
                 var current_product = {
                     slack: item.product_slack,
@@ -730,7 +815,9 @@ export default {
                         formData.append("packing_charge", this.packing_charge);
                         formData.append("notes", this.notes);
                         formData.append("tax_option", this.tax_option);
+                        // formData.append("gst_tax_option", this.gst_tax_option);
                         formData.append("products", JSON.stringify(this.products));
+                        formData.append("is_supplier", this.is_supplier);
 
                         axios.post(this.api_link, formData).then((response) => {
                             if (response.data.status_code == 200) {

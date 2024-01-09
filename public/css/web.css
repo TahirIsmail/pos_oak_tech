@@ -26,6 +26,26 @@
   overflow-y: hidden!important;
 }
 
+
+/* NEW SCROLL BAR */
+::-webkit-scrollbar {
+  width: 8px; 
+  height: 12px;
+  
+}
+
+::-webkit-scrollbar-track {
+  background: #c7ccd2;
+  height: 12px;
+  border-radius: 6px;
+  margin-top:10px!important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3d5683; 
+  border-radius: 6px;
+}
+
 .card {
   position: relative;
   display: -webkit-box;
@@ -43,7 +63,9 @@
   border: 1px solid #f1f2f6;
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(146, 153, 184, 0.03);
+  box-shadow: rgb(56 88 157 / 87%) 0px 6px 12px -2px, rgb(56 88 157 / 30%) 0px 3px 7px ;
+  margin-bottom: 20px ;
+  
 }
 .card-header-revenu{
 
@@ -342,7 +364,7 @@ html,body{
   padding-bottom: 0 !important;
   min-height: calc(100vh - 50px);
   overflow-y: hidden !important;
-  background-color: #f4f5f7;
+  background-color: #fff;
 }
 .btn-primary{
   background-color: #014f99 !important;
@@ -563,7 +585,18 @@ hr{
   flex-wrap: wrap;
   margin-right: -5px;
   margin-left: -5px;
+  /* border-radius: 3px !important; */
 }
+.row1:hover {
+  box-shadow: 1px 1px 3px #1665c6b8 !important;
+ 
+}
+.cardd:hover {
+  box-shadow: 1px 1px 3px #1665c6b8 !important;
+ 
+}
+
+
 
 .color-success{
   color: #20c997;
@@ -615,11 +648,6 @@ hr{
 }
 
 
-
-.canvasdispaly{
-  height:380px !important;
-
-}
 
 
 
@@ -812,4 +840,7 @@ table.table-rounded tr td, table.table-basic tr td, .orderDatatable-title, .paym
 .ap-po-timeChart .parentContainer {
   position: relative;
   bottom: -6px;
+}
+.ap-po-details, .cardd, .forcast-cardbox, .shadow {
+  box-shadow: rgb(56 88 157 / 87%) 0px 6px 12px -2px, rgb(56 88 157 / 30%) 0px 3px 7px !important;
 }

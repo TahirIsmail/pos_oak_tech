@@ -20,6 +20,7 @@ use App\Http\Resources\InvoiceResource;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Config;
+use App\Models\User;
 
 use Mpdf\Mpdf;
 
@@ -72,7 +73,7 @@ class Invoice extends Controller
     }
 
     //This is the function that loads the detail page
-    public function detail($slack){
+    public function detail(Request $request, $slack){
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_INVOICES';
         $data['action_key'] = 'A_DETAIL_INVOICE';
@@ -142,6 +143,36 @@ class Invoice extends Controller
 
         $data['printnode_enabled'] = (isset($store_data->printnode_enabled) && $store_data->printnode_enabled == 1)?true:false;
 
+        if($request->logged_user_role_id == 3){
+            $is_supplier = true;
+        }
+        else{
+            $is_supplier = false;
+        }
+
+        $data['is_supplier'] = $is_supplier;
+
+        $user = User::where('id', $invoice_data->created_by)->first();
+        if($user->supplier_id){
+            $created_by_supplier = true;
+        }
+        else{
+            $created_by_supplier = false;
+        }
+
+        $data['created_by_supplier'] = $created_by_supplier;
+        // dd($invoice_data);
+
+        if($request->logged_user_role_id == 2){
+            $is_customer = true;
+        }
+        else{
+            $is_customer = false;
+        }
+
+        $data['is_customer'] = $is_customer;
+
+
         return view('invoice.invoice_detail', $data);
     }
 
@@ -160,8 +191,18 @@ class Invoice extends Controller
         $invoice_data = new InvoiceResource($invoice);
 
         $print_logo_path = config("app.invoice_print_logo");
+
+        // dd($invoice_data->bill_to);
+
+        if($invoice_data->bill_to == "OAK TECHNOLOGY"){
+            $print_data = view('invoice.invoice.invoice_from_supplier_print', ['data' => json_encode($invoice_data), 'logo_path' => $print_logo_path])->render();
+
+        }
+        else{
+            $print_data = view('invoice.invoice.invoice_print', ['data' => json_encode($invoice_data), 'logo_path' => $print_logo_path])->render();
+
+        }
        
-        $print_data = view('invoice.invoice.invoice_print', ['data' => json_encode($invoice_data), 'logo_path' => $print_logo_path])->render();
 
         $mpdf_config = [
             'mode'          => 'utf-8',

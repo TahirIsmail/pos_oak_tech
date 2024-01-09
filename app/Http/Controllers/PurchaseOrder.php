@@ -18,6 +18,9 @@ use App\Http\Resources\PurchaseOrderResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Config;
 
+use App\Http\Resources\QuotationResource;
+use App\Models\Quotation as QuotationModel;
+
 use Mpdf\Mpdf;
 use App\Models\User;
 
@@ -68,7 +71,7 @@ class PurchaseOrder extends Controller
     }
 
     //This is the function that loads the detail page
-    public function detail($slack){
+    public function detail(Request $request, $slack){
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_PURCHASE_ORDERS';
         $data['action_key'] = 'A_DETAIL_PURCHASE_ORDER';
@@ -107,7 +110,30 @@ class PurchaseOrder extends Controller
         ])
         ->active()
         ->first();
+
+
+        if($request->logged_user_role_id == 3){
+            $is_supplier = true;
+        }
+        else{
+            $is_supplier = false;
+        }
+
+        $data['is_supplier'] = $is_supplier;
+
+
+        if($request->logged_user_role_id == 2){
+            $is_customer = true;
+        }
+        else{
+            $is_customer = false;
+        }
+
+        $data['is_customer'] = $is_customer;
+
+
         
+        // dd($is_supplier);
         $data['printnode_enabled'] = (isset($store_data->printnode_enabled) && $store_data->printnode_enabled == 1)?true:false;
 
         return view('purchase_order.purchase_order_detail', $data);
@@ -129,6 +155,8 @@ class PurchaseOrder extends Controller
 
         $print_logo_path = config("app.invoice_print_logo");
         $contact_person = User::with('role')->whereNotNull('company_contact_person')->get();
+
+        // dd($purchase_order_data);
         
         $print_data = view('purchase_order.invoice.po_print', ['data' => json_encode($purchase_order_data), 'logo_path' => $print_logo_path, 'contact_person' => $contact_person])->render();
 
@@ -172,5 +200,57 @@ class PurchaseOrder extends Controller
             $download_link = ($full_path == false)?$view_path.$filename.$cache_params:$upload_dir.$filename;
             return $download_link; 
         }
+    }
+
+
+
+
+
+
+
+    // customer make purchase order against vendor quotation 
+
+
+    public function make_purchase_order(Request $request, $slack)
+    {
+
+        $data['menu_key'] = 'MM_ORDERS';
+        $data['sub_menu_key'] = 'SM_PURCHASE_ORDERS';
+        $data['action_key'] = ($slack == null)?'A_ADD_PURCHASE_ORDER':'A_EDIT_PURCHASE_ORDER';
+        check_access(array($data['action_key']));
+        $quotation = QuotationModel::where('slack', $slack)->first();      
+
+        if (empty($quotation)) {
+            abort(404);
+        }
+
+        $quotation_data = new QuotationResource($quotation);
+
+
+        $data['currency_list'] = CountryModel::select('currency_code', 'currency_name')
+        ->where('currency_code', '!=', '')
+        ->whereNotNull('currency_code')
+        ->active()
+        ->groupBy('currency_code')
+        ->get();
+
+
+        $data['tax_options'] = MasterTaxOptionModel::select('tax_option_constant', 'label')
+        ->active()
+        ->get();
+
+
+
+        $data['quotation_data'] = $quotation_data;
+
+        if($request->logged_user_role_id == 2){
+            $is_customer = true;
+        }
+        else{
+            $is_customer = false;
+        }
+        $data['is_customer'] = $is_customer;
+
+        return view('purchase_order.make_purchase_order', $data);
     }
 }

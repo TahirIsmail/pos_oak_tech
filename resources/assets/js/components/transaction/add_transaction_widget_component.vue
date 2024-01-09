@@ -30,7 +30,7 @@
                     <div class="form-row mb-2">
                         <div class="form-group col-md-6">
                             <label for="account">{{ $t("Transaction Type") }}</label>
-                            <select name="transaction_type" v-model="transaction_type" v-validate="'required'" class="form-control form-control-custom custom-select">
+                            <select name="transaction_type" v-model="transaction_type" v-validate="'required'" class="form-control form-control-custom custom-select" :disabled="this.created_by_supplier">
                                 <option value="">Choose Transaction Type..</option>
                                 <option v-for="(transaction_type_item, index) in transaction_type_data" v-bind:value="transaction_type_item.transaction_type_constant" v-bind:key="index">
                                     {{ transaction_type_item.label }}
@@ -55,7 +55,7 @@
                             </select>
                             <span v-bind:class="{ 'error' : errors.has('payment_method') }">{{ errors.first('payment_method') }}</span> 
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6" v-if="!this.created_by_supplier">
                             <label for="account">{{ $t("Account") }}</label>
                             <select name="account" v-model="account" v-validate="'required'" class="form-control form-control-custom custom-select">
                                 <option value="">Choose Account..</option>
@@ -118,7 +118,7 @@
                 bill_to_slack   : this.invoice_slack,
                 transaction_date : '',
                 account         : '',
-                transaction_type: this.default_transaction_type,
+                transaction_type: this.created_by_supplier ? 'EXPENSE' : this.default_transaction_type,
                 payment_method  : '',
                 amount          : '',
                 notes           : '',
@@ -139,6 +139,8 @@
             bill_to_prop: String,
             currency_codes: [Array, Object],
             default_transaction_type: String,
+            created_by_supplier: Boolean,
+            invoice_against_po_from_customer: Boolean,
         },
         mounted() {
             console.log('Add transaction widget loaded');
@@ -162,7 +164,7 @@
                 this.$validator.validateAll().then((result) => {
                     if (result) {
                         
-                        event_bus.$emit('start_processing');
+                        // event_bus.$emit('start_processing');
                         var formData = new FormData();
 
                         formData.append("access_token", window.settings.access_token);
@@ -173,6 +175,8 @@
                         formData.append("transaction_type", (this.transaction_type == null)?'':this.transaction_type);
                         formData.append("amount", (this.amount == null)?'':this.amount);
                         formData.append("payment_method", (this.payment_method == null)?'':this.payment_method);
+                        formData.append("created_by_supplier", this.created_by_supplier);
+                        formData.append("invoice_against_po_from_customer", this.invoice_against_po_from_customer);
 
                         axios.post(this.api_link, formData).then((response) => {
                             if(response.data.status_code == 200) {

@@ -185,6 +185,10 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_purchase_order/{slack?}', "PurchaseOrder@add_purchase_order")->name('edit_purchase_order');
     Route::get('/print_purchase_order/{slack}', "PurchaseOrder@print_purchase_order")->name('print_purchase_order');
 
+
+
+    Route::get('/make_purchase_order/{slack?}', "PurchaseOrder@make_purchase_order")->name('make_purchase_order');
+
     //invoice
     Route::get('/invoices', "Invoice@index")->name('invoices');
     Route::get('/invoice/{slack}', "Invoice@detail")->name('invoice_detail');

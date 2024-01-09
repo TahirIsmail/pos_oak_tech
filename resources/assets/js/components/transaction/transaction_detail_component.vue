@@ -83,7 +83,8 @@
             <div class="form-row mb-2">
                 <div class="form-group col-md-3">
                     <label for="transaction_type">{{ $t("Transaction Type") }}</label>
-                    <p>{{ transaction.transaction_type_data.label }}</p>
+                    <p v-if="is_customer && transaction_from_customer == 1">Expense/Debit</p>
+                    <p v-else>{{ transaction.transaction_type_data.label }}</p>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="transaction_code">{{ $t("Transaction Code") }}</label>
@@ -148,6 +149,7 @@
                 delete_transaction_api_link : '/api/delete_transaction/'+this.transaction_data.slack,
 
                 transaction : this.transaction_data,
+                transaction_from_customer: this.transaction_data.transaction_from_customer,
                 bill_to_link : '',
                 bill_to_link_text : '',
                 block_delete_transaction : ['CUSTOMER_ORDER']
@@ -155,7 +157,8 @@
         },
         props: {
             transaction_data: [Array, Object],
-            delete_transaction_access: Boolean
+            delete_transaction_access: Boolean,
+            is_customer: Boolean,
         },
         mounted() {
             console.log('Transaction detail page loaded');
