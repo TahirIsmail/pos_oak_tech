@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="card p-4">
+        {{ api_link }}
         <form @submit.prevent="submit_form">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -53,12 +54,10 @@
                     <span v-bind:class="{ 'error': errors.has('expense_category') }">{{ errors.first('expense_category')
                     }}</span>
                 </div>
-            </div>
-            <div class="form-row mb-2">
-                <div class="form-group col-md-3">
+                <div class="form-group col-sm-12 col-md-4">
                     <label for="name">{{ $t("Notes") }}</label>
                     <textarea name="notes" v-model="notes" v-validate="'required|max:65535'"
-                        class="form-control form-control-custom" rows="5"
+                        class="form-control form-control-custom" rows="1"
                         :placeholder="$t('Notes on this Current Expense')"></textarea>
 
                     <span v-bind:class="{ error: errors.has('notes') }">{{
@@ -66,23 +65,16 @@
                     }}</span>
 
                 </div>
-
-            </div>
-            <div class="form-row mb-2">
-                <div class="form-group col-md-4">
+                <div class="form-group col-sm-12 col-md-4">
                     <label for="expense_date">{{ $t("Expense Date") }}</label>
-                    <!-- <date-picker :format="date.format" :lang='date.lang' v-model="expense_date" name="expense_date"
-                        v-validate="'required|date_format:yyyy-MM-dd'"
-                        input-class="form-control form-control-custom bg-white"
-                        :placeholder="$t('Please enter Expense Date')" autocomplete="off"></date-picker> -->
                         <input type="date"  v-model="expense_date" name="expense_date" 
                         v-validate="'required|date_format:yyyy-MM-dd'"
-                        input-class="form-control form-control-custom bg-white"
+                        class="form-control form-control-custom bg-white"
                         :placeholder="$t('Please enter Expense Date')" autocomplete="off"/>
                     <span v-bind:class="{ 'error': errors.has('Expense Date') }">{{ errors.first('Expense Date')
                     }}</span>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-sm-12 col-md-4">
                     <label for="receipt_upload">{{
                         $t("Expense Receipt Upload") + "(pdf, msword, vnd)"
                     }}</label>
@@ -96,8 +88,7 @@
                         errors.first("receipt_upload")
                     }}</span>
                 </div>
-                
-                    <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto" v-if="expense_transaction == null">
+                <div class="form-group col-sm-12 col-md-4 col-lg-4" v-if="expense_transaction == null">
                         <label for="status">{{ $t("Status") }}</label>
                         <select name="status" v-model="status" v-validate="'required|numeric'"
                             class="form-control form-control-custom custom-select">
@@ -108,14 +99,8 @@
                         </select>
                         <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
                     </div>
-                
-
-
             </div>
-
-
-
-
+            
 
         </form>
         <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
@@ -161,7 +146,7 @@ export default {
                 lang: 'en',
                 format: 'hh:mm A'
             },
-            api_link: (this.expense_data == null) ? "/api/add_expense" : "/api/update_expense/" + this.expense_data.slack,
+            api_link: this.expense_data && this.expense_data.slack ? "/api/update_expense/" + this.expense_data.slack : "/api/add_expense",
             expense_slack: this.expense_data && this.expense_data.slack !== null ? this.expense_data.slack : '',
             expense_name: this.expense_data && this.expense_data.expense_name !== null ? this.expense_data.expense_name : '',
             status: (this.expense_data && this.expense_data.status !== null) ? this.expense_data.status : 0,
@@ -177,19 +162,20 @@ export default {
         console.log("Expense Component Loaded");
     },
     props: {
-        expense_categories: Array,
+        expense_categories: [Array, Object],
         expense_data: [Array, Object],
         selected_expense_cat_id: Number,
         statuses: Array
     },
     methods: {
         submit_form() {
+            this.$off("submit");
+            this.$off("close");
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.show_modal = true;
                     this.$on("submit", function () {
                         this.processing = true;
-                        // alert(this.api_link);
                         const formData = new FormData();
                         formData.append("access_token", window.settings.access_token);
                         formData.append("expense_name", this.expense_name);
@@ -202,11 +188,9 @@ export default {
                             let file = this.$refs.receipt_upload.files[i];
                             formData.append("receipt_upload[" + i + "]", file);
                         }
+                        console.log(...formData);
 
-
-                        axios
-                            .post(this.api_link, formData)
-                            .then((response) => {
+                        axios.post('/api/add_expense', formData).then((response) => {
                                 if (response.data.status_code == 200) {
                                     this.show_response_message(response.data.msg, "Success");
 
@@ -229,12 +213,10 @@ export default {
                                 console.log("error");
                                 console.log(error);
                             });
-                        this.$off("submit");
                     });
 
                     this.$on("close", function () {
                         this.show_modal = false;
-                        this.$off("close");
                     });
                 }
             });

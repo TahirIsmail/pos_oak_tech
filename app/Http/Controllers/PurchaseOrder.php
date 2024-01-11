@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Config;
 
 use App\Http\Resources\QuotationResource;
 use App\Models\Quotation as QuotationModel;
-
+use App\Models\Supplier;
 use Mpdf\Mpdf;
 use App\Models\User;
 
@@ -243,6 +243,8 @@ class PurchaseOrder extends Controller
 
         $data['quotation_data'] = $quotation_data;
 
+        
+
         if($request->logged_user_role_id == 2){
             $is_customer = true;
         }
@@ -250,6 +252,7 @@ class PurchaseOrder extends Controller
             $is_customer = false;
         }
         $data['is_customer'] = $is_customer;
+
 
         return view('purchase_order.make_purchase_order', $data);
     }

@@ -31,7 +31,14 @@
                         <span v-if="transaction.transaction_from_customer == 1">Expense/Debit</span>
                         <span v-else>{{ transaction.transaction_type_data.label }}</span>
                         </td>
-                        <td v-else>{{ transaction.transaction_type_data.label }}</td>
+                        <td v-else>
+                            <span v-if="is_supplier && transaction.invoice_created_by_supplier == 1">
+                            Income/Credit
+                            </span>
+                            <span v-else>
+                                {{ transaction.transaction_type_data.label }} 
+                            </span>
+                        </td>
                         <td v-if="!to_supplier">{{ transaction.account.label }}</td>
                         <td>{{ transaction.payment_method }}</td>
                         <td class="text-right">{{ transaction.amount }}</td>
@@ -72,6 +79,7 @@
             transaction_list: [Array, Object],
             created_by_supplier: Boolean,
             is_customer: Boolean,
+            is_supplier: Boolean,
         },
         mounted() {
             console.log('Transaction listing component loaded');

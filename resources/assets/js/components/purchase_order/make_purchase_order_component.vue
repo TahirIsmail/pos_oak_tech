@@ -221,6 +221,7 @@
                 search_product : '',
                 
                 supplier : '',
+
                 supplier_name : '',
                 purchase_order_slack : '',
                 po_number : '',

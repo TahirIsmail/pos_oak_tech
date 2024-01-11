@@ -50,7 +50,6 @@ class Expense extends Controller
             //    dd($request->complaint_by);
 
             if ($slack == null) {
-
                 if ($request->hasFile('receipt_upload')) {
                     // Get the uploaded file from the request.
                     $file = $request->file('receipt_upload');
@@ -251,7 +250,7 @@ class Expense extends Controller
 
     public function add_expense_transaction(Request $request)
     {
-        $bill = UserModel::select('id','slack','fullname','phone','email')->ShowSuperAdminRole()->first();
+        $bill = UserModel::select('id','slack','fullname','phone','email')->where('role_id', 1)->first();
         
         $bill_to_id = $bill['id'];
         $bill_to_name = $bill['fullname'];
@@ -279,7 +278,8 @@ class Expense extends Controller
             "payment_method_id" => $payment_method_data->id,
             "payment_method" => $payment_method_data->label,
             'bill_to_address' => '',
-            "bill_to" => $request->bill_to,
+            'bill_to' => 'OTHER_EXPENSE',
+            "other_expense_type" => $request->bill_to,
             "bill_to_id" => $bill_to_id,
             "bill_to_name" => $bill_to_name,
             "bill_to_contact" => $bill_to_contact,

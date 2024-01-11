@@ -114,8 +114,8 @@ class Quotation extends Controller
 
             $item_array = [];
             foreach($quotations as $key => $quotation){
-                
                 $quotation = $quotation->toArray($request);
+                
 
                 $item_array[$key][] = $quotation['quotation_number'];
                 $item_array[$key][] = ($quotation['quotation_reference'] != '')?$quotation['quotation_reference']:'-';

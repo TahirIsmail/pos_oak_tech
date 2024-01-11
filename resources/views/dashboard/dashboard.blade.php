@@ -5,5 +5,5 @@
 @endpush
 
 @section("content")
-    <dashboardcomponent :store="{{ json_encode($store)}}"></dashboardcomponent>
+    <dashboardcomponent :store="{{ json_encode($store)}}" :dashboard_data="{{ json_encode($dashboard_data) }}"> </dashboardcomponent>
 @endsection

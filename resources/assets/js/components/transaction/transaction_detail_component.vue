@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row card p-4">
         <div class="col-md-12">
 
             <div class="d-flex flex-wrap mb-4">
@@ -98,6 +98,14 @@
                     <label for="account">{{ $t("Account") }}</label>
                     <p v-if="transaction.account != null">{{ transaction.account.label }} ({{ transaction.account.account_type_data.account_type_constant }})</p>
                     <p v-else>-</p>
+                </div>
+                <div class="form-group col-md-3" v-if="transaction.other_expense_type">
+                    <label for="">{{ $t("Other Expense Type") }}</label>
+                    <p>{{ transaction.other_expense_type }}</p>                    
+                </div>
+                <div class="form-group col-md-3" v-if="transaction.other_expense_type">
+                    <label for="">{{ $t("Transaction for") }}</label>
+                    <p>{{ transaction.bill_to }}</p>                    
                 </div>
                 <div class="form-group col-md-3">
                     <label for="created_by">{{ $t("Created By") }}</label>

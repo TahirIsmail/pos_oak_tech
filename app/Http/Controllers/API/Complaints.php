@@ -13,6 +13,10 @@ use App\Models\Customer;
 use App\Models\Category;
 use App\Models\ComplaintCharge;
 use App\Models\User;
+use App\Models\PurchaseOrder;
+use App\Models\Invoice;
+
+
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Store as StoreModel;
@@ -49,7 +53,7 @@ use App\Http\Resources\Collections\OrderCollection;
 
 use App\Http\Controllers\API\Notification as NotificationAPI;
 use App\Http\Controllers\API\Otp as OtpAPI;
-
+use App\Models\InvoiceProduct;
 
 class Complaints extends Controller
 {
@@ -70,11 +74,9 @@ class Complaints extends Controller
 
         if ($request->ajax()) {
 
-            if($request->logged_user_role_id == 2){
+            if ($request->logged_user_role_id == 2) {
                 $data = ModelsComplaints::with('order', 'product', 'customer')->where('customer_id', $request->logged_user_customer_id)->get();
-
-            }
-            else{
+            } else {
                 $data = ModelsComplaints::with('order', 'product', 'customer')->get();
             }
 
@@ -83,7 +85,7 @@ class Complaints extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('order_id', function ($row) {
-                    return 'Order#' . $row->order->order_number;
+                    return 'Order#' . $row->order->invoice_reference;
                 })
                 ->addColumn('product_id', function ($row) {
                     return $row->product->name . ' (' . $row->product->product_code . ')';
@@ -122,12 +124,11 @@ class Complaints extends Controller
             }
 
 
-            $order_id = Order::select('id')->where('slack', $request->order_slack)->get();
+            $order_id = Invoice::select('id')->where('slack', $request->order_slack)->get();
             $customer_id = Customer::select('id',)->where('slack', $request->customer_slack)->get();
 
-            // dd($slack);
             if ($slack == null) {
-
+               
                 // dd($order_id[0]->id, $customer_id);
                 $customer_complaints = [
                     "slack" => $this->generate_slack("complaints"),
@@ -196,15 +197,15 @@ class Complaints extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
-            $customers_orders = Order::with(['customer_data' => function ($query) use ($request) {
-                $query->where('slack', $request->slack);
-            }])->get();
-
-            if ($customers_orders) {
+            $customer = Customer::select('id')->where('slack', $request->customer_slack)->get();
+            $customer_user = User::select('id')->where('customer_id', $customer[0]->id)->get();
+            $customerInvoices = Invoice::select('id', 'slack', 'invoice_number', 'invoice_reference')->where('invoice_against_po_from_customer', 1)->where('bill_to_id', $customer_user[0]['id'])->get();
+    
+            if ($customerInvoices) {
                 return response()->json($this->generate_response(
                     array(
                         "message" => "Order Against Customer Fetched successfully",
-                        "data" => $customers_orders,
+                        "data" => $customerInvoices,
                         'msg' => 'success',
                     ),
                     'SUCCESS'
@@ -230,10 +231,8 @@ class Complaints extends Controller
             }
 
             // dd($request->order_slack);
-            $orders = OrderProduct::with('product_data')->OrderJoin()->where('orders.slack', $request->order_slack)->get();
-            $productData = $orders->pluck('product_data');
-
-
+            $invoice = Invoice::select('id')->where('slack', $request->order_slack)->get();
+            $productData = InvoiceProduct::where('invoice_id', $invoice[0]['id'])->get();
             if ($productData) {
                 return response()->json($this->generate_response(
                     array(
@@ -329,17 +328,18 @@ class Complaints extends Controller
         }
     }
 
-    public function complaint_completed(Request $request){
-        try {          
+    public function complaint_completed(Request $request)
+    {
+        try {
 
-           
+
             $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
 
             $complaint->final_lab_staff_remark = $request->final_lab_staff_remark;
             $complaint->complaint_status = 'Completed Complaint';
             $complaint->complaint_completed_date =  date('Y-m-d');
             $complaint->save();
-            if($complaint){
+            if ($complaint) {
                 return response()->json($this->generate_response(
                     array(
                         "message" => "Customer Complaint Assign to Lab Technician Completed Successfully",
@@ -348,8 +348,7 @@ class Complaints extends Controller
                     ),
                     'SUCCESS'
                 ));
-            }
-            else{
+            } else {
                 return response()->json($this->generate_response(
                     array(
                         "message" => "Some Error Occur",
@@ -359,7 +358,6 @@ class Complaints extends Controller
                     'Fail'
                 ));
             }
-
         } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
@@ -371,10 +369,11 @@ class Complaints extends Controller
     }
 
 
-    public function assign_products_complaint(Request $request){
+    public function assign_products_complaint(Request $request)
+    {
         $complaint_id = ModelsComplaints::select('id')->where('slack', $request->complaint_slack)->first();
 
-        if($complaint_id){
+        if ($complaint_id) {
             $products = Product::with('subcategory.category')->where('link_to_complaint', $complaint_id->id)->get();
             $data['products'] = $products;
             return response()->json($this->generate_response(
@@ -386,10 +385,10 @@ class Complaints extends Controller
                 'SUCCESS'
             ));
         }
-       
     }
 
-    public function complaintInvoice(Request $request){
+    public function complaintInvoice(Request $request)
+    {
         try {
 
             if (!check_access(['A_CUSTOMER_COMPLAINT_MAKE_INVOICE'], true)) {
@@ -401,12 +400,12 @@ class Complaints extends Controller
             $products = Product::whereIn('id', $productIdsArray)->get();
             $chargeLabel = explode(',', $request->charge_label);
             $chargePrice = explode(',', $request->charge_price);
-        //   dd($complaint->id);
-            foreach($products as $product){
+            //   dd($complaint->id);
+            foreach ($products as $product) {
                 $total_complaint_amount_invoice += floatval($product->sale_amount_excluding_tax);
             }
 
-            foreach($chargePrice as $complaintPrice){
+            foreach ($chargePrice as $complaintPrice) {
                 $total_complaint_amount_invoice += floatval($complaintPrice);
             }
 
@@ -415,8 +414,7 @@ class Complaints extends Controller
             $complaint->final_total_amount = $total_complaint_amount_invoice;
             $complaint->save();
 
-            for($i = 0; $i < count($chargeLabel); $i++)
-            {
+            for ($i = 0; $i < count($chargeLabel); $i++) {
                 $complaint_charges = [
                     'slack' => $this->generate_slack('complaint_charges'),
                     'store_id' => $request->logged_user_store_id,
@@ -430,7 +428,7 @@ class Complaints extends Controller
 
 
 
-           
+
 
             DB::commit();
 
@@ -452,23 +450,24 @@ class Complaints extends Controller
         }
     }
 
-    public function fetchComplaintRecord(Request $request){
-        $complaints = ModelsComplaints::with('linkToProduct','complaintCharges', 'transactions')->where('slack', $request->complaint_slack)->get();
+    public function fetchComplaintRecord(Request $request)
+    {
+        $complaints = ModelsComplaints::with('linkToProduct', 'complaintCharges', 'transactions')->where('slack', $request->complaint_slack)->get();
         $total_complaint_amount_invoice = 0;
         $total_received_amount = 0;
         $total_pending_amount = 0;
         $cal = $complaints->toArray();
-        if($cal[0]['transactions']){
-            foreach($cal[0]['transactions'] as $transaction){
+        if ($cal[0]['transactions']) {
+            foreach ($cal[0]['transactions'] as $transaction) {
                 $total_received_amount += floatval($transaction['received_amount']);
             }
         }
 
-        foreach($cal[0]['link_to_product'] as $product){
+        foreach ($cal[0]['link_to_product'] as $product) {
             $total_complaint_amount_invoice += floatval($product['sale_amount_including_tax']);
         }
 
-        foreach($cal[0]['complaint_charges'] as $complaintPrice){
+        foreach ($cal[0]['complaint_charges'] as $complaintPrice) {
             $total_complaint_amount_invoice += floatval($complaintPrice['charge_price']);
         }
 
@@ -476,45 +475,45 @@ class Complaints extends Controller
 
         // dd($total_pending_amount, $total_complaint_amount_invoice, $total_received_amount);
 
-       $data['total_complaint_amount_invoice'] = $total_complaint_amount_invoice;
-       $data['total_received_amount'] = $total_received_amount;
-       $data['total_pending_amount'] = $total_pending_amount;
-       
-       $income_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
-       ->where('transaction_type_constant', '=', trim('INCOME'))
-       ->first();
-       
-       $expense_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
-       ->where('transaction_type_constant', '=', trim('EXPENSE'))
-       ->first();        
+        $data['total_complaint_amount_invoice'] = $total_complaint_amount_invoice;
+        $data['total_received_amount'] = $total_received_amount;
+        $data['total_pending_amount'] = $total_pending_amount;
 
-       $data['transaction_type'] =  $income_transaction_type_data;
+        $income_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+            ->where('transaction_type_constant', '=', trim('INCOME'))
+            ->first();
+
+        $expense_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+            ->where('transaction_type_constant', '=', trim('EXPENSE'))
+            ->first();
+
+        $data['transaction_type'] =  $income_transaction_type_data;
         $data['accounts'] = AccountModel::select('accounts.slack', 'accounts.label', 'master_account_type.label as account_type_label')
-        ->masterAccountTypeJoin()
-        ->active()
-        ->get();
+            ->masterAccountTypeJoin()
+            ->active()
+            ->get();
 
         // dd($data['transaction_type']);
 
         $data['payment_methods'] = PaymentMethodModel::select('slack', 'label')
-        ->active()
-        ->skipPaymentGateway()
-        ->get();
+            ->active()
+            ->skipPaymentGateway()
+            ->get();
 
         $store_data = StoreModel::select('currency_name', 'currency_code', 'printnode_enabled')
-        ->where([
-            ['stores.id', '=', request()->logged_user_store_id]
-        ])
-        ->active()
-        ->first();
+            ->where([
+                ['stores.id', '=', request()->logged_user_store_id]
+            ])
+            ->active()
+            ->first();
 
         $data['currency_codes'] = [
             'store_currency' => $store_data->currency_code,
         ];
 
         $data['complaints'] = $complaints;
-        
-        if($complaints){
+
+        if ($complaints) {
             return response()->json($this->generate_response(
                 array(
                     "message" => "",
@@ -526,7 +525,8 @@ class Complaints extends Controller
         }
     }
 
-    public function request_requirement(Request $request){
+    public function request_requirement(Request $request)
+    {
 
         $complaints = ModelsComplaints::where('slack', $request->complaint_slack)->get();
         if ($complaints->count() > 0) {
@@ -545,7 +545,8 @@ class Complaints extends Controller
     }
 
 
-    public function complaint_submit_transaction(Request $request){
+    public function complaint_submit_transaction(Request $request)
+    {
 
         $account_id = AccountModel::where('slack', $request->account)->first();
         $payment_method_id = PaymentMethodModel::where('slack', $request->payment_method)->first();
@@ -576,32 +577,34 @@ class Complaints extends Controller
         ];
 
         // dd($transaction);
-        
+
         $transaction_id = TransactionModel::create($transaction)->id;
 
         $code_start_config = Config::get('constants.unique_code_start.transaction');
-        $code_start = (isset($code_start_config))?$code_start_config:100;
-        
+        $code_start = (isset($code_start_config)) ? $code_start_config : 100;
+
         $transaction_code = [
-            "transaction_code" => ($code_start+$transaction_id)
+            "transaction_code" => ($code_start + $transaction_id)
         ];
         TransactionModel::where('id', $transaction_id)
-        ->update($transaction_code);
+            ->update($transaction_code);
 
-        if($transaction_id){
+        if ($transaction_id) {
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Transaction updated successfully", 
+                    "message" => "Transaction updated successfully",
                     "data" => $transaction_id
-                ), 'SUCCESS'
+                ),
+                'SUCCESS'
             ));
         }
     }
 
 
-    public function fetchCategorySubcategory(Request $request){
+    public function fetchCategorySubcategory(Request $request)
+    {
         $categories = Category::with('subcategories')->get();
-        if($categories){
+        if ($categories) {
             return response()->json($this->generate_response(
                 array(
                     "message" => "Requirement Request Submitted Successfully",
@@ -614,8 +617,9 @@ class Complaints extends Controller
     }
 
 
-    public function fetchCategoryProduct(Request $request){
-        $category = Category::where('slack',$request->category_slack)->first();
+    public function fetchCategoryProduct(Request $request)
+    {
+        $category = Category::where('slack', $request->category_slack)->first();
         // dd($category);
         if ($category) {
             $subCategories = $category->subcategories->toArray();
@@ -628,23 +632,24 @@ class Complaints extends Controller
                     array(
                         "message" => "",
                         "data" => $data,
-                       'msg' =>'success',
+                        'msg' => 'success',
                     ),
                     'SUCCESS'
                 ));
             }
+        }
     }
-}
 
-    public function fetchSubCategoryProduct(Request $request){
+    public function fetchSubCategoryProduct(Request $request)
+    {
         $products = Product::with('subcategory.category')->where('sub_category_id', $request->sub_category_id)->where('quantity', 1)->get();
-        if($products){
+        if ($products) {
             $data['products'] = $products;
             return response()->json($this->generate_response(
                 array(
                     "message" => "",
                     "data" => $data,
-                   'msg' =>'success',
+                    'msg' => 'success',
                 ),
                 'SUCCESS'
             ));
@@ -661,11 +666,11 @@ class Complaints extends Controller
             $productIdsArray = explode(",", $request->product_ids);
             $complaint_id = ModelsComplaints::where('slack', $request->complaint_slack)->first();
             DB::beginTransaction();
-            foreach($productIdsArray as $productId){
+            foreach ($productIdsArray as $productId) {
                 $complaint_update = [
                     'admin_again_remark' => $request->admin_again_remark,
-                    'due_date' => $request->extend_date,  
-                    'complaint_status'   => 'Request Completed'               
+                    'due_date' => $request->extend_date,
+                    'complaint_status'   => 'Request Completed'
                 ];
                 $complaint_id->update($complaint_update);
                 $product = Product::find($productId);
@@ -674,7 +679,7 @@ class Complaints extends Controller
                 $product->save();
             }
             DB::commit();
-            if($product){
+            if ($product) {
                 return response()->json($this->generate_response(
                     array(
                         "message" => "Requirement Request Completed Successfully!",
@@ -694,17 +699,18 @@ class Complaints extends Controller
         }
     }
 
-    public function fetchSelectedProduct(Request $request){
+    public function fetchSelectedProduct(Request $request)
+    {
         // dd($request->product_ids);
         $productIdsArray = explode(",", $request->product_ids[0]);
         $products = Product::with('subcategory.category')->whereIn('id', $productIdsArray)->where('quantity', 1)->get();
-        if($products){
+        if ($products) {
             $data['products'] = $products;
             return response()->json($this->generate_response(
                 array(
                     "message" => "",
                     "data" => $data,
-                   'msg' =>'success',
+                    'msg' => 'success',
                 ),
                 'SUCCESS'
             ));

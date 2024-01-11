@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <form @submit.prevent="submit_form">
+    <div class="card p-4">
+        <form  @submit.prevent="submit_form">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                     <span class="text-title" v-if="expense_slack == null">{{
@@ -53,9 +53,8 @@
                     <span v-bind:class="{ 'error': errors.has('expense_category') }">{{ errors.first('expense_category')
                     }}</span>
                 </div>
-            </div>
-            <div class="form-row mb-2">
-                <div class="form-group col-md-3">
+
+                <div class="form-group col-sm-12 col-md-4">
                     <label for="name">{{ $t("Notes") }}</label>
                     <textarea name="notes" v-model="notes" v-validate="'required|max:65535'"
                         class="form-control form-control-custom" rows="5"
@@ -67,9 +66,7 @@
 
                 </div>
 
-            </div>
-            <div class="form-row mb-2">
-                <div class="form-group col-md-4">
+                <div class="form-group col-sm-12 col-md-4">
                     <label for="expense_date">{{ $t("Expense Date") }}</label>
                     <date-picker :format="date.format" :lang='date.lang' v-model="expense_date" name="expense_date"
                         v-validate="'required|date_format:yyyy-MM-dd'"
@@ -78,7 +75,7 @@
                     <span v-bind:class="{ 'error': errors.has('Expense Date') }">{{ errors.first('Expense Date')
                     }}</span>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-sm-12 col-md-4">
                     <label for="receipt_upload">{{
                         $t("Expense Receipt Upload") + "(pdf, msword, vnd)"
                     }}</label>
@@ -92,8 +89,9 @@
                         errors.first("receipt_upload")
                     }}</span>
                 </div>
-                
-                    <div class="form-group col-sm-12 col-md-10 col-lg-4 mx-auto" v-if="expense_transaction == null">
+
+
+                <div class="form-group col-sm-12 col-md-4 col-lg-4 mx-auto" v-if="expense_transaction == null">
                         <label for="status">{{ $t("Status") }}</label>
                         <select name="status" v-model="status" v-validate="'required|numeric'"
                             class="form-control form-control-custom custom-select">
@@ -104,14 +102,11 @@
                         </select>
                         <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
                     </div>
-                
 
 
             </div>
-
-
-
-
+            
+            
 
         </form>
         <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
@@ -135,9 +130,9 @@
 </template>
 <script>
 "use strict";
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
-import moment from "moment";
+// import DatePicker from 'vue2-datepicker';
+// import 'vue2-datepicker/index.css';
+// import moment from "moment";
 export default {
     data() {
         return {
@@ -182,6 +177,7 @@ export default {
     },
     methods: {
         submit_form() {
+            // alert('working');
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.show_modal = true;
@@ -237,10 +233,10 @@ export default {
                 }
             });
         },
-        convert_date_format(date) {
+        // convert_date_format(date) {
 
-            return (date != '') ? moment(date).format("YYYY-MM-DD") : '';
-        },
+        //     return (date != '') ? moment(date).format("YYYY-MM-DD") : '';
+        // },
 
 
     },

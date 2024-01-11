@@ -28,7 +28,7 @@ class Complaints extends Model
         return $this->hasMany(Product::class, 'link_to_complaint');
     }
     public function order(){
-        return $this->belongsTo(Order::class, 'order_id');
+        return $this->belongsTo(Invoice::class, 'order_id');
     }
     public function customer(){
         return $this->belongsTo(Customer::class, 'customer_id');

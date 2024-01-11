@@ -1,8 +1,8 @@
 @extends('layouts.layout')
 <style>
-    .dataTables_scroll{
+    /* .dataTables_scroll{
         overflow: hidden !important;
-    }
+    } */
 </style>
 @section("content")
 <div class="row">
@@ -57,7 +57,7 @@
 @endpush
 
 <style>
-    .card{
+    /* .card{
         border-radius: 10px !important;
     }
     #listing_wrapper{
@@ -67,5 +67,5 @@
     }
     .dataTables_scrollHeadInner{
         width: none !important;
-    }
+    } */
 </style>

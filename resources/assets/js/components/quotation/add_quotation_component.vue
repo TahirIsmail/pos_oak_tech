@@ -405,6 +405,7 @@ export default {
             supplier: '',
             supplier_list: [],
             tax_status: false,
+            is_supplier: this.is_supplier,
 
             bill_to: (this.quotation_data == null) ? '' : this.quotation_data.bill_to,
             bill_to_slack: (this.quotation_data == null) ? '' : (this.quotation_data.bill_to == 'SUPPLIER') ? this.quotation_data.supplier.slack : this.quotation_data.customer.slack,

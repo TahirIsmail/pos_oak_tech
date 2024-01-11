@@ -74,7 +74,7 @@ class ComplaintsController extends Controller
         check_access(array($data['action_key']));
         $users = UserModel::withCount(['assignComplaints' => function ($query) {
             $query->where('complaint_status', '!=', 'Completed Complaint');
-        }])->get();
+        }])->whereNotIn('role_id', [1,2,3])->get();
         
         $complaint = ComplaintModel::with('customer', 'order', 'product', 'user')->where('slack', '=', $slack)->first();
         $data['labTechnician'] = $users;

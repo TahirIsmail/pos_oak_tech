@@ -214,7 +214,7 @@
                                 <option selected disabled>Choose Employer Post..</option>
                                 <option value="Sales Person">Sales Person</option>
                                 <option value="Accountant">Accountant</option>
-                                <option value="Point of Content">Point of Content</option>
+                                <option value="Point of Content">Point of Contact</option>
                                 <option value="Other">Other</option>                                
                             </select>
                         <span :class="{ 'error': errors.has(`position ${index}`) }">{{ errors.first(`position ${index}`) }}</span>

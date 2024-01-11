@@ -38,4 +38,8 @@ class InvoiceProduct extends Model
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
     }
+
+    public function product(){
+        return $this->hasOne(Product::class, 'id', 'product_id');
+    }
 }

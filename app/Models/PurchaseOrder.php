@@ -76,8 +76,11 @@ class PurchaseOrder extends Model
         return $this->hasOne('App\Models\MasterTaxOption', 'id', 'tax_option_id')->where('master_tax_option.status', 1);
     }
 
-    public function invoices(){
-        return $this->hasMany('App\Models\Invoice', 'parent_po_id', 'id')->select('slack', 'invoice_number')->orderBy('id', 'desc');
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'parent_po_id', 'id')
+            ->select('slack', 'invoice_number', 'invoice_reference')
+            ->orderBy('id', 'desc');
     }
 
     public function parseDateOnly($date){

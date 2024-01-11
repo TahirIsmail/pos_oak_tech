@@ -88,7 +88,7 @@
           ></date-picker>
         </div>
       </div>
-
+      
       <!--  ====================== total customer vendors and staff start ==========   -->
 
       <div class="d-flex flex-wrap mb-4">
@@ -119,14 +119,14 @@
                 <div class="forcast-cardbox">
                   <h6 class="forcast-title">Net Profit</h6>
                   <div class="forcast-details">
-                    <h1 class="forcast-value">$42.5k</h1>
-                    <p class="forcast-status">
+                    <h1 class="forcast-value">RS: {{ dashboard_data.total_net_profits }}</h1>
+                    <!-- <p class="forcast-status">
                       <span class="percentage color-success">
                         <span data-feather="arrow-up"></span>
                         <span>25%</span>
                       </span>
                       <span class="forcast-text">Since last month</span>
-                    </p>
+                    </p> -->
                   </div>
                   <div class="forcast__chart">
                     <div class="parentContainer">
@@ -153,14 +153,14 @@
                 <div class="forcast-cardbox">
                   <h6 class="forcast-title">Total Sale Value</h6>
                   <div class="forcast-details">
-                    <h1 class="forcast-value">$42.5k</h1>
-                    <p class="forcast-status">
+                    <span class="forcast-value">RS:{{ (dashboard_data.total_sale_values) ? dashboard_data.total_sale_values : '0.00' }}</span>
+                    <!-- <p class="forcast-status">
                       <span class="percentage color-success">
                         <span data-feather="arrow-up"></span>
                         <span>25%</span>
                       </span>
                       <span class="forcast-text">Since last month</span>
-                    </p>
+                    </p> -->
                   </div>
                   <div class="forcast__chart">
                     <div class="parentContainer">
@@ -176,6 +176,7 @@
                 <!-- ends: .forcast-cardbox -->
               </div>
 
+
               <div
                 class="col-sm-12 col-md-12 col-lg-3"
                 style="
@@ -185,16 +186,50 @@
                 "
               >
                 <div class="forcast-cardbox">
-                  <h6 class="forcast-title">Total Revenue</h6>
+                  <h6 class="forcast-title">Total Invoices</h6>
                   <div class="forcast-details">
-                    <h1 class="forcast-value">$42.5k</h1>
-                    <p class="forcast-status">
+                    <h1 class="forcast-value">{{ (dashboard_data.total_invoices) ? dashboard_data.total_invoices : '0.00' }}</h1>
+                    <!-- <p class="forcast-status">
                       <span class="percentage color-success">
                         <span data-feather="arrow-up"></span>
                         <span>25%</span>
                       </span>
                       <span class="forcast-text">Since last month</span>
-                    </p>
+                    </p> -->
+                  </div>
+                  <div class="forcast__chart">
+                    <div class="parentContainer">
+                      <div>
+                        <canvas
+                          class="forcart_canvas"
+                          ref="lineChartCanvastInvoices"
+                        ></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ends: .forcast-cardbox -->
+              </div>
+
+              <div
+                class="col-sm-12 col-md-12 col-lg-3"
+                style="
+                  border-radius: 20px;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                "
+              >
+                <div class="forcast-cardbox">
+                  <h6 class="forcast-title">Total Products</h6>
+                  <div class="forcast-details">
+                    <h1 class="forcast-value">{{ dashboard_data.total_products }}</h1>
+                    <!-- <p class="forcast-status">
+                      <span class="percentage color-success">
+                        <span data-feather="arrow-up"></span>
+                        <span>25%</span>
+                      </span>
+                      <span class="forcast-text">Since last month</span>
+                    </p> -->
                   </div>
                   <div class="forcast__chart">
                     <div class="parentContainer">
@@ -210,53 +245,9 @@
                 <!-- ends: .forcast-cardbox -->
               </div>
 
-              <div
-                class="col-sm-12 col-md-12 col-lg-3"
-                style="
-                  border-radius: 20px;
-                  margin-top: 10px;
-                  margin-bottom: 10px;
-                "
-              >
-                <div class="forcast-cardbox">
-                  <h6 class="forcast-title">Total Invoices</h6>
-                  <div class="forcast-details">
-                    <h1 class="forcast-value">$42.5k</h1>
-                    <p class="forcast-status">
-                      <span class="percentage color-success">
-                        <span data-feather="arrow-up"></span>
-                        <span>25%</span>
-                      </span>
-                      <span class="forcast-text">Since last month</span>
-                    </p>
-                  </div>
-                  <div class="forcast__chart">
-                    <div class="parentContainer">
-                      <div>
-                        <canvas
-                          class="forcart_canvas"
-                          ref="lineChartCanvastInvoices"
-                        ></canvas>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- ends: .forcast-cardbox -->
-              </div>
+             
             </div>
           </div>
-
-
-
-
-
-
-
-
-
-
-
-
             
             <div
               class="col-sm-12 col-md-12 col-lg-6 mb-5"
@@ -266,20 +257,20 @@
                 class="row1 ap-po-details ap-po-details--2 radius-xl bg-white d-flex"
                 style="padding: 25px"
               >
-                <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-4 col-lg-4">
                   <div class="overview-content">
-                    <h1>7,461</h1>
+                    <h1>{{ dashboard_data.total_suppliers }}</h1>
                     <p>Vendors/Suppliers</p>
-                    <div class="ap-po-details-time">
+                    <!-- <div class="ap-po-details-time">
                       <span class="color-success"
                         ><i class="las la-arrow-up"></i>
                         <strong>25%</strong></span
                       >
                       <small>Since last week</small>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
-                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                <div class="ap-po-timeChart col-sm-12 col-md-8 col-lg-8">
                   <div class="overview-single__chart d-md-flex align-items-end">
                     <div class="parentContainer">
                       <div>
@@ -300,20 +291,20 @@
                 class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
                 style="padding: 25px"
               >
-                <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-3 col-lg-3">
                   <div class="overview-content">
-                    <h1>7,461</h1>
-                    <p>Users/Customers</p>
-                    <div class="ap-po-details-time">
+                    <h1>{{ dashboard_data.total_customers }}</h1>
+                    <p>Customers</p>
+                    <!-- <div class="ap-po-details-time">
                       <span class="color-success"
                         ><i class="las la-arrow-up"></i>
                         <strong>25%</strong></span
                       >
                       <small>Since last week</small>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
-                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                <div class="ap-po-timeChart col-sm-12 col-md-9 col-lg-9">
                   <div class="overview-single__chart d-md-flex align-items-end">
                     <div class="parentContainer">
                       <div>
@@ -334,20 +325,20 @@
                 class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
                 style="padding: 25px"
               >
-                <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-4 col-lg-4">
                   <div class="overview-content">
-                    <h1>7,461</h1>
+                    <h1>{{ dashboard_data.total_staff }}</h1>
                     <p>Staff</p>
-                    <div class="ap-po-details-time">
+                    <!-- <div class="ap-po-details-time">
                       <span class="color-success"
                         ><i class="las la-arrow-up"></i>
                         <strong>25%</strong></span
                       >
                       <small>Since last week</small>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
-                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                <div class="ap-po-timeChart col-sm-12 col-md-8 col-lg-8">
                   <div class="overview-single__chart d-md-flex align-items-end">
                     <div class="parentContainer">
                       <div>
@@ -368,20 +359,20 @@
                 class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
                 style="padding: 25px"
               >
-                <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-4 col-lg-4">
                   <div class="overview-content">
-                    <h1>7,461</h1>
+                    <h1>{{ dashboard_data.total_purchase_orders }}</h1>
                     <p>Purchase Order</p>
-                    <div class="ap-po-details-time">
+                    <!-- <div class="ap-po-details-time">
                       <span class="color-success"
                         ><i class="las la-arrow-up"></i>
                         <strong>25%</strong></span
                       >
                       <small>Since last week</small>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
-                <div class="ap-po-timeChart col-sm-12 col-md-4 col-lg-6">
+                <div class="ap-po-timeChart col-sm-12 col-md-8 col-lg-8">
                   <div class="overview-single__chart d-md-flex align-items-end">
                     <div class="parentContainer">
                       <div>
@@ -469,7 +460,7 @@
               <div class="card-body">
                 <div class="tab-content">
                   <div
-                    class="tab-pane fade"
+                    class="tab-pane fade active show"
                     id="t_revenue-week"
                     role="tabpanel"
                     aria-labelledby="t_revenue-week-tab"
@@ -480,7 +471,7 @@
                           >Total Net Profit</span
                         >
                         <h2 class="cashflow-display__amount color-primary">
-                          $2,784
+                          RS: {{ dashboard_data.total_net_profits }}
                         </h2>
                       </div>
                       <!-- ends: .cashflow-display__single -->
@@ -488,14 +479,14 @@
                         <span class="cashflow-display__title"
                           >Total Income</span
                         >
-                        <h2 class="cashflow-display__amount">$4,240</h2>
+                        <h2 class="cashflow-display__amount">RS: {{ dashboard_data.total_income }}</h2>
                       </div>
                       <!-- ends: .cashflow-display__single -->
                       <div class="cashflow-display__single">
                         <span class="cashflow-display__title"
                           >Total Expense</span
                         >
-                        <h2 class="cashflow-display__amount">$2,470</h2>
+                        <h2 class="cashflow-display__amount">RS: {{ dashboard_data.total_expense }}</h2>
                       </div>
                       <!-- ends: .cashflow-display__single -->
                     </div>
@@ -583,7 +574,7 @@
                     </div>
                   </div>
                   <div
-                    class="tab-pane fade active show"
+                    class="tab-pane fade"
                     id="t_revenue-year"
                     role="tabpanel"
                     aria-labelledby="t_revenue-year-tab"
@@ -648,17 +639,7 @@
                 <h6>TOTAL SALE AND PURCHASE</h6>
                 <div class="card-extra">
                   <ul class="card-tab-links mr-3 nav-tabs nav" role="tablist">
-                    <li>
-                      <a
-                        class="active"
-                        href="#tl_revenue-today"
-                        data-toggle="tab"
-                        id="tl_revenue-today-tab"
-                        role="tab"
-                        aria-selected="false"
-                        >Today</a
-                      >
-                    </li>
+                    
                     <li>
                       <a
                         href="#tl_revenue-week"
@@ -707,66 +688,20 @@
               <!-- ends: .card-header -->
               <div class="card-body pt-0">
                 <div class="tab-content">
+                 
                   <div
                     class="tab-pane fade active show"
-                    id="tl_revenue-today"
-                    role="tabpanel"
-                    aria-labelledby="tl_revenue-today-tab"
-                  >
-                    <div class="revenue-labels">
-                      <div class="current">
-                        <strong class="text-third">$72,784</strong>
-                        <span>Total Sale</span>
-                      </div>
-                      <div>
-                        <strong>$52,240</strong>
-                        <span style="color: #868eae !important"
-                          >Total Purchase</span
-                        >
-                      </div>
-                    </div>
-                    <!-- ends: .performance-stats -->
-
-                    <div class="wp-chart">
-                      <div class="parentContainer">
-                        <div>
-                          <canvas
-                            class="canvasdispaly"
-                            ref="myChart6TExtra"
-                          ></canvas>
-                        </div>
-                      </div>
-                      <ul class="legend-static" style="margin-top: 7px">
-                        <li class="custom-label">
-                          <span
-                            style="background-color: rgb(95, 99, 242)"
-                          ></span
-                          >Total Sale
-                        </li>
-                        <li class="custom-label">
-                          <span
-                            style="
-                              background-color: rgb(134, 142, 174) !important;
-                            "
-                          ></span
-                          >Total Purchase
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div
-                    class="tab-pane fade"
                     id="tl_revenue-week"
                     role="tabpanel"
                     aria-labelledby="tl_revenue-week-tab"
                   >
                     <div class="revenue-labels">
                       <div class="current">
-                        <strong class="text-third">$72,784</strong>
+                        <strong class="text-third">RS:{{ (dashboard_data.total_sale_values) ? dashboard_data.total_sale_values : '0.00' }}</strong>
                         <span>Total Sale</span>
                       </div>
                       <div>
-                        <strong>$52,240</strong>
+                        <strong>RS: {{ dashboard_data.total_purchase_order_values }}</strong>
                         <span style="color: #868eae !important"
                           >Total Purchase</span
                         >
@@ -856,11 +791,11 @@
                   >
                     <div class="revenue-labels">
                       <div class="current">
-                        <strong class="text-third">$72,784</strong>
+                        <strong class="text-third">RS:{{ (dashboard_data.total_sale_values) ? dashboard_data.total_sale_values : '0.00' }}</strong>
                         <span>Total Sale</span>
                       </div>
                       <div>
-                        <strong>$52,240</strong>
+                        <strong>RS: {{ dashboard_data.total_purchase_order_values }}</strong>
                         <span style="color: #868eae !important"
                           >Total Purchase</span
                         >
@@ -912,17 +847,7 @@
                 <h6>TOTAL STOCK-IN AND STOCK-OUT</h6>
                 <div class="card-extra">
                   <ul class="card-tab-links mr-3 nav-tabs nav" role="tablist">
-                    <li>
-                      <a
-                        class="active"
-                        href="#tl_stock-today"
-                        data-toggle="tab"
-                        id="tl_stock-today-tab"
-                        role="tab"
-                        aria-selected="false"
-                        >Today</a
-                      >
-                    </li>
+                    
                     <li>
                       <a
                         href="#tl_stock-week"
@@ -971,66 +896,20 @@
               <!-- ends: .card-header -->
               <div class="card-body pt-0">
                 <div class="tab-content">
+                 
                   <div
-                    class="tab-pane fade active show"
-                    id="tl_stock-today"
-                    role="tabpanel"
-                    aria-labelledby="tl_stock-today-tab"
-                  >
-                    <div class="revenue-labels">
-                      <div class="current">
-                        <strong class="text-third">$72,784</strong>
-                        <span>Total Stock-In</span>
-                      </div>
-                      <div>
-                        <strong>$52,240</strong>
-                        <span style="color: #868eae !important"
-                          >Total Stock-Out</span
-                        >
-                      </div>
-                    </div>
-                    <!-- ends: .performance-stats -->
-
-                    <div class="wp-chart">
-                      <div class="parentContainer">
-                        <div>
-                          <canvas
-                            class="canvasdispaly"
-                            ref="myChart6TodayExtra"
-                          ></canvas>
-                        </div>
-                      </div>
-                      <ul class="legend-static">
-                        <li class="custom-label">
-                          <span
-                            style="background-color: rgb(95, 99, 242)"
-                          ></span
-                          >Total Stock-In
-                        </li>
-                        <li class="custom-label">
-                          <span
-                            style="
-                              background-color: rgb(134, 142, 174) !important;
-                            "
-                          ></span
-                          >Total Stock-Out
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div
-                    class="tab-pane fade"
+                    class="tab-pane fade  active show"
                     id="tl_stock-week"
                     role="tabpanel"
                     aria-labelledby="tl_stock-week-tab"
                   >
                     <div class="revenue-labels">
                       <div class="current">
-                        <strong class="text-third">$72,784</strong>
-                        <span>Total Stock-In</span>
+                        <strong class="text-third">RS:{{ (dashboard_data.total_sale_values) ? dashboard_data.total_sale_values : '0.00' }}</strong>
+                        <span>Total Stock-In</span> 
                       </div>
                       <div>
-                        <strong>$52,240</strong>
+                        <strong>RS:{{ (dashboard_data.total_sale_values) ? dashboard_data.total_sale_values : '0.00' }}</strong>
                         <span style="color: #868eae !important"
                           >Total Stock-Out</span
                         >
@@ -1196,7 +1075,14 @@ export default {
       stats_processing: false,
 
       transactions: [],
-      chartData: [45, 35, 50, 20, 70, 40, 15],
+      chartData: [45, 35, 50, 20, 70, 40, 15, 3, 5, 2, 2, 34],
+      total_sales_per_month: this.dashboard_data.all_sale_according_to_month,
+      total_invoices_per_month: this.dashboard_data.total_invoices_per_month,
+      total_customers_per_month: this.dashboard_data.total_customers_per_month,
+      total_suppliers_per_month: this.dashboard_data.total_suppliers_per_month,
+      total_staff_per_month: this.dashboard_data.total_staff_per_month,
+      total_purchase_orders_per_month: this.dashboard_data.total_purchase_orders_per_month,
+      total_products_per_month: this.dashboard_data.total_products_per_month,
 
       todays_sales_count_chart_color: "#1F6EEB",
       todays_sales_value_chart_color: "#FF6283",
@@ -1405,6 +1291,8 @@ export default {
   props: {
     store: [Array, Object],
     value: Number,
+    dashboard_data: [Array, Object]
+    
   },
 
   mounted() {
@@ -1452,11 +1340,11 @@ export default {
         const chart = new Chart(ctx, {
           type: "bar",
           data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
             datasets: [
               {
-                label: "New Contact",
-                data: this.chartData,
+                label: "New Vendors/Suppliers",
+                data: this.total_suppliers_per_month,
                 backgroundColor: "#FF69A520",
                 hoverBackgroundColor: "#FF69A5",
               },
@@ -1531,20 +1419,20 @@ export default {
 
     createBarChart() {
       const selector = "myChart13";
-      const bgColor = "#5F63F220";
+      const bgColor = "#5F63F2";
       const hBgColor = "#5F63F2";
-      const label = "New Deals";
+      const label = "New Customers";
 
       const ctx = this.$refs.myChart13;
       if (ctx) {
         const chart = new Chart(ctx, {
           type: "bar",
           data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
             datasets: [
               {
                 label: label,
-                data: [45, 35, 50, 20, 70, 40, 15],
+                data: this.total_customers_per_month,
                 backgroundColor: bgColor,
                 hoverBackgroundColor: hBgColor,
               },
@@ -1622,18 +1510,18 @@ export default {
       const selector = "myChart14";
       const bgColor = "#20C99720";
       const hBgColor = "#20C997";
-      const label = "New Leads";
+      const label = "New Staff";
 
       const ctx = this.$refs.myChart14Ref;
       if (ctx) {
         const chart = new Chart(ctx, {
           type: "bar",
           data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
             datasets: [
               {
                 label: label,
-                data: this.chartData,
+                data: this.total_staff_per_month,
                 backgroundColor: bgColor,
                 hoverBackgroundColor: hBgColor,
               },
@@ -1711,18 +1599,18 @@ export default {
       const selector = "myChart15Canvas";
       const bgColor = "#2C99FF20";
       const hBgColor = "#2C99FF";
-      const label = "Total";
+      const label = "Total Purchase Orders";
 
       const canvas = this.$refs.myChart15Canvas;
       if (canvas) {
         const chart = new Chart(canvas, {
           type: "bar",
           data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
             datasets: [
               {
                 label: label,
-                data: this.chartData,
+                data: this.total_purchase_orders_per_month,
                 backgroundColor: bgColor,
                 hoverBackgroundColor: hBgColor,
               },
@@ -2555,23 +2443,25 @@ export default {
       const canvas = this.$refs.lineChartCanvas;
       const chartData = {
         labels: [
-          "Label 1",
-          "Label 2",
-          "Label 3",
-          "Label 4",
-          "Label 5",
-          "Label 6",
-          "Label 7",
-          "Label 8",
-          "Label 9",
-          "Label 10",
+        "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
         ],
         datasets: [
           {
             borderColor: "#5F63F2",
             fill: true,
             backgroundColor: "rgba(95, 99, 242, 0.09)",
-            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             tension: 0.4,
             label: "Line Chart dataset",
           },
@@ -2607,25 +2497,27 @@ export default {
       const canvas = this.$refs.lineChartCanvastvalue;
       const chartData = {
         labels: [
-          "Label 1",
-          "Label 2",
-          "Label 3",
-          "Label 4",
-          "Label 5",
-          "Label 6",
-          "Label 7",
-          "Label 8",
-          "Label 9",
-          "Label 10",
+        "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
         ],
         datasets: [
           {
             borderColor: "#FFA500",
             fill: true,
             backgroundColor: "rgba(255, 165, 0, 0.09)",
-            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            data: this.total_sales_per_month,
             tension: 0.4,
-            label: "Line Chart dataset",
+            label: "Income From Customer",
           },
         ],
       };
@@ -2659,25 +2551,27 @@ export default {
       const canvas = this.$refs.lineChartCanvastRevenue;
       const chartData = {
         labels: [
-          "Label 1",
-          "Label 2",
-          "Label 3",
-          "Label 4",
-          "Label 5",
-          "Label 6",
-          "Label 7",
-          "Label 8",
-          "Label 9",
-          "Label 10",
+        "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
         ],
         datasets: [
           {
             borderColor: " #006400",
             fill: true,
             backgroundColor: "rgba(0, 100, 0, 0.09)",
-            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            data: this.total_products_per_month,
             tension: 0.4,
-            label: "Line Chart dataset",
+            label: "Products",
           },
         ],
       };
@@ -2711,25 +2605,27 @@ export default {
       const canvas = this.$refs.lineChartCanvastInvoices;
       const chartData = {
         labels: [
-          "Label 1",
-          "Label 2",
-          "Label 3",
-          "Label 4",
-          "Label 5",
-          "Label 6",
-          "Label 7",
-          "Label 8",
-          "Label 9",
-          "Label 10",
+        "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
         ],
         datasets: [
           {
             borderColor: " #8B0000",
             fill: true,
             backgroundColor: "rgba(139, 0, 0, 0.09)",
-            data: [30, 10, 20, 25, 20, 30, 15, 25, 15, 10],
+            data: this.total_invoices_per_month,
             tension: 0.4,
-            label: "Line Chart dataset",
+            label: "Total Invoice Per Month",
           },
         ],
       };

@@ -29,6 +29,7 @@ class TransactionResource extends JsonResource
             'account' => new AccountResource($this->account),
             'transaction_type_data' => new MasterTransactionTypeResource($this->transaction_type_data),
             'bill_to' => $this->bill_to,
+            'other_expense_type' => $this->other_expense_type,
             'invoice_created_by_supplier' => $this->invoice_created_by_supplier,
             'transaction_from_customer' => $this->transaction_from_customer,
             'calculation_for_income_expense' => $this->calculation_for_income_expense,

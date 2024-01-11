@@ -45,8 +45,8 @@
                     <select name="selectedOrder" v-model="selectedOrder" class="form-control form-control-custom"
                         v-validate="'required'" @change="fetchOrderProducts">
                         <option value="" disabled>Select an Order..</option>
-                        <option v-for="(order, index) in customerOrders" :value="order.slack" :key="index">
-                            Order#{{ order.order_number }}
+                        <option v-for="(order, index) in customerInvoices" :value="order.slack" :key="index">
+                            Invoice#{{ order.invoice_reference }} ({{ order.invoice_number }})
                         </option>
                     </select>
                     <span v-bind:class="{ 'error': errors.has('selectedOrder') }">{{ errors.first('selectedOrder')
@@ -59,8 +59,8 @@
                     <select name="product_id" v-model="product_id" class="form-control form-control-custom"
                         v-validate="'required'">
                         <option value="" disabled>Select an Order..</option>
-                        <option v-for="(product, index) in orderProducts" :value="product.id" :key="index">
-                            {{ product.name }} - {{ product.product_code }}
+                        <option v-for="(invoice_products, index) in orderProducts" :value="invoice_products.product_id" :key="index">
+                            {{ invoice_products.product_code }}
                         </option>
                     </select>
                     <span v-bind:class="{ 'error': errors.has('product_id') }">{{ errors.first('product_id')
@@ -125,7 +125,7 @@ export default {
             selectedCustomer: this.complaints_data.length === 0 && this.complaints_data.customer == null ? '' : this.complaints_data.customer.slack,
             selectedOrder: this.complaints_data.length === 0 && this.complaints_data.order == null ? '' : this.complaints_data.order.slack,
             product_id: this.complaints_data.length === 0 && this.complaints_data.product_id == null ? '' : this.complaints_data.product_id,
-            customerOrders: [],
+            customerInvoices: [],
             orderProducts: [],
             api_link: this.complaints_data.length === 0 ? "/api/submit_customer_complaint" : "/api/update_customer_complaint/" + this.complaints_data.slack,
             // complaint_slack: this.complaints_data.length === 0 && this.complaints_data.slack !== null ? this.complaints_data.slack : null,
@@ -162,7 +162,7 @@ export default {
                 formData.append("customer_slack", this.selectedCustomer);
                 axios.post('/api/customer_orders', formData)
                     .then(response => {
-                        this.customerOrders = response.data.data;
+                        this.customerInvoices = response.data.data;
                     })
                     .catch(error => {
                         console.error(error);
@@ -175,7 +175,7 @@ export default {
                     this.show_modal = true;
                     this.$on("submit",() => {
                         // alert(this.api_link);
-                        this.processing = true;
+                        // this.processing = true;
                         const formData = new FormData();
                         formData.append("access_token", window.settings.access_token);
                         formData.append("complaint_ref", this.complaint_ref);

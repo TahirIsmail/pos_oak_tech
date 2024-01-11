@@ -274,7 +274,7 @@
                 </div>
             </div>
 
-            <transactionlistcomponent :is_customer="is_customer" :transaction_list="transactions" :created_by_supplier="created_by_supplier"></transactionlistcomponent>
+            <transactionlistcomponent :is_supplier="is_supplier" :is_customer="is_customer" :transaction_list="transactions" :created_by_supplier="created_by_supplier"></transactionlistcomponent>
             </div>
         </div>
 

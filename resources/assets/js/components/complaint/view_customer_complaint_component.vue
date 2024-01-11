@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row card p-4">
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -19,7 +19,9 @@
                 <div class="ml-auto d-flex">
                     <div v-if="assign_access">
                         <button type="submit" class="btn btn-success mr-1" v-if="complaint.assign_to_lab_staff_id == null" v-on:click="assigncomplaint_to_labtachnician()" v-bind:disabled="assign_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="assign_processing == true"></i> {{ $t("Assin Complaint") }}</button>
+                        <button type="button" class="btn btn-primary mr-1" v-on:click="add_complaint_status()" > {{ $t("Complaint Status") }}</button>
                     </div>
+
                     <div>
                     <button type="submit" class="alert alert-success mr-1" v-if="complaint.assign_to_lab_staff_id != null"> {{ $t("Complaint Assigned") }}</button>
                     </div>
@@ -66,8 +68,8 @@
                     <p>{{ complaint.complaint_ref }}</p>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="label">{{ $t("Order#") }}</label>
-                    <p>Order#{{ complaint.order.order_number }}</p>
+                    <label for="label">{{ $t("Invoice#") }}</label>
+                    <p>Invoice# {{ complaint.order.invoice_reference }} ({{ complaint.order.invoice_code }})</p>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="label">{{ $t("Product Name") }}</label>
@@ -140,7 +142,7 @@
             </div>
 
 
-            <div>
+        <div>
                 <hr>
 
 <div class="mb-2" v-if="complaint.final_total_amount != null">
@@ -617,6 +619,17 @@
         </modalcomponent>
 
 
+        <modalcomponent v-if="complaint_status_modal" v-on:close="complaint_status_modal = false">
+            <template v-slot:modal-header>
+                {{ $t("Add Complaint Status") }}
+            </template>
+            <template v-slot:modal-body>
+                
+            </template>
+            <template v-slot:modal-footer>
+                <button type="button" class="btn btn-primary" @click="submit_complaint_status()"> Continue</button>
+            </template>
+        </modalcomponent>
 
 
 
@@ -657,6 +670,7 @@
                 transactions:[],
                 notes:'',
                 transaction_type_data:'',
+                complaint_status_modal: false,
                 delete_processing: false,
                 show_payment_modal:false,
                 show_modal: false,
@@ -720,6 +734,10 @@
                         this.charges.push("");
                     }
                 },
+
+            add_complaint_status(){
+                this.complaint_status_modal = true;
+            },
                
             complaint_invoice_make(){
                 this.$off("submit");
