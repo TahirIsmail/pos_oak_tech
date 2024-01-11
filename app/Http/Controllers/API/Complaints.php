@@ -123,17 +123,19 @@ class Complaints extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
-
-            $order_id = Invoice::select('id')->where('slack', $request->order_slack)->get();
+            if($request->order_slack){
+                $order_id = Invoice::select('id')->where('slack', $request->order_slack)->get();
+            }
+            
             $customer_id = Customer::select('id',)->where('slack', $request->customer_slack)->get();
 
             if ($slack == null) {
-               
+
                 // dd($order_id[0]->id, $customer_id);
                 $customer_complaints = [
                     "slack" => $this->generate_slack("complaints"),
                     "store_id" => $request->logged_user_store_id,
-                    "order_id" => $order_id[0]->id,
+                    "order_id" => isset($order_id[0]->id) ? $order_id[0]->id : null,
                     "customer_id" => $customer_id[0]->id,
                     "product_id" => $request->product_id,
                     "complaint_ref" => $request->complaint_ref,
@@ -200,7 +202,7 @@ class Complaints extends Controller
             $customer = Customer::select('id')->where('slack', $request->customer_slack)->get();
             $customer_user = User::select('id')->where('customer_id', $customer[0]->id)->get();
             $customerInvoices = Invoice::select('id', 'slack', 'invoice_number', 'invoice_reference')->where('invoice_against_po_from_customer', 1)->where('bill_to_id', $customer_user[0]['id'])->get();
-    
+
             if ($customerInvoices) {
                 return response()->json($this->generate_response(
                     array(
@@ -384,6 +386,33 @@ class Complaints extends Controller
                 ),
                 'SUCCESS'
             ));
+        }
+    }
+
+
+    public function change_complaint_status(Request $request)
+    {
+        $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+        if ($complaint) {
+            $complaint->update([
+               'billable' => $request->billable,
+               'parts_required' => $request->parts_required,
+               'complaint_status_label' => $request->complaint_status_label,
+               'type_of_service' => $request->type_of_service,
+               'complaint_ok' => $request->complaint_ok,
+               'picked_for_workshop' => $request->picked_for_workshop
+            ]);
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Complaint Status Change Successfully.",
+                    "data" => '',
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+
         }
     }
 

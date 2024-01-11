@@ -43,28 +43,28 @@
                 <div class="form-group col-sm-12 col-md-4">
                     <label for="selectedOrder">{{ $t("Choose Order") }}</label>
                     <select name="selectedOrder" v-model="selectedOrder" class="form-control form-control-custom"
-                        v-validate="'required'" @change="fetchOrderProducts">
+                         @change="fetchOrderProducts">
                         <option value="" disabled>Select an Order..</option>
                         <option v-for="(order, index) in customerInvoices" :value="order.slack" :key="index">
                             Invoice#{{ order.invoice_reference }} ({{ order.invoice_number }})
                         </option>
                     </select>
-                    <span v-bind:class="{ 'error': errors.has('selectedOrder') }">{{ errors.first('selectedOrder')
-                    }}</span>
+                    <!-- <span v-bind:class="{ 'error': errors.has('selectedOrder') }">{{ errors.first('selectedOrder')
+                    }}</span> -->
                 </div>
 
 
                 <div class="form-group col-sm-12 col-md-4">
                     <label for="product_id">{{ $t("Choose Product") }}</label>
                     <select name="product_id" v-model="product_id" class="form-control form-control-custom"
-                        v-validate="'required'">
+                        >
                         <option value="" disabled>Select an Order..</option>
                         <option v-for="(invoice_products, index) in orderProducts" :value="invoice_products.product_id" :key="index">
                             {{ invoice_products.product_code }}
                         </option>
                     </select>
-                    <span v-bind:class="{ 'error': errors.has('product_id') }">{{ errors.first('product_id')
-                    }}</span>
+                    <!-- <span v-bind:class="{ 'error': errors.has('product_id') }">{{ errors.first('product_id')
+                    }}</span> -->
                 </div>
 
                 <div class="form-group col-sm-12 col-md-6">

@@ -500,6 +500,9 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/complaint_invoice_make','API\Complaints@complaintInvoice');
     Route::post('/fetchComplaintRecord','API\Complaints@fetchComplaintRecord');
 
+    Route::post('/change_complaint_status','API\Complaints@change_complaint_status');
+
+
     
 
 

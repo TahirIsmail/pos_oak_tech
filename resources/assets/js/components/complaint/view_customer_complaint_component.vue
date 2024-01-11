@@ -624,10 +624,70 @@
                 {{ $t("Add Complaint Status") }}
             </template>
             <template v-slot:modal-body>
-                
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-6">
+                            <label for="billable">{{ $t("BILLABLE") }}</label>
+                            <select name="billable" v-model="billable" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose Billable..</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('billable') }">{{ errors.first('billable') }}</span> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="parts_required">{{ $t("Parts Required") }}</label>
+                            <select name="parts_required" v-model="parts_required" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose parts_required..</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('parts_required') }">{{ errors.first('parts_required') }}</span> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="complaint_status">{{ $t("Complaint Status") }}</label>
+                            <select name="complaint_status" v-model="complaint_status" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose Complaint Status..</option>
+                                <option value="Equipment">Equipment</option>
+                                <option value="Remove for Workshop">Remove for Workshop</option>
+                                <option value="Backup">Backup</option>
+                                <option value="Replacement">Replacement</option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('complaint_status') }">{{ errors.first('complaint_status') }}</span> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="type_of_service">{{ $t("Type of Services") }}</label>
+                            <select name="type_of_service" v-model="type_of_service" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose Type of Services..</option>
+                                <option value="With Parts">With Parts</option>
+                                <option value="Without Parts">Without Parts</option>
+                                <option value="Warranty">Warranty</option>
+                                <option value="Per Call">Per Call</option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('type_of_service') }">{{ errors.first('type_of_service') }}</span> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="complaint_ok">{{ $t("Complaint Ok") }}</label>
+                            <select name="complaint_ok" v-model="complaint_ok" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose complaint_ok..</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('complaint_ok') }">{{ errors.first('complaint_ok') }}</span> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="picked_for_workshop">{{ $t("Picked for Workshop") }}</label>
+                            <select name="picked_for_workshop" v-model="picked_for_workshop" v-validate="'required'" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose picked_for_workshop..</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span v-bind:class="{ 'error' : errors.has('picked_for_workshop') }">{{ errors.first('picked_for_workshop') }}</span> 
+                        </div>
+                        
+                    </div>
             </template>
             <template v-slot:modal-footer>
-                <button type="button" class="btn btn-primary" @click="submit_complaint_status()"> Continue</button>
+                <button type="submit" class="btn btn-primary" @click="submit_complaint_status()"> Continue</button>
             </template>
         </modalcomponent>
 
@@ -712,6 +772,14 @@
                 complaint_slack:this.complaint.slack,
                 delete_category_api_link: '/api/delete_complaint/'+ this.complaint.slack,
                 charges: [],
+
+                billable: (this.complaint.billable) ? this.complaint.billable : '',
+                parts_required: (this.complaint.parts_required) ? this.complaint.parts_required : '',
+                complaint_status: (this.complaint.complaint_status_label) ? this.complaint.complaint_status_label : '',
+                type_of_service: (this.complaint.type_of_service) ? this.complaint.type_of_service : '',
+                complaint_ok: (this.complaint.complaint_ok) ? this.complaint.complaint_ok : '',
+                picked_for_workshop: (this.complaint.picked_for_workshop) ? this.complaint.picked_for_workshop : '',
+
             }
         },
         props: {
@@ -737,6 +805,43 @@
 
             add_complaint_status(){
                 this.complaint_status_modal = true;
+            },
+
+            submit_complaint_status(){
+                var formData = new FormData();
+                formData.append("access_token", window.settings.access_token);
+                formData.append("complaint_slack", this.complaint_slack);
+                formData.append('billable', this.billable);
+                formData.append('parts_required', this.parts_required);
+                formData.append('complaint_status_label', this.complaint_status);
+                formData.append('type_of_service', this.type_of_service);
+                formData.append('complaint_ok', this.complaint_ok);
+                formData.append('picked_for_workshop', this.picked_for_workshop);
+
+                axios.post('/api/change_complaint_status', formData).then((response) => {
+
+                if(response.data.status_code == 200) {
+                    this.show_response_message(response.data.msg, 'Success');
+                    
+                        location.reload();
+                
+                }else{
+                    this.show_modal = false;
+                    this.processing = false;
+                    try{
+                        var error_json = JSON.parse(response.data.msg);
+                        this.loop_api_errors(error_json);
+                    }catch(err){
+                        this.server_errors = response.data.msg;
+                    }
+                    this.error_class = 'error';
+                }
+
+                })
+                .catch((error) => {
+                console.log(error);
+                });
+
             },
                
             complaint_invoice_make(){
