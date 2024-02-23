@@ -22,6 +22,14 @@ class DemandController extends Controller
         return view('demand.demand', $data);
     }
 
+    public function quotation_request(){
+        $data['menu_key'] = 'MM_ORDERS';
+        $data['sub_menu_key'] = 'SM_REQUEST_QUOTATION';
+        check_access(array($data['menu_key'],$data['sub_menu_key']));
+        
+        return view('demand.quotation_request', $data);
+    }
+
     public function add_demand_form($slack = null){
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_DEMAND';
@@ -38,5 +46,15 @@ class DemandController extends Controller
         }
 
         return view('demand.add_demand_form', $data);
+    }
+
+    public function add_quotation_request(){
+        $data['menu_key'] = 'MM_ORDERS';
+        $data['sub_menu_key'] = 'SM_REQUEST_QUOTATION';
+        $data['action_key'] = 'A_ADD_QUOTATION_REQUEST';
+        check_access(array($data['action_key']));
+
+
+        return view('demand.add_quotation_request', $data);
     }
 }

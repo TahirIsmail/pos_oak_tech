@@ -74,6 +74,15 @@ class Controller extends BaseController
         return $slack;
     }
 
+    function generate_ticket($table)
+    {
+        do{
+            $ticketNumber = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $exist = DB::table($table)->where("ticket", $ticketNumber)->first();
+        }while($exist);
+        return $ticketNumber;
+    }
+
     function generate_response($response_array, $type = "")
     {
         switch($type){

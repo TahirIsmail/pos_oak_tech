@@ -13,15 +13,16 @@ class Customers{
                 { name: 'customers.name' },
                 { name: 'customers.email' },
                 { name: 'customers.phone' },
+                { name: 'customers.customer_type' },
                 { name: 'master_status.label' },
                 { name: 'customers.created_at' },
                 { name: 'customers.updated_at' },
                 { name: 'user_created.fullname' },
                 { name: 'customers.action' },
             ],
-            order: [[ 4, "desc" ]],
+            order: [[ 5, "desc" ]],
             columnDefs: [
-                { "orderable": false, "targets": [7] }
+                { "orderable": false, "targets": [8] }
             ]
         });
     }

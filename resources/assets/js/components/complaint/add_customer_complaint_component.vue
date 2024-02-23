@@ -26,14 +26,27 @@
             <div class="form-row mb-2">
 
                 <div class="form-group col-sm-12 col-md-4">
+                    <label for="customer_category">{{ $t("Customer Category") }}</label>
+                    <select name="customer_category" v-model="customer_category" @change="fetchCustomers"
+                        v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customer Category...">
+                        <option value="" disabled selected>Choose Customer Category...</option>
+                        <option value="CUSTOM">Corporate</option>
+                        <option value="WALKIN">Walkin</option>
+                    </select>
+                    <span v-bind:class="{ 'error': errors.has('customer_category') }">{{ errors.first('customer_category')
+                    }}</span>
+                </div>
+
+
+                <div class="form-group col-sm-12 col-md-4">
                     <label for="selectedCustomer">{{ $t("Choose Customer") }}</label>
-                    <select name="selectedCustomer" v-model="selectedCustomer" @change="fetchCustomerOrders"
+                    <select name="selectedCustomer" v-model="selectedCustomer"
                         v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customers..">
                         <option value="" disabled selected>Choose Customers..</option>
 
                         <option v-for="(customer_item, index) in customer_list" :value="customer_item.slack"
                             placeholder="Choose Customers.." :key="index">
-                            {{ customer_item.fullname }} - {{ customer_item.email }}
+                            {{ customer_item.name }} - {{ customer_item.email }}
                         </option>
                     </select>
                     <span v-bind:class="{ 'error': errors.has('selectedCustomer') }">{{ errors.first('selectedCustomer')
@@ -41,52 +54,125 @@
                 </div>
 
                 <div class="form-group col-sm-12 col-md-4">
-                    <label for="selectedOrder">{{ $t("Choose Order") }}</label>
-                    <select name="selectedOrder" v-model="selectedOrder" class="form-control form-control-custom"
-                         @change="fetchOrderProducts">
-                        <option value="" disabled>Select an Order..</option>
-                        <option v-for="(order, index) in customerInvoices" :value="order.slack" :key="index">
-                            Invoice#{{ order.invoice_reference }} ({{ order.invoice_number }})
-                        </option>
+                    <label for="service_type">{{ $t("Choose Service Type") }}</label>
+                    <select name="service_type" v-model="service_type" class="form-control form-control-custom">
+                        <option value="" disabled selected>Select an Service Type...</option>
+                        <option value="warranty (Invoice or Purchase Order Number)">warranty (Invoice or Purchase Order Number)</option>
+                        <option value="SLA With Parts">SLA With Parts</option>
+                        <option value="SLA Without Parts">SLA Without Parts</option>
+                        <option value="Per Call">Per Call</option>
+                       
                     </select>
-                    <!-- <span v-bind:class="{ 'error': errors.has('selectedOrder') }">{{ errors.first('selectedOrder')
+                    <!-- <span v-bind:class="{ 'error': errors.has('service_type') }">{{ errors.first('service_type')
                     }}</span> -->
+                </div>
+
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="poc_name">{{ $t("POC Name") }}</label>
+                    <input name="poc_name" v-model="poc_name" class="form-control form-control-custom" />
+                </div>
+
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="equipment_type">{{ $t("Choose Equipment Type") }}</label>
+                    <select name="equipment_type" v-model="equipment_type" class="form-control form-control-custom">
+                        <option value="" disabled selected>Select an Equipment Type...</option>
+                        <option v-for="(type, index) in equipment_types" :key="index" :value="type">{{ type }}</option>
+                       
+                    </select>
+                    <!-- <span v-bind:class="{ 'error': errors.has('equipment_type') }">{{ errors.first('equipment_type')
+                    }}</span> -->
+                </div>
+
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="equipment_make">{{ $t("Equipment Make") }}</label>
+                    <input type="text" name="equipment_make" v-model="equipment_make" v-validate="'required'"
+                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Equipment Make')" />
+                    <span v-bind:class="{ error: errors.has('equipment_make') }">{{
+                        errors.first("equipment_make")
+                    }}</span>
+                </div>
+
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="model">{{ $t("Model") }}</label>
+                    <input type="text" name="model" v-model="model" v-validate="'required'"
+                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Model')" />
+                    <span v-bind:class="{ error: errors.has('model') }">{{
+                        errors.first("model")
+                    }}</span>
+                </div>
+
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="serial_no">{{ $t("Serial No") }}</label>
+                    <input type="text" name="serial_no" v-model="serial_no" v-validate="'required'"
+                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Serial No')" />
+                    <span v-bind:class="{ error: errors.has('serial_no') }">{{
+                        errors.first("serial_no")
+                    }}</span>
+                </div>
+
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="complaint_details">{{ $t("Complaint Details") }}</label>
+                    <input type="text" name="complaint_details" v-model="complaint_details" v-validate="'required'"
+                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Complaint Details')" />
+                    <span v-bind:class="{ error: errors.has('complaint_details') }">{{
+                        errors.first("complaint_details")
+                    }}</span>
+                </div>
+
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="end_user_details">{{ $t("End User Details") }}</label>
+                    <input type="text" name="end_user_details" v-model="end_user_details" v-validate="'required'"
+                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter End User Details')" />
+                    <span v-bind:class="{ error: errors.has('end_user_details') }">{{
+                        errors.first("end_user_details")
+                    }}</span>
                 </div>
 
 
                 <div class="form-group col-sm-12 col-md-4">
-                    <label for="product_id">{{ $t("Choose Product") }}</label>
-                    <select name="product_id" v-model="product_id" class="form-control form-control-custom"
-                        >
-                        <option value="" disabled>Select an Order..</option>
-                        <option v-for="(invoice_products, index) in orderProducts" :value="invoice_products.product_id" :key="index">
-                            {{ invoice_products.product_code }}
-                        </option>
+                    <label for="service_required">{{ $t("Choose Service Required") }}</label>
+                    <select name="service_required" v-model="service_required" class="form-control form-control-custom">
+                        <option value="" disabled>Select Service Required...</option>
+                        <option value="On-Site">On-Site</option>
+                        <option value="Pickup for Workshop">Pickup for Workshop</option>
+                        <option value="Deliver by Customer">Deliver by Customer</option>
+                       
                     </select>
-                    <!-- <span v-bind:class="{ 'error': errors.has('product_id') }">{{ errors.first('product_id')
+                    <!-- <span v-bind:class="{ 'error': errors.has('service_required') }">{{ errors.first('service_required')
                     }}</span> -->
                 </div>
 
-                <div class="form-group col-sm-12 col-md-6">
-                    <label for="complaint_ref">{{ $t("Complaint Reference No") }}</label>
-                    <input type="text" name="complaint_ref" v-model="complaint_ref" v-validate="'required'"
-                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Complaint Reference')" />
-                    <span v-bind:class="{ error: errors.has('complaint_ref') }">{{
-                        errors.first("complaint_ref")
-                    }}</span>
+                 <div class="form-group col-sm-12 col-md-4">
+                    <label for="assigned_to">{{ $t("Assigned To") }}</label>
+                    <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
+                        <option value="" disabled>Select...</option>
+                        <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>
+                       
+                    </select>
+                    
                 </div>
 
-                <div class="form-group col-sm-12 col-md-6">
-                    <label for="name">{{ $t("Description") }}</label>
-                    <textarea name="description" v-model="description" v-validate="'required|max:65535'"
-                        class="form-control form-control-custom" rows="1"
-                        :placeholder="$t('Complaint Description')"></textarea>
-
-                    <span v-bind:class="{ error: errors.has('description') }">{{
-                        errors.first("description")
-                    }}</span>
-
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="complaint_status">{{ $t("Choose Status") }}</label>
+                    <select name="complaint_status" v-model="complaint_status" class="form-control form-control-custom">
+                        <option value="" disabled>Select Status...</option>
+                        <option value="Complaint Logged">Complaint Logged</option>
+                        <option value="Complaint Assigned">Complaint Assigned</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Complete">Complete</option>
+                        <option value="Approval Pending">Approval Pending</option>
+                        <option value="Not Repairable">Not Repairable</option>
+                        <option value="CSE">CSE</option>                       
+                    </select>                    
                 </div>
+                <!-- <div class="form-group col-sm-12 col-md-4">
+                    <label for="customer_feedback">{{ $t("Feedback") }}</label>
+                    <input type="text" name="customer_feedback" v-model="customer_feedback" v-validate="'required'"
+                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Feedback')" />
+                    <span v-bind:class="{ error: errors.has('customer_feedback') }">{{
+                        errors.first("customer_feedback")
+                    }}</span>
+                </div> -->
             </div>
 
         </form>
@@ -120,6 +206,9 @@ export default {
             processing: false,
             modal: false,
             show_modal: false,
+            customer_list: [],
+            
+
             error_class: "",
             complaint_slack: this.complaints_data.length === 0 ? '' : this.complaints_data.slack,
             selectedCustomer: this.complaints_data.length === 0 && this.complaints_data.customer == null ? '' : this.complaints_data.customer.slack,
@@ -132,14 +221,27 @@ export default {
             complaint_ref: this.complaints_data.length === 0 ? '' : this.complaints_data.complaint_ref,
             complaint_status: this.complaints_data.length === 0 && this.complaints_data.complaint_status !== null ? this.complaints_data.complaint_status : null,
             description: this.complaints_data.length === 0 ? '' : this.complaints_data.description,
-
+            customer_category: '',
+            service_type: '',
+            equipment_type: '',
+            equipment_make: '',
+            service_required: '',
+            assigned_to: '',
+            poc_name: '',
+            complaint_status: '',
+            model: '',
+            serial_no: '',
+            complaint_details: '',
+            end_user_details: '',
+            customer_feedback: '',
 
         };
 
     },
     props: {
+        lab_engineers: [Array, Object],
         complaints_data: Array,
-        customer_list: Array,
+        equipment_types: Array,
 
     },
     watch: {
@@ -153,6 +255,26 @@ export default {
     },
     methods: {
 
+        fetchCustomers(){
+            if(this.customer_category){
+                alert(this.customer_category);
+                const formData = new FormData();
+                formData.append("access_token", window.settings.access_token);
+                formData.append("customer_category", this.customer_category);
+                axios.post('/api/fetchCustomers', formData)
+                    .then(response => {
+                        if(response.status == 200){
+                            console.log(response.data.data);
+                            this.customer_list = response.data.data;
+
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+
+            }
+        },
         fetchCustomerOrders() {
 
             if (this.selectedCustomer) {
@@ -160,6 +282,8 @@ export default {
                 const formData = new FormData();
                 formData.append("access_token", window.settings.access_token);
                 formData.append("customer_slack", this.selectedCustomer);
+
+                
                 axios.post('/api/customer_orders', formData)
                     .then(response => {
                         this.customerInvoices = response.data.data;
@@ -178,11 +302,19 @@ export default {
                         // this.processing = true;
                         const formData = new FormData();
                         formData.append("access_token", window.settings.access_token);
-                        formData.append("complaint_ref", this.complaint_ref);
-                        formData.append("descriptions", this.description);
                         formData.append("customer_slack", this.selectedCustomer);
-                        formData.append("order_slack", this.selectedOrder);
-                        formData.append("product_id", this.product_id);
+                        formData.append("service_type", this.service_type);
+                        formData.append("equipment_type", this.equipment_type);
+                        formData.append("equipment_make", this.equipment_make);
+                        formData.append("model", this.model);
+                        formData.append("serial_no", this.serial_no);
+                        formData.append("complaint_details", this.complaint_details);
+                        formData.append("end_user_details", this.end_user_details);
+                        formData.append("service_required", this.service_required);
+                        formData.append("assigned_to", this.assigned_to);
+                        formData.append("poc_name", this.poc_name);
+                        formData.append("complaint_status", this.complaint_status);
+                        // formData.append("customer_feedback", this.customer_feedback);
                         
                         axios
                             .post(this.api_link, formData)

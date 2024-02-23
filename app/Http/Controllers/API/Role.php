@@ -56,6 +56,7 @@ class Role extends Controller
             ->skip($offset)
             ->statusJoin()
             ->resolveSuperAdminRole()
+            ->NotShowCustomerChildRoles()
             ->createdUser()
 
             ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
@@ -438,6 +439,59 @@ class Role extends Controller
                         'user_id' => $user->id,
                         'menu_id' => $role_menu,
                         'created_by' => $request->logged_user_id,
+                        "created_at"=> now(),
+                        "updated_at"=> now()
+                    ];
+                }
+
+                UserMenuModel::where('user_id', $user->id)->delete();
+                UserMenuModel::insert($user_menu_array);
+            }
+            
+            if($role_details->status == 0){
+                UserMenuModel::where('user_id', $user->id)->delete();
+            }
+        }
+    }
+
+    public function update_child_customer_user_roles($request, $role_id){
+        
+
+        if($role_id == ''){
+            return;
+        }
+
+        $role_details = RoleModel::select('*')
+        ->where([
+            ['id', '=', $role_id]
+        ])
+        ->first();
+
+        $users = UserModel::select('users.id')
+        ->where('users.role_id', '=', $role_id)
+        ->get();
+
+        // dd($request);
+        $role_menus = RoleMenuModel::where('role_id', '=', $role_id)
+        ->pluck('menu_id')
+        ->toArray();
+        (count($role_menus) >0 )?sort($role_menus):$role_menus;
+
+        foreach($users as $user){
+            
+            $user_menus = UserMenuModel::where('user_id', $user->id)
+            ->pluck('menu_id')
+            ->toArray();
+            (count($user_menus) >0 )?sort($user_menus):$user_menus;
+
+            if($role_menus != $user_menus && $role_details->status == 1){
+
+                $user_menu_array = [];
+                foreach($role_menus as $role_menu){
+                    $user_menu_array[] = [
+                        'user_id' => $user->id,
+                        'menu_id' => $role_menu,
+                        'created_by' => $request['created_by'],
                         "created_at"=> now(),
                         "updated_at"=> now()
                     ];

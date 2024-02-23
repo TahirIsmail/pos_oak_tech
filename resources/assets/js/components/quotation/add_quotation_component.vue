@@ -126,10 +126,10 @@
 
 
                         <div class="form-group col-md-4">
-                            <label for="notes">{{ $t("Notes") }}</label>
+                            <label for="notes">{{ $t("Terms & Conditions") }}</label>
                             <textarea name="notes" v-model="notes" v-validate="'max:65535'"
                                 class="form-control form-control-custom" rows="1" columns="5"
-                                :placeholder="$t('Enter Notes')"></textarea>
+                                :placeholder="$t('Enter Terms & Conditions')"></textarea>
                             <span v-bind:class="{ 'error': errors.has('notes') }">{{ errors.first('notes') }}</span>
                         </div>
                        
@@ -203,7 +203,7 @@
                                 </select>
                             </div>
 
-                            <!-- <div class="form-row mb-2" v-if="category_specifications.length > 0">
+                            <div class="form-row mb-2" v-if="category_specifications.length > 0">
                                     <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
                                     <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
                                     <input :type="(spec.category_specification_label == 'Quantity') ? 'number' : 'text'" v-if="spec.category_specification_details.length == 0" v-model="input_type[spec.category_specification_label]" class="form-control" >
@@ -216,7 +216,7 @@
                                     <option v-for="details in spec.category_specification_details" :key="details.id" :value="details.id">{{ details.values }}</option>
                                     </select>
                                     </div>
-                            </div> -->
+                            </div>
                                             
                         </div>
         
@@ -234,7 +234,7 @@
                         <div class="form-group col-md-5 mb-1">
                             <label for="name">{{ $t("Name & Description") }}</label>
                         </div>
-                        <div class="form-group col-md-1 mb-1">
+                        <div class="form-group col-md-2 mb-1">
                             <label for="quantity">{{ $t("Quantity") }}</label>
                         </div>
                         <div class="form-group col-md-1 mb-1">
@@ -254,7 +254,7 @@
                     <div class="form-row mb-2" v-for="(product, index) in products" :key="index">
                         <div class="form-group col-md-5">
                             <input type="text" v-bind:name="'product.name_' + index" v-model="product.name"
-                                v-validate="'required|max:250'" data-vv-as="Name" class="form-control form-control-custom"
+                                v-validate="'required'" data-vv-as="Name" class="form-control form-control-custom"
                                 autocomplete="off">
                             <span v-bind:class="{ 'error': errors.has('product.name_' + index) }">{{
                                 errors.first('product.name_' + index) }}</span>
@@ -262,12 +262,12 @@
                         <div class="form-group col-md-1">
                             <input type="number" v-bind:name="'product.quantity_' + index" v-model="product.quantity"
                                 v-validate="'required|decimal|min_value:1'" data-vv-as="Quantity"
-                                class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
-                                v-on:input="calculate_price" :readonly="!is_supplier">
+                                class="form-control form-control-custom" autocomplete="off" step="1" min="0"
+                                v-on:input="calculate_price" >
                             <span v-bind:class="{ 'error': errors.has('product.quantity_' + index) }">{{
                                 errors.first('product.quantity_' + index) }}</span>
                         </div>
-                        <div class="form-group col-md-1">
+                        <div class="form-group col-md-2">
                             <input type="number" v-bind:name="'product.unit_price_' + index" v-model="product.unit_price"
                                 v-validate="'required|decimal|min_value:0'" data-vv-as="Unit Price"
                                 class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
@@ -647,6 +647,13 @@ export default {
             formData.append("sub_category_id", (this.sub_category != '') ? this.sub_category : null);
             formData.append("child_category_id", (this.child_category_id != '') ? this.child_category_id : null);
 
+            if (this.input_type) {
+  
+                for (const key in this.input_type) {
+                    formData.append(`input_type[${key}]`, this.input_type[key]);
+                }
+            }
+            
             axios.post('/api/fetchProducts', formData).then((response) => {
                 if (response.data.status_code == 200) {
                     this.products = [];
@@ -654,6 +661,7 @@ export default {
                     response.data.data.forEach(element => {
                         // this.product_list = element;
                         this.add_product_to_list(element);
+                        console.log(element);
                     });
                     // this.products.push(response.data.data);
                 }
@@ -666,12 +674,12 @@ export default {
         },
 
         add_product_to_list(item) {
-            console.log(item);
+            
             if (item.product_slack != '') {
                 var current_product = {
                     slack: item.product_slack,
                     name: item.label,
-                    quantity: 1,
+                    quantity: item.quantity,
                     unit_price: item.purchase_amount_excluding_tax,
                     discount_percentage: item.discount_percentage,
                     tax_percentage: item.tax_percentage,

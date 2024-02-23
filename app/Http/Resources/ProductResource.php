@@ -75,6 +75,7 @@ class ProductResource extends JsonResource
             'supplier' => new SupplierResource($this->supplier),
             'tax_code' => new TaxcodeResource($this->tax_code),
             'discount_code' => new DiscountcodeResource($this->discount_code),
+            "gst_paid_for_product" => $this->gst_paid_for_product,
             'images' => ProductImageResource::collection($this->product_images),
             'is_ingredient' => $this->is_ingredient,
             'is_ingredient_price' => $this->is_ingredient_price,

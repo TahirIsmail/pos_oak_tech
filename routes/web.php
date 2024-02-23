@@ -207,6 +207,10 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/Demands', "DemandController@index")->name('Demands');
     Route::get('/add_demand_form', "DemandController@add_demand_form")->name('add_demand_form');
 
+    // quotation request 
+
+    Route::get('/quotation_request', "DemandController@quotation_request")->name('quotation_request');
+    Route::get('/add_quotation_request', "DemandController@add_quotation_request")->name('add_quotation_request');
 
     //payment gateway
     Route::get('/payment_gateway/{type}/{slack}', "Order@payment_gateway")->name('payment_gateway');

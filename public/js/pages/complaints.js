@@ -19,24 +19,39 @@ class Complaints{
             columns: [               
                 
                 {
-                    data: 'complaint_ref'
+                    data: 'ticket'
                 },
                 
                 {
-                    data: 'order_id'
+                    data: 'date'
                 },
                 {
-                    data:'product_id'
+                    data:'user_name'
                 },
                 {
-                    data:'customer_id'
+                    data:'equipment_type'
                 }, 
                 {
-                    data:'complaint_status'
+                    data:'equipment_make'
+                },
+                {
+                    data: 'model'
+                },
+                {
+                    data: 'serial_no'
+                },
+                {
+                    data: 'complaint_details'
+                },
+                {
+                    data: 'end_user_details'
+                },
+                {
+                    data: 'c_status'
                 },
                 {
                     data: 'action'
-                }         
+                }  
                 
                
             ]

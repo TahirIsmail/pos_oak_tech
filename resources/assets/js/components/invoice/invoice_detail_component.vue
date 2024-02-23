@@ -29,7 +29,8 @@
 
                     <span v-if="!is_supplier"><button type="submit" class="btn btn-danger mr-1" v-show="!block_delete_invoice.includes(invoice_basic.status.constant)" v-if="delete_invoice_access == true" v-on:click="delete_invoice()" v-bind:disabled="invoice_delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="invoice_delete_processing == true"></i> {{ $t("Delete Invoice") }}</button>
                     </span>
-                    <span v-if="!is_supplier"><button type="submit" class="btn btn-outline-primary mr-1" v-on:click="show_payment_modal = true" v-show="!block_make_payment.includes(invoice_basic.status.constant)" v-if="make_payment_access == true"> {{ $t("Record Payment") }}</button>
+                    <span v-if="!is_supplier">
+                        <button type="submit" class="btn btn-outline-primary mr-1" v-on:click="show_payment_modal = true" v-show="!block_make_payment.includes(invoice_basic.status.constant)" v-if="make_payment_access == true"> {{ $t("Record Payment") }}</button>
                     </span>
                     <div class="dropdown d-inline" v-if="invoice_statuses != ''">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="invoice_action" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

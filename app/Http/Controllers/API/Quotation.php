@@ -529,7 +529,7 @@ class Quotation extends Controller
             $bill_to_contact = $customer_data->phone;
             $bill_to_address = $customer_data->address;
 
-            if($request->is_supplier){
+            if($request->is_supplier == true){
                 $quotation_from_supplier = 1;
             }
             else{
@@ -766,7 +766,7 @@ class Quotation extends Controller
             'quotation_date' => 'date|nullable',
             'quotation_due_date' => 'date|nullable|after_or_equal:quotation_date',
             'notes' => $this->get_validation_rules("text", false),
-            'products.*.name' => $this->get_validation_rules("name_label", true),
+            // 'products.*.name' => $this->get_validation_rules("name_label", true),
             'products.*.quantity' => 'min:1|'.$this->get_validation_rules("numeric", true),
             'products.*.unit_price' => $this->get_validation_rules("numeric", true),
             'products.*.discount_percentage' => $this->get_validation_rules("numeric", false),

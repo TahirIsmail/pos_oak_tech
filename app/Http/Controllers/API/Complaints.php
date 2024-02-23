@@ -16,7 +16,6 @@ use App\Models\User;
 use App\Models\PurchaseOrder;
 use App\Models\Invoice;
 
-
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Store as StoreModel;
@@ -64,8 +63,7 @@ class Complaints extends Controller
      */
     public function index(Request $request)
     {
-        //
-
+        
         $data['action_key'] = 'A_VIEW_CUSTOMER_COMPLAINTS_LISTING';
         if (check_access(array($data['action_key']), true) == false) {
             $response = $this->no_access_response_for_listing_table();
@@ -75,34 +73,19 @@ class Complaints extends Controller
         if ($request->ajax()) {
 
             if ($request->logged_user_role_id == 2) {
-                $data = ModelsComplaints::with('order', 'product', 'customer')->where('customer_id', $request->logged_user_customer_id)->get();
+                $data = ModelsComplaints::with('customer')->where('customer_id', $request->logged_user_customer_id)->get();
             } else {
-                $data = ModelsComplaints::with('order', 'product', 'customer')->get();
+                $data = ModelsComplaints::with('customer')->get();
             }
-
-
-
+            // dd($data);
             return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('order_id', function ($row) {
-                    return 'Order#' . $row->order->invoice_reference;
-                })
-                ->addColumn('product_id', function ($row) {
-                    return $row->product->name . ' (' . $row->product->product_code . ')';
-                })
-                ->addColumn('customer_id', function ($row) {
-                    return $row->customer->name . ' (' . $row->customer->email . ')';
-                })
-                ->addColumn('complaint_status', function ($row) {
-                    return '<span class="btn btn-danger text-white">' . $row->complaint_status . '</span>';
-                })
+                ->addIndexColumn()             
+              
                 ->addColumn('action', function ($row) {
-
                     $data['row'] = $row;
-
                     return view('complaints.layouts.complaints_actions', $data)->render();
                 })
-                ->rawColumns(['order_id', 'product_id', 'customer_id', 'complaint_status', 'action'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
     }
@@ -115,19 +98,19 @@ class Complaints extends Controller
      */
     public function store(Request $request, $slack = null)
     {
-        //
-
         try {
 
             if (!check_access(['A_ADD_CUSTOMER_COMPLAINT'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
-            if($request->order_slack){
-                $order_id = Invoice::select('id')->where('slack', $request->order_slack)->get();
-            }
-            
-            $customer_id = Customer::select('id',)->where('slack', $request->customer_slack)->get();
+            $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
+            $assigned_to = User::select('id')->where('slack', $request->assigned_to)->get();
+            $ticket = $this->generate_ticket("complaints");
+            $currentTime = Carbon::now();
+            $time = $currentTime->format('H:i:s');
+            $date = $currentTime->format('d-m-Y');
+            // dd($request->all(), $ticket, $time, $date, $customer_id[0]->id, $assigned_to[0]->id);
 
             if ($slack == null) {
 
@@ -135,13 +118,21 @@ class Complaints extends Controller
                 $customer_complaints = [
                     "slack" => $this->generate_slack("complaints"),
                     "store_id" => $request->logged_user_store_id,
-                    "order_id" => isset($order_id[0]->id) ? $order_id[0]->id : null,
+                    "ticket" => $ticket,
+                    "date" => $date,
+                    "time" => $time,
                     "customer_id" => $customer_id[0]->id,
-                    "product_id" => $request->product_id,
-                    "complaint_ref" => $request->complaint_ref,
-                    "description" => $request->descriptions,
-                    "complaint_status" => "Complaint",
-                    "complaint_by" => 'Customer'
+                    "user_name" => $customer_id[0]->name,
+                    "equipment_type" => $request->equipment_type,
+                    "equipment_make" => $request->equipment_make,
+                    "model" => $request->model,
+                    "serial_no" => $request->serial_no,
+                    "complaint_details" => $request->complaint_details,
+                    "end_user_details" => $request->end_user_details,
+                    "service_required" => $request->service_required,
+                    "assign_to_lab_staff_id" => $assigned_to[0]->id,
+                    "poc_name" => $request->poc_name,
+                    "c_status" => $request->complaint_status,
                 ];
                 // dd($customer_complaints);
                 $customer_complaints = ModelsComplaints::create($customer_complaints);
@@ -694,6 +685,8 @@ class Complaints extends Controller
             }
             $productIdsArray = explode(",", $request->product_ids);
             $complaint_id = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+            // dd($complaint_id);
             DB::beginTransaction();
             foreach ($productIdsArray as $productId) {
                 $complaint_update = [
@@ -703,6 +696,7 @@ class Complaints extends Controller
                 ];
                 $complaint_id->update($complaint_update);
                 $product = Product::find($productId);
+                dd($productIdsArray);
                 $product->link_to_complaint = $complaint_id->id;
                 $product->quantity = 0;
                 $product->save();

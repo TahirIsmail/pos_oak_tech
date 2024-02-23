@@ -178,53 +178,16 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
         </div>
     </div>
 
-    <div class='mb-1rem'>
-        <table class='w-100'>
-            <tr>
-                <td class='w-50'>
-                    <div class='display-block'>Quotation Number: {{ $data->quotation_number }}</div>
-                    <div class='display-block'>Reference Number: {{ $data->quotation_reference }}</div>
-                    <div class='display-block'>Quotation Date: {{ $data->quotation_date }}</div>
-                    <div class='display-block'>Quotation Due Date: {{ $data->quotation_due_date }}</div>
-
-                </td>
-                <td class='right'>
-                    @if($logo_path != '')
-                    {{-- <img src="{{ $logo_path }}" class='h-50px' /> --}}
-                    @endif
-                </td>
-            </tr>
-        </table>
-    </div>
 
     <table class='w-100 mb-1rem'>
         <tr>
-            {{-- <td class='v-top w-50 pr-20px'>
-                <div class='bold display-block'>Bill From </div>
-                <div class='display-block'>{{ $data->store->name }}</div>
-                <div>
-                    {{ $data->store->address }}
-                    @if ($data->store->pincode != '')
-                    Pincode: {{ $data->store->pincode }}
-                    @endif
-                </div>
-                @if ($data->store->tax_number != '')
-                <div>GST: {{ $data->store->tax_number }}</div>
-                @endif
-                @if ($data->store->primary_email != '')
-                <div>Email 1: {{ $data->store->primary_email }}</div>
-                @endif
-                @if ($data->store->secondary_email != '')
-                <div>Email 2: {{ $data->store->secondary_email }}</div>
-                @endif
-                @if ($data->store->primary_contact != '')
-                <div>Contact No 1: {{ $data->store->primary_contact }}</div>
-                @endif
-                @if ($data->store->secondary_contact != '')
-                <div>Contact No 2: {{ $data->store->secondary_contact }}</div>
-                @endif
-                </div>
-            </td> --}}
+            <td class='w-50'>
+                <div class='display-block'>Quotation Number: {{ $data->quotation_number }}</div>
+                <div class='display-block'>Reference Number: {{ $data->quotation_reference }}</div>
+                <div class='display-block'>Quotation Date: {{ $data->quotation_date }}</div>
+                <div class='display-block'>Quotation Due Date: {{ $data->quotation_due_date }}</div>
+
+            </td>
             <td class='v-top w-50 pr-20px'>
                 <div class='bold display-block'>Quotation To</div>
                 <div class='display-block'>{{ $data->bill_to_name }} @if ($data->bill_to_code != '')({{ $data->bill_to_code }}) @endif </div>
@@ -238,6 +201,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
                     @endif
                 </div>
             </td>
+           
         </tr>
     </table>
 
@@ -271,7 +235,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
                 @foreach ($data->products as $item_key => $quotation_products)
                 <tr v-for="(po_product, key, index) in products" v-bind:value="$quotation_products->product_slack" v-bind:key="index">
                     <td>{{ $item_key+1 }}</td>
-                    <td>{{ ($quotation_products->product_code != ''? $quotation_products->product_code." - ": '') }}{{ $quotation_products->name }}</td>
+                    <td>{{ $quotation_products->name }}</td>
                     <td class="right">{{ $quotation_products->quantity }}</td>
                     <td class="right">{{ $quotation_products->amount_excluding_tax }}</td>
                     <td class="right">{{ $quotation_products->discount_amount }}<br>({{ $quotation_products->discount_percentage }}%)</td>

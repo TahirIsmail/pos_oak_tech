@@ -13,8 +13,8 @@ class Customer extends Model
 
     protected $table = 'customers';
     // protected $hidden = ['id'];
-    protected $fillable = ['slack','customer_type', 'customer_id', 'password', 'init_password', 'name', 'email', 'phone', 'address', 'city', 'country' , 'dob', 'father_name', 'gender', 'cnic', 'status','user_id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
-
+    // protected $fillable = ['slack','customer_type', 'customer_id', 'password', 'init_password', 'name', 'email', 'phone', 'address', 'city', 'country' , 'dob', 'father_name', 'gender', 'cnic', 'status','user_id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $guarded = [];
     public function scopeActive($query)
     {
         return $query->where('status', 1);
@@ -23,6 +23,10 @@ class Customer extends Model
     public function scopeSkipDefaultCustomer($query)
     {
         return $query->where('customer_type', '!=', 'DEFAULT');
+    }
+    public function scopeSkipChildCustomer($query)
+    {
+        return $query->where('customer_type', '!=', 'CHILD_CUSTOMER');
     }
 
     public function scopeStatusJoin($query)
@@ -91,6 +95,25 @@ class Customer extends Model
 
     public function user(){
     return $this->belongsTo(User::class, "id", "customer_id");
+    }
+
+    public function child_users()
+    {
+        return $this->hasOne(User::class, 'customer_child_id');
+    }
+
+    public function customer_contact_people(){
+        return $this->hasMany(CustomerContactPerson::class, "customer_id");
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+
+    public function quotation_request(){
+        return $this->hasMany(QuotationRequest::class, 'customer_id');
     }
 
     

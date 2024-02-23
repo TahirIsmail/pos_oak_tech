@@ -27,6 +27,9 @@ use App\Http\Resources\Collections\PurchaseOrderCollection;
 use App\Http\Controllers\API\Invoice as InvoiceAPI;
 use App\Models\Customer;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 
 class PurchaseOrder extends Controller
 {
@@ -156,6 +159,8 @@ class PurchaseOrder extends Controller
             }
 
             $this->validate_request($request);
+
+
             
             $po_data = $this->form_po_array($request);
             
@@ -462,6 +467,9 @@ class PurchaseOrder extends Controller
 
     public function form_po_array($request){
         
+
+        // dd($request->all());
+
         $po_slack = $request->po_slack;
 
         $products = $request->products;
@@ -509,7 +517,6 @@ class PurchaseOrder extends Controller
         }
 
 
-
         if (empty($supplier_data)) {
             throw new Exception("Invalid supplier selected", 400);
         }
@@ -542,8 +549,13 @@ class PurchaseOrder extends Controller
         if (empty($currency_data)) {
             throw new Exception("Invalid currency selected", 400);
         }
+        
 
-        $tax_option_data = $this->calculate_tax_component($request->tax_option);
+
+       
+   
+            $tax_option_data = $this->calculate_tax_component($request->tax_option);
+
 
         foreach($products as $product_key => $product_value){
 
@@ -577,7 +589,7 @@ class PurchaseOrder extends Controller
                 
                 $item_total = ($total_amount_after_discount+$tax_amount);
             }
-
+           
             $tax_components = $tax_option_data['tax_components'];
             if(count($tax_components)>0){
                 foreach($tax_components as $key => $tax_component){
@@ -607,6 +619,22 @@ class PurchaseOrder extends Controller
                     throw new Exception("Product ".$product_name." is not currently available", 400);
                 }
             }
+
+           
+
+            if ($request->hasFile('purchase_order_pdf')) {
+
+                $upload_dir = Config::get('constants.upload.purchase_order.upload_path');
+                $purchase_images_array = $request->purchase_order_pdf;
+                foreach ($purchase_images_array as $purchase_images_array_item) {
+
+                    $extension = $purchase_images_array_item->getClientOriginalExtension();
+                    $file_name = $product_slack . '_' . uniqid() . '.' . $extension;
+                    $path = Storage::disk('purchase_order')->putFileAs('/', $purchase_images_array_item, $file_name);
+                    $file_name = basename($path);
+                }
+
+            }
             
             $po_products[] = [
                 'purchase_order_id' => 0,
@@ -628,6 +656,7 @@ class PurchaseOrder extends Controller
                 'tax_amount' => $tax_amount,
                 'tax_components' => (count($tax_components)>0)?json_encode($tax_components):'',
                 'total_amount' => $item_total,
+
             ];
         }
 
@@ -677,10 +706,11 @@ class PurchaseOrder extends Controller
             "update_stock" => ($request->update_stock == true)?1:0,
             "terms" => $request->terms,
             "total_order_amount" => $total_order_amount,
+            "purchase_order_pdf" => $file_name,
             "tax_option_id" => $tax_option_data['tax_option_id'],
         ];
 
-        // dd($purchase_order);
+     
         
 
         return [

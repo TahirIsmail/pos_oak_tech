@@ -228,6 +228,9 @@ Vue.component('viewcustomercomplaint', require('./components/complaint/view_cust
 Vue.component('adddemandformcomponent', require('./components/demand_form/add_demand_form_component.vue').default);
 
 
+Vue.component('addquotationrequestcomponent', require('./components/demand_form/add_quotation_request_component.vue').default);
+
+
 
 
 // Vue.component('addexpensecomponent',require('./components/expense/add_expense_component.vue').default);

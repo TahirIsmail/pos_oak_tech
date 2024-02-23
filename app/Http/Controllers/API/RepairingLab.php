@@ -39,25 +39,14 @@ class RepairingLab extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('order_id', function ($row) {
-                    return 'Order#' . $row->order->order_number;
-                })
-                ->addColumn('product_id', function ($row) {
-                    return $row->product->name . ' (' . $row->product->product_code . ')';
-                })
-                ->addColumn('customer_id', function ($row) {
-                    return $row->customer->name . ' (' . $row->customer->email . ')';
-                })
-                ->addColumn('complaint_status', function ($row) {
-                    return '<span class="btn btn-danger text-white">' . $row->complaint_status . '</span>';
-                })
+               
                 ->addColumn('action', function ($row) {
 
                     $data['row'] = $row;
 
                     return view('complaints.layouts.complaints_actions', $data)->render();
                 })
-                ->rawColumns(['order_id', 'product_id', 'customer_id', 'complaint_status', 'action'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
     }

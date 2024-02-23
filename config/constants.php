@@ -63,6 +63,11 @@ return [
             'view_path' => '/storage/product/',
             'upload_path' => 'storage/product/'
         ],
+        'customer' => [
+            'dir' => 'customer/',
+            'view_path' => '/storage/customer/',
+            'upload_path' => '/storage/customer/',
+        ],
         'order' => [
             'dir' => 'order/',
             'view_path' => '/storage/order/',

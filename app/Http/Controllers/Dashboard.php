@@ -112,11 +112,12 @@ class Dashboard extends Controller
 
 
 
-
-
-        $total_customers = Customer::where('customer_type', '!=', 'DEFAULT')->count();
+        $total_customers = Customer::where('customer_type', '!=', 'DEFAULT')->where('parent_id', null)->count();
+        
         $customers_per_month = DB::table('customers')
             ->where('customer_type', '!=', 'DEFAULT')
+            ->where('parent_id', null)
+            ->whereNull('deleted_at')
             ->select(
                 DB::raw('COUNT(CASE WHEN MONTH(created_at) = 1 THEN 1 END) AS jan'),
                 DB::raw('COUNT(CASE WHEN MONTH(created_at) = 2 THEN 1 END) AS feb'),
@@ -135,7 +136,6 @@ class Dashboard extends Controller
         $total_customers_count_per_month = collect($customers_per_month)->values()->all();
 
         $total_customers_per_month = array_values(array_combine($months, $total_customers_count_per_month));
-
 
 
         $total_suppliers = Supplier::where('supplier_type', '!=', 'DEFAULT')->count();
@@ -164,11 +164,13 @@ class Dashboard extends Controller
 
 
         $total_staff =  DB::table('users')
-            ->whereNotIn('role_id', [2, 3])
+            ->whereNotIn('role_id', [1, 2, 3])
+            ->where('customer_child_id', null)
             ->count();
 
         $staff_per_month = DB::table('users')
-            ->whereNotIn('role_id', [2, 3])
+            ->whereNotIn('role_id', [1, 2, 3])
+            ->where('customer_child_id', null)
             ->select(
                 DB::raw('COUNT(CASE WHEN MONTH(created_at) = 1 THEN 1 END) AS jan'),
                 DB::raw('COUNT(CASE WHEN MONTH(created_at) = 2 THEN 1 END) AS feb'),

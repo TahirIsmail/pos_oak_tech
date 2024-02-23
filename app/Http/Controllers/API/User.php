@@ -161,6 +161,7 @@ class User extends Controller
             })
             ->hideSuperAdminRole()
             ->HideCustomerRole()
+            ->HideChildCustomer()
             ->HideSupplierRole()
             ->hideCurrentLoggedUser($request->logged_user_id)
             ->get();

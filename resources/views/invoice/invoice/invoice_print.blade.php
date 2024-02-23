@@ -207,7 +207,7 @@
 
     @if ($data->words != '')
         <div class="mb-1rem">
-            <div class='bold display-block'>In Words</div>
+            <div class='bold display-block'>In Words: </div>
             <pre>{{ $data->words }}</pre>
         </div>
     @endif

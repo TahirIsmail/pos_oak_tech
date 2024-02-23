@@ -11,8 +11,8 @@ class Supplier extends Model
 {
     protected $table = 'suppliers';
     // protected $hidden = ['id'];
-    protected $fillable = ['id', 'slack', 'store_id', 'supplier_code', 'supplier_id', 'name', 'email', 'phone', 'address','city', 'country', 'gender', 'pincode', 'status', 'created_by', 'updated_by'];
-
+    // protected $fillable = ['id', 'slack', 'store_id', 'supplier_code', 'supplier_id', 'name', 'email', 'phone', 'address','city', 'country', 'gender', 'pincode', 'status', 'created_by', 'updated_by'];
+    protected $guarded = [];
     protected static function boot()
     {
         parent::boot();

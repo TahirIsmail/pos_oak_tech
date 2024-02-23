@@ -202,6 +202,9 @@ class Supplier extends Controller
                 "phone" => $request->phone,
                 "email" => $request->email,
                 "pincode" => $request->pincode,
+                "supplier_description" => $request->supplier_description,
+                "supplier_strn" => $request->supplier_strn,
+                "supplier_ntn" => $request->supplier_ntn,
                 "status" => $request->status,
                 "created_by" => $request->logged_user_id,
             ];
@@ -443,6 +446,9 @@ class Supplier extends Controller
                 "phone" => $request->phone,
                 "email" => $request->email,
                 "pincode" => $request->pincode,
+                "supplier_description" => $request->supplier_description,
+                "supplier_strn" => $request->supplier_strn,
+                "supplier_ntn" => $request->supplier_ntn,
                 "status" => $request->status,
                 "updated_by" => $request->logged_user_id,
             ];
@@ -645,7 +651,7 @@ class Supplier extends Controller
         $validator = Validator::make($request->all(), [
             'supplier_name' => $this->get_validation_rules("name_label", true),
             'address' => $this->get_validation_rules("text", false),
-            'pincode' => $this->get_validation_rules("pincode", false),
+            // 'pincode' => $this->get_validation_rules("pincode", false),
             'email' => $this->get_validation_rules("email", false),
             'phone' => $this->get_validation_rules("phone", false),
             'status' => $this->get_validation_rules("status", true),

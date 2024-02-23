@@ -29,7 +29,7 @@
                     <button type="submit" class="btn btn-danger mr-1" v-show="!block_delete_quotation.includes(quotation_basic.status.constant)" v-if="delete_quotation_access == true" v-on:click="delete_quotation()" v-bind:disabled="quotation_delete_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="quotation_delete_processing == true"></i> {{ $t("Delete Quotation") }}</button>
 
                     <span v-if="quotation_basic.status.label == 'Accepted'">
-                        <span v-if="is_customer || quotation_basic.quotation_from_supplier == 1">                        
+                        <span v-if="is_customer || (quotation_basic.quotation_from_supplier == 1 && !is_supplier) ">                        
                             <a class="btn btn-outline-primary mr-1" v-bind:href="'/make_purchase_order/'+slack" target="_blank">{{ $t("Make Purchase Order") }}</a>                       
                         </span>                    
                     </span>
@@ -215,7 +215,7 @@
             <hr>
 
             <div class="mb-2">
-                <span class="text-subhead">{{ $t("Notes") }}</span>
+                <span class="text-subhead">{{ $t("Terms & Conditions") }}</span>
             </div>
             <div class="form-row mb-2">
                 <div class="form-group col-md-12">

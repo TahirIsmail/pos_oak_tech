@@ -25,11 +25,16 @@
                     <thead>
                         <tr>
     
-                            <th>{{ __("Complaint Reference No") }}</th>
-                            <th>{{ __("Complaint Order")}}</th>
-                            <th>{{ __("Complaint Product") }}</th>
+                            <th>{{ __("Complaint Ticket") }}</th>
+                            <th>{{ __("Complaint Date & time")}}</th>
                             <th>{{ __("Complaint Customer")}}</th>         
-                            <th>{{ __("Complaint Status")}}</th>
+                            <th>{{ __("Equipment Type") }}</th>
+                            <th>{{ __("Equipment Make")}}</th>
+                            <th>{{ __("Model") }}</th>
+                            <th>{{ __("Serial No") }}</th>
+                            <th>{{ __("Complaint Details") }}</th>
+                            <th>{{ __("End User Details") }}</th>
+                            <th>{{ __("Complaint Status") }}</th>
                             <th>{{ __("Action") }}</th>
                         </tr>
                     </thead>

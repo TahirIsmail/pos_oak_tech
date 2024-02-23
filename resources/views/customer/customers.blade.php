@@ -12,8 +12,14 @@
                     </div>
                     <div class="">
                         @if (check_access(['A_ADD_CUSTOMER'], true))
-                            <a href="{{ route('add_customer') }}" role="button"
-                                class="btn btn-primary">{{ __('New Customer') }}</a>
+                            
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ __('New Customer') }}
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ route('add_customer', ['customer_type' => 'corporate']) }}">Corporate Customer</a>
+                                    <a class="dropdown-item" href="{{ route('add_customer', ['customer_type' => 'walkin']) }}">Walkin Customer</a>
+                                </div>
                         @endif
                     </div>
                 </div>
@@ -25,6 +31,7 @@
                                 <th>{{ __('Name') }}</th>
                                 <th>{{ __('Email') }}</th>
                                 <th>{{ __('Phone') }}</th>
+                                <th>{{ __('Customer Type') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 <th>{{ __('Created On') }}</th>
                                 <th>{{ __('Updated On') }}</th>

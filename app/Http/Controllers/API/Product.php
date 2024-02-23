@@ -30,6 +30,7 @@ use App\Models\User as UserModel;
 use App\Models\ProductVariant as ProductVariantModel;
 use App\Models\VariantOption as VariantOptionModel;
 use App\Models\Customer as CustomerModel;
+// use App\Models\ProductSpecifications;
 
 use App\Http\Controllers\API\StockTransfer as StockTransferAPI;
 use App\Http\Controllers\API\Product as ProductAPI;
@@ -338,6 +339,7 @@ class Product extends Controller
                 "supplier_id" => $supplier_data->id,
                 "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
+                "gst_paid_for_product" => $request->gst_paid_for_product,
                 "quantity" => $request->quantity,
                 "at_start_quantity" => $request->quantity,
                 "alert_quantity" => (!isset($request->alert_quantity)) ? 0.00 : $request->alert_quantity,
@@ -618,6 +620,7 @@ class Product extends Controller
                 "supplier_id" => $supplier_data->id,
                 "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
                 "discount_code_id" => $discount_code_id,
+                "gst_paid_for_product" => $request->gst_paid_for_product,
                 "purchase_amount_excluding_tax" => $request->purchase_price,
                 "sale_amount_excluding_tax" => $sale_price,
                 "sale_amount_including_tax" => $sale_amount_including_tax,
@@ -1106,25 +1109,42 @@ class Product extends Controller
 
     public function fetch_products(Request $request)
     {
-        
+
         $category_id = $request['category_id'] ?? null;
         $sub_category_id = $request['sub_category_id'] ?? null;
         $child_category_id = $request['child_category_id'] ?? null;
+        $input_type = $request['input_type'] ?? null;
 
-        // Use these values to filter the products
         $products = ProductModel::query()
-            ->when($category_id !== "null", function ($query) use ($category_id) {
+            ->when($category_id !== null, function ($query) use ($category_id) {
                 return $query->where('category_id', $category_id);
             })
-            ->when($sub_category_id !== "null", function ($query) use ($sub_category_id) {
+            ->when($sub_category_id !== null && $sub_category_id !== 'null', function ($query) use ($sub_category_id) {
                 return $query->where('sub_category_id', $sub_category_id);
             })
-            ->when($child_category_id !== "null", function ($query) use ($child_category_id) {
+            ->when($child_category_id !== null && $child_category_id !== 'null', function ($query) use ($child_category_id) {
                 return $query->where('child_category_id', $child_category_id);
             })
-            ->where('quantity', 1)
-            ->with(['subcategory', 'product_specifications.category_specification_details','discountCode', 'taxCode'])
+            ->when($input_type !== null, function ($query) use ($input_type) {
+                foreach ($input_type as $specificationName => $specificationValue) {
+                    $query->whereHas('product_specifications', function ($subQuery) use ($specificationName, $specificationValue) {
+                        $subQuery->where('specification_label', $specificationName)
+                            ->where('specification_details', $specificationValue);
+                    });
+                }
+                return $query;
+            })
+            ->where('quantity', '!=', 0)
+            ->with([
+                'subcategory',
+                'product_specifications.category_specification_details',
+                'discountCode',
+                'taxCode',
+            ])
             ->get();
+
+
+        // dd($products);
 
         $specification = [];
         $main_products = $products->map(function ($product) {
@@ -1141,6 +1161,7 @@ class Product extends Controller
                 'product_slack' => $product->slack,
                 'product_code' => $product->product_code,
                 'label' => $product->name  . ' (' . $resultString . ' )',
+                'quantity' => $product->quantity,
                 'purchase_amount_excluding_tax' => $product->sale_amount_excluding_tax,
                 'tax_percentage' => optional($product->taxCode)->total_tax_percentage,
                 'tax_type' => optional($product->taxCode)->tax_type,

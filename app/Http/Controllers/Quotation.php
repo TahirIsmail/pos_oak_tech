@@ -208,19 +208,14 @@ class Quotation extends Controller
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_QUOTATIONS';
         check_access([$data['sub_menu_key']]);
-
-        $quotation = QuotationModel::where('slack', $slack)->first();
-
-       
+        $quotation = QuotationModel::where('slack', $slack)->first();    
 
         if (empty($quotation)) {
             abort(404);
         }
-
+        
         $quotation_data = new QuotationResource($quotation);
-
         $print_logo_path = config("app.invoice_print_logo");
-
         $first_bg_image = public_path('images/bg_Oak.png');
         $sec_bg_image = public_path('images/bg-page2.PNG');
         $third_bg_image = public_path('images/third-bg.png');

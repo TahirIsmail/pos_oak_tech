@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row card p-4">
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -39,6 +39,10 @@
                 <div class="form-group col-md-3">
                     <label for="name">{{ $t("Product Name") }}</label>
                     <p>{{ product.name }}</p>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="name">{{ $t("GST Paid For Product") }}</label>
+                    <p>{{ product.gst_paid_for_product }}</p>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="email">{{ $t("Supplier") }}</label>

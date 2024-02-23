@@ -18,6 +18,12 @@ class Role extends Model
     public function scopeResolveSuperAdminRole($query){
         $query->where('roles.id', '!=', 1);
     }
+    public function scopeNotShowCustomerChildRoles($query){
+        $query->where('roles.is_customer_child', 0);
+    }
+    public function scopeShowCustomerChildRoles($query){
+        $query->where('roles.is_customer_child', 1);
+    }
 
     public function scopeCustomerRole($query){
         $query->where('roles.id', '!=', 2);
@@ -65,5 +71,10 @@ class Role extends Model
 
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
     }
 }

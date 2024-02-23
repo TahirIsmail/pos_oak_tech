@@ -21,7 +21,10 @@ export var mixin = {
                 title: title,
                 text: message,
                 duration: duration,
-                closeOnClick: false
+                closeOnClick: false,
+                type: 'custom',
+                backgroundColor: '#1e5bb7',
+                textColor: 'white',
             });
             
         },

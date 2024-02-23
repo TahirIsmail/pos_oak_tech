@@ -52,7 +52,7 @@
                             <span v-bind:class="{ 'error': errors.has('phone') }">{{ errors.first('phone') }}</span>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <!-- <div class="form-group col-md-4">
                         <label for="gender">{{ $t("Gender") }}</label><span style="color:red">*</span>
                         <select name="status" v-model="gender" v-validate="'required'" class="form-control form-control-custom custom-select">
                             <option value="" selected disabled>Choose Gender..</option>
@@ -60,7 +60,7 @@
                             <option value="female">Female</option>
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('gender') }">{{ errors.first('gender') }}</span> 
-                        </div>
+                        </div> -->
                         <!-- <div class="form-group col-sm-12 col-md-10 col-lg-4">
                             <label for="pincode">{{ $t("Pincode") }}</label><span style="color:red">*</span>
                             <input type="text" name="pincode" v-model="pincode" v-validate="'max:15'"
@@ -79,6 +79,21 @@
                             <span v-bind:class="{ 'error': errors.has('status') }">{{ errors.first('status') }}</span>
                         </div>
                         <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                            <label for="supplier_description">{{ $t("Supplier Descriptions") }}</label>
+                            <textarea row="1" name="supplier_description" v-model="supplier_description" 
+                                class="form-control form-control-custom" :placeholder="$t('Please Enter Supplier Description')"></textarea>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                            <label for="supplier_strn">{{ $t("Supplier STRN") }}</label>
+                            <input type="text" name="supplier_strn" v-model="supplier_strn" 
+                                class="form-control form-control-custom" :placeholder="$t('Please Enter Supplier STRN')" />
+                        </div>
+                        <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                            <label for="supplier_ntn">{{ $t("Supplier NTN") }}</label>
+                            <input type="text" name="supplier_ntn" v-model="supplier_ntn" 
+                                class="form-control form-control-custom" :placeholder="$t('Please Enter Supplier NTN')" />
+                        </div>
+                        <div class="form-group col-sm-12 col-md-10 col-lg-6">
                             <label>{{ $t("Supplier Business Type") }}</label>
                             <div>
                             <input type="checkbox" id="Manufacturer" value="Manufacturer" v-model="businessTypes">
@@ -315,16 +330,19 @@ export default {
             api_link: (this.supplier_data == null) ? '/api/add_supplier' : '/api/update_supplier/' + this.supplier_data.slack,
 
             supplier_slack: (this.supplier_data == null) ? "" : this.supplier_data.slack,
-            supplier_id: (this.supplier_data == null) ? "" : this.supplier_data.supplier_id,
+            supplier_id: (this.supplier_data == null) ? "" : this.supplier_data.supplier_code,
             supplier_name: (this.supplier_data == null) ? "" : this.supplier_data.name,
             status: (this.supplier_data == null) ? "" : (this.supplier_data.status == null) ? '' : this.supplier_data.status.value,
             address: (this.supplier_data == null) ? [] : this.supplier_data.address,
             city: (this.supplier_data == null) ? [] : this.supplier_data.city,
             country: (this.supplier_data == null) ? [] : this.supplier_data.country,
-            gender: (this.supplier_data == null) ? [] : this.supplier_data.gender,
+            gender: '',
             phone: (this.supplier_data == null) ? [] : this.supplier_data.phone,
             email: (this.supplier_data == null) ? [] : this.supplier_data.email,
             pincode: (this.supplier_data == null) ? [] : this.supplier_data.pincode,
+            supplier_description: (this.supplier_data == null) ? '' : this.supplier_data.supplier_description,
+            supplier_strn: (this.supplier_data == null) ? '': this.supplier_data.supplier_strn,
+            supplier_ntn: (this.supplier_data == null) ? '' : this.supplier_data.supplier_ntn,
         }
     },
     props: {
@@ -384,6 +402,9 @@ export default {
                         formData.append("email", (this.email == null) ? '' : this.email);
                         formData.append("pincode", (this.pincode == null) ? '' : this.pincode);
                         formData.append("status", (this.status == null) ? '' : this.status);
+                        formData.append("supplier_description", (this.supplier_description == null) ? '' : this.supplier_description);
+                        formData.append("supplier_strn", (this.supplier_strn == null) ? '' : this.supplier_strn);
+                        formData.append("supplier_ntn", (this.supplier_ntn == null) ? '' : this.supplier_ntn);
                         formData.append("banks", banks);
                         formData.append('businessTypes', JSON.stringify(this.businessTypes));
                         formData.append('contact_people', persons);

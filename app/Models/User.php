@@ -14,9 +14,7 @@ class User extends Model
     use SoftDeletes;
     protected $table = 'users';
     protected $hidden = [ 'password', 'role_id'];
-    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname','father_name','cnic','dob','doj','gender', 'email', 'password', 'init_password', 'phone','emergency_number', 'reference','country','city','address', 'profile_image', 'bank_name', 'bank_code', 'account_title', 'account_number', 'iban_number', 'role_id', 'status','customer_id','supplier_id', 'line_manager' , 'company_contact_person', 'created_by', 'updated_by'];
-
-
+    protected $fillable = ['id', 'store_id', 'slack', 'user_code', 'fullname','father_name','cnic','dob','doj','gender', 'email', 'password', 'init_password', 'phone','emergency_number', 'reference','country','city','address', 'profile_image', 'bank_name', 'bank_code', 'account_title', 'account_number', 'iban_number', 'role_id', 'status','customer_id', 'customer_child_id','supplier_id', 'line_manager' , 'company_contact_person', 'created_by', 'updated_by'];
 
     public function manager()
     {
@@ -99,6 +97,9 @@ class User extends Model
     public function scopeHideCustomerRole($query){
         return $query->where('users.role_id', '!=', 2);
     }
+    public function scopeHideChildCustomer($query){
+        return $query->where('users.customer_child_id', null);
+    }
 
     public function scopeHideSupplierRole($query){
         return $query->where('users.role_id', '!=', 3);
@@ -160,6 +161,13 @@ class User extends Model
 
     public function customer(){
         return $this->hasOne(Customer::class, 'customer_id');
+    }
+
+ 
+
+    public function child_customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_child_id');
     }
     
 }

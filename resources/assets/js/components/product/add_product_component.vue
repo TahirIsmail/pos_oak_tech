@@ -171,7 +171,6 @@
             <select
               name="supplier"
               v-model="supplier"
-              v-validate="'required'"
               class="form-control form-control-custom custom-select"
             >
               <option value="">Choose Supplier..</option>
@@ -382,7 +381,7 @@
 
         <div class="form-row mb-2">
           <div class="form-group col-md-3">
-            <label for="tax_code">{{ $t("Tax Code") }}</label>
+            <label for="tax_code">{{ $t("Add Tax (Optional)") }}</label>
             <select
               name="tax_code"
               v-model="tax_code"
@@ -400,10 +399,23 @@
                 {{ taxcode.tax_code }} - {{ taxcode.label }} [Tax%:
                 {{ taxcode.total_tax_percentage }}] ({{ taxcode.tax_type }})
               </option>
-            </select>
-           
+            </select>           
           </div>
+
+
           <div class="form-group col-md-3">
+            <label for="tax_code">{{ $t("GST PAID FOR PRODUCT % (Optional) ") }}</label>
+            <input
+              type="number"
+              name="gst_paid_for_product"
+              v-model="gst_paid_for_product"
+              class="form-control form-control-custom"
+              placeholder="Please Enter GST If Any Pay (In %)"
+            />         
+          </div>
+
+
+          <!-- <div class="form-group col-md-3">
             <label for="discount_code">{{ $t("Discount Code") }}</label>
             <select
               name="discount_code"
@@ -422,7 +434,7 @@
             <span v-bind:class="{ error: errors.has('discount_code') }">{{
               errors.first("discount_code")
             }}</span>
-          </div>
+          </div> -->
         </div>
 
         <hr />
@@ -693,6 +705,7 @@ export default {
           : this.product_data.discount_code == null
           ? ""
           : this.product_data.discount_code.slack,
+      gst_paid_for_product : this.product_data == null ? "" : this.product_data.gst_paid_for_product,
       quantity: this.product_data == null
           ? 1
           : this.product_data.quantity,
@@ -1072,6 +1085,7 @@ export default {
             formData.append("child_category_id", this.child_category_id);
             formData.append('category_company_id', this.company_id);
             formData.append('product_name_id', (this.product_name_id) ? this.product_name_id : null);
+            formData.append('gst_paid_for_product', this.gst_paid_for_product);
 
             if (this.input_type) {
   

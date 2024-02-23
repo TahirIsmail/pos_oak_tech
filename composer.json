@@ -46,7 +46,8 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Helpers/Helper.php"
+            "app/Helpers/Helper.php",
+            "app/Helpers/numberToWordsHelper.php"
         ]
     },
     "autoload-dev": {

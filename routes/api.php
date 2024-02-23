@@ -77,6 +77,9 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/customer_list', 'API\Customer@list');
     Route::post('/delete_customer/{slack}', 'API\Customer@destroy');
 
+    Route::post('/fetchCustomers', 'API\Customer@fetchCustomers');
+
+
     //category
     Route::post('/categories', 'API\Category@index');
     Route::post('/add_category', 'API\Category@store');
@@ -321,9 +324,12 @@ Route::group(['middleware' => ['token_auth']], function () {
 
 
 
-    // Demand form 
+    // demand_form_data_fetch form 
     Route::post('/add_demand_form', 'API\DemandController@add_demand_form');
     Route::post('/demand_form_data_fetch', 'API\DemandController@index');
+    Route::post('/load_quotation_request_data', 'API\DemandController@load_quotation_request_data');
+    Route::post('/add_quotation_request', 'API\DemandController@add_quotation_request');
+
 
 
     //payment gateway

@@ -106,7 +106,7 @@
 
             <!--  ====================== Total detail per month ========== ////  -->
 
-          <div class="col-md-12" style="margin-top: 30px; margin-bottom: 30px;">
+          <div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px;">
             <div class="row">
               <div
                 class="col-sm-12 col-md-12 col-lg-3"
@@ -251,7 +251,7 @@
             
             <div
               class="col-sm-12 col-md-12 col-lg-6 mb-5"
-              style="margin-bottom: 30px"
+              
             >
               <div
                 class="row1 ap-po-details ap-po-details--2 radius-xl bg-white d-flex"
@@ -284,8 +284,8 @@
             </div>
 
             <div
-              class="col-sm-12 col-md-12 col-lg-6 mb-5"
-              style="margin-bottom: 30px"
+              class="col-sm-12 col-md-12 col-lg-6 mb-3"
+            
             >
               <div
                 class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
@@ -318,8 +318,8 @@
             </div>
 
             <div
-              class="col-sm-12 col-md-12 col-lg-6 mb-5"
-              style="margin-bottom: 30px"
+              class="col-sm-12 col-md-12 col-lg-6 mb-3"
+              style="margin-bottom: 20px"
             >
               <div
                 class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
@@ -352,8 +352,8 @@
             </div>
 
             <div
-              class="col-sm-12 col-md-12 col-lg-6 mb-5"
-              style="margin-bottom: 30px"
+              class="col-sm-12 col-md-12 col-lg-6 mb-3"
+              
             >
               <div
                 class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
@@ -390,8 +390,8 @@
 
       <!--  ====================== total customer vendors and staff start ==========   -->
 
-      <div class="col-md-12">
-        <div class="row">
+      <div class="col-md-12" style="margin-bottom: 20px">
+        <div class="row" >
           <!-- <div
             class="col-sm-12 col-md-12 col-lg-6 col-xl-4"
             style="border-radius: 20px"
@@ -401,7 +401,7 @@
               <div class="card-header-revenu">
                 <h6>
                   INCOME & EXPENSE
-                  <span>Nov 23, 2019 - Nov 29, 2019</span>
+                  <!-- <span>Nov 23, 2019 - Nov 29, 2019</span> -->
                 </h6>
                 <div class="card-extra">
                   <ul class="card-tab-links mr-3 nav-tabs nav" role="tablist">
@@ -536,14 +536,14 @@
                         <span class="cashflow-display__title"
                           >Total Income</span
                         >
-                        <h2 class="cashflow-display__amount">$74,240</h2>
+                        <h2 class="cashflow-display__amount">RS: 0.00</h2>
                       </div>
                       <!-- ends: .cashflow-display__single -->
                       <div class="cashflow-display__single">
                         <span class="cashflow-display__title"
                           >Total Expense</span
                         >
-                        <h2 class="cashflow-display__amount">$22,470</h2>
+                        <h2 class="cashflow-display__amount">RS: 0.00</h2>
                       </div>
                       <!-- ends: .cashflow-display__single -->
                     </div>
@@ -593,14 +593,14 @@
                         <span class="cashflow-display__title"
                           >Total Income</span
                         >
-                        <h2 class="cashflow-display__amount">$104,240</h2>
+                        <h2 class="cashflow-display__amount">RS: 0.00</h2>
                       </div>
                       <!-- ends: .cashflow-display__single -->
                       <div class="cashflow-display__single">
                         <span class="cashflow-display__title"
                           >Total Expense</span
                         >
-                        <h2 class="cashflow-display__amount">$872,470</h2>
+                        <h2 class="cashflow-display__amount">RS: 0.00</h2>
                       </div>
                       <!-- ends: .cashflow-display__single -->
                     </div>
@@ -690,7 +690,7 @@
                 <div class="tab-content">
                  
                   <div
-                    class="tab-pane fade active show"
+                    class="tab-pane  active show"
                     id="tl_revenue-week"
                     role="tabpanel"
                     aria-labelledby="tl_revenue-week-tab"
@@ -715,6 +715,7 @@
                           <canvas
                             class="canvasdispaly"
                             ref="myChart6WExtra"
+                            style="height: 228px !important;"
                           ></canvas>
                         </div>
                       </div>
@@ -744,11 +745,11 @@
                   >
                     <div class="revenue-labels">
                       <div class="current">
-                        <strong class="text-third">$72,784</strong>
+                        <strong class="text-third">RS: 0.00</strong>
                         <span>Total Sale</span>
                       </div>
                       <div>
-                        <strong>$52,240</strong>
+                        <strong>RS: 0.00</strong>
                         <span style="color: #868eae !important"
                           >Total Purchase</span
                         >
@@ -809,6 +810,7 @@
                           <canvas
                             class="canvasdispaly"
                             ref="myChart6Extra"
+                            
                           ></canvas>
                         </div>
                       </div>
@@ -1479,8 +1481,8 @@ export default {
     initializeCashflowChart() {
       const ctx = this.$refs.cashflowChartCanvas;
       if (ctx) {
-        const data1 = [20, 60, 50, 45, 50, 60, 70, 40, 45, 35, 25, 30];
-        const data2 = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"];
 
         new Chart(ctx, {
@@ -1530,8 +1532,8 @@ export default {
     createChart_W() {
       const ctx = this.$refs.barChartCashflow_W;
       if (ctx) {
-        const data1 = [20, 60, 50, 45, 50, 60, 70];
-        const data2 = [10, 40, 30, 40, 60, 55, 45];
+        const data1 = [0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Sunday",
           "Monday",
@@ -1588,8 +1590,8 @@ export default {
     createChart_Y() {
       const ctx = document.getElementById("barChartCashflow_Y");
       if (ctx) {
-        const data1 = [35, 55, 25, 72, 45, 58, 35, 45, 65, 38, 45, 48];
-        const data2 = [15, 35, 10, 16, 25, 44, 10, 5, 24, 18, 7, 36];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Jan",
           "Feb",
@@ -1651,8 +1653,8 @@ export default {
     Chart6TExtra() {
       const ctx = this.$refs.myChart6TExtra;
       if (ctx) {
-        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
-        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Jan",
           "Feb",
@@ -1730,8 +1732,8 @@ export default {
     initializeChartM() {
       const ctx = this.$refs.myChart6MExtra;
       if (ctx) {
-        const data1 = [55, 25, 45, 42, 40, 45, 42, 45, 35, 55, 40, 30];
-        const data2 = [45, 30, 35, 32, 35, 50, 32, 35, 25, 40, 30, 25];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"];
 
         new Chart(ctx, {
@@ -1796,8 +1798,8 @@ export default {
     initializeChartw() {
       const ctx = this.$refs.myChart6WExtra;
       if (ctx) {
-        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
-        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Sunday",
           "Monday",
@@ -1870,8 +1872,8 @@ export default {
     initializeChart() {
       const ctx = this.$refs.myChart6Extra;
       if (ctx) {
-        const data1 = [65, 35, 45, 42, 65, 60, 42, 45, 35, 55, 40, 65];
-        const data2 = [45, 20, 35, 32, 50, 45, 32, 35, 25, 40, 30, 55];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Jan",
           "Feb",
@@ -1949,8 +1951,8 @@ export default {
     Chart6TodayExtra() {
       const ctx = this.$refs.myChart6TodayExtra;
       if (ctx) {
-        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
-        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Jan",
           "Feb",
@@ -2024,8 +2026,8 @@ export default {
     Chart6WeekExtra() {
       const ctx = this.$refs.myChart6WeekExtra;
       if (ctx) {
-        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
-        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Sunday",
           "Monday",
@@ -2094,8 +2096,8 @@ export default {
     Chart6MonthExtra() {
       const ctx = this.$refs.myChart6MonthExtra;
       if (ctx) {
-        const data1 = [55, 25, 45, 42, 40, 45, 42, 45, 35, 55, 40, 30];
-        const data2 = [45, 30, 35, 32, 35, 50, 32, 35, 25, 40, 30, 25];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"];
 
         new Chart(ctx, {
@@ -2157,8 +2159,8 @@ export default {
     Chart6yearExtra() {
       const ctx = this.$refs.myChart6yearExtra;
       if (ctx) {
-        const data1 = [20, 38, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58];
-        const data2 = [38, 55, 42, 36, 60, 65, 50, 30, 25, 40, 45, 25];
+        const data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const data2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const labels = [
           "Jan",
           "Feb",
@@ -2236,17 +2238,17 @@ export default {
       const chartData = {
         labels: [
         "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
         ],
         datasets: [
           {
@@ -2290,17 +2292,17 @@ export default {
       const chartData = {
         labels: [
         "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
         ],
         datasets: [
           {
@@ -2344,17 +2346,17 @@ export default {
       const chartData = {
         labels: [
         "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
         ],
         datasets: [
           {
@@ -2398,17 +2400,17 @@ export default {
       const chartData = {
         labels: [
         "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
         ],
         datasets: [
           {

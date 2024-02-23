@@ -10,7 +10,9 @@ use App\Models\Customer as CustomerModel;
 use Pusher\Pusher;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
-
+use App\Models\Category;
+use App\Models\SubCategory;
+use App\Models\ChildCategory;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Config;
@@ -38,9 +40,23 @@ class ComplaintsController extends Controller
         $data['action_key'] = ($slack == null) ? 'A_ADD_CUSTOMER_COMPLAINT' : 'A_EDIT_CUSTOMER_COMPLAINT';
         check_access(array($data['action_key']));
 
+        $categories = Category::pluck('label')->unique()->toArray();
+        $subcategories = SubCategory::pluck('sub_category_name')->unique()->toArray();
+        $childCategories = ChildCategory::pluck('child_category')->unique()->toArray();
+        
+        $allValues = array_merge($categories, $subcategories, $childCategories);
+        $allValues = array_filter($allValues);
+        $allValues = array_values($allValues);
+
+        $data['equipment_types'] = $allValues;
 
         $data['complaints_data'] = [];
 
+        $users = UserModel::withCount(['assignComplaints' => function ($query) {
+            $query->where('complaint_status', '!=', 'Completed Complaint');
+        }])->whereNotIn('role_id', [1,2,3])->where('customer_child_id', null)->get();
+        $data['lab_engineers'] = $users;
+       
        
         
         if ($slack) {
@@ -75,9 +91,9 @@ class ComplaintsController extends Controller
         $users = UserModel::withCount(['assignComplaints' => function ($query) {
             $query->where('complaint_status', '!=', 'Completed Complaint');
         }])->whereNotIn('role_id', [1,2,3])->get();
+        $data['labTechnician'] = $users;
         
         $complaint = ComplaintModel::with('customer', 'order', 'product', 'user')->where('slack', '=', $slack)->first();
-        $data['labTechnician'] = $users;
         $data['complaint'] = $complaint;
        
         $data['assign_access_key'] = 'A_ASSIGN_CUSTOMER_COMPLAINT_LABTECHNICIAN';

@@ -111,6 +111,12 @@ return [
             'url' => env('APP_URL').'/storage/product',
             'visibility' => 'public',
         ],
+        'customer' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/customer'),
+            'url' => env('APP_URL').'/storage/customer',
+            'visibility' => 'public',
+        ],
 
         'order' => [
             'driver' => 'local',

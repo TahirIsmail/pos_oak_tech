@@ -1,6 +1,5 @@
 <template>
     <div class="row">
-        
         <div class="col-md-12">
             <div class="card p-4">
                 <div class="d-flex flex-wrap mb-4">
@@ -46,36 +45,137 @@
                     <div class="form-group col-md-3">
                         <label for="phone">{{ $t("Phone") }}</label>
                         <p>{{ (customer.phone == '' || customer.phone == null)?'-':customer.phone }}</p>
+                    </div>                                     
+                    <div class="form-group col-md-3">
+                        <label for="address">{{ $t("Account Opening Date") }}</label>
+                        <p>{{ (customer.account_opening_date == '' || customer.account_opening_date == null)?'-':customer.account_opening_date }}</p>
+                    </div>
+                    <div class="form-group col-md-3" v-if="customer.customer_type == 'CUSTOM'">
+                        <label for="address">{{ $t("Customer STRN") }}</label>
+                        <p>{{ (customer.customer_strn == '' || customer.customer_strn == null)?'-':customer.customer_strn }}</p>
+                    </div>
+                    <div class="form-group col-md-3" v-if="customer.customer_type == 'CUSTOM'">
+                        <label for="address">{{ $t("Customer NTN") }}</label>
+                        <p>{{ (customer.customer_ntn == '' || customer.customer_ntn == null)?'-':customer.customer_ntn }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="dob">{{ $t("Date of Birth") }}</label>
-                        <p>{{ (customer.dob == '' || customer.dob == null)?'-':customer.dob }}</p>
+                        <label for="address">{{ $t("ACCOUNT MANAGER") }}</label>
+                        <p>{{ (customer.account_manager == '' || customer.account_manager == null)?'-':customer.account_manager }}</p>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="address">{{ $t("Address") }}</label>
-                        <p>{{ (customer.address == '' || customer.address == null)?'-':customer.address }}</p>
+                    <div class="form-group col-md-3" v-if="customer.customer_type == 'WALKIN'">
+                        <label for="address">{{ $t("Cheque Limit") }}</label>
+                        <p>{{ (customer.cheque_limit == '' || customer.cheque_limit == null)?'-':customer.cheque_limit }}</p>
+                    </div>
+                    <div class="form-group col-md-3" v-if="customer.customer_type == 'WALKIN'">
+                        <label for="address">{{ $t("Cheque date") }}</label>
+                        <p>{{ (customer.cheque_due_date == '' || customer.cheque_due_date == null)?'-':customer.cheque_due_date }}</p>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="created_by">{{ $t("Created By") }}</label>
                         <p>{{ (customer.created_by == null)?'-':customer.created_by['fullname']+' ()' }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="updated_by">{{ $t("Updated By") }}</label>
-                        <p>{{ (customer.updated_by == null)?'-':customer.updated_by['fullname']+' ('+customer.updated_by['customer_code']+')' }}</p>
-                    </div>
-                    <div class="form-group col-md-3">
                         <label for="created_on">{{ $t("Created On") }}</label>
                         <p>{{ customer.created_at_label }}</p>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="updated_on">{{ $t("Updated On") }}</label>
-                        <p>{{ customer.updated_at_label }}</p>
                     </div>
                 </div>
     
                 <hr>
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Address Information") }}</span>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-3">
+                        <label for="address">{{ $t("Address") }}</label>
+                        <p>{{ (customer.address == '' || customer.address == null)?'-':customer.address }}</p>
+                    </div>  
+                    <div class="form-group col-md-3">
+                        <label for="city">{{ $t("City") }}</label>
+                        <p>{{ (customer.city == '' || customer.city == null)?'-':customer.city }}</p>
+                    </div> 
+                    <div class="form-group col-md-3">
+                        <label for="country">{{ $t("Country") }}</label>
+                        <p>{{ (customer.country == '' || customer.country == null)?'-':customer.country }}</p>
+                    </div>                    
+                    
+                </div>
+
+                <hr>
+
+                <div class="mb-2" v-if="customer.customer_type == 'CUSTOM'">
+                    <span class="text-subhead">{{ $t("Customer Contact Information") }}</span>
+                </div>
     
-                <div class="d-flex flex-wrap mb-4">
+                <div class="form-row mb-2" v-for="person in child_customers" :key="person.id" v-if="customer.customer_type == 'CUSTOM'">
+                    <div class="form-group col-md-3">
+                        <label for="person_name">{{ $t("Job Post") }}</label>
+                        <p>{{ person.position }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="person_name">{{ $t("Department") }}</label>
+                        <p>{{ person.customer_department }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="person_name">{{ $t("Role") }}</label>
+                        <p>{{ person.role.label }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="">{{ $t("Name") }}</label>
+                        <p>{{ person.name }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="">{{ $t("Email") }}</label>
+                        <p>{{ person.email }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="">{{ $t("Password") }}</label>
+                        <p>{{ person.child_users.init_password }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="">{{ $t("Mobile") }}</label>
+                        <p>{{ person.mobile }}</p>
+                    </div>
+                    
+                </div>
+
+                <div class="mb-2" v-if="customer.customer_type == 'WALKIN'">
+                    <span class="text-subhead">{{ $t("Reference Contact Information") }}</span>
+                </div>
+                <div class="form-row mb-2" v-if="customer.customer_type == 'WALKIN'">
+                    <div class="form-group col-md-3">
+                        <label for="person_name">{{ $t("Name") }}</label>
+                        <p>{{ customer.reference_name }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="">{{ $t("Mobile") }}</label>
+                        <p>{{ customer.reference_mobile }}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="">{{ $t("CNIC") }}</label>
+                        <p>{{ customer.reference_cnic }}</p>
+                    </div>
+                    
+                </div>
+
+                <hr>
+
+                <div class="mb-2" v-if="customer.customer_type == 'WALKIN'">
+                    <span class="text-subhead">{{ $t("Documents") }}</span>
+                </div>
+                <div class="form-row mb-2" v-if="customer.customer_type == 'WALKIN'">
+                    <div class="form-group col-md-6">
+                        <label for="">{{ $t("CNIC IMAGE") }}</label>
+                        <br>
+                        <img :src="customer.cnic_image" class="rounded mr-3 mb-3" alt="" style="width: 200px;height: 200px;">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">{{ $t("Cheque IMAGE") }}</label>
+                        <br>
+                        <img :src="customer.cheque_image" class="rounded mr-3 mb-3" alt="" style="width:200px;height: 200px;">
+                    </div>        
+                </div>
+
+                <!-- <div class="d-flex flex-wrap mb-4">
                     <div class="col-md-6 pl-0">
                         <div class="mb-2">
                             <span class="text-subhead">{{ $t("Recent Orders") }}</span>
@@ -141,7 +241,7 @@
                             <span class="mb-2"><span class="" v-if="favourite_processing == true"><i class='fa fa-circle-notch fa-spin'></i> Loading</span></span>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
         </div>
@@ -190,6 +290,7 @@
         props: {
             customer_data: [Array, Object],
             delete_access: Boolean,
+            child_customers: Array
         },
         mounted() {
             console.log('Customer detail page loaded');

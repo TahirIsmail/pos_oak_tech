@@ -1,6 +1,5 @@
 <template>
     <div class="row">
-        
         <div class="col-md-12">
 
             <div class="card p-4">
@@ -78,7 +77,17 @@
                         <p>{{ supplier.pincode }}</p>
                     </div> -->
                 </div>
-    
+
+
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Business Types") }}</span>
+                </div>
+                <div class="form-row mb-2" >
+                    <ul class="form-group col-md-3 px-2" style="list-style: none;" v-for="types in supplier.business_type" :key="types.id">
+                        
+                        <li>{{ types.business_type }}</li>
+                    </ul>
+                </div>
     
     
                 <div class="mb-2">

@@ -3,7 +3,7 @@
         <i class="fas fa-ellipsis-h actions-dropdown"></i>
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown">
-        @if (check_access(array('A_DETAIL_CUSTOMER_COMPLAINT'), true))
+        @if (check_access(array('A_VIEW_CUSTOMER_COMPLAINT'), true))
             <a href="view_customer_complaint/{{ $row->slack }}" class="dropdown-item">{{ __("View") }}</a>
         @endif
         @if (check_access(array('A_EDIT_CUSTOMER_COMPLAINT'), true))
