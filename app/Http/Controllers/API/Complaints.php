@@ -105,7 +105,11 @@ class Complaints extends Controller
             }
 
             $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
-            $assigned_to = User::select('id')->where('slack', $request->assigned_to)->get();
+            if(isset($request->assigned_to) && $request->assigned_to != null) {
+                $assigned_to = User::select('id')->where('slack', $request->assigned_to)->get();
+            } else {
+                $assigned_to = null;
+            }
             $ticket = $this->generate_ticket("complaints");
             $currentTime = Carbon::now();
             $time = $currentTime->format('H:i:s');
@@ -130,7 +134,7 @@ class Complaints extends Controller
                     "complaint_details" => $request->complaint_details,
                     "end_user_details" => $request->end_user_details,
                     "service_required" => $request->service_required,
-                    "assign_to_lab_staff_id" => $assigned_to[0]->id,
+                    "assign_to_lab_staff_id" => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
                     "poc_name" => $request->poc_name,
                     "c_status" => $request->complaint_status,
                 ];
@@ -388,16 +392,75 @@ class Complaints extends Controller
         if ($complaint) {
             $complaint->update([
                'billable' => $request->billable,
-               'parts_required' => $request->parts_required,
                'complaint_status_label' => $request->complaint_status_label,
                'type_of_service' => $request->type_of_service,
                'complaint_ok' => $request->complaint_ok,
-               'picked_for_workshop' => $request->picked_for_workshop
+               'picked_for_workshop' => $request->picked_for_workshop,
+               'equipment_S_no' => $request->equipment_s_no,
+               'equipment_specs' => $request->equipment_specs,
+               'accessories' => $request->accessories,
+               'invoice_number' => $request->invoice_number,
+               'po_number' => $request->po_number,
+               'complaint_condition' => $request->condition,
+               'equipment_part_serial_number' => $request->equipment_part_serial_number,
+               'outsource_date' => $request->outsource_date,
+               'return_date' => $request->return_date,
+               'delivery_date' => $request->delivery_date,
+               'fault_report_by_customer' => $request->fault_report_by_customer,
+               'c_status' => $request->c_status,
+               'status' => $request->status,
             ]);
 
             return response()->json($this->generate_response(
                 array(
                     "message" => "Complaint Status Change Successfully.",
+                    "data" => '',
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+
+        }
+    }
+
+    public function change_complaint_remark_by_engg(Request $request)
+    {
+        $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+        if ($complaint) {
+            $complaint->update([
+               'parts_required' => $request->parts_required,
+               'outsource' => $request->outsource,
+               'out_source_item' => $request->outsource_item,
+               'ready_date' => $request->ready_date,
+               'diagnose_by_engg' => $request->diagnose_by_engg,              
+            ]);
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Complaint Status Change Successfully.",
+                    "data" => '',
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+
+        }
+    }
+
+
+    public function add_customer_feedback(Request $request)
+    {
+        $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+        if ($complaint) {
+            $complaint->update([
+               'customer_feedback' => $request->customer_feedback,                         
+            ]);
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Complaint Customer Feedback Submitted Successfully.",
                     "data" => '',
                     'msg' => 'success',
                 ),
@@ -571,7 +634,8 @@ class Complaints extends Controller
         $account_id = AccountModel::where('slack', $request->account)->first();
         $payment_method_id = PaymentMethodModel::where('slack', $request->payment_method)->first();
         $complaint_id = ModelsComplaints::with('customer')->where('slack', $request->complaint_slack)->first();
-        // dd($complaint_id->customer->id);
+        $customer = Customer::where('id', $complaint_id->customer_id)->first();
+       
 
         $transaction = [
             "slack" => $this->generate_slack("transactions"),
@@ -583,9 +647,9 @@ class Complaints extends Controller
             "payment_method" => $payment_method_id->label,
             "bill_to" => 'COMPLAINTS',
             "bill_to_id" => $complaint_id->id,
-            "bill_to_name" => $complaint_id->customer->name,
-            "bill_to_contact" => $complaint_id->customer->phone,
-            "bill_to_address" => $complaint_id->customer->address,
+            "bill_to_name" => $customer->name,
+            "bill_to_contact" => $customer->phone,
+            "bill_to_address" => $customer->address,
             "currency_code" => 'PKR',
             "amount" => $request->payment_total_amount,
             "received_amount" => $request->received_amount,
@@ -696,7 +760,7 @@ class Complaints extends Controller
                 ];
                 $complaint_id->update($complaint_update);
                 $product = Product::find($productId);
-                dd($productIdsArray);
+                // dd($productIdsArray);
                 $product->link_to_complaint = $complaint_id->id;
                 $product->quantity = 0;
                 $product->save();

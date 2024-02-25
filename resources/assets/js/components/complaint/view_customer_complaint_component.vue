@@ -16,16 +16,28 @@
             <span></span>
           </div>
         </div>
+
+        <div class="d-flex flex-wrap mb-4">
+          <div class="ml-auto">
+              <button
+                type="submit"
+                class="alert alert-success mr-1"
+                v-if="complaint.assign_to_lab_staff_id != null"
+              >
+                {{ $t("Complaint Assigned") }}
+              </button>
+          </div>
+        </div>
   
         <div class="d-flex flex-wrap mb-4">
           <p v-html="server_errors" v-bind:class="[error_class]"></p>
-  
+          
           <div class="ml-auto d-flex">
             <div v-if="assign_access">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id == null"
+                v-if="complaint.assign_to_lab_staff_id == null || complaint.assign_to_lab_staff_id == 0"
                 v-on:click="assigncomplaint_to_labtachnician()"
                 v-bind:disabled="assign_processing == true"
               >
@@ -33,7 +45,7 @@
                   class="fa fa-circle-notch fa-spin"
                   v-if="assign_processing == true"
                 ></i>
-                {{ $t("Assin Complaint") }}
+                {{ $t("Assign Complaint") }}
               </button>
   
               <button
@@ -45,32 +57,43 @@
               </button>
             </div>
   
-            <div>
-              <button
-                type="submit"
-                class="alert alert-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null"
-              >
-                {{ $t("Complaint Assigned") }}
-              </button>
-            </div>
+            
   
             <div v-if="complaint.complaint_completed_date == null">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null"
-                v-on:click="request_for_product()"
-              >
+                v-if="complaint.assign_to_lab_staff_id != null && is_lab_tech"
+                v-on:click="request_for_product()">
                 {{ $t("Add Required Product") }}
               </button>
             </div>
+
+            <div v-if="complaint.complaint_completed_date == null">
+              <button
+                type="submit"
+                class="btn btn-primary mr-1"
+                v-if="complaint.assign_to_lab_staff_id != null && is_lab_tech"
+                v-on:click="add_remarks()">
+                {{ $t("Add Remarks") }}
+              </button>
+            </div>
+
+            <div v-if="complaint.complaint_completed_date != null">
+              <button
+                type="submit"
+                class="btn btn-primary mr-1"
+                v-if="is_customer && complaint.customer_feedback == null"
+                v-on:click="add_feedback()">
+                {{ $t("Add Feedback") }}
+              </button>
+            </div>
   
             <div v-if="complaint.complaint_completed_date == null">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null"
+                v-if="complaint.assign_to_lab_staff_id != null && !is_customer"
                 v-on:click="complaint_completed()"
               >
                 {{ $t("Complaint Complete") }}
@@ -180,14 +203,29 @@
             <label for="label">{{ $t("Complaint Status") }}</label>
   
             <p class="alert alert-success w-50">
-              {{ complaint.complaint_status }}
+              {{ complaint.c_status }}
+            </p>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="label">{{ $t("Status") }}</label>
+  
+            <p class="alert alert-success w-50">
+              {{ complaint.complaint_status_label }}
+            </p>
+          </div>
+
+          <div class="form-group col-md-3" v-if="!is_customer">
+            <label for="label">{{ $t("Status For OAK") }}</label>
+  
+            <p class="alert alert-success w-50">
+              {{ complaint.status }}
             </p>
           </div>
   
           <div class="form-group col-md-3">
             <label for="created_by">{{ $t("Assign to LabTechnician") }}</label>
   
-            <p>{{ complaint.user.fullname }} ({{  complaint.user.email }})</p>
+            <p v-if="complaint.user">{{ complaint.user.fullname }} ({{ complaint.user.email }})</p>
           </div>
   
           <div
@@ -196,7 +234,7 @@
           >
             <label for="created_by">{{ $t("Completed Date") }}</label>
   
-            <p class="alert alert-success w-50"></p>
+            <p class="alert alert-success w-50">{{ complaint.complaint_completed_date }}</p>
           </div>
   
           <div class="form-group col-md-3">
@@ -257,7 +295,7 @@
             <div v-if="complaint.due_date">
               <label for="created_by">{{ $t("due Date") }}</label>
   
-              <p class="alert alert-danger w-50"></p>
+              <p class="alert alert-danger w-50">{{ complaint.due_date }}</p>
             </div>
           </div>
   
@@ -267,7 +305,7 @@
               >{{ $t("Manager Remark to Lab Technician") }}</label
             >
   
-            <p></p>
+            <p> {{ complaint.admin_remark }} </p>
           </div>
   
           <div class="form-group col-md-3" v-if="complaint.admin_again_remark">
@@ -1090,13 +1128,14 @@
       <modalcomponent
         v-if="complaint_status_modal"
         v-on:close="complaint_status_modal = false"
+        :modal_width="'modal-container-xl'"
       >
         <template v-slot:modal-header>
           {{ $t("Add Complaint Status") }}
         </template>
         <template v-slot:modal-body>
           <div class="form-row mb-2">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <label for="billable">{{ $t("BILLABLE") }}</label>
   
               <select
@@ -1118,29 +1157,7 @@
               >
             </div>
   
-            <div class="form-group col-md-6">
-              <label for="parts_required">{{ $t("Parts Required") }}</label>
-  
-              <select
-                name="parts_required"
-                v-model="parts_required"
-                v-validate="'required'"
-                class="form-control form-control-custom custom-select"
-              >
-                <option value="" disabled>Choose parts_required..</option>
-  
-                <option value="Yes">Yes</option>
-  
-                <option value="No">No</option>
-              </select>
-  
-              <span
-                v-bind:class="{ 'error' : errors.has('parts_required') }"
-                >{{ errors.first('parts_required') }}</span
-              >
-            </div>
-  
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <label for="complaint_status">{{ $t("Complaint Status") }}</label>
   
               <select
@@ -1149,15 +1166,13 @@
                 v-validate="'required'"
                 class="form-control form-control-custom custom-select"
               >
-                <option value="" disabled>Choose Complaint Status..</option>
-  
-                <option value="Equipment">Equipment</option>
-  
-                <option value="Remove for Workshop">Remove for Workshop</option>
-  
-                <option value="Backup">Backup</option>
-  
-                <option value="Replacement">Replacement</option>
+                <option value="" disabled>Choose Complaint Status..</option>  
+                <option value="Equipment">Equipment</option>  
+                <option value="Remove for Workshop">Remove for Workshop</option>  
+                <option value="Backup">Backup</option>  
+                <option value="Repaired reinstalled">Repaired reinstalled</option>
+                <option value="Not Repairable">Not Repairable</option>
+                <option value="Replacement Required">Replacement Required</option>
               </select>
   
               <span
@@ -1165,8 +1180,40 @@
                 >{{ errors.first('complaint_status') }}</span
               >
             </div>
+
+
+            <div class="form-group col-md-4">
+              <label for="c_status">{{ $t("Complaint Customer Status") }}</label>  
+              <select
+                name="c_status"
+                v-model="c_status"
+                class="form-control form-control-custom custom-select"
+              >
+                <option value="" disabled>Choose Complaint Customer Status..</option>  
+                <option value="Complaint Logged">Complaint Logged</option>
+                <option value="Complaint Assigned">Complaint Assigned</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Complaint Complete">Complaint Complete</option>
+                <option value="Approval Pending">Approval Pending</option>
+                <option value="Not Repairable">Not Repairable</option>                           
+              </select>              
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="status">{{ $t("Status") }}</label>  
+              <select
+                name="status"
+                v-model="status"
+                class="form-control form-control-custom custom-select"
+              >
+                <option value="" disabled>Choose Status..</option>  
+                <option value="Ready">Ready</option>
+                <option value="Engineer">Engineer</option>
+                <option value="Delivered">Delivered</option>                        
+              </select>              
+            </div>
   
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <label for="type_of_service">{{ $t("Type of Services") }}</label>
   
               <select
@@ -1177,13 +1224,14 @@
               >
                 <option value="" disabled>Choose Type of Services..</option>
   
-                <option value="With Parts">With Parts</option>
-  
-                <option value="Without Parts">Without Parts</option>
-  
                 <option value="Warranty">Warranty</option>
-  
+                <option value="With Parts">SLA With Parts</option>
+                <option value="Without Parts">SLA Without Parts</option>
                 <option value="Per Call">Per Call</option>
+                <option value="OAK Stock">OAK Stock</option>
+  
+  
+  
               </select>
   
               <span
@@ -1192,7 +1240,7 @@
               >
             </div>
   
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <label for="complaint_ok">{{ $t("Complaint Ok") }}</label>
   
               <select
@@ -1214,7 +1262,7 @@
               >
             </div>
   
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <label
                 for="picked_for_workshop"
                 >{{ $t("Picked for Workshop") }}</label
@@ -1238,6 +1286,151 @@
                 >{{ errors.first('picked_for_workshop') }}</span
               >
             </div>
+
+
+            <div class="form-group col-md-4">
+              <label
+                for="equipment_s_no"
+                >{{ $t("Equipment S.No") }}</label
+              >
+  
+              <input
+                name="equipment_s_no"
+                v-model="equipment_s_no"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="equipment_specs"
+                >{{ $t("Equipment Specs") }}</label
+              >
+  
+              <input
+                name="equipment_specs"
+                v-model="equipment_specs"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="accessories"
+                >{{ $t("Accessories") }}</label
+              >  
+              <input
+                name="accessories"
+                v-model="accessories"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="Invoice_number"
+                >{{ $t("Invoice Number") }} <small>(In Case of Warranty)</small></label
+              >  
+              <input
+                name="Invoice_number"
+                v-model="Invoice_number"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="po_number"
+                >{{ $t("PO Number") }} <small>(In Case of Warranty)</small></label
+              >  
+              <input
+                name="po_number"
+                v-model="po_number"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="condition"
+                >{{ $t("Condition") }}</label
+              >
+  
+              <select
+                name="condition"
+                v-model="condition"
+                class="form-control form-control-custom custom-select"
+              >
+                <option value="" disabled>Choose Condition..</option>  
+                <option value="Good Condition">Good Condition</option>  
+                <option value="Normal Condition">Normal Condition</option>
+                <option value="Damaged Condition">Damaged Condition</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="equipment_part_serial_number"
+                >{{ $t("Equipment Part") }} <small>(Serial Number)</small></label
+              >  
+              <input
+                name="equipment_part_serial_number"
+                v-model="equipment_part_serial_number"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="outsource_date"
+                >{{ $t("OutSource Date") }} </label
+              >  
+              <input
+                type="date"
+                name="outsource_date"
+                v-model="outsource_date"
+                class="form-control form-control-custom"
+              />
+            </div>
+            <div class="form-group col-md-4">
+              <label
+                for="return_date"
+                >{{ $t("Return Date") }} </label
+              >  
+              <input
+                type="date"
+                name="return_date"
+                v-model="return_date"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="delivery_date"
+                >{{ $t("Delivery Date") }} </label
+              >  
+              <input
+                type="date"
+                name="delivery_date"
+                v-model="delivery_date"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-8">
+              <label
+                for="fault_report_by_customer"
+                >{{ $t("Fault Report By Customer") }} </label
+              >  
+              <textarea
+                name="fault_report_by_customer"
+                v-model="fault_report_by_customer"
+                class="form-control form-control-custom"
+                row="1"
+              ></textarea>
+            </div>
+
           </div>
         </template>
         <template v-slot:modal-footer>
@@ -1245,6 +1438,151 @@
             type="submit"
             class="btn btn-primary"
             @click="submit_complaint_status()"
+          >
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
+
+
+
+      <modalcomponent
+        v-if="add_remark_modal"
+        v-on:close="add_remark_modal = false"
+        :modal_width="'modal-container-xl'"
+      >
+        <template v-slot:modal-header>
+          {{ $t("Add Complaint Remarks") }}
+        </template>
+        <template v-slot:modal-body>
+          <div class="form-row mb-2">           
+  
+            <div class="form-group col-md-4">
+              <label for="parts_required">{{ $t("Parts Required") }}</label>
+  
+              <select
+                name="parts_required"
+                v-model="parts_required"
+                v-validate="'required'"
+                class="form-control form-control-custom custom-select"
+              >
+                <option value="" disabled>Choose parts_required..</option>
+  
+                <option value="Yes">Yes</option>
+  
+                <option value="No">No</option>
+              </select>
+  
+              <span
+                v-bind:class="{ 'error' : errors.has('parts_required') }"
+                >{{ errors.first('parts_required') }}</span
+              >
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="outsource">{{ $t("OutSource") }}</label>  
+              <select
+                name="outsource"
+                v-model="outsource"
+                v-validate="'required'"
+                class="form-control form-control-custom custom-select"
+              >
+                <option value="" disabled>Choose Out-Source..</option>  
+                <option value="Yes">Yes</option>  
+                <option value="No">No</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="outsource_item">{{ $t("OutSource Item") }}</label>  
+              <select
+                name="outsource_item"
+                v-model="outsource_item"
+                class="form-control form-control-custom custom-select"
+              >
+                <option value="" disabled>Choose Out-Source..</option>  
+                <option v-for="(item, index) in out_source_items" :value="item" :key="index">{{ item }}</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-4">
+              <label
+                for="ready_date"
+                >{{ $t("Ready Date") }}</label
+              >
+  
+              <input
+                type="date"
+                name="ready_date"
+                v-model="ready_date"
+                class="form-control form-control-custom"
+              />
+            </div>
+
+            <div class="form-group col-md-8">
+              <label
+                for="diagnose_by_engg"
+                >{{ $t("Fault Diagnose By Engineer") }} </label
+              >  
+              <textarea
+                name="diagnose_by_engg"
+                v-model="diagnose_by_engg"
+                class="form-control form-control-custom"
+                row="1"
+              ></textarea>
+            </div>
+  
+  
+
+
+          </div>
+        </template>
+        <template v-slot:modal-footer>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            @click="submit_complaint_remarks()"
+          >
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
+
+
+      <modalcomponent
+        v-if="add_customer_feedback"
+        v-on:close="add_customer_feedback = false"
+        :modal_width="'modal-container-xl'"
+      >
+        <template v-slot:modal-header>
+          {{ $t("Add Complaint Feedback") }}
+        </template>
+        <template v-slot:modal-body>
+          <div class="form-row mb-2">
+
+            <div class="form-group col-md-8">
+              <label
+                for="customer_feedback"
+                >{{ $t("Add Complaint Feedback") }} </label
+              >  
+              <textarea
+                name="customer_feedback"
+                v-model="customer_feedback"
+                class="form-control form-control-custom"
+                row="1"
+              ></textarea>
+            </div>
+  
+  
+
+
+          </div>
+        </template>
+        <template v-slot:modal-footer>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            @click="submit_customer_feedback()"
           >
             Continue
           </button>
@@ -1299,6 +1637,8 @@
               notes: '',
               transaction_type_data: '',
               complaint_status_modal: false,
+              add_customer_feedback: false,
+              add_remark_modal: false,
               delete_processing: false,
               show_payment_modal: false,
               show_modal: false,
@@ -1347,7 +1687,24 @@
               type_of_service: (this.complaint.type_of_service) ? this.complaint.type_of_service : '',
               complaint_ok: (this.complaint.complaint_ok) ? this.complaint.complaint_ok : '',
               picked_for_workshop: (this.complaint.picked_for_workshop) ? this.complaint.picked_for_workshop : '',
-  
+              equipment_s_no: (this.complaint.equipments_S_no) ? this.complaint.equipments_S_no : '',
+              equipment_specs: (this.complaint.equipment_specs) ? this.complaint.equipment_specs : '',
+              accessories: (this.complaint.accessories) ? this.complaint.accessories : '',
+              invoice_number: (this.complaint.invoice_number) ? this.complaint.invoice_number : '',
+              po_number: (this.complaint.po_number) ? this.complaint.po_number : '',
+              condition: (this.complaint.complaint_condition) ? this.complaint.complaint_condition : '',
+              equipment_part_serial_number: (this.complaint.equipment_part_serial_number) ? this.complaint.equipment_part_serial_number : '',
+              outsource_date: (this.complaint.outsource_date) ? this.complaint.outsource_date : '',
+              return_date: (this.complaint.return_date) ? this.complaint.return_date : '',
+              delivery_date: (this.complaint.delivery_date) ? this.complaint.delivery_date : '',
+              fault_report_by_customer: (this.complaint.fault_report_by_customer) ? this.complaint.fault_report_by_customer : '',
+              outsource: (this.complaint.outsource) ? this.complaint.outsource : '',
+              outsource_item: (this.complaint.out_source_item) ? this.complaint.out_source_item : '',
+              ready_date: (this.complaint.ready_date) ? this.complaint.ready_date : '',
+              diagnose_by_engg: (this.complaint.diagnose_by_engg) ? this.complaint.diagnose_by_engg : '',
+              customer_feedback: (this.complaint.customer_feedback) ? this.complaint.customer_feedback : '',
+              c_status: (this.complaint.c_status) ? this.complaint.c_status : '',
+              status: (this.complaint.status) ? this.complaint.status : '',
           }
       },
       props: {
@@ -1357,6 +1714,9 @@
           requirement_request_access: Boolean,
           Customer_complaint_make_invoice: Boolean,
           delete_access: Boolean,
+          is_lab_tech: Boolean,
+          out_source_items: [Array, Object],
+          is_customer: Boolean
       },
       mounted() {
           console.log('Category detail page loaded');
@@ -1374,8 +1734,80 @@
           add_complaint_status() {
               this.complaint_status_modal = true;
           },
+
+          add_remarks(){
+            this.add_remark_modal = true;
+          },
+          add_feedback(){
+            this.add_customer_feedback = true;
+          },
+
+          submit_customer_feedback(){
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('complaint_slack', this.complaint_slack);
+            formData.append('customer_feedback', this.customer_feedback);
+            axios.post('/api/add_customer_feedback', formData).then((response) => {
   
-          submit_complaint_status() {
+                if (response.data.status_code == 200) {
+                    this.show_response_message(response.data.msg, 'Success');
+
+                    location.reload();
+
+                } else {
+                    this.show_modal = false;
+                    this.processing = false;
+                    try {
+                        var error_json = JSON.parse(response.data.msg);
+                        this.loop_api_errors(error_json);
+                    } catch (err) {
+                        this.server_errors = response.data.msg;
+                    }
+                    this.error_class = 'error';
+                }
+
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          },
+
+          submit_complaint_remarks(){
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('complaint_slack', this.complaint_slack);
+            formData.append('parts_required', this.parts_required);
+            formData.append('outsource', this.outsource);
+            formData.append('outsource_item', this.outsource_item);
+            formData.append('ready_date', this.ready_date);
+            formData.append('diagnose_by_engg', this.diagnose_by_engg);
+
+            axios.post('/api/change_complaint_remark_by_engg', formData).then((response) => {
+  
+                if (response.data.status_code == 200) {
+                    this.show_response_message(response.data.msg, 'Success');
+
+                    location.reload();
+
+                } else {
+                    this.show_modal = false;
+                    this.processing = false;
+                    try {
+                        var error_json = JSON.parse(response.data.msg);
+                        this.loop_api_errors(error_json);
+                    } catch (err) {
+                        this.server_errors = response.data.msg;
+                    }
+                    this.error_class = 'error';
+                }
+
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          },
+  
+          submit_complaint_status() {           
               var formData = new FormData();
               formData.append("access_token", window.settings.access_token);
               formData.append("complaint_slack", this.complaint_slack);
@@ -1385,6 +1817,19 @@
               formData.append('type_of_service', this.type_of_service);
               formData.append('complaint_ok', this.complaint_ok);
               formData.append('picked_for_workshop', this.picked_for_workshop);
+              formData.append('equipment_s_no', this.equipment_s_no);
+              formData.append('equipment_specs', this.equipment_specs);
+              formData.append('accessories', this.accessories);
+              formData.append('invoice_number', this.invoice_number);
+              formData.append('po_number', this.po_number);
+              formData.append('condition', this.condition);
+              formData.append('equipment_part_serial_number', this.equipment_part_serial_number);
+              formData.append('outsource_date', this.outsource_date);
+              formData.append('return_date', this.return_date);
+              formData.append('delivery_date', this.delivery_date);
+              formData.append('fault_report_by_customer', this.fault_report_by_customer);  
+              formData.append('c_status', this.c_status);
+              formData.append('status', this.status);        
   
               axios.post('/api/change_complaint_status', formData).then((response) => {
   

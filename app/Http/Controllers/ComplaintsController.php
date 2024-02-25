@@ -57,7 +57,24 @@ class ComplaintsController extends Controller
         }])->whereNotIn('role_id', [1,2,3])->where('customer_child_id', null)->get();
         $data['lab_engineers'] = $users;
        
-       
+        if($request->customer_id || $request->customer_child_id){
+            if($request->customer_id){
+               $data['customer_slack'] = $request->logged_user_slack;
+            }
+            if($request->customer_child_id){
+                $child_customer = CustomerModel::where('id', $request->customer_child_id)->first();
+                $customer = CustomerModel::where('id', $child_customer->parent_id)->first();
+
+                $data['customer_slack'] = $customer->slack;
+
+            }
+            $data['is_customer'] = true;
+            
+        }else{
+          $data['is_customer'] = false;
+          $data['customer_slack'] = '';
+
+        }
         
         if ($slack) {
 
@@ -90,11 +107,34 @@ class ComplaintsController extends Controller
         check_access(array($data['action_key']));
         $users = UserModel::withCount(['assignComplaints' => function ($query) {
             $query->where('complaint_status', '!=', 'Completed Complaint');
-        }])->whereNotIn('role_id', [1,2,3])->get();
+        }])->whereNotIn('role_id', [1,2,3])->where('customer_child_id', null)->get();
         $data['labTechnician'] = $users;
         
         $complaint = ComplaintModel::with('customer', 'order', 'product', 'user')->where('slack', '=', $slack)->first();
         $data['complaint'] = $complaint;
+
+        $lab_tech = ($request->logged_user_id == $complaint->assign_to_lab_staff_id) ? true : false;
+        $data['is_lab_tech'] = $lab_tech;
+        $categories = Category::pluck('label')->unique()->toArray();
+        $subcategories = SubCategory::pluck('sub_category_name')->unique()->toArray();
+        $childCategories = ChildCategory::pluck('child_category')->unique()->toArray();
+        
+        $allValues = array_merge($categories, $subcategories, $childCategories);
+        $allValues = array_filter($allValues);
+        $allValues = array_values($allValues);
+
+        $data['out_source_items'] = $allValues;
+        // dd($data['out_source_items']);
+
+
+        if($request->customer_id || $request->customer_child_id){
+            $data['is_customer'] = true;
+            
+        }else{
+          $data['is_customer'] = false;
+
+        }
+
        
         $data['assign_access_key'] = 'A_ASSIGN_CUSTOMER_COMPLAINT_LABTECHNICIAN';
         if (check_access(array($data['assign_access_key']), true) == false) {
@@ -141,7 +181,7 @@ class ComplaintsController extends Controller
         $data['action_key'] = 'A_PRINT_CUSTOMER_COMPLAINT_INVOICE';
         check_access(array($data['action_key']));
         
-        $complaint_invoice = ComplaintModel::with('order','storeData','linkToProduct','complaintCharges', 'transactions')->where('slack', '=', $slack)->first();
+        $complaint_invoice = ComplaintModel::with('storeData','linkToProduct','complaintCharges', 'transactions')->where('slack', '=', $slack)->first();
         // dd('kashif');
         
         if (empty($complaint_invoice)) {

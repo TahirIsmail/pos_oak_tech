@@ -507,6 +507,8 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/fetchComplaintRecord','API\Complaints@fetchComplaintRecord');
 
     Route::post('/change_complaint_status','API\Complaints@change_complaint_status');
+    Route::post('/change_complaint_remark_by_engg','API\Complaints@change_complaint_remark_by_engg');
+    Route::post('/add_customer_feedback','API\Complaints@add_customer_feedback');
 
 
     

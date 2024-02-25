@@ -1,5 +1,6 @@
 <template>
     <div class="card p-4">
+        
         <form @submit.prevent="submit_form">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -25,7 +26,7 @@
 
             <div class="form-row mb-2">
 
-                <div class="form-group col-sm-12 col-md-4">
+                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
                     <label for="customer_category">{{ $t("Customer Category") }}</label>
                     <select name="customer_category" v-model="customer_category" @change="fetchCustomers"
                         v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customer Category...">
@@ -38,7 +39,7 @@
                 </div>
 
 
-                <div class="form-group col-sm-12 col-md-4">
+                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
                     <label for="selectedCustomer">{{ $t("Choose Customer") }}</label>
                     <select name="selectedCustomer" v-model="selectedCustomer"
                         v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customers..">
@@ -142,7 +143,7 @@
                     }}</span> -->
                 </div>
 
-                 <div class="form-group col-sm-12 col-md-4">
+                 <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
                     <label for="assigned_to">{{ $t("Assigned To") }}</label>
                     <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
                         <option value="" disabled>Select...</option>
@@ -152,7 +153,7 @@
                     
                 </div>
 
-                <div class="form-group col-sm-12 col-md-4">
+                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
                     <label for="complaint_status">{{ $t("Choose Status") }}</label>
                     <select name="complaint_status" v-model="complaint_status" class="form-control form-control-custom">
                         <option value="" disabled>Select Status...</option>
@@ -211,7 +212,8 @@ export default {
 
             error_class: "",
             complaint_slack: this.complaints_data.length === 0 ? '' : this.complaints_data.slack,
-            selectedCustomer: this.complaints_data.length === 0 && this.complaints_data.customer == null ? '' : this.complaints_data.customer.slack,
+            selectedCustomer: this.complaints_data.length === 0 || this.complaints_data.customer == null ? (this.is_customer ? this.customer_slack : '') : this.complaints_data.customer.slack,
+
             selectedOrder: this.complaints_data.length === 0 && this.complaints_data.order == null ? '' : this.complaints_data.order.slack,
             product_id: this.complaints_data.length === 0 && this.complaints_data.product_id == null ? '' : this.complaints_data.product_id,
             customerInvoices: [],
@@ -242,6 +244,8 @@ export default {
         lab_engineers: [Array, Object],
         complaints_data: Array,
         equipment_types: Array,
+        is_customer: Boolean,
+        customer_slack: String,
 
     },
     watch: {
@@ -257,7 +261,7 @@ export default {
 
         fetchCustomers(){
             if(this.customer_category){
-                alert(this.customer_category);
+                // alert(this.customer_category);
                 const formData = new FormData();
                 formData.append("access_token", window.settings.access_token);
                 formData.append("customer_category", this.customer_category);

@@ -7,7 +7,7 @@
 <html>
 
 <head>
-    <title>Invoice #{{ $data->order_id }}</title>
+    <title>Invoice</title>
 </head>
 
 <body>
@@ -26,12 +26,12 @@
                     <table class='w-50'>
                         <tr>
                             <td>
-                                <div class='display-block left'>Complaint Ref:</div>
+                                <div class='display-block left'>Complaint Ticket:</div>
 
                             </td>
                             <td>
                                 <div class="bold">
-                                    {{ $data->complaint_ref }}</div>
+                                    {{ $data->ticket }}</div>
                             </td>
                         </tr>
                         <tr>
@@ -43,15 +43,7 @@
                                 {{ $data->created_at }}
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div class='display-block'>Order No:</div>
-
-                            </td>
-                            <td>
-                                <div class="bold">Order# {{ $data->order->order_number }}</div>
-                            </td>
-                        </tr>
+                       
                       
                         <tr>
                             <td>
@@ -101,15 +93,10 @@
             </td>
             <td class='v-top w-50 pr-20px'>
                 <div class='bold display-block'>Complaint To </div>
-                <div class='display-block'>{{ $data->order->customer_name }}
+                {{-- <div class='display-block'>{{ $data->order->customer_name }} --}}
                 </div>
                 <div class='pr-100px'>
-                    @if ($data->order->customer_email != '')
-                        Email: {{ $data->order->customer_email }}
-                    @endif
-                    @if ($data->order->customer_phone != '')
-                        Contact No: {{ $data->order->customer_phone }}
-                    @endif
+                  
                 </div>
             </td>
         </tr>
