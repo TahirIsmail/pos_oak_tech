@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row card p-4">
         <div class="col-md-12">
 
             <div class="d-flex flex-wrap mb-4">

@@ -59,7 +59,7 @@ class DemandController extends Controller
             return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('customer_id', function ($row) {
-               return $row['customer']['name'];
+               return isset($row['customer']['name']) ? $row['customer']['name'] : '';
             })          
             ->rawColumns(['customer_id'])
             ->make(true);

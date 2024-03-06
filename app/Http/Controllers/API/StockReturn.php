@@ -145,7 +145,7 @@ class StockReturn extends Controller
             DB::beginTransaction();
 
             $stock_return_data = $this->form_stock_return_array($request);
-            
+            // dd($stock_return_data);
             if(!empty($stock_return_data['stock_return_data'])){
                 
                 $stock_return = $stock_return_data['stock_return_data'];
@@ -181,6 +181,8 @@ class StockReturn extends Controller
                     StockReturnProductModel::insert($item);
 
                 });
+
+                // dd($request, $stock_return['slack']);
 
                 $this->update_stock_from_stock_return($request, $stock_return['slack'], false);
             }
@@ -492,11 +494,11 @@ class StockReturn extends Controller
                 ->where('products.slack', '=', $product_slack)
                 ->categoryJoin()
                 ->supplierJoin()
-                ->taxcodeJoin()
-                ->discountcodeJoin()
-                ->categoryActive()
+                // ->taxcodeJoin()
+                // ->discountcodeJoin()
+                // ->categoryActive()
                 ->supplierActive()
-                ->taxcodeActive()
+                // ->taxcodeActive()
                 ->first();
                 if (empty($product_data)) {
                     throw new Exception("Product ".$product_name." is not currently available", 400);
@@ -541,7 +543,7 @@ class StockReturn extends Controller
         $packing_charge = (isset($request->packing_charge))?$request->packing_charge:0.00;
 
         $total_order_amount = ($total_after_discount_amount+$total_tax_amount+$shipping_charge+$packing_charge);
-
+        // dd($request->update_stock);
         $stock_return_data = [
             "store_id" => $request->logged_user_store_id,
             "return_date" => $request->stock_return_date,
@@ -565,7 +567,7 @@ class StockReturn extends Controller
             "update_stock" => ($request->update_stock == true)?1:0,
             "notes" => $request->notes,
         ];
-
+        // dd($stock_return_products);
         return [
             'stock_return_data' => $stock_return_data,
             'stock_return_products' => $stock_return_products
@@ -683,21 +685,28 @@ class StockReturn extends Controller
             throw new Exception("Invalid stock return provided", 400);
         }
 
+
         if($stock_return->update_stock == 0){
             return false;
         }
-
+        if($request->bill_to == 'SUPPLIER'){
+            $return_update = true;
+        }
+        if($request->bill_to == 'CUSTOMER'){
+            $return_update = false;
+        }
         $stock_return_data = new StockReturnResource($stock_return);
+        // dd($stock_return_data->update_stock);
 
         $products = $stock_return_data->products;
-
+        // dd($products);
         if(count($products)>0){
             foreach($products as $product){
 
                 if($product->product_id != '' && $product->quantity > 0){
-
+                    // dd($return_update);
                     if($return_update == false){
-                        if($product->stock_update == 0){
+                        // if($product->stock_update == 0){
                             $product_data = ProductModel::find($product->product_id);
                             $product_data->increment('quantity', $product->quantity);
 
@@ -707,11 +716,11 @@ class StockReturn extends Controller
                             $item['updated_by'] = $request->logged_user_id;
                             StockReturnProductModel::where('id', $product->id)
                             ->update($item);
-                        }
+                        // }
                     }
                     if($return_update == true){
 
-                        if($product->stock_update == 1){
+                        // if($product->stock_update == 1){
                             $product_data = ProductModel::find($product->product_id);
                             $product_data->decrement('quantity', $product->quantity);
 
@@ -721,19 +730,19 @@ class StockReturn extends Controller
                             $item['updated_by'] = $request->logged_user_id;
                             StockReturnProductModel::where('id', $product->id)
                             ->update($item);
-                        }
+                        // }
 
-                        if($product->stock_update == 0){
-                            $product_data = ProductModel::find($product->product_id);
-                            $product_data->increment('quantity', $product->quantity);
+                        // if($product->stock_update == 0){
+                        //     $product_data = ProductModel::find($product->product_id);
+                        //     $product_data->increment('quantity', $product->quantity);
 
-                            $item = [];
-                            $item['stock_update'] = 1;
-                            $item['updated_at'] = now();
-                            $item['updated_by'] = $request->logged_user_id;
-                            StockReturnProductModel::where('id', $product->id)
-                            ->update($item);
-                        }
+                        //     $item = [];
+                        //     $item['stock_update'] = 1;
+                        //     $item['updated_at'] = now();
+                        //     $item['updated_by'] = $request->logged_user_id;
+                        //     StockReturnProductModel::where('id', $product->id)
+                        //     ->update($item);
+                        // }
                     }
                 }
 

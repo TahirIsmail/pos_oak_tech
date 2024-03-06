@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
             <div class="card p-4">
                 <div class="d-flex flex-wrap mb-4">
@@ -115,7 +116,7 @@
                         <label for="person_name">{{ $t("Department") }}</label>
                         <p>{{ person.customer_department }}</p>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-3" v-if="person.role">
                         <label for="person_name">{{ $t("Role") }}</label>
                         <p>{{ person.role.label }}</p>
                     </div>

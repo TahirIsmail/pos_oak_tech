@@ -259,7 +259,7 @@
               <div class="form-group col-md-1 mb-1" v-if="tax_option == 'GST'">
                 <label for="tax_percentage">{{ $t("Tax %") }}</label>
               </div>
-              <div class="form-group col-md-2 mb-1">
+              <div class="form-group col-md-1 mb-1">
                 <label for="amount">{{ $t("Amount") }}</label>
               </div>
             </div>

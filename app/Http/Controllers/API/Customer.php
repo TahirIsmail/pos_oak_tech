@@ -521,12 +521,12 @@ class Customer extends Controller
             $this->validate_request($request);
             $contact_persons = json_decode($request->input('contact_people'), true);
             //check email already exists
-            if ($request->email != '') {
-                $customer_email_exists = CustomerModel::where('email', $request->email)->where('slack', '!=', $slack)->first();
-                if ($customer_email_exists) {
-                    throw new Exception("Customer email already exists");
-                }
-            }
+            // if ($request->email != '') {
+            //     $customer_email_exists = CustomerModel::where('email', $request->email)->where('slack', '!=', $slack)->first();
+            //     if ($customer_email_exists) {
+            //         throw new Exception("Customer email already exists");
+            //     }
+            // }
             //check phone already exists
             if ($request->phone != '') {
                 $customer_phone_exists = CustomerModel::where('phone', $request->phone)->where('slack', '!=', $slack)->first();

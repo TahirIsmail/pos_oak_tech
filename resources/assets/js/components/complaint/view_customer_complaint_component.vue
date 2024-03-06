@@ -222,7 +222,7 @@
             </p>
           </div>
   
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-3" v-if="!is_customer">
             <label for="created_by">{{ $t("Assign to LabTechnician") }}</label>
   
             <p v-if="complaint.user">{{ complaint.user.fullname }} ({{ complaint.user.email }})</p>
@@ -291,7 +291,7 @@
             <p class="">{{ complaint.serial_no }}</p>
           </div>
   
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-3" v-if="!is_customer">
             <div v-if="complaint.due_date">
               <label for="created_by">{{ $t("due Date") }}</label>
   
@@ -303,18 +303,11 @@
             <label
               for="created_by"
               >{{ $t("Manager Remark to Lab Technician") }}</label
-            >
-  
+            >  
             <p> {{ complaint.admin_remark }} </p>
           </div>
   
-          <div class="form-group col-md-3" v-if="complaint.admin_again_remark">
-            <label
-              for="created_by"
-              >{{ $t("Manager Remark On Lab Technician Request") }}</label
-            >
-            <p></p>
-          </div>
+         
   
           <div
             class="form-group col-md-3"

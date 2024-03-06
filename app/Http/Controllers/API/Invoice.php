@@ -170,7 +170,6 @@ class Invoice extends Controller
                 }
 
             }
-            
             if(!empty($invoice_data['invoice_data'])){
                 
                 $invoice = $invoice_data['invoice_data'];
@@ -179,8 +178,9 @@ class Invoice extends Controller
                 $invoice['invoice_number'] = Str::random(6);
                 $invoice['created_at'] = now();
                 $invoice['created_by'] = $request->logged_user_id;
-
+                
                 $invoice_id = InvoiceModel::create($invoice)->id;
+                
 
                 $code_start_config = Config::get('constants.unique_code_start.invoice');
                 $code_start = (isset($code_start_config))?$code_start_config:100;
@@ -190,21 +190,29 @@ class Invoice extends Controller
                 ];
                 InvoiceModel::where('id', $invoice_id)
                 ->update($invoice_number);
+                
             }
             
             if(!empty($invoice_data['invoice_products'])){
-                
                 $invoice_products = $invoice_data['invoice_products'];
-
+                
                 if(isset($request->po_from_customer) && $request->po_from_customer == 1){
+                    
                
                     foreach ($invoice_products as $productData) {
                         $product = ProductModel::find($productData['product_id']);
-                    
                         if ($product) {
-                            $product->update([
-                                'quantity' => 0,
-                            ]);
+                            $product->decrement('quantity', $productData['quantity']);
+                        }
+                    }
+                }
+
+                if($invoice_data['invoice_data']['bill_to'] == 'CUSTOMER'){
+                    $invoice_products = $invoice_data['invoice_products'];
+                    foreach ($invoice_products as $productData) {
+                        $product = ProductModel::find($productData['product_id']);
+                        if ($product) {
+                            $product->decrement('quantity', $productData['quantity']);
                         }
                     }
                 }
@@ -566,7 +574,7 @@ class Invoice extends Controller
         }
 
         $tax_option_data = $this->calculate_tax_component($request->tax_option);
-
+       
         foreach($products as $product_key => $product_value){
 
             $product_slack = $product_value['slack'];
@@ -611,17 +619,17 @@ class Invoice extends Controller
                     $tax_components[$key]['tax_amount'] = number_format((float)$tax_component_amount, 2, '.', '');
                 }
             }
-
+            // dd($products);
             if($product_slack != ''){
                 $product_data = ProductModel::select('products.id', 'products.slack', 'products.product_code')
                 ->where('products.slack', '=', $product_slack)
                 ->categoryJoin()
                 ->supplierJoin()
-                ->taxcodeJoin()
-                ->discountcodeJoin()
+                // ->taxcodeJoin()
+                // ->discountcodeJoin()
                 // ->categoryActive()
                 ->supplierActive()
-                ->taxcodeActive()
+                // ->taxcodeActive()
                 ->first();
                 if (empty($product_data)) {
                     throw new Exception("Product ".$product_name." is not currently available", 400);
@@ -695,6 +703,7 @@ class Invoice extends Controller
             "terms" => $request->terms,
         ];
 
+        // dd($invoice_data, $invoice_products);
         return [
             'invoice_data' => $invoice_data,
             'invoice_products' => $invoice_products
@@ -839,11 +848,11 @@ class Invoice extends Controller
                 ->where('products.slack', '=', $product_slack)
                 ->categoryJoin()
                 ->supplierJoin()
-                ->taxcodeJoin()
-                ->discountcodeJoin()
+                // ->taxcodeJoin()
+                // ->discountcodeJoin()
                 // ->categoryActive()
                 ->supplierActive()
-                ->taxcodeActive()
+                // ->taxcodeActive()
                 ->first();
                 if (empty($product_data)) {
                     throw new Exception("Product ".$product_name." is not currently available", 400);
@@ -1056,7 +1065,7 @@ class Invoice extends Controller
                     $tax_components[$key]['tax_amount'] = number_format((float)$tax_component_amount, 2, '.', '');
                 }
             }
-
+            // dd($product_slack);
             if($product_slack != ''){
                 $product_data = ProductModel::select('products.id', 'products.slack', 'products.product_code')
                 ->where('products.slack', '=', $product_slack)
@@ -1068,6 +1077,7 @@ class Invoice extends Controller
                 ->supplierActive()
                 // ->taxcodeActive()
                 ->first();
+                // dd($product_data);
                 if (empty($product_data)) {
                     throw new Exception("Product ".$product_name." is not currently available", 400);
                 }

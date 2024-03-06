@@ -216,9 +216,10 @@ class Quotation extends Controller
         
         $quotation_data = new QuotationResource($quotation);
         $print_logo_path = config("app.invoice_print_logo");
-        $first_bg_image = public_path('images/bg_Oak.png');
-        $sec_bg_image = public_path('images/bg-page2.PNG');
-        $third_bg_image = public_path('images/third-bg.png');
+        // $first_bg_image = public_path('images/bg_Oak.png');
+        $first_bg_image = asset('public/images/bg_Oak.png');
+        $sec_bg_image = asset('public/images/bg-page2.png');
+        $third_bg_image = asset('public/images/third-bg.png');
 
 
         if($request->logged_user_role_id == 3){
@@ -229,7 +230,7 @@ class Quotation extends Controller
         }
 
 
-        // dd($quotation_data);
+        // dd($sec_bg_image);
         
         
         if ($quotation) {

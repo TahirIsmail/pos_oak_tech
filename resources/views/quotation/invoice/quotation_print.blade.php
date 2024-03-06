@@ -10,7 +10,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
         .backbg {
             height: 100%;
             width: 100%;
-            background-image: url('{{ $first_bg_image }} ');
+            background-image: url({{ $first_bg_image }});
             /* background-size: cover; */
             background-repeat: no-repeat;
             /* background-position: center; */
@@ -85,7 +85,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
         .backbg1 {
             height: 100%;
             width: 100%;
-            background-image: url('{{ $sec_bg_image }} ');
+            background-image: url({{ $sec_bg_image }});
             /* background-size: cover; */
             background-repeat: no-repeat;
             /* background-position: center; */
@@ -95,7 +95,7 @@ $colspan = 5+((isset($data->tax_option_data) && count($data->tax_option_data->co
         .backbg2 {
             height: 100%;
             width: 100%;
-            background-image: url('{{  $third_bg_image }} ');
+            background-image: url({{  $third_bg_image }});
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
