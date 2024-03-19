@@ -44,7 +44,7 @@
                         <th>{{ __("Name") }}</th>
                         <th>{{ __("Supplier") }}</th>
                         <th>{{ __("Category") }}</th>
-                        <th>{{ __("Tax Code") }}</th>
+                        <th>{{ __("GST Paid on Product") }}</th>
                         <th>{{ __("Discount Code") }}</th>
                         <th>{{ __("Quantity") }}</th>
                         <th>{{ __("Amount") }}</th>

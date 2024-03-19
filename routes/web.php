@@ -126,6 +126,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     //tax code
     Route::get('/tax_codes', "Taxcode@index")->name('tax_codes');
+    Route::get('/gst_on_product', "Taxcode@gst_on_product")->name('gst_on_product');
     Route::get('/tax_code/{slack}', "Taxcode@detail")->name('tax_code');
     Route::get('/add_tax_code', "Taxcode@add_tax_code")->name('add_tax_code');
     Route::get('/edit_tax_code/{slack?}', "Taxcode@add_tax_code")->name('edit_tax_code');

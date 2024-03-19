@@ -13,7 +13,7 @@ class Product extends Model
 {
     protected $table = 'products';
     protected $hidden = ['store_id'];
-    protected $fillable = ['id', 'slack', 'store_id', 'product_code', 'gst_paid_for_product', 'name', 'product_name_id', 'category_id', 'category_company_id', 'child_category_id', 'description', 'sub_category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'at_start_quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
+    protected $fillable = ['id', 'slack', 'store_id', 'product_code', 'gst_paid_for_product', 'sale_price_percentage', 'name', 'product_name_id', 'category_id', 'category_company_id', 'child_category_id', 'description', 'sub_category_id', 'supplier_id', 'tax_code_id', 'discount_code_id', 'quantity', 'at_start_quantity', 'alert_quantity', 'purchase_amount_excluding_tax', 'sale_amount_excluding_tax', 'sale_amount_including_tax', 'is_ingredient', 'is_ingredient_price', 'is_addon_product', 'status', 'created_by', 'updated_by'];
 
     protected static function boot()
     {
@@ -53,6 +53,11 @@ class Product extends Model
         return $query->leftJoin('tax_codes', function ($join) {
             $join->on('tax_codes.id', '=', 'products.tax_code_id');
         });
+    }
+
+    
+    public function gst_on_product(){
+        return $this->hasMany(GstOnProduct::class, 'product_id');
     }
 
     public function taxCode()

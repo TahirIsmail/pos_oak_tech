@@ -92,10 +92,11 @@ class Product extends Controller
         $data['product_data'] = null;
         if(isset($slack)){
             
-            $product = ProductModel::with('subcategory', 'User', 'updatedUser', 'product_images', 'product_specifications.category_specification_details')->where('products.slack', '=', $slack)->first();
+            $product = ProductModel::with('gst_on_product','subcategory', 'User', 'updatedUser', 'product_images', 'product_specifications.category_specification_details')->where('products.slack', '=', $slack)->first();
             if (empty($product)) {
                 abort(404);
             }            
+            // dd($product);
             $product_data = new ProductResource($product);
             $data['product_data'] = $product_data;
         }
@@ -114,7 +115,7 @@ class Product extends Controller
         $data['action_key'] = 'A_DETAIL_PRODUCT';
         check_access([$data['action_key']]);
 
-        $product = ProductModel::with('category','subcategory','User', 'updatedUser', 'product_images', 'product_specifications.category_specification_details')->where('products.slack', '=', $slack)->first();
+        $product = ProductModel::with('gst_on_product', 'category','subcategory','User', 'updatedUser', 'product_images', 'product_specifications.category_specification_details')->where('products.slack', '=', $slack)->first();
         // dd($product);
         
         if (empty($product)) {

@@ -21,6 +21,14 @@ class Taxcode extends Controller
         
         return view('tax_code.tax_codes', $data);
     }
+    public function gst_on_product(Request $request){
+        //check access
+        $data['menu_key'] = 'MM_TAX_AND_DISCOUNT';
+        $data['sub_menu_key'] = 'SM_GST_PRODUCT';
+        check_access(array($data['menu_key'],$data['sub_menu_key']));
+        
+        return view('tax_code.gst_on_product', $data);
+    }
 
     //This is the function that loads the add/edit page
     public function add_tax_code($slack = null){

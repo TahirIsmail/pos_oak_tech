@@ -184,6 +184,7 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //tax code
     Route::post('/tax_codes', 'API\Taxcode@index');
+    Route::post('/gst_listing', 'API\Taxcode@gst_listing');
     Route::post('/add_tax_code', 'API\Taxcode@store');
     Route::post('/update_tax_code/{slack}', 'API\Taxcode@update');
     Route::post('/tax_code/{slack}', 'API\Taxcode@show');

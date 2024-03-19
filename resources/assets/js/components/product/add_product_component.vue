@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+   
     <div class="col-md-12">
       <div class="card shadow">
       <form @submit.prevent="submit_form" class="mb-3">
@@ -373,14 +374,15 @@
         <div class="d-flex flex-wrap mb-1">
           <div class="mr-auto">
             <span class="text-subhead">{{
-              $t("Tax & Discount Information")
+              // $t("Tax & Discount Information")
+              $t("")
             }}</span>
           </div>
           <div class=""></div>
         </div>
 
         <div class="form-row mb-2">
-          <div class="form-group col-md-3">
+          <!-- <div class="form-group col-md-3">
             <label for="tax_code">{{ $t("Add Tax (Optional)") }}</label>
             <select
               name="tax_code"
@@ -400,19 +402,24 @@
                 {{ taxcode.total_tax_percentage }}] ({{ taxcode.tax_type }})
               </option>
             </select>           
-          </div>
+          </div> -->
 
 
-          <div class="form-group col-md-3">
-            <label for="tax_code">{{ $t("GST PAID FOR PRODUCT % (Optional) ") }}</label>
-            <input
-              type="number"
-              name="gst_paid_for_product"
-              v-model="gst_paid_for_product"
-              class="form-control form-control-custom"
-              placeholder="Please Enter GST If Any Pay (In %)"
-            />         
+          <div>
+            <label for="gst_cash">{{ $t("Select Cash OR GST") }}</label>
+            <select 
+             name="gst_cash"
+             v-model="gst_cash"
+             class="form-control form-control-custom custom-select"
+             >
+             <option value="Cash">Cash</option>
+             <option value="GST">GST</option>
+            </select>
           </div>
+          
+
+
+         
 
 
           <!-- <div class="form-group col-md-3">
@@ -469,9 +476,19 @@
               errors.first("purchase_price")
             }}</span>
           </div>
+          <div class="form-group col-md-3" v-if="gst_cash == 'GST'">
+            <label for="tax_code">{{ $t("GST PAID FOR PRODUCT % ") }}</label>
+            <input
+              type="number"
+              name="gst_paid_for_product"
+              v-model="gst_paid_for_product"
+              class="form-control form-control-custom"
+              placeholder="Please Enter GST (In %)"
+            />         
+          </div>
           <div class="form-group col-md-3">
             <label for="sale_price"
-              >{{ $t("Sale Price Excluding Tax") }} ({{ currency_code }})</label
+              >{{ $t("Sale Price Excluding Tax (%)") }}</label
             >
             <input
               type="number"
@@ -481,7 +498,7 @@
               class="form-control form-control-custom"
               :placeholder="$t('Please enter sale price excluding tax')"
               autocomplete="off"
-              step="0.01"
+              step="1"
               min="0"
               v-on:input="calculate_sale_prices"
               :readonly="is_taxcode_inclusive == true"
@@ -492,7 +509,7 @@
           </div>
           <div class="form-group col-md-3">
             <label for="sale_price"
-              >{{ $t("Sale Price Including Tax") }} ({{ currency_code }})</label
+              >{{ $t("Total Sale Price") }} ({{ currency_code }})</label
             >
             <input
               type="number"
@@ -500,9 +517,9 @@
               v-model="sale_price_including_tax"
               v-validate="{ required: is_taxcode_inclusive, decimal: true }"
               class="form-control form-control-custom"
-              :placeholder="$t('Please enter sale price including tax')"
+              :placeholder="$t('Please enter total sale price')"
               autocomplete="off"
-              step="0.01"
+              step="1"
               min="0"
               v-on:input="calculate_sale_prices"
               :readonly="is_taxcode_inclusive == false"
@@ -628,6 +645,11 @@ export default {
   components: { Multiselect },
   data() {
     return {
+      gst_cash: this.product_data == null 
+         ? 'Cash' 
+         : this.product_data.gst_paid_for_product == 1
+         ? 'GST'
+         : 'Cash',
       subCategories: [],
       childCategories: [],
       child_category_id: this.product_data == null
@@ -705,7 +727,11 @@ export default {
           : this.product_data.discount_code == null
           ? ""
           : this.product_data.discount_code.slack,
-      gst_paid_for_product : this.product_data == null ? "" : this.product_data.gst_paid_for_product,
+      gst_paid_for_product : this.product_data == null 
+          ? "" 
+          : this.product_data.gst_on_product 
+          ? this.product_data.gst_on_product[0].gst_paid_for_product
+          : '',
       quantity: this.product_data == null
           ? 1
           : this.product_data.quantity,
@@ -713,11 +739,11 @@ export default {
       sale_price:
         this.product_data == null
           ? ""
-          : this.product_data.sale_amount_excluding_tax,
+          : this.product_data.sale_price_percentage,
       sale_price_including_tax:
         this.product_data == null
           ? ""
-          : this.product_data.sale_amount_including_tax,
+          : this.product_data.sale_amount_excluding_tax,
       purchase_price:
         this.product_data == null
           ? ""
@@ -971,7 +997,7 @@ export default {
         if (result) {
           this.show_modal = true;
           this.$on("submit", function () {
-            this.processing = true;
+            // this.processing = true;
 
 
 
@@ -1086,6 +1112,7 @@ export default {
             formData.append('category_company_id', this.company_id);
             formData.append('product_name_id', (this.product_name_id) ? this.product_name_id : null);
             formData.append('gst_paid_for_product', this.gst_paid_for_product);
+            formData.append('gst_cash', this.gst_cash);
 
             if (this.input_type) {
   
@@ -1446,9 +1473,14 @@ export default {
       this.sale_price_including_tax = "";
     },
 
-    calculate_tax(item_total, tax_percentage) {
+    // calculate_tax(item_total, tax_percentage) {
+    //   var tax_amount =
+    //     (parseFloat(tax_percentage) / 100) * parseFloat(item_total);
+    //   return tax_amount.toFixed(2);
+    // },
+    calculated_sale_price(sale_price, purchase_price) {
       var tax_amount =
-        (parseFloat(tax_percentage) / 100) * parseFloat(item_total);
+        (parseFloat(purchase_price) / 100) * parseFloat(sale_price);
       return tax_amount.toFixed(2);
     },
 
@@ -1463,12 +1495,17 @@ export default {
           parseFloat(calculated_tax);
         this.sale_price = sale_price_excluding_tax;
       } else {
-        var calculated_tax = this.calculate_tax(
+        // var calculated_tax = this.calculate_tax(
+        //   this.sale_price,
+        //   this.selected_tax_percentage
+        // );
+        var calculated_sale_price = this.calculated_sale_price(
           this.sale_price,
-          this.selected_tax_percentage
+          this.purchase_price
         );
-        var sale_price_including_tax =
-          parseFloat(this.sale_price) + parseFloat(calculated_tax);
+        // alert(calculated_sale_price);
+        // var sale_price_including_tax = parseFloat(this.sale_price) + parseFloat(calculated_tax);
+        var sale_price_including_tax = parseFloat(this.purchase_price) + parseFloat(calculated_sale_price);
         this.sale_price_including_tax = sale_price_including_tax;
       }
     },

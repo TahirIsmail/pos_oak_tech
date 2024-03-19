@@ -24,4 +24,42 @@ class Taxcodes{
             ]
         });
     }
+
+    load_gst_listing(){
+      
+     
+        var table = $('#gst_listing').DataTable({
+           
+            ajax: {
+                url: '/api/gst_listing',
+                type : 'POST',
+                data : {
+                    access_token : window.settings.access_token
+                }
+               
+            },            
+            columns: [
+                {
+                    data: 'id'
+                },
+                {
+                    data: 'product_id'
+                },
+                {
+                    data: 'gst_paid_for_product'
+                },  
+                {
+                    data: 'amount'
+                },   
+                {
+                    data: 'action'
+                },    
+               
+            ],
+            order: [
+                [0, 'desc']
+            ]
+        })
+    }
+
 }

@@ -78,7 +78,7 @@ class Products{
                     data: 'category'
                 },
                 {
-                    data: 'tax_code_id'
+                    data: 'sale_price_percentage'
                 },  
                 {
                     data: 'discount_code_id'

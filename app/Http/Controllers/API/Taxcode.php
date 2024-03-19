@@ -17,8 +17,9 @@ use App\Models\Taxcode as TaxcodeModel;
 use App\Models\TaxcodeType as TaxcodeTypeModel;
 
 use App\Http\Controllers\API\Product as ProductAPI;
-
+use Yajra\DataTables\DataTables;
 use App\Http\Resources\Collections\TaxcodeCollection;
+use App\Models\GstOnProduct;
 
 class Taxcode extends Controller
 {
@@ -100,6 +101,51 @@ class Taxcode extends Controller
             
             return response()->json($response);
         }catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+    }
+
+    public function gst_listing(Request $request){
+        try {
+
+         
+            $data['action_key'] = 'A_VIEW_GST_LISTING';
+            if (check_access(array($data['action_key']), true) == false) {
+                $response = $this->no_access_response_for_listing_table();
+                return $response;
+            }
+           
+
+            if ($request->ajax()) {
+             
+
+                $data = GstOnProduct::with('product')->get();
+                
+                return Datatables::of($data)
+                    ->addIndexColumn()                   
+                    ->addColumn('action', function ($row) {
+                        $data['product'] = $row['product'];
+                        return view('product.layouts.product_gst_actions', $data)->render();
+                    })
+                    ->addColumn('product_id', function ($row) {
+                       return $row['product']->product_code;
+                    })
+                    ->addColumn('gst_paid_for_product', function ($row) {
+                        return $row['gst_paid_for_product'] . '%';
+                     })
+                    ->addColumn('amount', function ($row) {
+                        return $row['product']->purchase_amount_excluding_tax * $row['gst_paid_for_product'] / 100;
+                     })
+
+                    ->rawColumns(['action', 'product_id', 'amount', 'gst_paid_for_product'])
+                    ->make(true);
+            }
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),

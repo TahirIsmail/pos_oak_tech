@@ -40,6 +40,7 @@ use App\Http\Resources\AddonGroupResource;
 
 use App\Http\Resources\Collections\ProductCollection;
 use App\Models\CategorySpecificationDetails;
+use App\Models\GstOnProduct;
 use App\Models\ProductSpecifications;
 use Mpdf\Mpdf;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -68,9 +69,11 @@ class Product extends Controller
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
                 $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User')
+                   
                     ->where('quantity', '>', 0)
                     ->orderBy('id', 'desc')
                     ->get();
+
                 return Datatables::of($data)
                     ->addIndexColumn()
 
@@ -80,9 +83,9 @@ class Product extends Controller
                     ->addColumn('category', function ($row) {
                         return $row['category']->label . '(' . $row['category']->category_code . ')';
                     })
-                    ->addColumn('tax_code_id', function ($row) {
-                        if (isset($row['tax_code'])) {
-                            return ($row['tax_code']->label . ' - ' . $row['tax_code']->tax_code);
+                    ->addColumn('sale_price_percentage', function ($row) {
+                        if (isset($row['sale_price_percentage'])) {
+                            return $row['sale_price_percentage'] .'% ';
                         } else {
                             return '--';
                         }
@@ -103,12 +106,14 @@ class Product extends Controller
                         }
                     })
 
+                    
+
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;
                         return view('product.layouts.product_actions', $data)->render();
                     })
 
-                    ->rawColumns(['supplier_id', 'category', 'tax_code_id', 'discount_code_id', 'status', 'created_by', 'action'])
+                    ->rawColumns(['supplier_id', 'category', 'sale_price_percentage', 'discount_code_id', 'status', 'action'])
                     ->make(true);
             }
 
@@ -239,7 +244,7 @@ class Product extends Controller
             }
 
 
-
+            // dd($request->all());
 
             $this->validate_request($request);
 
@@ -275,44 +280,44 @@ class Product extends Controller
             }
 
 
-            $sale_price = 0;
-            $sale_amount_including_tax = 0;
-            $taxcode_data = [];
-            if (isset($request->tax_code)) {
-                $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
-                    ->where('slack', '=', trim($request->tax_code))
-                    //->active()
-                    ->first();
-                if (empty($taxcode_data)) {
-                    throw new Exception("Taxcode not found or inactive in the system", 400);
-                } else {
-                    if ($taxcode_data->tax_type == 'INCLUSIVE') {
-                        $sale_amount_including_tax = $request->sale_amount_including_tax;
-                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
-                        $sale_price = $request->sale_amount_including_tax - $tax_amount;
-                    } else {
-                        $sale_price = $request->sale_price;
-                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
-                        $sale_amount_including_tax = $sale_price + $tax_amount;
-                    }
-                }
-            } else {
-                $taxcode_data = [];
-                $sale_price = $request->sale_price;
-            }
+            // $sale_price = 0;
+            // $sale_amount_including_tax = 0;
+            // $taxcode_data = [];
+            // if (isset($request->tax_code)) {
+            //     $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
+            //         ->where('slack', '=', trim($request->tax_code))
+            //         //->active()
+            //         ->first();
+            //     if (empty($taxcode_data)) {
+            //         throw new Exception("Taxcode not found or inactive in the system", 400);
+            //     } else {
+            //         if ($taxcode_data->tax_type == 'INCLUSIVE') {
+            //             $sale_amount_including_tax = $request->sale_amount_including_tax;
+            //             $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
+            //             $sale_price = $request->sale_amount_including_tax - $tax_amount;
+            //         } else {
+            //             $sale_price = $request->sale_price;
+            //             $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
+            //             $sale_amount_including_tax = $sale_price + $tax_amount;
+            //         }
+            //     }
+            // } else {
+            //     $taxcode_data = [];
+            //     $sale_price = $request->sale_price;
+            // }
 
 
             $discount_code_id = NULL;
-            if (isset($request->discount_code)) {
-                $discount_code_data = DiscountcodeModel::select('id')
-                    ->where('slack', '=', trim($request->discount_code))
-                    ->active()
-                    ->first();
-                if (empty($discount_code_data)) {
-                    throw new Exception("Discount code not found or inactive in the system", 400);
-                }
-                $discount_code_id = $discount_code_data->id;
-            }
+            // if (isset($request->discount_code)) {
+            //     $discount_code_data = DiscountcodeModel::select('id')
+            //         ->where('slack', '=', trim($request->discount_code))
+            //         ->active()
+            //         ->first();
+            //     if (empty($discount_code_data)) {
+            //         throw new Exception("Discount code not found or inactive in the system", 400);
+            //     }
+            //     $discount_code_id = $discount_code_data->id;
+            // }
 
             if (isset($request->stock_transfer_product_slack) && $request->stock_transfer_product_slack != '') {
                 $stock_transfer_api = new StockTransferAPI();
@@ -337,15 +342,14 @@ class Product extends Controller
                 "child_category_id" => $request->child_category_id,
                 "product_name_id" => $request->product_name,
                 "supplier_id" => $supplier_data->id,
-                "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
-                "discount_code_id" => $discount_code_id,
-                "gst_paid_for_product" => $request->gst_paid_for_product,
+                "gst_paid_for_product" => ($request->gst_cash == 'GST') ? 1 : 0,
                 "quantity" => $request->quantity,
                 "at_start_quantity" => $request->quantity,
                 "alert_quantity" => (!isset($request->alert_quantity)) ? 0.00 : $request->alert_quantity,
                 "purchase_amount_excluding_tax" => $request->purchase_price,
-                "sale_amount_excluding_tax" => $sale_price,
-                "sale_amount_including_tax" => $sale_amount_including_tax,
+                "sale_amount_excluding_tax" => $request->sale_amount_including_tax,
+                "sale_price_percentage" => $request->sale_price,
+                // "sale_amount_including_tax" => $sale_amount_including_tax,
                 "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
                 "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
                 "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
@@ -353,13 +357,14 @@ class Product extends Controller
                 "created_by" => $request->logged_user_id
             ];
 
-
-
-            // dd($product);
-
-
             $product_id = ProductModel::create($product)->id;
-
+            if($product_id){
+                $gst_on_product = [
+                    'product_id' => $product_id,
+                    'gst_paid_for_product' => $request->gst_paid_for_product,
+                ];
+                GstOnProduct::create($gst_on_product);
+            }
             $productSpecifications = [];
             if ($request->input_type) {
                 foreach ($request->input_type as $label => $value) {
@@ -566,47 +571,46 @@ class Product extends Controller
             $sale_amount_including_tax = 0;
 
 
-            if (isset($request->tax_code)) {
-                $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
-                    ->where('slack', '=', trim($request->tax_code))
-                    //->active()
-                    ->first();
-                if (empty($taxcode_data)) {
-                    throw new Exception("Taxcode not found or inactive in the system", 400);
-                } else {
-                    if ($taxcode_data->tax_type == 'INCLUSIVE') {
-                        $sale_amount_including_tax = $request->sale_amount_including_tax;
-                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
-                        $sale_price = $sale_amount_including_tax - $tax_amount;
-                        $request->is_ingredient_price = false;
-                    } else {
-                        $sale_price = $request->sale_price;
-                        $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
-                        $sale_amount_including_tax = $sale_price + $tax_amount;
-                    }
-                }
-            } else {
-                $taxcode_data = [];
-                $sale_price = $request->sale_price;
-            }
+            // if (isset($request->tax_code)) {
+            //     $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
+            //         ->where('slack', '=', trim($request->tax_code))
+            //         //->active()
+            //         ->first();
+            //     if (empty($taxcode_data)) {
+            //         throw new Exception("Taxcode not found or inactive in the system", 400);
+            //     } else {
+            //         if ($taxcode_data->tax_type == 'INCLUSIVE') {
+            //             $sale_amount_including_tax = $request->sale_amount_including_tax;
+            //             $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
+            //             $sale_price = $sale_amount_including_tax - $tax_amount;
+            //             $request->is_ingredient_price = false;
+            //         } else {
+            //             $sale_price = $request->sale_price;
+            //             $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
+            //             $sale_amount_including_tax = $sale_price + $tax_amount;
+            //         }
+            //     }
+            // } else {
+            //     $taxcode_data = [];
+            //     $sale_price = $request->sale_price;
+            // }
 
             $discount_code_id = NULL;
-            if (isset($request->discount_code)) {
-                $discount_code_data = DiscountcodeModel::select('id')
-                    ->where('slack', '=', trim($request->discount_code))
-                    ->active()
-                    ->first();
-                if (empty($discount_code_data)) {
-                    throw new Exception("Discount code not found or inactive in the system", 400);
-                }
-                $discount_code_id = $discount_code_data->id;
-            }
+            // if (isset($request->discount_code)) {
+            //     $discount_code_data = DiscountcodeModel::select('id')
+            //         ->where('slack', '=', trim($request->discount_code))
+            //         ->active()
+            //         ->first();
+            //     if (empty($discount_code_data)) {
+            //         throw new Exception("Discount code not found or inactive in the system", 400);
+            //     }
+            //     $discount_code_id = $discount_code_data->id;
+            // }
 
 
 
-            DB::beginTransaction();
+            DB::beginTransaction();          
 
-            // if($check_condition){
             $product = [
                 "name" => $name,
                 "product_code" => strtoupper($request->product_code),
@@ -614,21 +618,26 @@ class Product extends Controller
                 "category_id" => $request->category,
                 "sub_category_id" => $request->sub_category,
                 "category_company_id" => $request->category_company_id,
-                "product_name_id" => $request->product_name_id,
+                "child_category_id" => $request->child_category_id,
+                "product_name_id" => $request->product_name,
+                "supplier_id" => $supplier_data->id,
+                "gst_paid_for_product" => ($request->gst_cash == 'GST') ? 1 : 0,
                 "quantity" => $request->quantity,
                 "at_start_quantity" => $request->quantity,
-                "supplier_id" => $supplier_data->id,
-                "tax_code_id" => empty($taxcode_data) || !isset($taxcode_data->id) ? null : $taxcode_data->id,
-                "discount_code_id" => $discount_code_id,
-                "gst_paid_for_product" => $request->gst_paid_for_product,
+                "alert_quantity" => (!isset($request->alert_quantity)) ? 0.00 : $request->alert_quantity,
                 "purchase_amount_excluding_tax" => $request->purchase_price,
-                "sale_amount_excluding_tax" => $sale_price,
-                "sale_amount_including_tax" => $sale_amount_including_tax,
+                "sale_amount_excluding_tax" => $request->sale_amount_including_tax,
+                "sale_price_percentage" => $request->sale_price,
+                // "sale_amount_including_tax" => $sale_amount_including_tax,
                 "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
                 "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
                 "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
                 "status" => $request->status,
+                "updated_by" => $request->logged_user_id
             ];
+
+
+            // dd($product);
 
             // }
             // else{
@@ -653,11 +662,29 @@ class Product extends Controller
 
             // }
 
-            $action_response = ProductModel::where('slack', $slack)
-                ->update($product);
-            $productModel = ProductModel::where('slack', $slack)->first();
+            $action_response = ProductModel::where('slack', $slack)->update($product);
 
-            // dd($productModel->id);
+            if ($action_response) {
+                $productModel = ProductModel::where('slack', $slack)->first();
+            
+                if ($productModel) {
+                    $gst_on_product = GstOnProduct::where('product_id', $productModel->id)->first();
+            
+                    if ($gst_on_product) {
+                        $gst_on_product->gst_paid_for_product = $request->gst_paid_for_product;
+                        $gst_on_product->save();
+                    } else {
+                        // If GstOnProduct doesn't exist, create a new one
+                        GstOnProduct::create([
+                            'product_id' => $productModel->id,
+                            'gst_paid_for_product' => $request->gst_paid_for_product
+                        ]);
+                    }
+                }
+            }
+            
+
+            
 
             if ($action_response) {
                 $p_specifications = [];

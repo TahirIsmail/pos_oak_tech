@@ -1,5 +1,6 @@
 <template>
     <div class="row card p-4">
+        
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -117,10 +118,7 @@
                     <label for="sale_amount_excluding_tax">{{ $t("Sale Price Excluding Tax") }}</label>
                     <p>{{ product.sale_amount_excluding_tax }}</p>
                 </div>
-                <div class="form-group col-md-3">
-                    <label for="sale_amount_excluding_tax">{{ $t("Sale Price Including Tax") }}</label>
-                    <p>{{ product.sale_amount_including_tax }}</p>
-                </div>
+               
                 <div class="form-group col-md-3">
                     <label for="quantity">{{ $t("Quantity") }}</label>
                     <p>{{ product.quantity }}</p>
@@ -134,84 +132,29 @@
 
             <div class="mb-3">
                 <div class="mb-2">
-                    <span class="text-subhead">{{ $t("Tax Information") }}</span>
+                    <span class="text-subhead">{{ $t("GST Information") }}</span>
                 </div>
-                <div v-if="(product.tax_code != null)">
+                <div v-if="( product.gst_on_product[0])">
                     <div class="form-row mb-2">
                         <div class="form-group col-md-3">
-                            <label for="tax_code">{{ $t("Tax Code") }}</label>
-                            <p>{{ product.tax_code.tax_code }}</p>
+                            <label for="tax_code">{{ $t("GST (%) Paid On Product") }}</label>
+                            <p>{{ product.gst_on_product[0].gst_paid_for_product }}</p>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="tax_percentage">{{ $t("Tax Percentage") }}</label>
-                            <p>{{ product.tax_code.total_tax_percentage }}</p>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="tax_percentage">{{ $t("Tax Type") }}</label>
-                            <p>{{ product.tax_code.tax_type_label }}</p>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="tax_code_label">{{ $t("Tax Name") }}</label>
-                            <p>{{ product.tax_code.label }}</p>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="tax_code_description">{{ $t("Tax Description") }}</label>
-                            <p>{{ (product.tax_code.description)?product.tax_code.description:'-' }}</p>
-                        </div>
-                    </div>
 
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="table-responsive" v-if="product.tax_code.total_tax_percentage > 0">
-                                <table class="table display nowrap text-nowrap w-100">
-                                    <thead>
-                                        <tr>
-                                        <th scope="col">{{ $t("Tax Type") }}</th>
-                                        <th scope="col">{{ $t("Tax Percentage") }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(tax_component, key, index) in product.tax_code.tax_components" v-bind:key="index">
-                                            <td>{{ tax_component.tax_type }}</td>
-                                            <td>{{ tax_component.tax_percentage }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <span class="mb-2" v-else>No Tax Components</span>
+                        <div class="form-group col-md-3">
+                            <label for="tax_code">{{ $t("GST Amount Paid On Product") }}</label>
+                            <p>{{ (product.purchase_amount_excluding_tax * product.gst_on_product[0].gst_paid_for_product) / 100 }}</p>
+
                         </div>
                     </div>
+                    
                 </div>
                 <div v-else>
                     <i class="fas fa-info-circle text-danger"></i> Not Updated
                 </div>
             </div>
-            <hr>
 
-            <div class="mb-3">
-                <div class="mb-2">
-                    <span class="text-subhead">{{ $t("Discount Information") }}</span>
-                </div>
-                <div class="form-row mb-2" v-if="product.discount_code != null">
-                    <div class="form-group col-md-3">
-                        <label for="discount_code">{{ $t("Discount Code") }}</label>
-                        <p>{{ product.discount_code.discount_code }}</p>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="discount_percentage">{{ $t("Discount Percentage") }}</label>
-                        <p>{{ product.discount_code.discount_percentage }}</p>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="discount_code_label">{{ $t("Discount Name") }}</label>
-                        <p>{{ product.discount_code.label }}</p>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="discount_code_description">{{ $t("Discount Description") }}</label>
-                        <p>{{ product.discount_code.description }}</p>
-                    </div>
-                </div>
-                <div class="mb-3" v-else>No Discount Information</div>
-            </div>
+
             <hr>
 
             <div class="form-row mb-2">
