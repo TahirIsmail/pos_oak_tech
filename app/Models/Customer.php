@@ -24,6 +24,10 @@ class Customer extends Model
     {
         return $query->where('customer_type', '!=', 'DEFAULT');
     }
+    public function scopeWalkInCustomer($query)
+    {
+        return $query->where('customer_type', 'WALKIN');
+    }
     public function scopeSkipChildCustomer($query)
     {
         return $query->where('customer_type', '!=', 'CHILD_CUSTOMER');

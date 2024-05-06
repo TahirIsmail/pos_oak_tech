@@ -27,6 +27,7 @@ use App\Models\MasterTaxOption as MasterTaxOptionModel;
 use App\Models\User as UserModel;
 
 use App\Http\Resources\Collections\InvoiceCollection;
+use App\Models\GstOnProduct;
 
 class Invoice extends Controller
 {
@@ -217,6 +218,20 @@ class Invoice extends Controller
                     }
                 }
 
+                if($request->invoice_type == 'gst'){
+                    foreach($invoice_products as $receiving_gst){
+                        if($receiving_gst['tax_percentage']){
+                            $r_gst = [
+                                'product_id' => $receiving_gst['product_id'],
+                                'gst_percentage' => $receiving_gst['tax_percentage'],
+                                'gst_paid_for_product' => $receiving_gst['tax_amount'],
+                                'receiving_from_customer' => 1,
+                            ];
+                            GstOnProduct::create($r_gst);
+                        }
+                    }
+
+                }
                 array_walk($invoice_products, function (&$item, $key) use ($invoice_id, $request){
                     
                     $item['slack'] = $this->generate_slack("invoice_products");

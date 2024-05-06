@@ -299,26 +299,26 @@
                         </cool-select>
                     </div>
 
-                    <!-- <div class="d-flex justify-content-center p-2">
+                    <div class="d-flex justify-content-center p-2">
                         <span class="">Or</span>
-                    </div> -->
+                    </div>
 
                     <!-- <div class="form-group">
                         <label for="customer_name">{{ $t("Customer Name") }}</label>
                         <input type="text" name="customer_name" v-model="customer_name" v-validate="'max:255'" class="form-control" :placeholder="$t('Please provide Name')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('customer_name') }">{{ errors.first('customer_name') }}</span> 
                         <span class="small text-secondary text-break"><i class="fas fa-exclamation-circle text-primary"></i> {{ $t("Track only customer name") }}</span>
-                    </div> -->
-
-                    <!-- <div class="d-flex justify-content-center p-2">
-                        <span class="">Or</span>
                     </div>
 
                     <div class="d-flex justify-content-center p-2">
-                        <span class="text-primary text-bold cursor" v-on:click="new_customer_form()"><i class="fas fa-user-plus"></i> {{ $t("Add New Customer") }}</span>
+                        <span class="">Or</span>
                     </div> -->
 
-                    <!-- <addcustomerordercomponent v-show="show_new_customer_form == true" v-bind:class="'mt-2 border-top'" :customer_status="customer_status"></addcustomerordercomponent> -->
+                    <div class="d-flex justify-content-center p-2">
+                        <span class="text-primary text-bold cursor" v-on:click="new_customer_form()"><i class="fas fa-user-plus"></i> {{ $t("Add New Customer") }}</span>
+                    </div>
+
+                    <addcustomerordercomponent v-show="show_new_customer_form == true" v-bind:class="'mt-2 border-top'" :customer_status="customer_status"></addcustomerordercomponent>
                 </div>
                 <div v-else>
                     <div class="">
@@ -1139,7 +1139,7 @@
                         formData.append("keywords", keywords);
                         formData.append("type", type);
 
-                        axios.post('/api/load_customers', formData).then((response) => {
+                        axios.post('/api/load_walkin_customers', formData).then((response) => {
                             if(response.data.status_code == 200) {
                                 this.customer_list = response.data.data;
                             }

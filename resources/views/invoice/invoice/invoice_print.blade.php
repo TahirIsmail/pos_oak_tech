@@ -1,6 +1,10 @@
 @php
     $data = json_decode($data);
-    $colspan = 5 + (isset($data->tax_option_data) && count($data->tax_option_data->component_array) > 0 ? count($data->tax_option_data->component_array) : 1);
+    $colspan =
+        5 +
+        (isset($data->tax_option_data) && count($data->tax_option_data->component_array) > 0
+            ? count($data->tax_option_data->component_array)
+            : 1);
 @endphp
 <!DOCTYPE html>
 <html>
@@ -84,10 +88,10 @@
                     <div>GST: {{ $data->store->tax_number }}</div>
                 @endif
                 @if ($data->store->primary_email != '')
-                    <div>Email 1: {{ $data->store->primary_email }}</div>
+                    <div>Email: {{ $data->store->primary_email }}</div>
                 @endif
                 @if ($data->store->secondary_email != '')
-                    <div>Email 2: {{ $data->store->secondary_email }}</div>
+                    <div>Email: {{ $data->store->secondary_email }}</div>
                 @endif
                 @if ($data->store->primary_contact != '')
                     <div>Contact No 1: {{ $data->store->primary_contact }}</div>
@@ -116,7 +120,13 @@
         </tr>
     </table>
     <div class="invoice-head center">
-        <h2>GST INVOICE</h2>
+        <h2> 
+            @if (isset($data->tax_option_data) && count($data->tax_option_data->component_array) > 0)
+                @foreach ($data->tax_option_data->component_array as $component_array_key => $component_array_item)
+                   {{ strtoupper($component_array_item) }}
+                @endforeach
+            @endif
+                INVOICE</h2>
     </div>
 
     <div class="mb-1rem">
@@ -126,12 +136,12 @@
                     <th class="left">#</th>
                     <th class="left">Product Description</th>
                     <th class="right">Qty</th>
-                    <th class="right">Price (EXCL Tax)</th>
-                    <th class="right">Discount</th>
+                    <th class="right">Price</th>
+                    <th class="right"></th>
 
                     @if (isset($data->tax_option_data) && count($data->tax_option_data->component_array) > 0)
                         @foreach ($data->tax_option_data->component_array as $component_array_key => $component_array_item)
-                            <th class="right">{{ $component_array_item }}</th>
+                            <th class="right">{{ strtoupper($component_array_item) }}</th>
                         @endforeach
                     @else
                         <th class="right">Tax</th>
@@ -146,13 +156,11 @@
                     <tr v-for="(po_product, key, index) in products" v-bind:value="$invoice_products->product_slack"
                         v-bind:key="index">
                         <td>{{ $item_key + 1 }}</td>
-                        <td>{{ $invoice_products->product_code != '' ? $invoice_products->product_code . ' - ' : '' }}{{ $invoice_products->name }}
+                        <td>{{ $invoice_products->name }}
                         </td>
                         <td class="right">{{ $invoice_products->quantity }}</td>
                         <td class="right">{{ $invoice_products->amount_excluding_tax }}</td>
-                        <td class="right">
-                            {{ $invoice_products->discount_amount }}<br>({{ $invoice_products->discount_percentage }}%)
-                        </td>
+                        <td class="right"></td>
 
                         @if (isset($data->tax_option_data) && count($data->tax_option_data->component_array) > 0)
                             @foreach ($data->tax_option_data->component_array as $component_array_key => $component_array_item)
@@ -180,20 +188,20 @@
                     <td colspan="{{ $colspan }}" class="right">Total After Discount</td>
                     <td class="right">{{ $data->total_after_discount }}</td>
                 </tr>
-                <tr>
-                    <td colspan="{{ $colspan }}" class="right">Total Tax</td>
+                {{-- <tr>
+                    <td colspan="{{ $colspan }}" class="right">Total GST</td>
                     <td class="right">{{ $data->total_tax_amount }}</td>
-                </tr>
+                </tr> --}}
                 <tr>
-                    <td colspan="{{ $colspan }}" class="right">Shipping Charge</td>
+                    <td colspan="{{ $colspan }}" class="right">Other Charge</td>
                     <td class="right">{{ $data->shipping_charge }}</td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <td colspan="{{ $colspan }}" class="right">Packaging Charge</td>
                     <td class="right">{{ $data->packing_charge }}</td>
-                </tr>
+                </tr> --}}
                 <tr>
-                    <td colspan="{{ $colspan }}" class="right bold">Total (INCL Tax)</td>
+                    <td colspan="{{ $colspan }}" class="right bold">Total (Payable)</td>
                     <td class="right bold">{{ $data->total_order_amount }}</td>
                 </tr>
             </tbody>
@@ -208,7 +216,7 @@
     @if ($data->words != '')
         <div class="mb-1rem">
             <div class='bold display-block'>In Words: </div>
-            <pre>{{ $data->words }}</pre>
+            <pre>{{ $data->words }} only/-</pre>
         </div>
     @endif
 
@@ -221,22 +229,32 @@
     <div class="col6 bold">
         <h3>Recieved By:</h3>
         <hr>
-        
-            <div><h3>Name:</h3><div><hr></div></div>
-            
-        
-        
-        
-            
-            <div><h3>Signature:</h3><div><hr></div></div>
-           
-        
-        
-    </div>
-    
 
-        
-    
+        <div>
+            <h3>Name:</h3>
+            <div>
+                <hr>
+            </div>
+        </div>
+
+
+
+
+
+        <div>
+            <h3>Signature:</h3>
+            <div>
+                <hr>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
     <div class='col12 center'>
         <div class='display-block'>Thank You!</div>
     </div>

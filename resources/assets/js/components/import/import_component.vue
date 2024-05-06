@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
+            
             <form @submit.prevent="submit_form" class="mb-3">
 
                 <div class="card-header d-flex flex-wrap mb-4">

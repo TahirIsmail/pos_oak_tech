@@ -151,7 +151,9 @@ class Transaction extends Controller
                 throw new Exception("Invalid request", 400);
             }
 
+            
             $this->validate_request($request);
+           
             $invoice_created_by_supplier = 0;
             $transaction_from_customer = 0;
 
@@ -182,6 +184,8 @@ class Transaction extends Controller
                 $bill_to_name = $customer_data->name;
                 $bill_to_contact = implode(', ',[$customer_data->phone, $customer_data->email]);
                 $bill_to_address = $customer_data->address;
+
+               
                 
 
             }else if($request->bill_to == 'INVOICE'){
@@ -231,6 +235,8 @@ class Transaction extends Controller
                     $bill_to_name = $invoice_data->bill_to_name;
                     $bill_to_contact = implode(', ',[$invoice_data->bill_to_contact, $invoice_data->bill_to_email]);
                     $bill_to_address = $invoice_data->bill_to_address;
+
+                    $calculation_for_income_expense = $request->transaction_type;
                     
                 }
             }else if($request->bill_to == 'STAFF'){
@@ -302,7 +308,7 @@ class Transaction extends Controller
                     "bill_to_address" => $bill_to_address,
                     "currency_code" => $store_data->currency_code,
                     "amount" => $request->amount,
-                    "notes" => $request->notes,
+                    "notes" => $request->note,
                     "transaction_date" => $request->transaction_date,
                     "created_by" => $request->logged_user_id
                 ];
@@ -327,14 +333,14 @@ class Transaction extends Controller
                     "bill_to_address" => $bill_to_address,
                     "currency_code" => $store_data->currency_code,
                     "amount" => $request->amount,
-                    "notes" => $request->notes,
+                    "notes" => $request->note,
                     "transaction_date" => $request->transaction_date,
                     "created_by" => $request->logged_user_id
                 ];
 
             }
        
-
+            // dd($transaction);
             
             $transaction_id = TransactionModel::create($transaction)->id;
 
@@ -533,11 +539,11 @@ class Transaction extends Controller
     {
 
         
-        if($request->created_by_supplier){
+        if(isset($request->created_by_supplier) && $request->created_by_supplier){
             $validator = Validator::make($request->all(), [
                 'bill_to_slack' => $this->get_validation_rules("slack", true),
                 'bill_to' => $this->get_validation_rules("string", true),
-                'transaction_date' => 'date|required',
+                'transaction_date' => 'required',
                 'transaction_type' => $this->get_validation_rules("string", true),
                 'amount' => $this->get_validation_rules("numeric", true),
                 'payment_method' => $this->get_validation_rules("slack", true),
@@ -547,7 +553,7 @@ class Transaction extends Controller
             $validator = Validator::make($request->all(), [
                 'bill_to_slack' => $this->get_validation_rules("slack", true),
                 'bill_to' => $this->get_validation_rules("string", true),
-                'transaction_date' => 'date|required',
+                'transaction_date' => 'required',
                 'account' => $this->get_validation_rules("slack", true),
                 'transaction_type' => $this->get_validation_rules("string", true),
                 'amount' => $this->get_validation_rules("numeric", true),

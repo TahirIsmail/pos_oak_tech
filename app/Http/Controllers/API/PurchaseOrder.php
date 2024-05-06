@@ -635,6 +635,9 @@ class PurchaseOrder extends Controller
                 }
 
             }
+            else{
+                $file_name = '';
+            }
             
             $po_products[] = [
                 'purchase_order_id' => 0,
@@ -708,6 +711,7 @@ class PurchaseOrder extends Controller
             "total_order_amount" => $total_order_amount,
             "purchase_order_pdf" => $file_name,
             "tax_option_id" => $tax_option_data['tax_option_id'],
+            "tax_option" => $request->tax_option
         ];
 
      
@@ -903,8 +907,6 @@ class PurchaseOrder extends Controller
             $purchase_order_id = $purchase_order->id;
             
 
-            // dd($purchase_order->created_by, $request->all());
-
             if (empty($purchase_order)) {
                 throw new Exception("Unable to fetch purchase order details");
             }
@@ -926,6 +928,7 @@ class PurchaseOrder extends Controller
                     'packing_charge' => $purchase_order_data_decoded->packing_charge,
                     'shipping_charge' => $purchase_order_data_decoded->shipping_charge,
                     'tax_option' => ($purchase_order_data_decoded->tax_option_data != null)?$purchase_order_data_decoded->tax_option_data->tax_option_constant:'DEFAULT_TAX',
+                    'invoice_type' => ($purchase_order_data_decoded->tax_option_data != null)?$purchase_order_data_decoded->tax_option_data->tax_option_constant:'DEFAULT_TAX',
                     'terms' => $purchase_order_data_decoded->terms,
                     "invoice_to" => $purchase_order->created_by,
                     "invoice_from" => $purchase_order_data_decoded->supplier->slack,
@@ -943,6 +946,7 @@ class PurchaseOrder extends Controller
                     'packing_charge' => $purchase_order_data_decoded->packing_charge,
                     'shipping_charge' => $purchase_order_data_decoded->shipping_charge,
                     'tax_option' => ($purchase_order_data_decoded->tax_option_data != null)?$purchase_order_data_decoded->tax_option_data->tax_option_constant:'DEFAULT_TAX',
+                    'invoice_type' => ($purchase_order_data_decoded->tax_option_data != null)?$purchase_order_data_decoded->tax_option_data->tax_option_constant:'DEFAULT_TAX',
                     'terms' => $purchase_order_data_decoded->terms,
                     "invoice_to" => $purchase_order->created_by,
                 ]);

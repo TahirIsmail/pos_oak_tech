@@ -60,8 +60,8 @@ class Customer extends Controller
 
             if ($data['customer_data']->customer_type == 'CUSTOM') {
                 $data['customer_type'] = 'corporate';
-            } else if ($data['customer_data']->customer_type == 'WALKIN') {
-                $data['customer_type'] = 'walkin';
+            } else if ($data['customer_data']->customer_type == 'DEALER') {
+                $data['customer_type'] = 'dealer';
             } else {
             }
         } else {

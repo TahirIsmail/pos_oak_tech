@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+
       <div class="col-md-12">
         <div class="card">
           <form @submit.prevent="submit_form" class="mb-3">
@@ -387,7 +388,7 @@
   
             <div class="form-row mb-3">
               <div class="col-md-2 offset-md-7 text-right">
-                <span class="align-text-top">{{ $t("Shipping Charges") }}</span>
+                <span class="align-text-top">{{ $t("Other Charges") }}</span>
               </div>
               <div class="col-md-2">
                 <input
@@ -407,7 +408,7 @@
                 >
               </div>
             </div>
-            <div class="form-row mb-3">
+            <!-- <div class="form-row mb-3">
               <div class="col-md-2 offset-md-7 text-right">
                 <span class="align-text-top">{{ $t("Packing Charges") }}</span>
               </div>
@@ -428,7 +429,7 @@
                   >{{ errors.first('packing_charge') }}</span
                 >
               </div>
-            </div>
+            </div> -->
             <div class="form-row mb-3">
               <div class="col-md-2 offset-md-7 text-right">
                 {{ $t("Total") }}
@@ -506,7 +507,7 @@
               order_date : '',
               order_due_date : '',
               currency : '',
-              tax_option :(this.quotation_data == null)?'':(this.quotation_data.gst_tax_option == 'GST') ? 'GST': 'Cash',
+              tax_option :(this.quotation_data == null)?'':(this.quotation_data.gst_tax_option == 'gst') ? 'gst': 'cash',
               update_stock : '',
               tax_status: false,
   
@@ -587,6 +588,7 @@
                       formData.append("keywords", keywords);
   
                       axios.post('/api/load_suppliers', formData).then((response) => {
+                        // console.log(response);
                           if(response.data.status_code == 200) {
                               this.supplier_list = response.data.data;
                           }

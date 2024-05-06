@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+     
         <div class="col-md-12">
     
             <div class="card shadow" v-if="customer_type == 'corporate'">
@@ -316,7 +317,7 @@
     
     
     
-            <div class="card shadow" v-if="customer_type == 'walkin'">
+            <div class="card shadow" v-if="customer_type == 'dealer'">
     
                 <form @submit.prevent="submit_form" class="mb-3" enctype="multipart/form-data">
     
@@ -326,18 +327,14 @@
     
                         <div class="mr-auto">
     
-                            <span class="text-title" v-if="customer_slack == ''">{{ $t("Add Customer") }}</span>
+                            <span class="text-title" v-if="customer_slack == ''">{{ $t("Add Dealer") }}</span>
     
-                            <span class="text-title" v-else>{{ $t("Edit Customer") }}</span>
+                            <span class="text-title" v-else>{{ $t("Edit Dealer") }}</span>
     
                         </div>
     
-                        <div class="">
-    
-                            <button type="submit" class="btn btn-primary" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="processing == true"></i> {{ $t("Save Customer")
-    
-                                        }}</button>
-    
+                        <div class="">    
+                            <button type="submit" class="btn btn-primary" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="processing == true"></i> {{ $t("Save Dealer")}}</button>    
                         </div>
     
                     </div>

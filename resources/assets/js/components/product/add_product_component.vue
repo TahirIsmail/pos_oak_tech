@@ -1,6 +1,5 @@
 <template>
   <div class="row">
-   
     <div class="col-md-12">
       <div class="card shadow">
       <form @submit.prevent="submit_form" class="mb-3">
@@ -254,18 +253,10 @@
               v-for="childcategory in childCategories" :key="childcategory.id" :value="childcategory.id"
               >
               {{ childcategory.child_category }}
-            </option>
-               
-             
+            </option>              
             </select>
          
           </div>
-
-
-
-        
-
-
 
           <!-- <div class="form-group col-md-3">
             <label for="sub_category_id">{{ $t("Brand Name") }}</label>
@@ -327,8 +318,6 @@
             
           </div> -->
 
-
-
           <!-- <div class="form-group col-md-3">
             <label for="status">{{ $t("Status") }}</label>
             <select
@@ -382,6 +371,7 @@
         </div>
 
         <div class="form-row mb-2">
+
           <!-- <div class="form-group col-md-3">
             <label for="tax_code">{{ $t("Add Tax (Optional)") }}</label>
             <select
@@ -404,7 +394,6 @@
             </select>           
           </div> -->
 
-
           <div>
             <label for="gst_cash">{{ $t("Select Cash OR GST") }}</label>
             <select 
@@ -416,12 +405,6 @@
              <option value="GST">GST</option>
             </select>
           </div>
-          
-
-
-         
-
-
           <!-- <div class="form-group col-md-3">
             <label for="discount_code">{{ $t("Discount Code") }}</label>
             <select
@@ -509,7 +492,7 @@
           </div>
           <div class="form-group col-md-3">
             <label for="sale_price"
-              >{{ $t("Total Sale Price") }} ({{ currency_code }})</label
+              >{{ $t("Total Sale Price Per Unit") }} ({{ currency_code }})</label
             >
             <input
               type="number"
@@ -528,6 +511,25 @@
               v-bind:class="{ error: errors.has('sale_price_including_tax') }"
               >{{ errors.first("sale_price_including_tax") }}</span
             >
+          </div>
+
+          <div class="form-group col-md-3">            
+            <label for="total_sale_price_including_tax"
+           >{{ $t("Total Price") }} ({{ currency_code }})</label
+            >
+            <input
+              type="number"
+              name="total_sale_price_including_tax"
+              v-model="total_sale_price_including_tax"
+              class="form-control form-control-custom"
+              :placeholder="$t('Please enter total sale price')"
+              autocomplete="off"
+              step="1"
+              min="0"
+              v-on:input="calculate_sale_prices"
+              :readonly="is_taxcode_inclusive == false"
+            />
+           
           </div>
         </div>
        
@@ -645,6 +647,10 @@ export default {
   components: { Multiselect },
   data() {
     return {
+      quantity_from_spec: false,
+      total_sale_price_including_tax: this.product_data == null 
+        ? 0 
+        : this.product_data.total_sale_price_including_tax,
       gst_cash: this.product_data == null 
          ? 'Cash' 
          : this.product_data.gst_paid_for_product == 1
@@ -727,11 +733,11 @@ export default {
           : this.product_data.discount_code == null
           ? ""
           : this.product_data.discount_code.slack,
-      gst_paid_for_product : this.product_data == null 
-          ? "" 
-          : this.product_data.gst_on_product 
-          ? this.product_data.gst_on_product[0].gst_paid_for_product
-          : '',
+          gst_paid_for_product: this.product_data == null
+            ? ''
+            : this.product_data.gst_paid_for_product == 1
+                ? this.product_data.gst_on_product[0].gst_paid_for_product
+                : '',
       quantity: this.product_data == null
           ? 1
           : this.product_data.quantity,
@@ -957,6 +963,8 @@ export default {
         this.product_name = this.input_type["Product Name"];
       }
       if(this.input_type["Quantity"]){
+
+        this.quantity_from_spec = true;
         this.quantity = this.input_type["Quantity"];
       }
     },
@@ -1113,6 +1121,7 @@ export default {
             formData.append('product_name_id', (this.product_name_id) ? this.product_name_id : null);
             formData.append('gst_paid_for_product', this.gst_paid_for_product);
             formData.append('gst_cash', this.gst_cash);
+            formData.append('total_sale_price_including_tax', this.total_sale_price_including_tax);
 
             if (this.input_type) {
   
@@ -1507,6 +1516,7 @@ export default {
         // var sale_price_including_tax = parseFloat(this.sale_price) + parseFloat(calculated_tax);
         var sale_price_including_tax = parseFloat(this.purchase_price) + parseFloat(calculated_sale_price);
         this.sale_price_including_tax = sale_price_including_tax;
+        this.total_sale_price_including_tax = sale_price_including_tax * parseFloat(this.quantity);
       }
     },
   },

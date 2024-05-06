@@ -243,7 +243,7 @@
                         <div class="form-group col-md-1 mb-1">
                             <label for="discount_percentage">{{ $t("Discount %") }}</label>
                         </div>
-                        <div class="form-group col-md-1 mb-1" v-if="tax_option == 'GST'">
+                        <div class="form-group col-md-1 mb-1" v-if="tax_option == 'gst'">
                             <label for="tax_percentage">{{ $t("GST Tax %") }}</label>
                         </div>
                         <div class="form-group col-md-2 mb-1">
@@ -270,7 +270,7 @@
                         <div class="form-group col-md-2">
                             <input type="number" v-bind:name="'product.unit_price_' + index" v-model="product.unit_price"
                                 v-validate="'required|decimal|min_value:0'" data-vv-as="Unit Price"
-                                class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
+                                class="form-control form-control-custom" autocomplete="off" step="1" min="0"
                                 v-on:input="calculate_price">
                             <span v-bind:class="{ 'error': errors.has('product.unit_price_' + index) }">{{
                                 errors.first('product.unit_price_' + index) }}</span>
@@ -283,10 +283,10 @@
                             <span v-bind:class="{ 'error': errors.has('product.discount_percentage_' + index) }">{{
                                 errors.first('product.discount_percentage_' + index) }}</span>
                         </div>
-                        <div class="form-group col-md-1" v-if="tax_option == 'GST'">
+                        <div class="form-group col-md-1" v-if="tax_option == 'gst'">
                             <input type="number" v-bind:name="'product.tax_percentage_' + index"
                                 v-model="product.tax_percentage" v-validate="'decimal|min_value:0'" data-vv-as="Tax %"
-                                class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
+                                class="form-control form-control-custom" autocomplete="off" step="1" min="0"
                                 v-on:input="calculate_price">
                             <span v-bind:class="{ 'error': errors.has('product.tax_percentage_' + index) }">{{
                                 errors.first('product.tax_percentage_' + index) }}</span>
@@ -294,7 +294,7 @@
                         <div class="form-group col-md-2">
                             <input type="number" v-bind:name="'product.amount_' + index" v-model="product.amount"
                                 v-validate="'required|decimal|min_value:0'" data-vv-as="Amount"
-                                class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
+                                class="form-control form-control-custom" autocomplete="off" step="1" min="0"
                                 readonly="true">
                             <span v-bind:class="{ 'error': errors.has('product.amount_' + index) }">{{
                                 errors.first('product.amount_' + index) }}</span>
@@ -310,28 +310,28 @@
 
                     <div class="form-row mb-3">
                         <div class="col-md-2 offset-md-7 text-right">
-                            <span class="align-text-top">{{ $t("Shipping Charges") }}</span>
+                            <span class="align-text-top">{{ $t("Other Charges") }}</span>
                         </div>
                         <div class="col-md-2">
                             <input type="number" name="shipping_charge" v-model="shipping_charge"
                                 v-validate="'decimal|min_value:0'" class="form-control form-control-custom"
-                                autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
+                                autocomplete="off" step="1" min="0" v-on:input="calculate_price">
                             <span v-bind:class="{ 'error': errors.has('shipping_charge') }">{{
                                 errors.first('shipping_charge') }}</span>
                         </div>
                     </div>
-                    <div class="form-row mb-3">
+                    <!-- <div class="form-row mb-3">
                         <div class="col-md-2 offset-md-7 text-right">
                             <span class="align-text-top">{{ $t("Packing Charges") }}</span>
                         </div>
                         <div class="col-md-2">
                             <input type="number" name="packing_charge" v-model="packing_charge"
                                 v-validate="'decimal|min_value:0'" class="form-control form-control-custom"
-                                autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
+                                autocomplete="off" step="1" min="0" v-on:input="calculate_price">
                             <span v-bind:class="{ 'error': errors.has('packing_charge') }">{{
                                 errors.first('packing_charge') }}</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-row  mb-3">
                         <div class="col-md-2 offset-md-7 text-right">
                             {{ $t("Total") }}
@@ -416,7 +416,7 @@ export default {
             quotation_date: (this.quotation_data == null) ? '' : (this.quotation_data.quotation_date_raw != null) ? new Date(this.quotation_data.quotation_date_raw) : '',
             quotation_due_date: (this.quotation_data == null) ? '' : (this.quotation_data.quotation_due_date_raw != null) ? new Date(this.quotation_data.quotation_due_date_raw) : '',
             currency: (this.quotation_data == null) ? '' : (this.quotation_data.currency_code != null) ? this.quotation_data.currency_code : '',
-            tax_option: (this.quotation_data == null) ? 'GST' : (this.quotation_data.tax_option_data != null) ? this.quotation_data.tax_option_data.tax_option_constant : '',
+            tax_option: (this.quotation_data == null) ? 'gst' : (this.quotation_data.tax_option_data != null) ? this.quotation_data.tax_option_data.tax_option_constant : '',
 
             shipping_charge: (this.quotation_data == null) ? '' : (this.quotation_data.shipping_charge != null) ? this.quotation_data.shipping_charge : '',
             packing_charge: (this.quotation_data == null) ? '' : (this.quotation_data.packing_charge != null) ? this.quotation_data.packing_charge : '',

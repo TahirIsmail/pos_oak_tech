@@ -1,307 +1,309 @@
 <template>
     <div class="row">
         <div class="col-md-12">
+            <div class="card p-4">
 
-            <div class="d-flex flex-wrap mb-4">
-                <div class="mr-auto">
-                   <div class="d-flex">
-
-                        <div>
-                            <span class="text-title"> {{ $t("Order") }} #{{ order_basic.order_number }} </span>
+                <div class="d-flex flex-wrap mb-4">
+                    <div class="mr-auto">
+                       <div class="d-flex">
+    
+                            <div>
+                                <span class="text-title"> {{ $t("Order") }} #{{ order_basic.order_number }} </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="">
-                    <!-- <span v-if="order_basic.restaurant_mode == 1 && order_basic.kitchen_status != null" v-bind:class="order_basic.kitchen_status.color" class="mr-2">{{ order_basic.kitchen_status.label }}</span> -->
-                    <span v-if="order_basic.payment_status != null" v-bind:class="order_basic.payment_status.color" class="mr-2">{{ order_basic.payment_status.label }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</span>
-                    <button v-if="order_basic.payment_status.value == 0" style="padding:6px 16px!important" @click="pending_payment()" class="btn btn-primary mr-2">{{ $t("Pay Remaining Amount") }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</button>
-                    <span v-bind:class="order_basic.status.color">{{ order_basic.status.label }}</span>
-                </div>
-            </div>
-
-            <div class="d-flex flex-wrap mb-4">
-
-                <p v-html="server_errors" v-bind:class="[error_class]"></p>
-
-                <div class="ml-auto">
-                    
-                    <button type="submit" class="btn btn-danger mr-1" v-if="delete_order_access == true" v-on:click="delete_order()" v-bind:disabled="order_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="order_processing == true"></i> {{ $t("Delete Order") }}</button>
-
-                    <button type="button" class="btn btn-outline-primary mr-1" v-if="share_invoice_sms_access == true && order_basic.status.value == 1" v-on:click="share_invoice_as_sms()" v-bind:disabled="send_sms_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="send_sms_processing == true"></i> {{ $t("Share Invoice as SMS") }}</button>
-
-                    <button type="button" class="btn btn-outline-primary mr-1" v-if="merge_order_access == true && order_basic.status.value == 1" v-on:click="merge_order()"> <i class="fas fa-clone"></i> {{ $t("Merge Orders") }}</button>
-
-                    <button type="button" class="btn btn-outline-primary mr-1" v-if="unmerge_order_access == true && order_basic.status.value == 4" v-on:click="unmerge_order()"> <i class="far fa-clone"></i> {{ $t("Unmerge Order") }}</button>
-
-                    <a class="btn btn-outline-primary mr-1" v-if="order_basic.status.value == 1" v-bind:href="print_order_link" target="_blank">{{ $t("PDF") }}</a>
-
-                    <button class="btn btn-outline-primary mr-1" v-if="printnode_enabled == true" v-on:click="printnode_print('KOT')" v-bind:disabled="kot_processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="kot_processing == true"></i> {{ $t("Print KOT") }}</button>
-
-                    <button class="btn btn-outline-primary" v-if="printnode_enabled == true" v-on:click="printnode_print('POS_INVOICE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Print Invoice") }}</button>
-
-                </div>
-
-            </div>
-
-            <div v-show="order_basic.restaurant_mode == 1">
-                <div class="mb-2">
-                    <span class="text-subhead">{{ $t("Restaurant Mode Information") }}</span>
-                </div>
-                <div class="form-row mb-2" v-if="order_basic.contact_number != null || order_basic.address != null">
-                    <div class="form-group col-md-6">
-                        <label for="email">{{ $t("Delivery Details") }}</label>
-                        <span class="d-block"><span class="text-muted small">{{ $t("Contact Number") }}</span> {{ order_basic.contact_number }}</span>
-                        <span class="d-block"><span class="text-muted small">{{ $t("Address") }}</span> <span class="custom-pre">{{ (order_basic.address)?order_basic.address:'-' }}</span></span>
+                    <div class="">
+                        <!-- <span v-if="order_basic.restaurant_mode == 1 && order_basic.kitchen_status != null" v-bind:class="order_basic.kitchen_status.color" class="mr-2">{{ order_basic.kitchen_status.label }}</span> -->
+                        <span v-if="order_basic.payment_status != null" v-bind:class="order_basic.payment_status.color" class="mr-2">{{ order_basic.payment_status.label }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</span>
+                        <button v-if="order_basic.payment_status.value == 0" style="padding:6px 16px!important" @click="pending_payment()" class="btn btn-primary mr-2">{{ $t("Pay Remaining Amount") }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</button>
+                        <span v-bind:class="order_basic.status.color">{{ order_basic.status.label }}</span>
                     </div>
+                </div>
+    
+                <div class="d-flex flex-wrap mb-4">
+    
+                    <p v-html="server_errors" v-bind:class="[error_class]"></p>
+    
+                    <div class="ml-auto">
+                        
+                        <!-- <button type="submit" class="btn btn-danger mr-1" v-if="delete_order_access == true" v-on:click="delete_order()" v-bind:disabled="order_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="order_processing == true"></i> {{ $t("Delete Order") }}</button> -->
+    
+                        <button type="button" class="btn btn-outline-primary mr-1" v-if="share_invoice_sms_access == true && order_basic.status.value == 1" v-on:click="share_invoice_as_sms()" v-bind:disabled="send_sms_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="send_sms_processing == true"></i> {{ $t("Share Invoice as SMS") }}</button>
+    
+                        <!-- <button type="button" class="btn btn-outline-primary mr-1" v-if="merge_order_access == true && order_basic.status.value == 1" v-on:click="merge_order()"> <i class="fas fa-clone"></i> {{ $t("Merge Orders") }}</button> -->
+    
+                        <button type="button" class="btn btn-outline-primary mr-1" v-if="unmerge_order_access == true && order_basic.status.value == 4" v-on:click="unmerge_order()"> <i class="far fa-clone"></i> {{ $t("Unmerge Order") }}</button>
+    
+                        <a class="btn btn-outline-primary mr-1" v-if="order_basic.status.value == 1" v-bind:href="print_order_link" target="_blank">{{ $t("PDF") }}</a>
+    
+                        <button class="btn btn-outline-primary mr-1" v-if="printnode_enabled == true" v-on:click="printnode_print('KOT')" v-bind:disabled="kot_processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="kot_processing == true"></i> {{ $t("Print KOT") }}</button>
+    
+                        <button class="btn btn-outline-primary" v-if="printnode_enabled == true" v-on:click="printnode_print('POS_INVOICE')" v-bind:disabled="processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="processing == true"></i> {{ $t("Print Invoice") }}</button>
+    
+                    </div>
+    
+                </div>
+    
+                <!-- <div v-show="order_basic.restaurant_mode == 1">
+                    <div class="mb-2">
+                        <span class="text-subhead">{{ $t("Restaurant Mode Information") }}</span>
+                    </div>
+                    <div class="form-row mb-2" v-if="order_basic.contact_number != null || order_basic.address != null">
+                        <div class="form-group col-md-6">
+                            <label for="email">{{ $t("Delivery Details") }}</label>
+                            <span class="d-block"><span class="text-muted small">{{ $t("Contact Number") }}</span> {{ order_basic.contact_number }}</span>
+                            <span class="d-block"><span class="text-muted small">{{ $t("Address") }}</span> <span class="custom-pre">{{ (order_basic.address)?order_basic.address:'-' }}</span></span>
+                        </div>
+                    </div>
+                    <div class="form-row mb-2">
+                        <div class="form-group col-md-3" v-show="order_basic.restaurant_mode == 1">
+                            <label for="email">{{ $t("Order From") }}</label>
+                            <p>{{ (order_basic.order_origin == 'DIGITAL_MENU')?'Digital Menu':'POS Screen' }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="email">{{ $t("Order Type") }}</label>
+                            <p>{{ order_basic.order_type }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="email">{{ $t("Billing Type") }}</label>
+                            <p>{{ (order_basic.billing_type_data != null)?order_basic.billing_type_data.label:'-' }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="email">{{ $t("Table Number or Name") }}</label>
+                            <p>{{ (order_basic.table != null && order_basic.table != '')?order_basic.table:'-' }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="email">{{ $t("Waiter") }}</label>
+                            <p>{{ (order_basic.waiter_data != null)?order_basic.waiter_data.fullname + ' (' +order_basic.waiter_data.user_code+ ')' :'-' }}</p>
+                        </div>
+                    </div>
+                </div> -->
+                <hr>
+    
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Basic Information") }}</span>
                 </div>
                 <div class="form-row mb-2">
-                    <div class="form-group col-md-3" v-show="order_basic.restaurant_mode == 1">
-                        <label for="email">{{ $t("Order From") }}</label>
-                        <p>{{ (order_basic.order_origin == 'DIGITAL_MENU')?'Digital Menu':'POS Screen' }}</p>
+                    <div class="form-group col-md-3">
+                        <label for="email">{{ $t("Name") }}</label>
+                        <p>{{ (order_basic.customer_name == null)?'-':order_basic.customer_name }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="email">{{ $t("Order Type") }}</label>
-                        <p>{{ order_basic.order_type }}</p>
+                        <label for="email">{{ $t("Email") }}</label>
+                        <p>{{ (order_basic.customer_email == null)?'-':order_basic.customer_email }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="email">{{ $t("Billing Type") }}</label>
-                        <p>{{ (order_basic.billing_type_data != null)?order_basic.billing_type_data.label:'-' }}</p>
+                        <label for="email">{{ $t("Phone") }}</label>
+                        <p>{{ (order_basic.customer_phone == null)?'-':order_basic.customer_phone }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="email">{{ $t("Table Number or Name") }}</label>
-                        <p>{{ (order_basic.table != null && order_basic.table != '')?order_basic.table:'-' }}</p>
+                        <label for="email">{{ $t("Payment Mode") }}</label>
+                        <p>{{ (order_basic.payment_method == null)?'-':order_basic.payment_method }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="email">{{ $t("Waiter") }}</label>
-                        <p>{{ (order_basic.waiter_data != null)?order_basic.waiter_data.fullname + ' (' +order_basic.waiter_data.user_code+ ')' :'-' }}</p>
-                    </div>
-                </div>
-            </div>
-            <hr>
-
-            <div class="mb-2">
-                <span class="text-subhead">{{ $t("Basic Information") }}</span>
-            </div>
-            <div class="form-row mb-2">
-                <div class="form-group col-md-3">
-                    <label for="email">{{ $t("Name") }}</label>
-                    <p>{{ (order_basic.customer_name == null)?'-':order_basic.customer_name }}</p>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="email">{{ $t("Email") }}</label>
-                    <p>{{ (order_basic.customer_email == null)?'-':order_basic.customer_email }}</p>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="email">{{ $t("Phone") }}</label>
-                    <p>{{ (order_basic.customer_phone == null)?'-':order_basic.customer_phone }}</p>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="email">{{ $t("Payment Mode") }}</label>
-                    <p>{{ (order_basic.payment_method == null)?'-':order_basic.payment_method }}</p>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="created_by">{{ $t("Created By") }}</label>
-                    <p>{{ (order_basic.created_by == null)?'-':order_basic.created_by['fullname']+' ('+order_basic.created_by['user_code']+')' }}</p>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="updated_by">{{ $t("Updated By") }}</label>
-                    <p>{{ (order_basic.updated_by == null)?'-':order_basic.updated_by['fullname']+' ('+order_basic.updated_by['user_code']+')' }}</p>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="created_on">{{ $t("Created On") }}</label>
-                    <p>{{ order_basic.created_at_label }}</p>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="updated_on">{{ $t("Updated On") }}</label>
-                    <p>{{ order_basic.updated_at_label }}</p>
-                </div>
-            </div>
-            <hr>
-
-            <div class="mb-3">
-                
-                <div class="mb-2">
-                    <span class="text-subhead">{{ $t("Order Level Tax Information") }}</span>
-                </div>
-                <div class="form-row mb-2" v-if="order_basic.order_level_tax_percentage >0">
-                    <div class="form-group col-md-3">
-                        <label for="tax_code">{{ $t("Tax Code") }}</label>
-                        <p>{{ order_basic.order_level_tax_code }}</p>
+                        <label for="created_by">{{ $t("Created By") }}</label>
+                        <p>{{ (order_basic.created_by == null)?'-':order_basic.created_by['fullname']+' ('+order_basic.created_by['user_code']+')' }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="tax_percentage">{{ $t("Tax Percentage") }}</label>
-                        <p>{{ order_basic.order_level_tax_percentage }}</p>
+                        <label for="updated_by">{{ $t("Updated By") }}</label>
+                        <p>{{ (order_basic.updated_by == null)?'-':order_basic.updated_by['fullname']+' ('+order_basic.updated_by['user_code']+')' }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="tax_amount">{{ $t("Tax Amount") }}</label>
-                        <p>{{ order_basic.order_level_tax_amount }}</p>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="table-responsive" v-if="order_basic.order_level_tax_percentage >0">
-                            <table class="table display nowrap text-nowrap w-100">
-                                <thead>
-                                    <tr>
-                                    <th scope="col">{{ $t("Tax Type") }}</th>
-                                    <th scope="col">{{ $t("Tax Percentage") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(tax_component, key, index) in order_basic.order_level_tax_components" v-bind:key="index">
-                                        <td>{{ tax_component.tax_type }}</td>
-                                        <td>{{ tax_component.tax_percentage }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <span class="mb-2" v-else>No Order Level Tax Components</span>
-                    </div>
-                </div>
-                
-            </div>
-            <hr>
-
-            <div class="mb-3">
-                <div class="mb-2">
-                    <span class="text-subhead">{{ $t("Order Level Discount Information") }}</span>
-                </div>
-                <div class="form-row mb-2" v-if="order_basic.order_level_discount_percentage >0">
-                    <div class="form-group col-md-3">
-                        <label for="discount_code">{{ $t("Discount Code") }}</label>
-                        <p>{{ order_basic.order_level_discount_code }}</p>
+                        <label for="created_on">{{ $t("Created On") }}</label>
+                        <p>{{ order_basic.created_at_label }}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="discount_percentage">{{ $t("Discount Percentage") }}</label>
-                        <p>{{ order_basic.order_level_discount_percentage }}</p>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="discount_code_label">{{ $t("Discount Amount") }}</label>
-                        <p>{{ order_basic.order_level_discount_amount }}</p>
+                        <label for="updated_on">{{ $t("Updated On") }}</label>
+                        <p>{{ order_basic.updated_at_label }}</p>
                     </div>
                 </div>
-                <div class="mb-3" v-else>No Order Level Discount Information</div>
-            </div>
-            <hr>
-
-            <div class="mb-2">
-                <span class="text-subhead">{{ $t("Product Information") }}</span>
-            </div>
-            <div class="table-responsive mb-2">
-                <table class="table table-striped display nowrap text-nowrap w-100">
-                    <thead>
-                        <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{{ $t("Product Code") }}</th>
-                        <th scope="col">{{ $t("Product") }}</th>
-                        <th scope="col" class="text-right">{{ $t("Quantity") }}</th>
-                        <th scope="col" class="text-right">{{ $t("Price") }} (EXCL Tax)</th>
-                        <th scope="col" class="text-right">{{ $t("Discount %") }}</th>
-                        <th scope="col" class="text-right">{{ $t("Discount Amount") }}</th>
-                        <th scope="col" class="text-right">{{ $t("Tax %") }}</th>
-                        <th scope="col" class="text-right">{{ $t("Tax Amount") }}</th>
-                        <th scope="col" class="text-right">{{ $t("Total") }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(order_product, key, index) in products" v-bind:value="order_product.product_slack" v-bind:key="index">
-                            <th scope="row" v-if="order_product.parent_order_product">{{ order_product.counter }}</th>
-                            <th scope="row" v-else><span v-html="addon_label" class="pl-4"></span></th>
-                            <td>{{ order_product.product_code }}</td>
-                            <td>{{ order_product.name }}</td>
-                            <td class="text-right">{{ order_product.quantity }}</td>
-                            <td class="text-right">{{ order_product.price }}</td>
-                            <td class="text-right">{{ order_product.discount_percentage }}</td>
-                            <td class="text-right">{{ order_product.discount_amount }}</td>
-                            <td class="text-right">
-                                {{ order_product.tax_percentage }}
-                                <span class="d-block small" v-for="(tax_component, key, index) in order_product.tax_components" v-bind:key="index">
-                                    <span v-show="tax_component.tax_percentage>0">{{ tax_component.tax_type }} : {{ tax_component.tax_percentage }}%</span>
-                                </span>
-                            </td>
-                            <td class="text-right">
-                                {{ order_product.tax_amount }}
-                                <span class="d-block small" v-for="(tax_component, key, index) in order_product.tax_components" v-bind:key="index">
-                                    <span v-show="tax_component.tax_percentage>0">{{ tax_component.tax_type }} : {{ tax_component.tax_amount.toFixed(2) }}</span>
-                                </span>
-                            </td>
-                            <td class="text-right">{{ order_product.total_price }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right">{{ $t("Sub Total") }} (EXCL Tax)</td>
-                            <td class="text-right">{{ order_basic.sale_amount_subtotal_excluding_tax }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right">{{ $t("Discount") }}</td>
-                            <td class="text-right">{{ order_basic.total_discount_before_additional_discount }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right">{{ $t("Additional Discount") }} ({{ order_basic.additional_discount_percentage }}%)</td>
-                            <td class="text-right">{{ order_basic.additional_discount_amount }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right">{{ $t("Total Discount") }}</td>
-                            <td class="text-right">{{ order_basic.total_discount_amount }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right">{{ $t("Total After Discount") }}</td>
-                            <td class="text-right">{{ order_basic.total_after_discount }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right">
-                                {{ $t("Total Tax") }}
-                                <small v-if="order_basic.product_level_total_tax>0" class="d-block">
-                                    Product Tax : {{ order_basic.product_level_total_tax }}
-                                </small>
-                                <small v-if="order_basic.order_level_tax_percentage>0" class="d-block">
-                                    Overall Tax : 
-                                    <span v-for="(tax_component, key, index) in order_basic.order_level_tax_components" v-bind:key="index">
-                                        {{ tax_component.tax_type }} : {{ tax_component.tax_amount.toFixed(2) }} ({{ tax_component.tax_percentage }}%) &middot;
-                                    </span>
-                                </small>
-                            </td>
-                            <td class="text-right">{{ order_basic.total_tax_amount }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right text-bold">{{ $t("Total") }} (INCL Tax)</td>
-                            <td class="text-right text-bold">{{ order_basic.currency_code }} {{ order_basic.total_order_amount }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="9" class="text-right text-bold">{{ $t("Total") }} (Received Amount)</td>
-                            <td class="text-right text-bold">{{ order_basic.currency_code }} {{ total_received_amount }}</td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="9" class="text-right text-bold">{{ $t("Total") }} (Pending Amount)</td>
-                            <td class="text-right text-bold">{{ order_basic.currency_code }} {{ order_basic.total_order_amount - total_received_amount }}</td>
-                        </tr>
-
-
-                        <tr v-if="order_basic.order_difference != ''">
-                            <td colspan="9" class="text-right">{{ $t("Merge Difference Amount") }}</td>
-                            <td class="text-right">{{ order_basic.order_difference }}<br>
-                                <small>{{ (order_basic.order_difference.order_difference_exists == 'positive')?'Receive from Customer':'Return to Customer' }}</small>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div v-if="order_data.merged_orders != null && order_data.merged_orders.length != 0">
                 <hr>
+    
+                <div class="mb-3">
+                    
+                    <div class="mb-2">
+                        <span class="text-subhead">{{ $t("Order Level Tax Information") }}</span>
+                    </div>
+                    <div class="form-row mb-2" v-if="order_basic.order_level_tax_percentage >0">
+                        <div class="form-group col-md-3">
+                            <label for="tax_code">{{ $t("Tax Code") }}</label>
+                            <p>{{ order_basic.order_level_tax_code }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="tax_percentage">{{ $t("Tax Percentage") }}</label>
+                            <p>{{ order_basic.order_level_tax_percentage }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="tax_amount">{{ $t("Tax Amount") }}</label>
+                            <p>{{ order_basic.order_level_tax_amount }}</p>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="table-responsive" v-if="order_basic.order_level_tax_percentage >0">
+                                <table class="table display nowrap text-nowrap w-100">
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">{{ $t("Tax Type") }}</th>
+                                        <th scope="col">{{ $t("Tax Percentage") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(tax_component, key, index) in order_basic.order_level_tax_components" v-bind:key="index">
+                                            <td>{{ tax_component.tax_type }}</td>
+                                            <td>{{ tax_component.tax_percentage }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <span class="mb-2" v-else>No Order Level Tax Components</span>
+                        </div>
+                    </div>
+                    
+                </div>
+                <hr>
+    
+                <div class="mb-3">
+                    <div class="mb-2">
+                        <span class="text-subhead">{{ $t("Order Level Discount Information") }}</span>
+                    </div>
+                    <div class="form-row mb-2" v-if="order_basic.order_level_discount_percentage >0">
+                        <div class="form-group col-md-3">
+                            <label for="discount_code">{{ $t("Discount Code") }}</label>
+                            <p>{{ order_basic.order_level_discount_code }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="discount_percentage">{{ $t("Discount Percentage") }}</label>
+                            <p>{{ order_basic.order_level_discount_percentage }}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="discount_code_label">{{ $t("Discount Amount") }}</label>
+                            <p>{{ order_basic.order_level_discount_amount }}</p>
+                        </div>
+                    </div>
+                    <div class="mb-3" v-else>No Order Level Discount Information</div>
+                </div>
+                <hr>
+    
                 <div class="mb-2">
-                    <span class="text-subhead">{{ $t("Merged Orders") }}</span>
+                    <span class="text-subhead">{{ $t("Product Information") }}</span>
                 </div>
-                <div class="d-flex flex-wrap mb-4">
-                    <span v-for="(merged_order, key, index) in order_data.merged_orders" v-bind:value="merged_order.slack" v-bind:key="index">
-                        <span v-if="merged_order.detail_link != ''"><a v-bind:href="merged_order.detail_link" target="_blank">{{ merged_order.order_number }}</a></span><span v-else>{{ merged_order.order_number }}</span> &nbsp;&middot;&nbsp;
-                    </span>
+                <div class="table-responsive mb-2">
+                    <table class="table table-striped display nowrap text-nowrap w-100">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">{{ $t("Product Code") }}</th>
+                            <th scope="col">{{ $t("Product") }}</th>
+                            <th scope="col" class="text-right">{{ $t("Quantity") }}</th>
+                            <th scope="col" class="text-right">{{ $t("Price") }} (EXCL Tax)</th>
+                            <th scope="col" class="text-right">{{ $t("Discount %") }}</th>
+                            <th scope="col" class="text-right">{{ $t("Discount Amount") }}</th>
+                            <th scope="col" class="text-right">{{ $t("Tax %") }}</th>
+                            <th scope="col" class="text-right">{{ $t("Tax Amount") }}</th>
+                            <th scope="col" class="text-right">{{ $t("Total") }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(order_product, key, index) in products" v-bind:value="order_product.product_slack" v-bind:key="index">
+                                <th scope="row" v-if="order_product.parent_order_product">{{ order_product.counter }}</th>
+                                <th scope="row" v-else><span v-html="addon_label" class="pl-4"></span></th>
+                                <td>{{ order_product.product_code }}</td>
+                                <td>{{ order_product.name }}</td>
+                                <td class="text-right">{{ order_product.quantity }}</td>
+                                <td class="text-right">{{ order_product.price }}</td>
+                                <td class="text-right">{{ order_product.discount_percentage }}</td>
+                                <td class="text-right">{{ order_product.discount_amount }}</td>
+                                <td class="text-right">
+                                    {{ order_product.tax_percentage }}
+                                    <span class="d-block small" v-for="(tax_component, key, index) in order_product.tax_components" v-bind:key="index">
+                                        <span v-show="tax_component.tax_percentage>0">{{ tax_component.tax_type }} : {{ tax_component.tax_percentage }}%</span>
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    {{ order_product.tax_amount }}
+                                    <span class="d-block small" v-for="(tax_component, key, index) in order_product.tax_components" v-bind:key="index">
+                                        <span v-show="tax_component.tax_percentage>0">{{ tax_component.tax_type }} : {{ tax_component.tax_amount.toFixed(2) }}</span>
+                                    </span>
+                                </td>
+                                <td class="text-right">{{ order_product.total_price }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right">{{ $t("Sub Total") }} (EXCL Tax)</td>
+                                <td class="text-right">{{ order_basic.sale_amount_subtotal_excluding_tax }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right">{{ $t("Discount") }}</td>
+                                <td class="text-right">{{ order_basic.total_discount_before_additional_discount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right">{{ $t("Additional Discount") }} ({{ order_basic.additional_discount_percentage }}%)</td>
+                                <td class="text-right">{{ order_basic.additional_discount_amount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right">{{ $t("Total Discount") }}</td>
+                                <td class="text-right">{{ order_basic.total_discount_amount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right">{{ $t("Total After Discount") }}</td>
+                                <td class="text-right">{{ order_basic.total_after_discount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right">
+                                    {{ $t("Total Tax") }}
+                                    <small v-if="order_basic.product_level_total_tax>0" class="d-block">
+                                        Product Tax : {{ order_basic.product_level_total_tax }}
+                                    </small>
+                                    <small v-if="order_basic.order_level_tax_percentage>0" class="d-block">
+                                        Overall Tax : 
+                                        <span v-for="(tax_component, key, index) in order_basic.order_level_tax_components" v-bind:key="index">
+                                            {{ tax_component.tax_type }} : {{ tax_component.tax_amount.toFixed(2) }} ({{ tax_component.tax_percentage }}%) &middot;
+                                        </span>
+                                    </small>
+                                </td>
+                                <td class="text-right">{{ order_basic.total_tax_amount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right text-bold">{{ $t("Total") }} (INCL Tax)</td>
+                                <td class="text-right text-bold">{{ order_basic.currency_code }} {{ order_basic.total_order_amount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="9" class="text-right text-bold">{{ $t("Total") }} (Received Amount)</td>
+                                <td class="text-right text-bold">{{ order_basic.currency_code }} {{ total_received_amount }}</td>
+                            </tr>
+<!--     
+                            <tr>
+                                <td colspan="9" class="text-right text-bold">{{ $t("Total") }} (Pending Amount)</td>
+                                <td class="text-right text-bold">{{ order_basic.currency_code }} {{ order_basic.total_order_amount - total_received_amount }}</td>
+                            </tr> -->
+    
+    
+                            <!-- <tr v-if="order_basic.order_difference != ''">
+                                <td colspan="9" class="text-right">{{ $t("Merge Difference Amount") }}</td>
+                                <td class="text-right">{{ order_basic.order_difference }}<br>
+                                    <small>{{ (order_basic.order_difference.order_difference_exists == 'positive')?'Receive from Customer':'Return to Customer' }}</small>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
                 </div>
+    
+                <div v-if="order_data.merged_orders != null && order_data.merged_orders.length != 0">
+                    <hr>
+                    <div class="mb-2">
+                        <span class="text-subhead">{{ $t("Merged Orders") }}</span>
+                    </div>
+                    <div class="d-flex flex-wrap mb-4">
+                        <span v-for="(merged_order, key, index) in order_data.merged_orders" v-bind:value="merged_order.slack" v-bind:key="index">
+                            <span v-if="merged_order.detail_link != ''"><a v-bind:href="merged_order.detail_link" target="_blank">{{ merged_order.order_number }}</a></span><span v-else>{{ merged_order.order_number }}</span> &nbsp;&middot;&nbsp;
+                        </span>
+                    </div>
+                </div>
+                
+                <hr>
+                <transactionlistcomponent :transaction_list="transactions"></transactionlistcomponent>
             </div>
-            
-            <hr>
-            <transactionlistcomponent :transaction_list="transactions"></transactionlistcomponent>
 
         </div>
 

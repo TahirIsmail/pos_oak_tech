@@ -2,29 +2,22 @@
 
 namespace App\Http\Controllers\API;
 
-use Exception;
-use Validator;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\API\Role as RoleApi;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Config;
+use App\Http\Resources\Collections\CustomerCollection;
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer as CustomerModel;
-use App\Models\Role as RoleModel;
 use App\Models\User as UserModel;
 use App\Models\UserStore as UserStoreModel;
-use App\Models\Store as StoreModel;
-use App\Http\Resources\CustomerResource;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use App\Http\Resources\Collections\CustomerCollection;
-use App\Http\Controllers\API\Role as RoleApi;
-use App\Models\CustomerContactPerson;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManagerStatic as Image;
-
-
+use Illuminate\Support\Str;
+use Validator;
 
 class Customer extends Controller
 {
@@ -51,7 +44,7 @@ class Customer extends Controller
 
             $order_by = $request->order[0]["column"];
             $order_direction = $request->order[0]["dir"];
-            $order_by_column =  $request->columns[$order_by]['name'];
+            $order_by_column = $request->columns[$order_by]['name'];
 
             $filter_string = $request->search['value'];
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
@@ -104,7 +97,7 @@ class Customer extends Controller
                 'draw' => $draw,
                 'recordsTotal' => $total_count,
                 'recordsFiltered' => $total_count,
-                'data' => $item_array
+                'data' => $item_array,
             ];
 
             return response()->json($response);
@@ -112,7 +105,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -134,7 +127,7 @@ class Customer extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    function generateCustomCode($keyword)
+    public function generateCustomCode($keyword)
     {
         $randomNumber = sprintf('%06d', mt_rand(0, 999999));
 
@@ -165,7 +158,6 @@ class Customer extends Controller
 
             // dd($request->all());
 
-
             //check phone already exists
             if ($request->phone != '') {
                 $customer_phone_exists = CustomerModel::where('phone', $request->phone)->first();
@@ -174,31 +166,29 @@ class Customer extends Controller
                 }
             }
 
-
             if ($request->hasFile('cnic_image')) {
                 $upload_dir_for_cnic = public_path('customer/cnic');
-                $customer_cnic_images_array = $request->cnic_image;            
+                $customer_cnic_images_array = $request->cnic_image;
                 $customer_cnic_extension = $customer_cnic_images_array[0]->getClientOriginalExtension();
-                $file_name_cnic = 'Customer_Cnic' . '_' . uniqid() . '.' . $customer_cnic_extension;      
-                $database_customer_cnic_path = 'cnic/' . $$file_name_cnic;       
-                $customer_cnic_path = $customer_cnic_images_array[0]->move($upload_dir_for_cnic, $file_name_cnic);   
-                     
+                $file_name_cnic = 'Customer_Cnic' . '_' . uniqid() . '.' . $customer_cnic_extension;
+                $database_customer_cnic_path = 'cnic/' . $file_name_cnic; // Remove extra $ here
+                $customer_cnic_path = $customer_cnic_images_array[0]->move($upload_dir_for_cnic, $file_name_cnic);
             }
 
             if ($request->hasFile('cheque_image')) {
                 $upload_dir = public_path('customer/cheque');
-                $product_images_array = $request->cheque_image;            
+                $product_images_array = $request->cheque_image;
                 $extension = $product_images_array[0]->getClientOriginalExtension();
-                $file_name_customer_cheque = 'Customer_Cheque' . '_' . uniqid() . '.' . $extension;    
-                $database_customer_cheque_path = 'cheque/' . $file_name_customer_cheque;          
-                $path_cheque_image = $product_images_array[0]->move($upload_dir, $file_name_customer_cheque);               
+                $file_name_customer_cheque = 'Customer_Cheque' . '_' . uniqid() . '.' . $extension;
+                $database_customer_cheque_path = 'cheque/' . $file_name_customer_cheque;
+                $path_cheque_image = $product_images_array[0]->move($upload_dir, $file_name_customer_cheque);
             }
-            
-            // dd($file_name_cnic, $file_name_customer_cheque);
 
+            // dd($file_name_cnic, $file_name_customer_cheque);
 
             DB::beginTransaction();
             if ($request->customer_type == 'corporate') {
+                // dd($request);
                 $customer = [
                     "slack" => $this->generate_slack("customers"),
                     'customer_type' => 'CUSTOM',
@@ -219,12 +209,33 @@ class Customer extends Controller
                     "dob" => $request->dob,
                     "cnic" => $request->cnic,
                     "status" => $request->status,
-                    "created_by" => $request->logged_user_id
+                    "created_by" => $request->logged_user_id,
                 ];
 
                 $customer_id = CustomerModel::create($customer)->id;
+                $password = Str::random(6);
+                $hashed_password = Hash::make($password);
 
-                foreach($contact_persons as $person){
+                $user = [
+                    "slack" => $customer['slack'],
+                    "user_code" => Str::random(6),
+                    "email" => $customer['email'],
+                    "password" => $hashed_password,
+                    "init_password" => $password,
+                    "fullname" => $customer['name'],
+                    "phone" => $customer['phone'],
+                    "role_id" => 2,
+                    "store_id" => $request->logged_user_store_id,
+                    "status" => $request->status,
+                    "customer_id" => $customer_id,
+                    "created_by" => $request->logged_user_id,
+                ];
+
+                // dd($user);
+
+                $this->customerAddInUser($request, $user);
+
+                foreach ($contact_persons as $person) {
                     $child_customer = [
                         "slack" => $this->generate_slack("customers"),
                         'customer_type' => 'CHILD_CUSTOMER',
@@ -236,47 +247,47 @@ class Customer extends Controller
                         'mobile_number' => $person['mobile'],
                         'role_id' => $person['customer_person_role'],
                         "status" => $request->status,
-                        "created_by" => $request->logged_user_id
+                        "created_by" => $request->logged_user_id,
                     ];
                     $customer_child_id = CustomerModel::create($child_customer)->id;
-                    if($customer_child_id){
+
+                    if ($customer_child_id) {
                         $child_password = Str::random(6);
                         $child_hashed_password = Hash::make($child_password);
-            
+
                         $child_customer_user = [
                             "slack" => $child_customer['slack'],
                             "user_code" => Str::random(6),
                             'email' => $person['email'],
                             "password" => $child_hashed_password,
                             "init_password" => $child_password,
-                            "fullname" =>$person['name'],
+                            "fullname" => $person['name'],
                             "phone" => $person['mobile'],
                             "role_id" => $person['customer_person_role'],
                             "store_id" => $request->logged_user_store_id,
                             "status" => $request->status,
                             "customer_child_id" => $customer_child_id,
-                            "created_by" => $request->logged_user_id
-                        ];            
+                            "created_by" => $request->logged_user_id,
+                        ];
                         $child_request = [
-                           'access_token' => $request->access_token,
-                           'email' => $person['email'],
-                           "password" => $child_hashed_password,
-                           "init_password" => $child_password,
-                           "fullname" =>$person['name'],
-                           "phone" => $person['mobile'],
-                           "role_id" => $person['customer_person_role'],
-                           "store_id" => $request->logged_user_store_id,
-                           "status" => $request->status,
-                           "customer_child_id" => $customer_child_id,
-                           "created_by" => $request->logged_user_id,
-                           "logged_user_store_id" => $request->logged_user_store_id
+                            'access_token' => $request->access_token,
+                            'email' => $person['email'],
+                            "password" => $child_hashed_password,
+                            "init_password" => $child_password,
+                            "fullname" => $person['name'],
+                            "phone" => $person['mobile'],
+                            "role_id" => $person['customer_person_role'],
+                            "store_id" => $request->logged_user_store_id,
+                            "status" => $request->status,
+                            "customer_child_id" => $customer_child_id,
+                            "created_by" => $request->logged_user_id,
+                            "logged_user_store_id" => $request->logged_user_store_id,
                         ];
 
                         // dd($child_customer_user);
                         $this->ChildcustomerAddInUser($child_request, $child_customer_user);
                     }
                 }
-
 
                 // foreach ($contact_persons as $person) {
                 //     $contactPerson = [
@@ -292,7 +303,7 @@ class Customer extends Controller
             } else {
                 $customer = [
                     "slack" => $this->generate_slack("customers"),
-                    'customer_type' => 'WALKIN',
+                    'customer_type' => 'DEALER',
                     'customer_id' => $customer_code,
                     "name" => $request->name,
                     "email" => $request->email,
@@ -312,44 +323,40 @@ class Customer extends Controller
                     "reference_cnic" => $request->reference_cnic,
                     "cnic_image" => $database_customer_cnic_path ?? null,
                     "cheque_image" => $database_customer_cheque_path ?? null,
-                    "created_by" => $request->logged_user_id
+                    "created_by" => $request->logged_user_id,
                 ];
 
                 $customer_id = CustomerModel::create($customer)->id;
+
+                $password = Str::random(6);
+                $hashed_password = Hash::make($password);
+
+                $user = [
+                    "slack" => $customer['slack'],
+                    "user_code" => Str::random(6),
+                    "email" => $customer['email'],
+                    "password" => $hashed_password,
+                    "init_password" => $password,
+                    "fullname" => $customer['name'],
+                    "phone" => $customer['phone'],
+                    "role_id" => 2,
+                    "store_id" => $request->logged_user_store_id,
+                    "status" => $request->status,
+                    "customer_id" => $customer_id,
+                    "created_by" => $request->logged_user_id,
+                ];
+
+                // dd($user);
+
+                $this->customerAddInUser($request, $user);
             }
 
-
-
-            $password = Str::random(6);
-            $hashed_password = Hash::make($password);
-
-            $user = [
-                "slack" => $customer['slack'],
-                "user_code" => Str::random(6),
-                "email" => $customer['email'],
-                "password" => $hashed_password,
-                "init_password" => $password,
-                "fullname" => $customer['name'],
-                "phone" => $customer['phone'],
-                "role_id" => 2,
-                "store_id" => $request->logged_user_store_id,
-                "status" => $request->status,
-                "customer_id" => $customer_id,
-                "created_by" => $request->logged_user_id
-            ];
-
-            // dd($user);
-
-            $this->customerAddInUser($request, $user);
-
             DB::commit();
-
-
 
             return response()->json($this->generate_response(
                 array(
                     "message" => "Customer created successfully",
-                    "data"    => $customer
+                    "data" => $customer,
                 ),
                 'SUCCESS'
             ));
@@ -357,24 +364,22 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
     }
 
-
     private function customerAddInUser($request, $user)
     {
 
-
-        // dd($user->email);
+        // dd($user);
         $user_email_exists = UserModel::where('email', $user['email'])->first();
+
         if ($user_email_exists) {
             throw new Exception("Email is already added, try signing in");
         }
 
-        //    dd($request);
         DB::beginTransaction();
 
         $user_id = UserModel::create($user)->id;
@@ -384,7 +389,7 @@ class Customer extends Controller
 
         // dd($user_id);
         $user_code = [
-            "user_code" => ($code_start + $user_id)
+            "user_code" => ($code_start + $user_id),
         ];
         UserModel::where('id', $user_id)
             ->update($user_code);
@@ -392,7 +397,7 @@ class Customer extends Controller
         $role_api = new RoleAPI();
         $role_api->update_user_roles($request, 2);
         // dd($request);
-        $this->update_user_stores($request,  $user['slack']);
+        $this->update_user_stores($request, $user['slack']);
 
         DB::commit();
 
@@ -401,14 +406,15 @@ class Customer extends Controller
     private function ChildcustomerAddInUser($request, $user)
     {
 
-
-        // dd($user->email);
+        // dd($user['email']);
         $user_email_exists = UserModel::where('email', $user['email'])->first();
+
         if ($user_email_exists) {
-            throw new Exception("Email is already added, try signing in");
+            throw new Exception("Contact Person Email is already added, try signing in");
         }
 
-        //    dd($user);
+        // dd($user_email_exists);
+
         DB::beginTransaction();
 
         $user_id = UserModel::create($user)->id;
@@ -418,7 +424,7 @@ class Customer extends Controller
 
         // dd($user_id);
         $user_code = [
-            "user_code" => ($code_start + $user_id)
+            "user_code" => ($code_start + $user_id),
         ];
         UserModel::where('id', $user_id)
             ->update($user_code);
@@ -426,11 +432,69 @@ class Customer extends Controller
         $role_api = new RoleAPI();
         $role_api->update_child_customer_user_roles($request, $user['role_id']);
         // dd($request);
-        $this->update_child_customer_user_stores($request,  $user['slack']);
+        $this->update_child_customer_user_stores($request, $user['slack']);
 
         DB::commit();
 
         return $user_data;
+    }
+
+    public function store_walkIn_customer(Request $request)
+    {
+        try {
+
+            if (!check_access(['A_ADD_CUSTOMER'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            $this->validate_request($request);
+
+            
+            
+            $customer_code = $this->generateCustomCode('Cust-');         
+
+            //check email already exists
+            if ($request->email != '') {
+                $customer_email_exists = CustomerModel::where('email', $request->email)->first();
+                if ($customer_email_exists) {
+                    throw new Exception("WalkIn Customer email already exists");
+                }
+            } 
+
+            DB::beginTransaction();
+          
+                $customer = [
+                    "slack" => $this->generate_slack("customers"),
+                    'customer_type' => 'WALKIN',
+                    'customer_id' => $customer_code,
+                    "name" => $request->name,
+                    "email" => $request->email,
+                    "phone" => $request->phone,                   
+                    "address" => $request->address,  
+                    "dob" => $request->dob,     
+                    "created_by" => $request->logged_user_id,           
+                ];
+
+                $customer_id = CustomerModel::create($customer)->id;
+
+
+            DB::commit();
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "WalkIn Customer created successfully",
+                    "data" => $customer,
+                ),
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
     }
     /**
      * Display the specified resource.
@@ -455,7 +519,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Customer loaded successfully",
-                    "data"    => $item_data
+                    "data" => $item_data,
                 ),
                 'SUCCESS'
             ));
@@ -463,7 +527,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -484,12 +548,12 @@ class Customer extends Controller
             }
 
             $list = new CustomerCollection(CustomerModel::select('*')
-                ->orderBy('created_at', 'desc')->paginate());
+                    ->orderBy('created_at', 'desc')->paginate());
 
             return response()->json($this->generate_response(
                 array(
                     "message" => "Customers loaded successfully",
-                    "data"    => $list
+                    "data" => $list,
                 ),
                 'SUCCESS'
             ));
@@ -497,7 +561,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -539,39 +603,36 @@ class Customer extends Controller
 
             if ($request->hasFile('cnic_image')) {
                 $upload_dir_for_cnic = public_path('customer/cnic');
-                $customer_cnic_images_array = $request->cnic_image;            
+                $customer_cnic_images_array = $request->cnic_image;
                 $customer_cnic_extension = $customer_cnic_images_array[0]->getClientOriginalExtension();
-                $file_name_cnic = 'Customer_Cnic' . '_' . uniqid() . '.' . $customer_cnic_extension;   
-                $database_customer_cnic_path = 'cnic/' . $file_name_cnic;         
-                $customer_cnic_path = $customer_cnic_images_array[0]->move($upload_dir_for_cnic, $file_name_cnic); 
-                
-                if ($customer_cnic_and_cheque->cnic_image) {            
-                    if (File::exists(public_path('customer/'.$customer_cnic_and_cheque->cnic_image))) {
-                        File::delete(public_path('customer/'.$customer_cnic_and_cheque->cnic_image));
+                $file_name_cnic = 'Customer_Cnic' . '_' . uniqid() . '.' . $customer_cnic_extension;
+                $database_customer_cnic_path = 'cnic/' . $file_name_cnic;
+                $customer_cnic_path = $customer_cnic_images_array[0]->move($upload_dir_for_cnic, $file_name_cnic);
+
+                if ($customer_cnic_and_cheque->cnic_image) {
+                    if (File::exists(public_path('customer/' . $customer_cnic_and_cheque->cnic_image))) {
+                        File::delete(public_path('customer/' . $customer_cnic_and_cheque->cnic_image));
                     }
-                }      
-            }
-            else{
-                $database_customer_cnic_path = $customer_cnic_and_cheque->cnic_image;    
+                }
+            } else {
+                $database_customer_cnic_path = $customer_cnic_and_cheque->cnic_image;
             }
 
             if ($request->hasFile('cheque_image')) {
                 $upload_dir = public_path('customer/cheque');
-                $product_images_array = $request->cheque_image;            
+                $product_images_array = $request->cheque_image;
                 $extension = $product_images_array[0]->getClientOriginalExtension();
-                $file_name_customer_cheque = 'Customer_Cheque' . '_' . uniqid() . '.' . $extension;   
-                $database_customer_cheque_path = 'cheque/' . $file_name_customer_cheque;         
-                $path_cheque_image = $product_images_array[0]->move($upload_dir, $file_name_customer_cheque);   
-                if ($customer_cnic_and_cheque->cheque_image) {            
-                    if (File::exists(public_path('customer/'.$customer_cnic_and_cheque->cheque_image))) {
-                        File::delete(public_path('customer/'.$customer_cnic_and_cheque->cheque_image));
+                $file_name_customer_cheque = 'Customer_Cheque' . '_' . uniqid() . '.' . $extension;
+                $database_customer_cheque_path = 'cheque/' . $file_name_customer_cheque;
+                $path_cheque_image = $product_images_array[0]->move($upload_dir, $file_name_customer_cheque);
+                if ($customer_cnic_and_cheque->cheque_image) {
+                    if (File::exists(public_path('customer/' . $customer_cnic_and_cheque->cheque_image))) {
+                        File::delete(public_path('customer/' . $customer_cnic_and_cheque->cheque_image));
                     }
-                }                   
-            }
-            else{
+                }
+            } else {
                 $database_customer_cheque_path = $customer_cnic_and_cheque->cheque_image;
             }
-
 
             // dd($database_customer_cheque_path, $database_customer_cnic_path);
 
@@ -581,6 +642,7 @@ class Customer extends Controller
             if ($request->customer_type == 'corporate') {
                 $customer = [
                     "name" => $request->name,
+                    "email" => $request->email,
                     "father_name" => $request->father_name,
                     "phone" => $request->phone,
                     "mobile_number" => $request->mobile_number,
@@ -596,13 +658,13 @@ class Customer extends Controller
                     "gender" => $request->gender,
                     "dob" => $request->dob,
                     "status" => $request->status,
-                    "updated_by" => $request->logged_user_id
+                    "updated_by" => $request->logged_user_id,
                 ];
                 $data = CustomerModel::where('slack', $slack)
                     ->update($customer);
                 $updatedRecord = CustomerModel::where('slack', $slack)->first();
 
-                if($updatedRecord){
+                if ($updatedRecord) {
                     $customer_user = [
                         'fullname' => $request->name,
                         'email' => $request->email,
@@ -610,8 +672,7 @@ class Customer extends Controller
                     ];
                     $user = UserModel::where('customer_id', $updatedRecord->id)->update($customer_user);
                 }
-             
-                
+
                 foreach ($contact_persons as $person) {
                     $contactPerson = [
                         'id' => isset($person['customer_child_id']) ? $person['customer_child_id'] : null,
@@ -626,19 +687,19 @@ class Customer extends Controller
                         ['id' => $contactPerson['id']],
                         $contactPerson
                     );
-                    if(isset($person['customer_child_id'])){
+                    if (isset($person['customer_child_id'])) {
                         $customer_child_user = [
                             'fullname' => $person['name'],
-                            'email' =>  $person['email'],
+                            'email' => $person['email'],
                             'phone' => $person['mobile'],
                         ];
                         $user = UserModel::where('customer_child_id', $person['customer_child_id'])->update($customer_child_user);
                     }
-                   
+
                 }
             } else {
                 $customer = [
-                    'customer_type' => 'WALKIN',
+                    'customer_type' => 'Dealer',
                     "name" => $request->name,
                     "email" => $request->email,
                     "phone" => $request->phone,
@@ -656,14 +717,14 @@ class Customer extends Controller
                     "reference_mobile" => $request->reference_mobile,
                     "reference_cnic" => $request->reference_cnic,
                     "cnic_image" => $database_customer_cnic_path ?? null,
-                    "cheque_image" => $database_customer_cheque_path ?? null, 
-                    "created_by" => $request->logged_user_id
+                    "cheque_image" => $database_customer_cheque_path ?? null,
+                    "created_by" => $request->logged_user_id,
                 ];
                 $data = CustomerModel::where('slack', $slack)
-                ->update($customer);
+                    ->update($customer);
                 $updatedRecord = CustomerModel::where('slack', $slack)->first();
 
-                if($updatedRecord){
+                if ($updatedRecord) {
                     $customer_user = [
                         'fullname' => $request->name,
                         'email' => $request->email,
@@ -672,17 +733,14 @@ class Customer extends Controller
                     $user = UserModel::where('customer_id', $updatedRecord->id)->update($customer_user);
                 }
 
-         
             }
-
-
 
             DB::commit();
 
             return response()->json($this->generate_response(
                 array(
                     "message" => "Customer updated successfully",
-                    "data"    => $data
+                    "data" => $data,
                 ),
                 'SUCCESS'
             ));
@@ -690,7 +748,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -721,7 +779,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Customers loaded successfully",
-                    "data"    => $customer_list
+                    "data" => $customer_list,
                 ),
                 'SUCCESS'
             ));
@@ -729,7 +787,43 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+    public function load_walkin_customer_list(Request $request)
+    {
+        try {
+            $keywords = $request->keywords;
+            $type = $request->type;
+            DB::enableQueryLog();
+            $customer_list = CustomerModel::select('slack', 'name', 'email', 'phone')
+                ->when($type == 'all', function ($query) use ($keywords) {
+                    return $query->where('name', 'like', $keywords . '%')
+                        ->orWhere('email', 'like', $keywords . '%')
+                        ->orWhere('phone', 'like', $keywords . '%');
+                })
+                ->skipDefaultCustomer()
+                ->WalkInCustomer()
+                ->limit(15)
+                ->get();
+
+            // dd($customer_list, $type);
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Customers loaded successfully",
+                    "data" => $customer_list,
+                ),
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -753,7 +847,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Customers filtered successfully",
-                    "data" => $customers
+                    "data" => $customers,
                 ),
                 'SUCCESS'
             ));
@@ -761,7 +855,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -792,7 +886,7 @@ class Customer extends Controller
                 array(
                     "message" => "Customer deleted successfully",
                     "data" => $slack,
-                    "link" => $forward_link
+                    "link" => $forward_link,
                 ),
                 'SUCCESS'
             ));
@@ -800,7 +894,7 @@ class Customer extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -810,9 +904,9 @@ class Customer extends Controller
     {
         $validator = Validator::make($request->all(), [
 
-            'email'  => 'required_if:phone,""' . '|' . $this->get_validation_rules("email", false),
-            'phone'  => 'required_if:email,""' . '|' . $this->get_validation_rules("phone", false),
-            'name'   => $this->get_validation_rules("fullname", true),
+            'email' => 'required_if:phone,""' . '|' . $this->get_validation_rules("email", false),
+            'phone' => 'required_if:email,""' . '|' . $this->get_validation_rules("phone", false),
+            'name' => $this->get_validation_rules("fullname", true),
             'address' => $this->get_validation_rules("text", false),
             'status' => $this->get_validation_rules("status", true),
         ]);
@@ -822,7 +916,6 @@ class Customer extends Controller
         }
     }
 
-
     public function update_child_customer_user_stores($request, $user_slack)
     {
 
@@ -830,9 +923,6 @@ class Customer extends Controller
             return;
         }
 
-
-        
-        
         $selected_stores = $request['logged_user_store_id'];
         // dd($selected_stores);
 
@@ -863,7 +953,7 @@ class Customer extends Controller
             'store_id' => $selected_stores,
             'created_by' => $request['created_by'],
             "created_at" => now(),
-            "updated_at" => now()
+            "updated_at" => now(),
         ];
         // }
 
@@ -872,17 +962,12 @@ class Customer extends Controller
         // }
     }
 
-
-
     public function update_user_stores(Request $request, $user_slack)
     {
 
         if ($user_slack == '') {
             return;
         }
-
-
-        
 
         $selected_stores = $request->logged_user_store_id;
 
@@ -911,7 +996,7 @@ class Customer extends Controller
             'store_id' => 1,
             'created_by' => $request->logged_user_id,
             "created_at" => now(),
-            "updated_at" => now()
+            "updated_at" => now(),
         ];
         // }
 
@@ -930,7 +1015,7 @@ class Customer extends Controller
             "fullname" => $request->name,
             "phone" => $request->phone,
             "status" => $request->status,
-            "updated_by" => $request->logged_user_id
+            "updated_by" => $request->logged_user_id,
         ];
 
         $data = UserModel::where('slack', $slack)
@@ -939,22 +1024,19 @@ class Customer extends Controller
         $role_api = new RoleAPI();
         $role_api->update_user_roles($request, 1);
 
-
-
         DB::commit();
 
         return $data;
     }
 
-
-
-    public function fetchCustomers(Request $request){
+    public function fetchCustomers(Request $request)
+    {
         $customers = CustomerModel::select('slack', 'id', 'name', 'email')->where('customer_type', $request->customer_category)->get();
         return response()->json($this->generate_response(
             array(
                 "message" => "Customer deleted successfully",
                 "data" => $customers,
-               
+
             ),
             'SUCCESS'
         ));

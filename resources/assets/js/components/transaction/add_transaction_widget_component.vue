@@ -70,7 +70,7 @@
                     <div class="form-row mb-2">
                         <div class="form-group col-md-6">
                             <label for="amount">{{ $t("Amount") }} ({{ currency_codes.store_currency }})</label>
-                            <input type="number" name='amount' v-model="amount" v-validate="`required|decimal|max_value:${payment_pending_amount}`" class="form-control form-control-custom" :placeholder="$t('Please enter the amount')"  autocomplete="off" step="0.01" min="0">
+                            <input type="number" name='amount' v-model="amount" v-validate="`required|decimal|max_value:${payment_pending_amount}`" class="form-control form-control-custom" :placeholder="$t('Please enter the amount')"  autocomplete="off" step="1" min="0">
                             <span v-bind:class="{ 'error' : errors.has('amount') }">{{ errors.first('amount') }}</span> 
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                 this.$validator.validateAll().then((result) => {
                     if (result) {
                         
-                        // event_bus.$emit('start_processing');
+                        event_bus.$emit('start_processing');
                         var formData = new FormData();
 
                         formData.append("access_token", window.settings.access_token);
@@ -177,7 +177,7 @@
                         formData.append("payment_method", (this.payment_method == null)?'':this.payment_method);
                         formData.append("created_by_supplier", this.created_by_supplier);
                         formData.append("invoice_against_po_from_customer", this.invoice_against_po_from_customer);
-
+                        formData.append("note", this.notes);
                         axios.post(this.api_link, formData).then((response) => {
                             if(response.data.status_code == 200) {
                                 this.show_response_message(response.data.msg, 'Success');

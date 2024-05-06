@@ -46,7 +46,45 @@ class Taxcodes{
                     data: 'product_id'
                 },
                 {
-                    data: 'gst_paid_for_product'
+                    data: 'gst_percentage'
+                },  
+                {
+                    data: 'amount'
+                },   
+                {
+                    data: 'status'
+                },   
+                {
+                    data: 'action'
+                },    
+               
+            ],
+            order: [
+                [0, 'desc']
+            ]
+        })
+    }
+
+    receiving_gst(){
+          
+        var table = $('#receiving_gst_table').DataTable({           
+            ajax: {
+                url: '/api/receiving_gst_listing',
+                type : 'POST',
+                data : {
+                    access_token : window.settings.access_token
+                }
+               
+            },            
+            columns: [
+                {
+                    data: 'id'
+                },
+                {
+                    data: 'product_id'
+                },
+                {
+                    data: 'gst_percentage'
                 },  
                 {
                     data: 'amount'

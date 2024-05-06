@@ -627,7 +627,7 @@ class Supplier extends Controller
             })
             ->active()
             ->get();
-        
+            // dd($supplier_data, $request->logged_user_role_id);
 
             return response()->json($this->generate_response(
                 array(

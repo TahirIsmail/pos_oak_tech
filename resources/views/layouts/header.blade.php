@@ -49,4 +49,6 @@
     <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
     @stack('styles')
     <title>{{ (config('app.app_title'))?config('app.app_title'):'OAK TECHNOLOGY' }}</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 </head>

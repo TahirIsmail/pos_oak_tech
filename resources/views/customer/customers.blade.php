@@ -18,7 +18,7 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{{ route('add_customer', ['customer_type' => 'corporate']) }}">Corporate Customer</a>
-                                    <a class="dropdown-item" href="{{ route('add_customer', ['customer_type' => 'walkin']) }}">Walkin Customer</a>
+                                    <a class="dropdown-item" href="{{ route('add_customer', ['customer_type' => 'dealer']) }}">Dealer</a>
                                 </div>
                         @endif
                     </div>

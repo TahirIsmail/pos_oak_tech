@@ -68,8 +68,8 @@ class Product extends Controller
             if ($request->ajax()) {
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
-                $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User')
-                   
+                $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User', 'gst_on_product')
+                  
                     ->where('quantity', '>', 0)
                     ->orderBy('id', 'desc')
                     ->get();
@@ -98,6 +98,14 @@ class Product extends Controller
                         }
                     })
 
+                    ->addColumn('gst_paid_for_product', function ($row) {
+                        if ($row['gst_paid_for_product'] == 1) {
+                            return $row['gst_on_product'][0]->gst_percentage . '%';
+                        } else {
+                            return '--';
+                        }
+                    })
+
                     ->addColumn('status', function ($row) {
                         if ($row['status'] == 1) {
                             return 'Active';
@@ -106,14 +114,16 @@ class Product extends Controller
                         }
                     })
 
-                    
+                    ->addColumn('created_by', function ($row) {
+                        return $row['user']['fullname'] . ' (' . $row['user']['email'] . ')';
+                    })                   
 
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;
                         return view('product.layouts.product_actions', $data)->render();
                     })
 
-                    ->rawColumns(['supplier_id', 'category', 'sale_price_percentage', 'discount_code_id', 'status', 'action'])
+                    ->rawColumns(['supplier_id', 'category', 'gst_paid_for_product', 'discount_code_id', 'status', 'created_by', 'action'])
                     ->make(true);
             }
 
@@ -239,12 +249,13 @@ class Product extends Controller
     {
         try {
 
+           
+
             if (!check_access(['A_ADD_PRODUCT'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
 
-            // dd($request->all());
 
             $this->validate_request($request);
 
@@ -318,7 +329,7 @@ class Product extends Controller
             //     }
             //     $discount_code_id = $discount_code_data->id;
             // }
-
+                
             if (isset($request->stock_transfer_product_slack) && $request->stock_transfer_product_slack != '') {
                 $stock_transfer_api = new StockTransferAPI();
                 $validate_response = $stock_transfer_api->validate_verify_stock_transfer($request, $request->stock_transfer_product_slack, $request->quantity);
@@ -349,19 +360,20 @@ class Product extends Controller
                 "purchase_amount_excluding_tax" => $request->purchase_price,
                 "sale_amount_excluding_tax" => $request->sale_amount_including_tax,
                 "sale_price_percentage" => $request->sale_price,
-                // "sale_amount_including_tax" => $sale_amount_including_tax,
+                "total_sale_price_including_tax" => $request->total_sale_price_including_tax,
                 "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
                 "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
                 "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
                 "status" => $request->status,
                 "created_by" => $request->logged_user_id
             ];
+            // dd($request->input_type);
 
             $product_id = ProductModel::create($product)->id;
-            if($product_id){
+            if($product_id && $request->gst_cash == 'GST'){
                 $gst_on_product = [
                     'product_id' => $product_id,
-                    'gst_paid_for_product' => $request->gst_paid_for_product,
+                    'gst_percentage' => $request->gst_paid_for_product,
                 ];
                 GstOnProduct::create($gst_on_product);
             }
@@ -375,12 +387,7 @@ class Product extends Controller
 
                     $productSpec->save();
                 }
-            }
-
-
-
-
-
+            }            
 
             $this->add_ingredients($request, $product['slack']);
 
@@ -628,7 +635,7 @@ class Product extends Controller
                 "purchase_amount_excluding_tax" => $request->purchase_price,
                 "sale_amount_excluding_tax" => $request->sale_amount_including_tax,
                 "sale_price_percentage" => $request->sale_price,
-                // "sale_amount_including_tax" => $sale_amount_including_tax,
+                "total_sale_price_including_tax" => $request->total_sale_price_including_tax,
                 "is_ingredient_price" => ($request->is_ingredient_price == true) ? 1 : 0,
                 "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
                 "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
@@ -667,7 +674,7 @@ class Product extends Controller
             if ($action_response) {
                 $productModel = ProductModel::where('slack', $slack)->first();
             
-                if ($productModel) {
+                if ($productModel && $request->gst_cash == 'GST') {
                     $gst_on_product = GstOnProduct::where('product_id', $productModel->id)->first();
             
                     if ($gst_on_product) {
@@ -874,15 +881,15 @@ class Product extends Controller
 
             $query = ProductModel::with('subcategory')->select('products.*')
                 ->supplierJoin()
-                ->taxcodeJoin()
-                ->discountcodeJoin()
+                // ->taxcodeJoin()
+                // ->discountcodeJoin()
                 ->supplierActive()
-                ->taxcodeActive()
+                // ->taxcodeActive()
                 ->quantityCheck()
                 ->active()
                 ->mainProduct();
-
-
+            
+            
 
             if (isset($product_code) && $product_code != '') {
                 $query->where([
@@ -1101,21 +1108,20 @@ class Product extends Controller
             $keywords = $request->keywords;
             $supplier_slack = $request->supplier;
 
-            $query = ProductModel::with('subcategory')->select('products.slack as product_slack', 'products.product_code as product_code', 'products.name as label', 'products.purchase_amount_excluding_tax', 'tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
+            $query = ProductModel::with('subcategory')->select('products.slack as product_slack', 'products.quantity', 'products.product_code as product_code', 'products.name as label', 'products.sale_amount_excluding_tax', 'tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
                 ->supplierJoin()
                 ->taxcodeJoin()
                 ->discountcodeJoin()
                 ->supplierActive()
-                // ->taxcodeActive()
-                ->where('quantity', 1)
+                ->where('quantity', '!=', 0)
                 ->where('suppliers.slack', $supplier_slack)
                 ->where(function ($query) use ($keywords) {
                     $query->where('products.product_code', 'like', $keywords . '%')
                         ->orWhere('products.name', 'like', $keywords . '%');
                 });
-
+                
             $product_data = $query->get();
-
+                // dd($product_data);
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product listed successfully",

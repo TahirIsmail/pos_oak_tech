@@ -88,8 +88,7 @@
                 processing      : false,
                 modal           : false,
                 show_modal      : false,
-                api_link        : (this.customer_data == null)?'/api/add_customer':'/api/update_customer/'+this.customer_data.slack,
-
+                api_link        : (this.customer_data == null)?'/api/add_walkIn_customer':'/api/update_customer/'+this.customer_data.slack,
                 customer_slack  : (this.customer_data == null)?'':this.customer_data.slack,
                 email           : (this.customer_data == null)?'':this.customer_data.email,
                 name            : (this.customer_data == null)?'':this.customer_data.name,
@@ -127,7 +126,6 @@
 
                 this.$off("submit");
                 this.$off("close");
-
                 this.$validator.validateAll().then((result) => {
                     
                     if (result) {

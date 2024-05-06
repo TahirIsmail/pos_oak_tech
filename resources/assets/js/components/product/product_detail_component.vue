@@ -42,10 +42,6 @@
                     <p>{{ product.name }}</p>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="name">{{ $t("GST Paid For Product") }}</label>
-                    <p>{{ product.gst_paid_for_product }}</p>
-                </div>
-                <div class="form-group col-md-3">
                     <label for="email">{{ $t("Supplier") }}</label>
                     <p v-if="(product.supplier!=null)">{{ product.supplier.name }} ({{product.supplier.supplier_code}})</p><p v-else>-</p>
                 </div>
@@ -115,8 +111,13 @@
                     <p>{{ product.purchase_amount_excluding_tax }}</p>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="sale_amount_excluding_tax">{{ $t("Sale Price Excluding Tax") }}</label>
+                    <label for="sale_amount_excluding_tax">{{ $t("Sale Price Per Unit") }}</label>
                     <p>{{ product.sale_amount_excluding_tax }}</p>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="sale_amount_excluding_tax">{{ $t("Total Price") }}</label>
+                    <p>{{ product.total_sale_price_including_tax }}</p>
                 </div>
                
                 <div class="form-group col-md-3">

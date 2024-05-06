@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
-use Exception;
-use Validator;
-
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\API\Product as ProductAPI;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Support\Facades\Config;
-
+use App\Http\Resources\Collections\TaxcodeCollection;
 use App\Http\Resources\TaxcodeResource;
+use App\Models\GstOnProduct;
+use App\Models\Invoice;
+use App\Models\Product;
 use App\Models\Taxcode as TaxcodeModel;
 use App\Models\TaxcodeType as TaxcodeTypeModel;
-
-use App\Http\Controllers\API\Product as ProductAPI;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Validator;
 use Yajra\DataTables\DataTables;
-use App\Http\Resources\Collections\TaxcodeCollection;
-use App\Models\GstOnProduct;
 
 class Taxcode extends Controller
 {
@@ -33,7 +29,7 @@ class Taxcode extends Controller
         try {
 
             $data['action_key'] = 'A_VIEW_TAXCODE_LISTING';
-            if(check_access(array($data['action_key']), true) == false){
+            if (check_access(array($data['action_key']), true) == false) {
                 $response = $this->no_access_response_for_listing_table();
                 return $response;
             }
@@ -43,52 +39,52 @@ class Taxcode extends Controller
             $draw = $request->draw;
             $limit = $request->length;
             $offset = $request->start;
-            
+
             $order_by = $request->order[0]["column"];
             $order_direction = $request->order[0]["dir"];
-            $order_by_column =  $request->columns[$order_by]['name'];
+            $order_by_column = $request->columns[$order_by]['name'];
 
             $filter_string = $request->search['value'];
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
-            
+
             $query = TaxcodeModel::select('tax_codes.*', 'master_status.label as status_label', 'master_status.color as status_color', 'user_created.fullname')
-            ->take($limit)
-            ->skip($offset)
-            ->statusJoin()
-            ->createdUser()
+                ->take($limit)
+                ->skip($offset)
+                ->statusJoin()
+                ->createdUser()
 
-            ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
-                $query->orderBy($order_by_column, $order_direction);
-            }, function ($query) {
-                $query->orderBy('created_at', 'desc');
-            })
+                ->when($order_by_column, function ($query, $order_by_column) use ($order_direction) {
+                    $query->orderBy($order_by_column, $order_direction);
+                }, function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                })
 
-            ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
-                $query->where(function ($query) use ($filter_string, $filter_columns){
-                    foreach($filter_columns as $filter_column){
-                        $query->orWhere($filter_column, 'like', '%'.$filter_string.'%');
-                    }
-                });
-            })
+                ->when($filter_string, function ($query, $filter_string) use ($filter_columns) {
+                    $query->where(function ($query) use ($filter_string, $filter_columns) {
+                        foreach ($filter_columns as $filter_column) {
+                            $query->orWhere($filter_column, 'like', '%' . $filter_string . '%');
+                        }
+                    });
+                })
 
-            ->get();
+                ->get();
 
             $tax_codes = TaxcodeResource::collection($query);
-           
+
             $total_count = TaxcodeModel::select("id")->get()->count();
 
             $item_array = [];
-            foreach($tax_codes as $key => $tax_code){
+            foreach ($tax_codes as $key => $tax_code) {
 
                 $tax_code = $tax_code->toArray($request);
 
                 $item_array[$key][] = $tax_code['label'];
                 $item_array[$key][] = $tax_code['tax_code'];
                 $item_array[$key][] = $tax_code['total_tax_percentage'];
-                $item_array[$key][] = (isset($tax_code['status']['label']))?view('common.status', ['status_data' => ['label' => $tax_code['status']['label'], "color" => $tax_code['status']['color']]])->render():'-';
+                $item_array[$key][] = (isset($tax_code['status']['label'])) ? view('common.status', ['status_data' => ['label' => $tax_code['status']['label'], "color" => $tax_code['status']['color']]])->render() : '-';
                 $item_array[$key][] = $tax_code['created_at_label'];
                 $item_array[$key][] = $tax_code['updated_at_label'];
-                $item_array[$key][] = (isset($tax_code['created_by']) && isset($tax_code['created_by']['fullname']))?$tax_code['created_by']['fullname']:'-';
+                $item_array[$key][] = (isset($tax_code['created_by']) && isset($tax_code['created_by']['fullname'])) ? $tax_code['created_by']['fullname'] : '-';
                 $item_array[$key][] = view('tax_code.layouts.tax_code_actions', array('tax_code' => $tax_code))->render();
             }
 
@@ -96,63 +92,167 @@ class Taxcode extends Controller
                 'draw' => $draw,
                 'recordsTotal' => $total_count,
                 'recordsFiltered' => $total_count,
-                'data' => $item_array
+                'data' => $item_array,
             ];
-            
+
             return response()->json($response);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
     }
 
-    public function gst_listing(Request $request){
+    public function gst_listing(Request $request)
+    {
         try {
 
-         
             $data['action_key'] = 'A_VIEW_GST_LISTING';
             if (check_access(array($data['action_key']), true) == false) {
                 $response = $this->no_access_response_for_listing_table();
                 return $response;
             }
-           
 
             if ($request->ajax()) {
-             
 
-                $data = GstOnProduct::with('product')->get();
-                
+                $data = GstOnProduct::with('product')->where('receiving_from_customer', 0)->get();
+
                 return Datatables::of($data)
-                    ->addIndexColumn()                   
+                    ->addIndexColumn()
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row['product'];
                         return view('product.layouts.product_gst_actions', $data)->render();
                     })
                     ->addColumn('product_id', function ($row) {
-                       return $row['product']->product_code;
+                        return $row['product']->product_code;
                     })
-                    ->addColumn('gst_paid_for_product', function ($row) {
-                        return $row['gst_paid_for_product'] . '%';
-                     })
+                    ->addColumn('gst_percentage', function ($row) {
+                        return ($row['gst_percentage'] === null) ? '' : $row['gst_percentage'] . '%';
+                    })
                     ->addColumn('amount', function ($row) {
-                        return $row['product']->purchase_amount_excluding_tax * $row['gst_paid_for_product'] / 100;
-                     })
+                        return ($row['gst_percentage'] === null) ? $row['gst_paid_for_product'] : $row['product']->purchase_amount_excluding_tax * $row['gst_percentage'] / 100;
+                    })
+                    ->addColumn('status', function ($row) {
+                        $data['data'] = $row;
+                        return view('product.layouts.gst_status', $data)->render();
+                    })
 
-                    ->rawColumns(['action', 'product_id', 'amount', 'gst_paid_for_product'])
+                    ->rawColumns(['action', 'product_id', 'amount', 'status', 'gst_percentage'])
                     ->make(true);
             }
         } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
+    }
+
+    public function fetch_cash_products(Request $request)
+    {
+        $invoices = Invoice::with(['products.product' => function ($query) {
+            $query->select('id', 'slack', 'product_code')->where('gst_paid_for_product', 0)->where('is_gst_adjust', 0);
+        }])->where('slack', $request->invoice_slack)->get();
+
+        return response()->json($this->generate_response(
+            array(
+                "message" => "Cash Products Fetch Successfully!",
+                "data" => $invoices[0]['products'],
+            ), 'SUCCESS'
+        ));
+    }
+
+    public function save_adjust_gst_cash_product(Request $request)
+    {
+
+        try {
+            DB::beginTransaction();
+            $gst_on_products = [
+                'product_id' => $request->product_id,
+                'gst_paid_for_product' => $request->gst_amount,
+                'is_gst_adjust' => 1,
+            ];
+            $gst = GstOnProduct::create($gst_on_products);
+            if ($gst) {
+                $cash_product = Product::find($request->product_id);
+                $cash_product->is_gst_adjust = 1;
+                $cash_product->save();
+            }
+
+            DB::commit();
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "GST Adjust in Cash Product successfully",
+                    "data" => $gst,
+                ), 'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+
+    }
+
+    public function receiving_gst_listing(Request $request)
+    {
+        try {
+
+            $data['action_key'] = 'A_VIEW_GST_LISTING';
+            if (check_access(array($data['action_key']), true) == false) {
+                $response = $this->no_access_response_for_listing_table();
+                return $response;
+            }
+
+            if ($request->ajax()) {
+
+                $data = GstOnProduct::with('product')->where('receiving_from_customer', 1)->get();
+                // dd($data);
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function ($row) {
+                        $data['product'] = $row['product'];
+                        return view('product.layouts.product_gst_actions', $data)->render();
+                    })
+                    ->addColumn('product_id', function ($row) {
+                        return $row['product']->product_code;
+                    })
+                    ->addColumn('gst_percentage', function ($row) {
+                        return $row['gst_percentage'] . '%';
+                    })
+                    ->addColumn('amount', function ($row) {
+                        return $row['gst_paid_for_product'];
+                    })
+
+                    ->rawColumns(['action', 'product_id', 'amount', 'gst_percentage'])
+                    ->make(true);
+            }
+        } catch (Exception $e) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $gst = GstOnProduct::findOrFail($request->gst_id);
+        $gst->is_paid = 1;
+        $gst->save();
+
+        return response()->json(['status' => 'Success', 'message' => 'Status updated successfully']);
     }
 
     /**
@@ -162,7 +262,7 @@ class Taxcode extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -175,21 +275,21 @@ class Taxcode extends Controller
     {
         try {
 
-            if(!check_access(['A_ADD_TAXCODE'], true)){
+            if (!check_access(['A_ADD_TAXCODE'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $this->validate_request($request);
 
             $taxcode_exists = TaxcodeModel::select('id')
-            ->where('tax_code', '=', trim($request->tax_code))
-            ->first();
+                ->where('tax_code', '=', trim($request->tax_code))
+                ->first();
             if (!empty($taxcode_exists)) {
                 throw new Exception("Tax code already exists", 400);
             }
 
             DB::beginTransaction();
-            
+
             $taxcode = [
                 "slack" => $this->generate_slack("tax_codes"),
                 "store_id" => $request->logged_user_store_id,
@@ -199,14 +299,14 @@ class Taxcode extends Controller
                 "total_tax_percentage" => 0,
                 "description" => $request->description,
                 "status" => $request->status,
-                "created_by" => $request->logged_user_id
+                "created_by" => $request->logged_user_id,
             ];
-            
+
             $taxcode_id = TaxcodeModel::create($taxcode)->id;
 
             $tax_components = json_decode($request->tax_components);
-            if(!empty($tax_components)){
-                foreach($tax_components as $tax_component){
+            if (!empty($tax_components)) {
+                foreach ($tax_components as $tax_component) {
                     $tax_component_data = [
                         'tax_code_id' => $taxcode_id,
                         'tax_type' => $tax_component->tax_component,
@@ -220,24 +320,24 @@ class Taxcode extends Controller
             }
 
             $action_response = TaxcodeModel::where('id', $taxcode_id)
-            ->update([
-                'total_tax_percentage' => $total_percentage
-            ]);
+                ->update([
+                    'total_tax_percentage' => $total_percentage,
+                ]);
 
             DB::commit();
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Tax code created successfully", 
-                    "data"    => $taxcode['slack']
+                    "message" => "Tax code created successfully",
+                    "data" => $taxcode['slack'],
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -250,34 +350,34 @@ class Taxcode extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($slack)
-    { 
+    {
         try {
 
-            if(!check_access(['A_DETAIL_TAXCODE'], true)){
+            if (!check_access(['A_DETAIL_TAXCODE'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $item = TaxcodeModel::select('*')
-            ->where('slack', $slack)
-            ->first();
+                ->where('slack', $slack)
+                ->first();
 
             $item_data = new TaxcodeResource($item);
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Taxcode loaded successfully", 
-                    "data"    => $item_data
+                    "message" => "Taxcode loaded successfully",
+                    "data" => $item_data,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
-        }  
+        }
     }
 
     /**
@@ -290,25 +390,25 @@ class Taxcode extends Controller
     {
         try {
 
-            if(!check_access(['A_VIEW_TAXCODE_LISTING'], true)){
+            if (!check_access(['A_VIEW_TAXCODE_LISTING'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $list = new TaxcodeCollection(TaxcodeModel::select('*')
-            ->orderBy('created_at', 'desc')->paginate());
+                    ->orderBy('created_at', 'desc')->paginate());
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Taxcodes loaded successfully", 
-                    "data"    => $list
+                    "message" => "Taxcodes loaded successfully",
+                    "data" => $list,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -325,24 +425,24 @@ class Taxcode extends Controller
     {
         try {
 
-            if(!check_access(['A_EDIT_TAXCODE'], true)){
+            if (!check_access(['A_EDIT_TAXCODE'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
             $this->validate_request($request);
 
             $taxcode_exists = TaxcodeModel::select('id')
-            ->where([
-                ['slack', '!=', $slack],
-                ['tax_code', '=', trim($request->tax_code)],
-            ])
-            ->first();
+                ->where([
+                    ['slack', '!=', $slack],
+                    ['tax_code', '=', trim($request->tax_code)],
+                ])
+                ->first();
             if (!empty($taxcode_exists)) {
                 throw new Exception("Tax code already exists", 400);
             }
 
             DB::beginTransaction();
-            
+
             $taxcode = [
                 "label" => $request->tax_code_name,
                 "tax_code" => strtoupper($request->tax_code),
@@ -350,24 +450,24 @@ class Taxcode extends Controller
                 "total_tax_percentage" => 0,
                 "description" => $request->description,
                 "status" => $request->status,
-                "updated_by" => $request->logged_user_id
+                "updated_by" => $request->logged_user_id,
             ];
-            
+
             $action_response = TaxcodeModel::where('slack', $slack)
-            ->update($taxcode);
+                ->update($taxcode);
 
             $taxcode_details = TaxcodeModel::select('id')
-            ->where([
-                ['slack', '=', $slack]
-            ])
-            ->first();
+                ->where([
+                    ['slack', '=', $slack],
+                ])
+                ->first();
 
             $tax_components = json_decode($request->tax_components);
-            if(!empty($tax_components)){
+            if (!empty($tax_components)) {
 
                 TaxcodeTypeModel::where('tax_code_id', $taxcode_details->id)->delete();
 
-                foreach($tax_components as $tax_component){
+                foreach ($tax_components as $tax_component) {
                     $tax_component_data = [
                         'tax_code_id' => $taxcode_details->id,
                         'tax_type' => $tax_component->tax_component,
@@ -381,12 +481,12 @@ class Taxcode extends Controller
             }
 
             $action_response = TaxcodeModel::where('id', $taxcode_details->id)
-            ->update([
-                'total_tax_percentage' => $total_percentage
-            ]);
+                ->update([
+                    'total_tax_percentage' => $total_percentage,
+                ]);
 
             $update_product_prices = $request->update_product_prices;
-            if($update_product_prices == 1){
+            if ($update_product_prices == 1) {
                 $product_api = new ProductAPI();
                 $response = $product_api->recalculate_product_price($taxcode_details->id);
             }
@@ -395,16 +495,16 @@ class Taxcode extends Controller
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Tax code updated successfully", 
-                    "data"    => $slack
+                    "message" => "Tax code updated successfully",
+                    "data" => $slack,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -418,8 +518,8 @@ class Taxcode extends Controller
      */
     public function destroy(Request $request, $slack)
     {
-        try{
-            if(!check_access(['A_DELETE_TAXCODE'], true)){
+        try {
+            if (!check_access(['A_DELETE_TAXCODE'], true)) {
                 throw new Exception("Invalid request", 400);
             }
 
@@ -428,7 +528,7 @@ class Taxcode extends Controller
                 throw new Exception("Invalid taxcode provided", 400);
             }
             $taxcode_id = $taxcode_detail->id;
-            
+
             DB::beginTransaction();
 
             TaxcodeModel::where('id', $taxcode_id)->delete();
@@ -439,17 +539,17 @@ class Taxcode extends Controller
 
             return response()->json($this->generate_response(
                 array(
-                    "message" => "Taxcode deleted successfully", 
+                    "message" => "Taxcode deleted successfully",
                     "data" => $slack,
-                    "link" => $forward_link
+                    "link" => $forward_link,
                 ), 'SUCCESS'
             ));
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -464,7 +564,7 @@ class Taxcode extends Controller
             'status' => $this->get_validation_rules("status", true),
         ]);
         $validation_status = $validator->fails();
-        if($validation_status){
+        if ($validation_status) {
             throw new Exception($validator->errors());
         }
     }

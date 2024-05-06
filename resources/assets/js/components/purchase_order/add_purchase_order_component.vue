@@ -418,7 +418,7 @@
   
             <div class="form-row mb-3">
               <div class="col-md-2 offset-md-7 text-right">
-                <span class="align-text-top">{{ $t("Shipping Charges") }}</span>
+                <span class="align-text-top">{{ $t("Other Charges") }}</span>
               </div>
               <div class="col-md-2">
                 <input
@@ -438,7 +438,7 @@
                 >
               </div>
             </div>
-            <div class="form-row mb-3">
+            <!-- <div class="form-row mb-3">
               <div class="col-md-2 offset-md-7 text-right">
                 <span class="align-text-top">{{ $t("Packing Charges") }}</span>
               </div>
@@ -459,7 +459,7 @@
                   >{{ errors.first('packing_charge') }}</span
                 >
               </div>
-            </div>
+            </div> -->
             <div class="form-row mb-3">
               <div class="col-md-2 offset-md-7 text-right">
                 {{ $t("Total") }}

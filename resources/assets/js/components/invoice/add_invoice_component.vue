@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        
+       
         <div class="col-md-12">
             <div class="card">
             <form @submit.prevent="submit_form" class="mb-3">
@@ -29,7 +29,7 @@
                         <span v-bind:class="{ 'error' : errors.has('bill_to') }">{{ errors.first('bill_to') }}</span> 
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="bill_to_slack">{{ $t("Choose Customer or Supplier") }}</label>
+                        <label for="bill_to_slack">{{ $t("Choose Customer") }}</label>
                         <cool-select type="text" name="bill_to_slack" v-validate="'required'" :placeholder="$t('Please choose Customer or Supplier')"  autocomplete="off" v-model="bill_to_slack" :items="bill_to_list" item-text="label" itemValue='slack' @search='load_bill_to_list' ref="bill_to_label">
                         </cool-select>
                         <span v-bind:class="{ 'error' : errors.has('bill_to_slack') }">{{ errors.first('bill_to_slack') }}</span> 
@@ -53,7 +53,6 @@
                         <span v-bind:class="{ 'error' : errors.has('invoice_due_date') }">{{ errors.first('invoice_due_date') }}</span> 
                     </div>
                 </div>
-
                 <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="currency">{{ $t("Currency") }}</label>
@@ -119,10 +118,10 @@
                     <div class="form-group col-md-1 mb-1">
                         <label for="discount_percentage">{{ $t("Discount %") }}</label>  
                     </div>
-                    <div class="form-group col-md-1 mb-1">
+                    <div class="form-group col-md-1 mb-1" v-if="invoice_type == 'gst'">
                         <label for="tax_type">{{ $t("Tax Type") }}</label>  
                     </div>
-                    <div class="form-group col-md-1 mb-1">
+                    <div class="form-group col-md-1 mb-1" v-if="invoice_type == 'gst'">
                         <label for="tax_percentage">{{ $t("Tax %") }}</label>  
                     </div>
                      <div class="form-group col-md-2 mb-1">
@@ -136,7 +135,7 @@
                         <span v-bind:class="{ 'error' : errors.has('product.name_'+index) }">{{ errors.first('product.name_'+index) }}</span> 
                     </div>
                     <div class="form-group col-md-1">
-                        <input type="number" v-bind:name="'product.quantity_'+index" v-model="product.quantity" v-validate="'required|decimal|min_value:1'" data-vv-as="Quantity" class="form-control form-control-custom"  autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
+                        <input type="number" v-bind:name="'product.quantity_'+index" v-model="product.quantity" v-validate="'required|decimal|min_value:1'" data-vv-as="Quantity" :max="max_quantity" class="form-control form-control-custom"  autocomplete="off" step="1" min="0" v-on:input="calculate_price">
                         <span v-bind:class="{ 'error' : errors.has('product.quantity_'+index) }">{{ errors.first('product.quantity_'+index) }}</span> 
                     </div>
                     <div class="form-group col-md-1">
@@ -147,7 +146,7 @@
                         <input type="number" v-bind:name="'product.discount_percentage_'+index" v-model="product.discount_percentage" v-validate="'decimal|min_value:0'" data-vv-as="Discount %" class="form-control form-control-custom"  autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
                         <span v-bind:class="{ 'error' : errors.has('product.discount_percentage_'+index) }">{{ errors.first('product.discount_percentage_'+index) }}</span> 
                     </div>
-                    <div class="form-group col-md-1">
+                    <div class="form-group col-md-1" v-if="invoice_type == 'gst'">
                         <select v-bind:name="'product.tax_type_'+index" v-model="product.tax_type" v-validate="''" class="form-control form-control-custom custom-select" v-on:change="calculate_price" data-vv-as="Tax Type">
                             <option v-for="(tax_type, index) in tax_types" v-bind:value="tax_type.tax_type_constant" v-bind:key="index">
                                 {{ tax_type.label }}
@@ -155,7 +154,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('product.tax_type_'+index) }">{{ errors.first('product.tax_type_'+index) }}</span> 
                     </div>
-                    <div class="form-group col-md-1">
+                    <div class="form-group col-md-1" v-if="invoice_type == 'gst'">
                         <input type="number" v-bind:name="'product.tax_percentage_'+index" v-model="product.tax_percentage" v-validate="'decimal|min_value:0'" data-vv-as="Tax %" class="form-control form-control-custom" autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
                         <span v-bind:class="{ 'error' : errors.has('product.tax_percentage_'+index) }">{{ errors.first('product.tax_percentage_'+index) }}</span> 
                     </div>
@@ -172,14 +171,14 @@
 
                 <div class="form-row mb-3">
                     <div class="col-md-2 offset-md-7 text-right">
-                        <span class="align-text-top">{{ $t("Shipping Charges") }}</span>
+                        <span class="align-text-top">{{ $t("Other Charges") }}</span>
                     </div>
                     <div class="col-md-2">
                         <input type="number" name="shipping_charge" v-model="shipping_charge" v-validate="'decimal|min_value:0'" class="form-control form-control-custom"  autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
                         <span v-bind:class="{ 'error' : errors.has('shipping_charge') }">{{ errors.first('shipping_charge') }}</span>
                     </div>
                 </div>
-                <div class="form-row mb-3">
+                <!-- <div class="form-row mb-3">
                     <div class="col-md-2 offset-md-7 text-right">
                         <span class="align-text-top">{{ $t("Packing Charges") }}</span>
                     </div>
@@ -187,7 +186,7 @@
                         <input type="number" name="packing_charge" v-model="packing_charge" v-validate="'decimal|min_value:0'" class="form-control form-control-custom"  autocomplete="off" step="0.01" min="0" v-on:input="calculate_price">
                         <span v-bind:class="{ 'error' : errors.has('packing_charge') }">{{ errors.first('packing_charge') }}</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="form-row  mb-3">
                     <div class="col-md-2 offset-md-7 text-right">
                         {{ $t("Total") }}
@@ -236,6 +235,7 @@
                     lang : 'en',
                     format : "YYYY-MM-DD",
                 },
+                max_quantity    : 100,
                 server_errors   : '',
                 error_class     : '',
                 processing      : false,
@@ -243,7 +243,7 @@
                 show_modal      : false,
                 api_link        : (this.invoice_data == null)?'/api/add_invoice':'/api/update_invoice/'+this.invoice_data.slack,
                 
-                bill_to_master_list : ['SUPPLIER', 'CUSTOMER'],
+                bill_to_master_list : ['CUSTOMER'],
                 bill_to_list   : [],
                 product_list   : [],
                 search_product : '',
@@ -259,7 +259,7 @@
                 invoice_date : (this.invoice_data == null)?'':(this.invoice_data.invoice_date_raw != null)?new Date(this.invoice_data.invoice_date_raw):'',
                 invoice_due_date : (this.invoice_data == null)?'':(this.invoice_data.invoice_due_date_raw != null)?new Date(this.invoice_data.invoice_due_date_raw):'',
                 currency : (this.invoice_data == null)?'':(this.invoice_data.currency_code != null)?this.invoice_data.currency_code:'',
-                tax_option : (this.invoice_data == null)?'':(this.invoice_data.tax_option_data != null)?this.invoice_data.tax_option_data.tax_option_constant:'',
+                tax_option : (this.invoice_data == null)? this.invoice_type:(this.invoice_data.tax_option_data != null)?this.invoice_data.tax_option_data.tax_option_constant:'',
 
                 shipping_charge : (this.invoice_data == null)?'':(this.invoice_data.shipping_charge != null)?this.invoice_data.shipping_charge:'',
                 packing_charge : (this.invoice_data == null)?'':(this.invoice_data.packing_charge != null)?this.invoice_data.packing_charge:'',
@@ -377,7 +377,7 @@
                 if(typeof keywords != 'undefined'){
                     var supplier = (this.bill_to == 'SUPPLIER')?this.bill_to_slack:this.supplier;
                     if (keywords.length > 0 && supplier != '') {
-
+                        // alert('working');
                         var formData = new FormData();
                         formData.append("access_token", window.settings.access_token);
                         formData.append("keywords", keywords);
@@ -397,11 +397,12 @@
 
             add_product_to_list(item) {
                 if( item.product_slack != '' ){
+                    this.max_quantity = item.quantity;
                     var current_product = {
                         slack : item.product_slack,
                         name : item.label,
-                        quantity : 1,
-                        unit_price : item.purchase_amount_excluding_tax,
+                        quantity : item.quantity,
+                        unit_price : item.sale_amount_excluding_tax,
                         discount_percentage : item.discount_percentage,
                         tax_type : item.tax_type,
                         tax_percentage : item.tax_percentage,

@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="card p-4 row">
         <div class="col-md-12">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
@@ -16,13 +16,13 @@
             <div class="form-row mb-2">
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>
                 <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-info mr-1 w-100" v-on:click="add_child_category()" v-bind:disabled="add_child_category_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_child_category_processing == true"></i> {{ $t("Add Child Category") }}</button>
+                    <button type="submit" style="background:rgb(29 89 180);color:white;" class="btn mr-1 w-100" v-on:click="add_child_category()" v-bind:disabled="add_child_category_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_child_category_processing == true"></i> {{ $t("Add Child Category") }}</button>
                 </div>
                 <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-info mr-1 w-100" v-on:click="add_category_specifications()" v-bind:disabled="add_category_specifications_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specifications_processing == true"></i> {{ $t("Add Category Specifications") }}</button>
+                    <button type="submit" style="background:rgb(29 89 180);color:white;" class="btn mr-1 w-100" v-on:click="add_category_specifications()" v-bind:disabled="add_category_specifications_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specifications_processing == true"></i> {{ $t("Add Category Specifications") }}</button>
                 </div>
                 <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-info mr-1 w-100" v-on:click="add_category_specification_details()" v-bind:disabled="add_category_specification_details_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specification_details_processing == true"></i> {{ $t("Add Specification Values") }}</button>
+                    <button type="submit" style="background:rgb(29 89 180);color:white;" class="btn mr-1 w-100" v-on:click="add_category_specification_details()" v-bind:disabled="add_category_specification_details_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specification_details_processing == true"></i> {{ $t("Add Specification Values") }}</button>
                 </div>
             </div>
             <hr>
@@ -82,7 +82,7 @@
             <div class="form-row mb-2">
                 <div class="col-12" v-if="mainTable">
                     <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
+                        <thead class="" style="background:rgb(29 89 180);color:white;">
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">Category</th>
@@ -105,7 +105,7 @@
 
                 <div class="col-12" v-if="ViewChildCategoryStatus">
                     <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
+                        <thead class="" style="background:rgb(29 89 180);color:white;">
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">Child Category</th>
@@ -134,7 +134,7 @@
 
                 <div class="col-12" v-if="ViewCategorySpecificationStatus">
                     <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
+                        <thead class="" style="background:rgb(29 89 180);color:white;">
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">Category Specification</th>
@@ -164,7 +164,7 @@
 
                 <div class="col-12" v-if="ViewSpecificationValuesStatus">
                     <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
+                        <thead class="" style="background:rgb(29 89 180);color:white;">
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">Specification Value</th>

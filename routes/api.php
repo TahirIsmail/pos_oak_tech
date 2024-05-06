@@ -71,8 +71,10 @@ Route::group(['middleware' => ['token_auth']], function () {
     //customer
     Route::post('/customers', 'API\Customer@index');
     Route::post('/add_customer', 'API\Customer@store');
+    Route::post('/add_walkIn_customer', 'API\Customer@store_walkIn_customer');
     Route::post('/update_customer/{slack}', 'API\Customer@update');
     Route::post('/load_customers', 'API\Customer@load_customer_list');
+    Route::post('/load_walkin_customers', 'API\Customer@load_walkin_customer_list');
     Route::post('/customer/{slack}', 'API\Customer@show');
     Route::post('/customer_list', 'API\Customer@list');
     Route::post('/delete_customer/{slack}', 'API\Customer@destroy');
@@ -96,21 +98,13 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/submit_specification_values', 'API\Category@submit_specification_values');
     Route::post('/categorySpecifications', 'API\Category@submit_specifications');
 
-
-
     Route::post('/fetch_child_categories', 'API\Category@fetch_child_categories');
     Route::post('/fetch_category_specifications', 'API\Category@category_specifications');
-
-
-
-
 
     Route::post('/view_child_or_specifications_categories', 'API\Category@view_child_or_specifications_categories');
     Route::post('/view_specifications_categories', 'API\Category@view_specifications_categories');
     Route::post('/view_specifications_values', 'API\Category@view_specifications_values');
     Route::post('/update_category_portion', 'API\Category@edit_categories_portion');
-
-
 
 
     Route::post('/fetchSubCategories', 'API\Category@fetch_sub_categories');
@@ -127,20 +121,15 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/supplier/{slack}', 'API\Supplier@show');
     Route::post('/supplier_list', 'API\Supplier@list');
     Route::post('/delete_supplier/{slack}', 'API\Supplier@destroy');
-
     Route::post('/delete_supplier_performance/{slack}', 'API\Supplier@destroy_supplier_performance');
-
-
 
     Route::post('/submit_supplier_performance', 'API\Supplier@submit_supplier_performance');
     Route::post('/update_supplier_performance/{slack}', 'API\Supplier@submit_supplier_performance');
 
     // leave type and leaves 
-
     Route::post('/add_leave_type', 'API\LeaveTypeController@store');
     Route::post('/update_leave_type/{slack}', 'API\LeaveTypeController@store');
     Route::post('/delete_leave_type/{slack}', 'API\LeaveTypeController@delete');
-
 
     Route::post('/leaves_listing', 'API\LeaveTypeController@leaves_listing')->name('leaves_listing');
     Route::post('/approve_leaves_listing', 'API\LeaveTypeController@approve_leaves_listing')->name('approve_leaves_listing');
@@ -185,6 +174,10 @@ Route::group(['middleware' => ['token_auth']], function () {
     //tax code
     Route::post('/tax_codes', 'API\Taxcode@index');
     Route::post('/gst_listing', 'API\Taxcode@gst_listing');
+    Route::post('/receiving_gst_listing', 'API\Taxcode@receiving_gst_listing');
+    Route::post('/fetch_cash_products', 'API\Taxcode@fetch_cash_products');
+    Route::post('/save_adjust_gst_cash_product', 'API\Taxcode@save_adjust_gst_cash_product');
+    Route::post('/update-gst-status', 'API\Taxcode@updateStatus')->name('update.gst.status');
     Route::post('/add_tax_code', 'API\Taxcode@store');
     Route::post('/update_tax_code/{slack}', 'API\Taxcode@update');
     Route::post('/tax_code/{slack}', 'API\Taxcode@show');
@@ -215,9 +208,7 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/unmerge_order', 'API\Order@unmerge_order');
     Route::post('/update_all_kitchen_item_as_prepared', 'API\Order@update_all_kitchen_item_as_prepared');
 
-
     Route::post('/remaining_amount_payment/{slack}', 'API\Order@remaining_amount_payment');
-
     //store
     Route::post('/stores', 'API\Store@index');
     Route::post('/add_store', 'API\Store@store');

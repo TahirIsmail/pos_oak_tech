@@ -23640,7 +23640,7 @@ __webpack_require__.r(__webpack_exports__);
       processing: false,
       modal: false,
       show_modal: false,
-      api_link: this.customer_data == null ? '/api/add_customer' : '/api/update_customer/' + this.customer_data.slack,
+      api_link: this.customer_data == null ? '/api/add_walkIn_customer' : '/api/update_customer/' + this.customer_data.slack,
       customer_slack: this.customer_data == null ? '' : this.customer_data.slack,
       email: this.customer_data == null ? '' : this.customer_data.email,
       name: this.customer_data == null ? '' : this.customer_data.name,
@@ -26394,13 +26394,14 @@ __webpack_require__.r(__webpack_exports__);
         lang: 'en',
         format: "YYYY-MM-DD"
       },
+      max_quantity: 100,
       server_errors: '',
       error_class: '',
       processing: false,
       modal: false,
       show_modal: false,
       api_link: this.invoice_data == null ? '/api/add_invoice' : '/api/update_invoice/' + this.invoice_data.slack,
-      bill_to_master_list: ['SUPPLIER', 'CUSTOMER'],
+      bill_to_master_list: ['CUSTOMER'],
       bill_to_list: [],
       product_list: [],
       search_product: '',
@@ -26414,7 +26415,7 @@ __webpack_require__.r(__webpack_exports__);
       invoice_date: this.invoice_data == null ? '' : this.invoice_data.invoice_date_raw != null ? new Date(this.invoice_data.invoice_date_raw) : '',
       invoice_due_date: this.invoice_data == null ? '' : this.invoice_data.invoice_due_date_raw != null ? new Date(this.invoice_data.invoice_due_date_raw) : '',
       currency: this.invoice_data == null ? '' : this.invoice_data.currency_code != null ? this.invoice_data.currency_code : '',
-      tax_option: this.invoice_data == null ? '' : this.invoice_data.tax_option_data != null ? this.invoice_data.tax_option_data.tax_option_constant : '',
+      tax_option: this.invoice_data == null ? this.invoice_type : this.invoice_data.tax_option_data != null ? this.invoice_data.tax_option_data.tax_option_constant : '',
       shipping_charge: this.invoice_data == null ? '' : this.invoice_data.shipping_charge != null ? this.invoice_data.shipping_charge : '',
       packing_charge: this.invoice_data == null ? '' : this.invoice_data.packing_charge != null ? this.invoice_data.packing_charge : '',
       terms: this.invoice_data == null ? '' : this.invoice_data.terms != null ? this.invoice_data.terms : '',
@@ -26511,6 +26512,7 @@ __webpack_require__.r(__webpack_exports__);
       if (typeof keywords != 'undefined') {
         var supplier = this.bill_to == 'SUPPLIER' ? this.bill_to_slack : this.supplier;
         if (keywords.length > 0 && supplier != '') {
+          // alert('working');
           var formData = new FormData();
           formData.append("access_token", window.settings.access_token);
           formData.append("keywords", keywords);
@@ -26527,11 +26529,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     add_product_to_list: function add_product_to_list(item) {
       if (item.product_slack != '') {
+        this.max_quantity = item.quantity;
         var current_product = {
           slack: item.product_slack,
           name: item.label,
-          quantity: 1,
-          unit_price: item.purchase_amount_excluding_tax,
+          quantity: item.quantity,
+          unit_price: item.sale_amount_excluding_tax,
           discount_percentage: item.discount_percentage,
           tax_type: item.tax_type,
           tax_percentage: item.tax_percentage,
@@ -29073,7 +29076,7 @@ __webpack_require__.r(__webpack_exports__);
           formData.append("access_token", window.settings.access_token);
           formData.append("keywords", keywords);
           formData.append("type", type);
-          axios.post('/api/load_customers', formData).then(function (response) {
+          axios.post('/api/load_walkin_customers', formData).then(function (response) {
             if (response.data.status_code == 200) {
               _this6.customer_list = response.data.data;
             }
@@ -30501,6 +30504,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   },
   data: function data() {
     return {
+      quantity_from_spec: false,
+      total_sale_price_including_tax: this.product_data == null ? 0 : this.product_data.total_sale_price_including_tax,
       gst_cash: this.product_data == null ? 'Cash' : this.product_data.gst_paid_for_product == 1 ? 'GST' : 'Cash',
       subCategories: [],
       childCategories: [],
@@ -30530,7 +30535,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       category: this.product_data == null ? "" : this.product_data.category == null ? "" : this.product_data.category.id,
       tax_code: this.product_data == null ? "" : this.product_data.tax_code == null ? "" : this.product_data.tax_code.slack,
       discount_code: this.product_data == null ? "" : this.product_data.discount_code == null ? "" : this.product_data.discount_code.slack,
-      gst_paid_for_product: this.product_data == null ? "" : this.product_data.gst_on_product ? this.product_data.gst_on_product[0].gst_paid_for_product : '',
+      gst_paid_for_product: this.product_data == null ? '' : this.product_data.gst_paid_for_product == 1 ? this.product_data.gst_on_product[0].gst_paid_for_product : '',
       quantity: this.product_data == null ? 1 : this.product_data.quantity,
       alert_quantity: 1,
       sale_price: this.product_data == null ? "" : this.product_data.sale_price_percentage,
@@ -30676,6 +30681,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         this.product_name = this.input_type["Product Name"];
       }
       if (this.input_type["Quantity"]) {
+        this.quantity_from_spec = true;
         this.quantity = this.input_type["Quantity"];
       }
     },
@@ -30754,6 +30760,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             formData.append('product_name_id', this.product_name_id ? this.product_name_id : null);
             formData.append('gst_paid_for_product', this.gst_paid_for_product);
             formData.append('gst_cash', this.gst_cash);
+            formData.append('total_sale_price_including_tax', this.total_sale_price_including_tax);
             if (this.input_type) {
               for (var key in this.input_type) {
                 formData.append("input_type[".concat(key, "]"), this.input_type[key]);
@@ -31074,6 +31081,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         // var sale_price_including_tax = parseFloat(this.sale_price) + parseFloat(calculated_tax);
         var sale_price_including_tax = parseFloat(this.purchase_price) + parseFloat(calculated_sale_price);
         this.sale_price_including_tax = sale_price_including_tax;
+        this.total_sale_price_including_tax = sale_price_including_tax * parseFloat(this.quantity);
       }
     }
   }
@@ -31702,7 +31710,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       order_date: '',
       order_due_date: '',
       currency: '',
-      tax_option: this.quotation_data == null ? '' : this.quotation_data.gst_tax_option == 'GST' ? 'GST' : 'Cash',
+      tax_option: this.quotation_data == null ? '' : this.quotation_data.gst_tax_option == 'gst' ? 'gst' : 'cash',
       update_stock: '',
       tax_status: false,
       created_by_customer: this.is_customer ? true : false,
@@ -31761,6 +31769,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           formData.append("access_token", window.settings.access_token);
           formData.append("keywords", keywords);
           axios.post('/api/load_suppliers', formData).then(function (response) {
+            // console.log(response);
             if (response.data.status_code == 200) {
               _this.supplier_list = response.data.data;
             }
@@ -32224,7 +32233,7 @@ __webpack_require__.r(__webpack_exports__);
       quotation_date: this.quotation_data == null ? '' : this.quotation_data.quotation_date_raw != null ? new Date(this.quotation_data.quotation_date_raw) : '',
       quotation_due_date: this.quotation_data == null ? '' : this.quotation_data.quotation_due_date_raw != null ? new Date(this.quotation_data.quotation_due_date_raw) : '',
       currency: this.quotation_data == null ? '' : this.quotation_data.currency_code != null ? this.quotation_data.currency_code : '',
-      tax_option: this.quotation_data == null ? 'GST' : this.quotation_data.tax_option_data != null ? this.quotation_data.tax_option_data.tax_option_constant : '',
+      tax_option: this.quotation_data == null ? 'gst' : this.quotation_data.tax_option_data != null ? this.quotation_data.tax_option_data.tax_option_constant : '',
       shipping_charge: this.quotation_data == null ? '' : this.quotation_data.shipping_charge != null ? this.quotation_data.shipping_charge : '',
       packing_charge: this.quotation_data == null ? '' : this.quotation_data.packing_charge != null ? this.quotation_data.packing_charge : '',
       notes: this.quotation_data == null ? '' : this.quotation_data.notes != null ? this.quotation_data.notes : '',
@@ -37667,7 +37676,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$off("cancel_transaction");
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          // event_bus.$emit('start_processing');
+          _event_bus_js__WEBPACK_IMPORTED_MODULE_3__.event_bus.$emit('start_processing');
           var formData = new FormData();
           formData.append("access_token", window.settings.access_token);
           formData.append("bill_to", _this.bill_to == null ? '' : _this.bill_to);
@@ -37679,6 +37688,7 @@ __webpack_require__.r(__webpack_exports__);
           formData.append("payment_method", _this.payment_method == null ? '' : _this.payment_method);
           formData.append("created_by_supplier", _this.created_by_supplier);
           formData.append("invoice_against_po_from_customer", _this.invoice_against_po_from_customer);
+          formData.append("note", _this.notes);
           axios.post(_this.api_link, formData).then(function (response) {
             if (response.data.status_code == 200) {
               _this.show_response_message(response.data.msg, 'Success');
@@ -41356,7 +41366,7 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "row"
+    staticClass: "card p-4 row"
   }, [_c("div", {
     staticClass: "col-md-12"
   }, [_c("div", {
@@ -41381,7 +41391,11 @@ var render = function render() {
   }), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-4"
   }, [_c("button", {
-    staticClass: "btn btn-info mr-1 w-100",
+    staticClass: "btn mr-1 w-100",
+    staticStyle: {
+      background: "rgb(29 89 180)",
+      color: "white"
+    },
     attrs: {
       type: "submit",
       disabled: _vm.add_child_category_processing == true
@@ -41396,7 +41410,11 @@ var render = function render() {
   }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Add Child Category")))])]), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-4"
   }, [_c("button", {
-    staticClass: "btn btn-info mr-1 w-100",
+    staticClass: "btn mr-1 w-100",
+    staticStyle: {
+      background: "rgb(29 89 180)",
+      color: "white"
+    },
     attrs: {
       type: "submit",
       disabled: _vm.add_category_specifications_processing == true
@@ -41411,7 +41429,11 @@ var render = function render() {
   }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Add Category Specifications")))])]), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-4"
   }, [_c("button", {
-    staticClass: "btn btn-info mr-1 w-100",
+    staticClass: "btn mr-1 w-100",
+    staticStyle: {
+      background: "rgb(29 89 180)",
+      color: "white"
+    },
     attrs: {
       type: "submit",
       disabled: _vm.add_category_specification_details_processing == true
@@ -42296,7 +42318,7 @@ var staticRenderFns = [function () {
     staticClass: "table"
   }, [_c("thead", {
     staticStyle: {
-      background: "#17a2b8",
+      background: "rgb(29 89 180)",
       color: "white"
     }
   }, [_c("tr", [_c("th", {
@@ -42338,7 +42360,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("thead", {
     staticStyle: {
-      background: "#17a2b8",
+      background: "rgb(29 89 180)",
       color: "white"
     }
   }, [_c("tr", [_c("th", {
@@ -42363,7 +42385,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("thead", {
     staticStyle: {
-      background: "#17a2b8",
+      background: "rgb(29 89 180)",
       color: "white"
     }
   }, [_c("tr", [_c("th", {
@@ -42388,7 +42410,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("thead", {
     staticStyle: {
-      background: "#17a2b8",
+      background: "rgb(29 89 180)",
       color: "white"
     }
   }, [_c("tr", [_c("th", {
@@ -46982,7 +47004,7 @@ var render = function render() {
     on: {
       click: _vm.addContactPerson
     }
-  }, [_vm._v("Add More Persons")])])], 2)])]) : _vm._e(), _vm._v(" "), _vm.customer_type == "walkin" ? _c("div", {
+  }, [_vm._v("Add More Persons")])])], 2)])]) : _vm._e(), _vm._v(" "), _vm.customer_type == "dealer" ? _c("div", {
     staticClass: "card shadow"
   }, [_c("form", {
     staticClass: "mb-3",
@@ -47001,9 +47023,9 @@ var render = function render() {
     staticClass: "mr-auto"
   }, [_vm.customer_slack == "" ? _c("span", {
     staticClass: "text-title"
-  }, [_vm._v(_vm._s(_vm.$t("Add Customer")))]) : _c("span", {
+  }, [_vm._v(_vm._s(_vm.$t("Add Dealer")))]) : _c("span", {
     staticClass: "text-title"
-  }, [_vm._v(_vm._s(_vm.$t("Edit Customer")))])]), _vm._v(" "), _c("div", {}, [_c("button", {
+  }, [_vm._v(_vm._s(_vm.$t("Edit Dealer")))])]), _vm._v(" "), _c("div", {}, [_c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "submit",
@@ -47011,7 +47033,7 @@ var render = function render() {
     }
   }, [_vm.processing == true ? _c("i", {
     staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Save Customer")))])])]), _vm._v(" "), _c("p", {
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Save Dealer")))])])]), _vm._v(" "), _c("p", {
     "class": [_vm.error_class],
     domProps: {
       innerHTML: _vm._s(_vm.server_errors)
@@ -51786,7 +51808,7 @@ var render = function render() {
     attrs: {
       "for": "bill_to_slack"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Choose Customer or Supplier")))]), _vm._v(" "), _c("cool-select", {
+  }, [_vm._v(_vm._s(_vm.$t("Choose Customer")))]), _vm._v(" "), _c("cool-select", {
     directives: [{
       name: "validate",
       rawName: "v-validate",
@@ -52155,19 +52177,19 @@ var render = function render() {
     attrs: {
       "for": "discount_percentage"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Discount %")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Discount %")))])]), _vm._v(" "), _vm.invoice_type == "gst" ? _c("div", {
     staticClass: "form-group col-md-1 mb-1"
   }, [_c("label", {
     attrs: {
       "for": "tax_type"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Tax Type")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Tax Type")))])]) : _vm._e(), _vm._v(" "), _vm.invoice_type == "gst" ? _c("div", {
     staticClass: "form-group col-md-1 mb-1"
   }, [_c("label", {
     attrs: {
       "for": "tax_percentage"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Tax %")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Tax %")))])]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-2 mb-1"
   }, [_c("label", {
     attrs: {
@@ -52230,8 +52252,9 @@ var render = function render() {
         type: "number",
         name: "product.quantity_" + index,
         "data-vv-as": "Quantity",
+        max: _vm.max_quantity,
         autocomplete: "off",
-        step: "0.01",
+        step: "1",
         min: "0"
       },
       domProps: {
@@ -52319,7 +52342,7 @@ var render = function render() {
       "class": {
         error: _vm.errors.has("product.discount_percentage_" + index)
       }
-    }, [_vm._v(_vm._s(_vm.errors.first("product.discount_percentage_" + index)))])]), _vm._v(" "), _c("div", {
+    }, [_vm._v(_vm._s(_vm.errors.first("product.discount_percentage_" + index)))])]), _vm._v(" "), _vm.invoice_type == "gst" ? _c("div", {
       staticClass: "form-group col-md-1"
     }, [_c("select", {
       directives: [{
@@ -52360,7 +52383,7 @@ var render = function render() {
       "class": {
         error: _vm.errors.has("product.tax_type_" + index)
       }
-    }, [_vm._v(_vm._s(_vm.errors.first("product.tax_type_" + index)))])]), _vm._v(" "), _c("div", {
+    }, [_vm._v(_vm._s(_vm.errors.first("product.tax_type_" + index)))])]) : _vm._e(), _vm._v(" "), _vm.invoice_type == "gst" ? _c("div", {
       staticClass: "form-group col-md-1"
     }, [_c("input", {
       directives: [{
@@ -52396,7 +52419,7 @@ var render = function render() {
       "class": {
         error: _vm.errors.has("product.tax_percentage_" + index)
       }
-    }, [_vm._v(_vm._s(_vm.errors.first("product.tax_percentage_" + index)))])]), _vm._v(" "), _c("div", {
+    }, [_vm._v(_vm._s(_vm.errors.first("product.tax_percentage_" + index)))])]) : _vm._e(), _vm._v(" "), _c("div", {
       staticClass: "form-group col-md-2"
     }, [_c("input", {
       directives: [{
@@ -52462,7 +52485,7 @@ var render = function render() {
     staticClass: "col-md-2 offset-md-7 text-right"
   }, [_c("span", {
     staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Shipping Charges")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Other Charges")))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-2"
   }, [_c("input", {
     directives: [{
@@ -52498,47 +52521,6 @@ var render = function render() {
       error: _vm.errors.has("shipping_charge")
     }
   }, [_vm._v(_vm._s(_vm.errors.first("shipping_charge")))])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-row mb-3"
-  }, [_c("div", {
-    staticClass: "col-md-2 offset-md-7 text-right"
-  }, [_c("span", {
-    staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Packing Charges")))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-2"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.packing_charge,
-      expression: "packing_charge"
-    }, {
-      name: "validate",
-      rawName: "v-validate",
-      value: "decimal|min_value:0",
-      expression: "'decimal|min_value:0'"
-    }],
-    staticClass: "form-control form-control-custom",
-    attrs: {
-      type: "number",
-      name: "packing_charge",
-      autocomplete: "off",
-      step: "0.01",
-      min: "0"
-    },
-    domProps: {
-      value: _vm.packing_charge
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-        _vm.packing_charge = $event.target.value;
-      }, _vm.calculate_price]
-    }
-  }), _vm._v(" "), _c("span", {
-    "class": {
-      error: _vm.errors.has("packing_charge")
-    }
-  }, [_vm._v(_vm._s(_vm.errors.first("packing_charge")))])])]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-3"
   }, [_c("div", {
     staticClass: "col-md-2 offset-md-7 text-right"
@@ -58202,7 +58184,31 @@ var render = function render() {
             },
             expression: "customer_filter"
           }
-        })], 1)]) : _c("div", [_c("div", {}, [_c("div", {
+        })], 1), _vm._v(" "), _c("div", {
+          staticClass: "d-flex justify-content-center p-2"
+        }, [_c("span", {}, [_vm._v("Or")])]), _vm._v(" "), _c("div", {
+          staticClass: "d-flex justify-content-center p-2"
+        }, [_c("span", {
+          staticClass: "text-primary text-bold cursor",
+          on: {
+            click: function click($event) {
+              return _vm.new_customer_form();
+            }
+          }
+        }, [_c("i", {
+          staticClass: "fas fa-user-plus"
+        }), _vm._v(" " + _vm._s(_vm.$t("Add New Customer")))])]), _vm._v(" "), _c("addcustomerordercomponent", {
+          directives: [{
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show_new_customer_form == true,
+            expression: "show_new_customer_form == true"
+          }],
+          "class": "mt-2 border-top",
+          attrs: {
+            customer_status: _vm.customer_status
+          }
+        })], 1) : _c("div", [_c("div", {}, [_c("div", {
           staticClass: "d-flex justify-content-center mb-2"
         }, [_c("img", {
           staticClass: "rounded-circle customer-image",
@@ -60158,6 +60164,8 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "col-md-12"
   }, [_c("div", {
+    staticClass: "card p-4"
+  }, [_c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("div", {
     staticClass: "mr-auto"
@@ -60189,20 +60197,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "ml-auto"
-  }, [_vm.delete_order_access == true ? _c("button", {
-    staticClass: "btn btn-danger mr-1",
-    attrs: {
-      type: "submit",
-      disabled: _vm.order_processing == true
-    },
-    on: {
-      click: function click($event) {
-        return _vm.delete_order();
-      }
-    }
-  }, [_vm.order_processing == true ? _c("i", {
-    staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Delete Order")))]) : _vm._e(), _vm._v(" "), _vm.share_invoice_sms_access == true && _vm.order_basic.status.value == 1 ? _c("button", {
+  }, [_vm.share_invoice_sms_access == true && _vm.order_basic.status.value == 1 ? _c("button", {
     staticClass: "btn btn-outline-primary mr-1",
     attrs: {
       type: "button",
@@ -60215,19 +60210,7 @@ var render = function render() {
     }
   }, [_vm.send_sms_processing == true ? _c("i", {
     staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Share Invoice as SMS")))]) : _vm._e(), _vm._v(" "), _vm.merge_order_access == true && _vm.order_basic.status.value == 1 ? _c("button", {
-    staticClass: "btn btn-outline-primary mr-1",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.merge_order();
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-clone"
-  }), _vm._v(" " + _vm._s(_vm.$t("Merge Orders")))]) : _vm._e(), _vm._v(" "), _vm.unmerge_order_access == true && _vm.order_basic.status.value == 4 ? _c("button", {
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Share Invoice as SMS")))]) : _vm._e(), _vm._v(" "), _vm.unmerge_order_access == true && _vm.order_basic.status.value == 4 ? _c("button", {
     staticClass: "btn btn-outline-primary mr-1",
     attrs: {
       type: "button"
@@ -60269,74 +60252,7 @@ var render = function render() {
     }
   }, [_vm.processing == true ? _c("i", {
     staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Print Invoice")))]) : _vm._e()])]), _vm._v(" "), _c("div", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.order_basic.restaurant_mode == 1,
-      expression: "order_basic.restaurant_mode == 1"
-    }]
-  }, [_c("div", {
-    staticClass: "mb-2"
-  }, [_c("span", {
-    staticClass: "text-subhead"
-  }, [_vm._v(_vm._s(_vm.$t("Restaurant Mode Information")))])]), _vm._v(" "), _vm.order_basic.contact_number != null || _vm.order_basic.address != null ? _c("div", {
-    staticClass: "form-row mb-2"
-  }, [_c("div", {
-    staticClass: "form-group col-md-6"
-  }, [_c("label", {
-    attrs: {
-      "for": "email"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Delivery Details")))]), _vm._v(" "), _c("span", {
-    staticClass: "d-block"
-  }, [_c("span", {
-    staticClass: "text-muted small"
-  }, [_vm._v(_vm._s(_vm.$t("Contact Number")))]), _vm._v(" " + _vm._s(_vm.order_basic.contact_number))]), _vm._v(" "), _c("span", {
-    staticClass: "d-block"
-  }, [_c("span", {
-    staticClass: "text-muted small"
-  }, [_vm._v(_vm._s(_vm.$t("Address")))]), _vm._v(" "), _c("span", {
-    staticClass: "custom-pre"
-  }, [_vm._v(_vm._s(_vm.order_basic.address ? _vm.order_basic.address : "-"))])])])]) : _vm._e(), _vm._v(" "), _c("div", {
-    staticClass: "form-row mb-2"
-  }, [_c("div", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.order_basic.restaurant_mode == 1,
-      expression: "order_basic.restaurant_mode == 1"
-    }],
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "email"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Order From")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.order_basic.order_origin == "DIGITAL_MENU" ? "Digital Menu" : "POS Screen"))])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "email"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Order Type")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.order_basic.order_type))])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "email"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Billing Type")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.order_basic.billing_type_data != null ? _vm.order_basic.billing_type_data.label : "-"))])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "email"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Table Number or Name")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.order_basic.table != null && _vm.order_basic.table != "" ? _vm.order_basic.table : "-"))])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "email"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Waiter")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.order_basic.waiter_data != null ? _vm.order_basic.waiter_data.fullname + " (" + _vm.order_basic.waiter_data.user_code + ")" : "-"))])])])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Print Invoice")))]) : _vm._e()])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "mb-2"
   }, [_c("span", {
     staticClass: "text-subhead"
@@ -60550,7 +60466,7 @@ var render = function render() {
       staticClass: "text-right"
     }, [_vm._v(_vm._s(order_product.discount_amount))]), _vm._v(" "), _c("td", {
       staticClass: "text-right"
-    }, [_vm._v("\n                            " + _vm._s(order_product.tax_percentage) + "\n                            "), _vm._l(order_product.tax_components, function (tax_component, key, index) {
+    }, [_vm._v("\n                                    " + _vm._s(order_product.tax_percentage) + "\n                                    "), _vm._l(order_product.tax_components, function (tax_component, key, index) {
       return _c("span", {
         key: index,
         staticClass: "d-block small"
@@ -60564,7 +60480,7 @@ var render = function render() {
       }, [_vm._v(_vm._s(tax_component.tax_type) + " : " + _vm._s(tax_component.tax_percentage) + "%")])]);
     })], 2), _vm._v(" "), _c("td", {
       staticClass: "text-right"
-    }, [_vm._v("\n                            " + _vm._s(order_product.tax_amount) + "\n                            "), _vm._l(order_product.tax_components, function (tax_component, key, index) {
+    }, [_vm._v("\n                                    " + _vm._s(order_product.tax_amount) + "\n                                    "), _vm._l(order_product.tax_components, function (tax_component, key, index) {
       return _c("span", {
         key: index,
         staticClass: "d-block small"
@@ -60619,14 +60535,14 @@ var render = function render() {
     attrs: {
       colspan: "9"
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("Total Tax")) + "\n                            "), _vm.order_basic.product_level_total_tax > 0 ? _c("small", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("Total Tax")) + "\n                                    "), _vm.order_basic.product_level_total_tax > 0 ? _c("small", {
     staticClass: "d-block"
-  }, [_vm._v("\n                                Product Tax : " + _vm._s(_vm.order_basic.product_level_total_tax) + "\n                            ")]) : _vm._e(), _vm._v(" "), _vm.order_basic.order_level_tax_percentage > 0 ? _c("small", {
+  }, [_vm._v("\n                                        Product Tax : " + _vm._s(_vm.order_basic.product_level_total_tax) + "\n                                    ")]) : _vm._e(), _vm._v(" "), _vm.order_basic.order_level_tax_percentage > 0 ? _c("small", {
     staticClass: "d-block"
-  }, [_vm._v("\n                                Overall Tax : \n                                "), _vm._l(_vm.order_basic.order_level_tax_components, function (tax_component, key, index) {
+  }, [_vm._v("\n                                        Overall Tax : \n                                        "), _vm._l(_vm.order_basic.order_level_tax_components, function (tax_component, key, index) {
     return _c("span", {
       key: index
-    }, [_vm._v("\n                                    " + _vm._s(tax_component.tax_type) + " : " + _vm._s(tax_component.tax_amount.toFixed(2)) + " (" + _vm._s(tax_component.tax_percentage) + "%) ·\n                                ")]);
+    }, [_vm._v("\n                                            " + _vm._s(tax_component.tax_type) + " : " + _vm._s(tax_component.tax_amount.toFixed(2)) + " (" + _vm._s(tax_component.tax_percentage) + "%) ·\n                                        ")]);
   })], 2) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "text-right"
   }, [_vm._v(_vm._s(_vm.order_basic.total_tax_amount))])]), _vm._v(" "), _c("tr", [_c("td", {
@@ -60643,21 +60559,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("Total")) + " (Received Amount)")]), _vm._v(" "), _c("td", {
     staticClass: "text-right text-bold"
-  }, [_vm._v(_vm._s(_vm.order_basic.currency_code) + " " + _vm._s(_vm.total_received_amount))])]), _vm._v(" "), _c("tr", [_c("td", {
-    staticClass: "text-right text-bold",
-    attrs: {
-      colspan: "9"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Total")) + " (Pending Amount)")]), _vm._v(" "), _c("td", {
-    staticClass: "text-right text-bold"
-  }, [_vm._v(_vm._s(_vm.order_basic.currency_code) + " " + _vm._s(_vm.order_basic.total_order_amount - _vm.total_received_amount))])]), _vm._v(" "), _vm.order_basic.order_difference != "" ? _c("tr", [_c("td", {
-    staticClass: "text-right",
-    attrs: {
-      colspan: "9"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Merge Difference Amount")))]), _vm._v(" "), _c("td", {
-    staticClass: "text-right"
-  }, [_vm._v(_vm._s(_vm.order_basic.order_difference)), _c("br"), _vm._v(" "), _c("small", [_vm._v(_vm._s(_vm.order_basic.order_difference.order_difference_exists == "positive" ? "Receive from Customer" : "Return to Customer"))])])]) : _vm._e()], 2)])]), _vm._v(" "), _vm.order_data.merged_orders != null && _vm.order_data.merged_orders.length != 0 ? _c("div", [_c("hr"), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.order_basic.currency_code) + " " + _vm._s(_vm.total_received_amount))])])], 2)])]), _vm._v(" "), _vm.order_data.merged_orders != null && _vm.order_data.merged_orders.length != 0 ? _c("div", [_c("hr"), _vm._v(" "), _c("div", {
     staticClass: "mb-2"
   }, [_c("span", {
     staticClass: "text-subhead"
@@ -60674,12 +60576,12 @@ var render = function render() {
         href: merged_order.detail_link,
         target: "_blank"
       }
-    }, [_vm._v(_vm._s(merged_order.order_number))])]) : _c("span", [_vm._v(_vm._s(merged_order.order_number))]), _vm._v("  · \n                ")]);
+    }, [_vm._v(_vm._s(merged_order.order_number))])]) : _c("span", [_vm._v(_vm._s(merged_order.order_number))]), _vm._v("  · \n                        ")]);
   }), 0)]) : _vm._e(), _vm._v(" "), _c("hr"), _vm._v(" "), _c("transactionlistcomponent", {
     attrs: {
       transaction_list: _vm.transactions
     }
-  })], 1), _vm._v(" "), _c("modalcomponent", {
+  })], 1)]), _vm._v(" "), _c("modalcomponent", {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -60698,7 +60600,7 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "modal-header",
       fn: function fn() {
-        return [_vm._v("\n            " + _vm._s(_vm.$t("Confirm")) + "\n        ")];
+        return [_vm._v("\n                " + _vm._s(_vm.$t("Confirm")) + "\n            ")];
       },
       proxy: true
     }, {
@@ -60934,7 +60836,7 @@ var render = function render() {
               _vm.calc_pending_amount = $event.target.value;
             }
           }
-        })])]) : _vm._e()]) : _vm._e()]), _vm._v("\n            " + _vm._s(_vm.$t("Are you sure you want to proceed?")) + "\n        ")];
+        })])]) : _vm._e()]) : _vm._e()]), _vm._v("\n                " + _vm._s(_vm.$t("Are you sure you want to proceed?")) + "\n            ")];
       },
       proxy: true
     }, {
@@ -60982,13 +60884,13 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "modal-header",
       fn: function fn() {
-        return [_vm._v("\n            " + _vm._s(_vm.$t("Confirm")) + "\n        ")];
+        return [_vm._v("\n                " + _vm._s(_vm.$t("Confirm")) + "\n            ")];
       },
       proxy: true
     }, {
       key: "modal-body",
       fn: function fn() {
-        return [_vm._v("\n            " + _vm._s(_vm.$t("Are you sure you want to proceed?")) + "\n        ")];
+        return [_vm._v("\n                " + _vm._s(_vm.$t("Are you sure you want to proceed?")) + "\n            ")];
       },
       proxy: true
     }, {
@@ -61020,7 +60922,7 @@ var render = function render() {
         }) : _vm._e(), _vm._v(" Continue")])];
       },
       proxy: true
-    }], null, false, 4065667252)
+    }], null, false, 2933876404)
   }) : _vm._e(), _vm._v(" "), _vm.show_share_invoice_sms_modal ? _c("modalcomponent", {
     on: {
       close: function close($event) {
@@ -61030,13 +60932,13 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "modal-header",
       fn: function fn() {
-        return [_vm._v("\n            " + _vm._s(_vm.$t("Confirm")) + "\n        ")];
+        return [_vm._v("\n                " + _vm._s(_vm.$t("Confirm")) + "\n            ")];
       },
       proxy: true
     }, {
       key: "modal-body",
       fn: function fn() {
-        return [_vm._v("\n            Are you sure you want to share the invoice as SMS to " + _vm._s(_vm.order_basic.customer_phone) + "?\n        ")];
+        return [_vm._v("\n                Are you sure you want to share the invoice as SMS to " + _vm._s(_vm.order_basic.customer_phone) + "?\n            ")];
       },
       proxy: true
     }, {
@@ -61068,7 +60970,7 @@ var render = function render() {
         }) : _vm._e(), _vm._v(" Continue")])];
       },
       proxy: true
-    }], null, false, 1555883948)
+    }], null, false, 310870444)
   }) : _vm._e(), _vm._v(" "), _vm.show_merge_order_modal ? _c("modalcomponent", {
     attrs: {
       modal_width: "modal-container-md"
@@ -61081,7 +60983,7 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "modal-header",
       fn: function fn() {
-        return [_vm._v("\n           " + _vm._s(_vm.$t("Merge Orders")) + "\n        ")];
+        return [_vm._v("\n               " + _vm._s(_vm.$t("Merge Orders")) + "\n            ")];
       },
       proxy: true
     }, {
@@ -61136,9 +61038,9 @@ var render = function render() {
               var item = _ref.item;
               return [_c("div", {
                 staticClass: "d-flex justify-content-start"
-              }, [_c("div", [_vm._v("\n                                    " + _vm._s(item.order_number) + "\n                                ")])])];
+              }, [_c("div", [_vm._v("\n                                        " + _vm._s(item.order_number) + "\n                                    ")])])];
             }
-          }], null, false, 2636772172),
+          }], null, false, 1566363468),
           model: {
             value: _vm.search_order,
             callback: function callback($$v) {
@@ -61180,11 +61082,11 @@ var render = function render() {
             staticClass: "form-row mb-2"
           }, [_c("div", {
             staticClass: "form-group col-md-3 mb-1 mt-2"
-          }, [_vm._v("\n                        " + _vm._s(merge_order_item.order_number) + "\n                    ")]), _vm._v(" "), _c("div", {
+          }, [_vm._v("\n                            " + _vm._s(merge_order_item.order_number) + "\n                        ")]), _vm._v(" "), _c("div", {
             staticClass: "form-group col-md-3 mb-1 mt-2"
-          }, [_vm._v("\n                        " + _vm._s(merge_order_item.currency_code) + " " + _vm._s(merge_order_item.total_order_amount) + " \n                    ")]), _vm._v(" "), _c("div", {
+          }, [_vm._v("\n                            " + _vm._s(merge_order_item.currency_code) + " " + _vm._s(merge_order_item.total_order_amount) + " \n                        ")]), _vm._v(" "), _c("div", {
             staticClass: "form-group col-md-4 mb-1 mt-2"
-          }, [_vm._v("\n                        " + _vm._s(merge_order_item.created_at_label) + "\n                    ")]), _vm._v(" "), _c("div", {
+          }, [_vm._v("\n                            " + _vm._s(merge_order_item.created_at_label) + "\n                        ")]), _vm._v(" "), _c("div", {
             staticClass: "form-group col-md-2 text-right"
           }, [_c("button", {
             staticClass: "btn btn-outline-danger",
@@ -61231,7 +61133,7 @@ var render = function render() {
         }) : _vm._e(), _vm._v(" Continue")])];
       },
       proxy: true
-    }], null, false, 1426035678)
+    }], null, false, 921056497)
   }) : _vm._e(), _vm._v(" "), _c("modalcomponent", {
     directives: [{
       name: "show",
@@ -61247,7 +61149,7 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "modal-header",
       fn: function fn() {
-        return [_vm._v("\n            Merge Response\n        ")];
+        return [_vm._v("\n                Merge Response\n            ")];
       },
       proxy: true
     }, {
@@ -61302,6 +61204,8 @@ var render = function render() {
     staticClass: "container-lg"
   }, [_c("div", {
     staticClass: "col-md-12 pt-4"
+  }, [_c("div", {
+    staticClass: "card p-4"
   }, [_c("div", {
     staticClass: "d-flex justify-content-between mb-5"
   }, [_c("div", [_c("img", {
@@ -61491,7 +61395,7 @@ var render = function render() {
       staticClass: "align-middle text-right"
     }, [_vm._v(_vm._s(order_product.price))]), _vm._v(" "), _c("td", {
       staticClass: "align-middle text-right"
-    }, [_vm._v("\n                                " + _vm._s(order_product.discount_amount) + "\n                                "), _c("span", {
+    }, [_vm._v("\n                                    " + _vm._s(order_product.discount_amount) + "\n                                    "), _c("span", {
       directives: [{
         name: "show",
         rawName: "v-show",
@@ -61501,7 +61405,7 @@ var render = function render() {
       staticClass: "d-block components-small"
     }, [_vm._v("Discount: " + _vm._s(order_product.discount_percentage) + "%")])]), _vm._v(" "), _c("td", {
       staticClass: "align-middle text-right"
-    }, [_vm._v("\n                                " + _vm._s(order_product.tax_amount) + "\n                                "), _vm._l(order_product.tax_components, function (tax_component, key, index) {
+    }, [_vm._v("\n                                    " + _vm._s(order_product.tax_amount) + "\n                                    "), _vm._l(order_product.tax_components, function (tax_component, key, index) {
       return _c("span", {
         key: index,
         staticClass: "d-block components-small"
@@ -61539,7 +61443,7 @@ var render = function render() {
     staticClass: "text-right"
   }, [_vm._v(_vm._s(_vm.order_basic.additional_discount_amount))]), _vm._v(" "), _vm.order_basic.additional_discount_percentage > 0 ? _c("small", {
     staticClass: "d-block"
-  }, [_vm._v("\n                                " + _vm._s(_vm.order_basic.additional_discount_percentage) + "%\n                            ")]) : _vm._e()]), _vm._v(" "), _c("tr", [_c("td", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.order_basic.additional_discount_percentage) + "%\n                                ")]) : _vm._e()]), _vm._v(" "), _c("tr", [_c("td", {
     staticClass: "text-right",
     attrs: {
       colspan: "6"
@@ -61558,14 +61462,14 @@ var render = function render() {
     attrs: {
       colspan: "6"
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("Total Tax")) + "\n                                "), _vm.order_basic.product_level_total_tax > 0 ? _c("small", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("Total Tax")) + "\n                                    "), _vm.order_basic.product_level_total_tax > 0 ? _c("small", {
     staticClass: "d-block"
-  }, [_vm._v("\n                                    Product Tax : " + _vm._s(_vm.order_basic.product_level_total_tax) + "\n                                ")]) : _vm._e(), _vm._v(" "), _vm.order_basic.order_level_tax_percentage > 0 ? _c("small", {
+  }, [_vm._v("\n                                        Product Tax : " + _vm._s(_vm.order_basic.product_level_total_tax) + "\n                                    ")]) : _vm._e(), _vm._v(" "), _vm.order_basic.order_level_tax_percentage > 0 ? _c("small", {
     staticClass: "d-block"
-  }, [_vm._v("\n                                    Overall Tax: \n                                    "), _vm._l(_vm.order_basic.order_level_tax_components, function (tax_component, key, index) {
+  }, [_vm._v("\n                                        Overall Tax: \n                                        "), _vm._l(_vm.order_basic.order_level_tax_components, function (tax_component, key, index) {
     return _c("span", {
       key: index
-    }, [_vm._v("\n                                        " + _vm._s(tax_component.tax_type) + " : " + _vm._s(tax_component.tax_amount.toFixed(2)) + " (" + _vm._s(tax_component.tax_percentage) + "%) ·\n                                    ")]);
+    }, [_vm._v("\n                                            " + _vm._s(tax_component.tax_type) + " : " + _vm._s(tax_component.tax_amount.toFixed(2)) + " (" + _vm._s(tax_component.tax_percentage) + "%) ·\n                                        ")]);
   })], 2) : _vm._e()]), _vm._v(" "), _c("td", {
     staticClass: "text-right"
   }, [_vm._v(_vm._s(_vm.order_basic.total_tax_amount))])]), _vm._v(" "), _c("tr", [_c("td", {
@@ -61575,7 +61479,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("Total")) + " (INCL Tax)")]), _vm._v(" "), _c("td", {
     staticClass: "text-right text-title"
-  }, [_vm._v(_vm._s(_vm.order_basic.total_order_amount))])])], 2)])]), _vm._v(" "), _vm._m(2)])])]);
+  }, [_vm._v(_vm._s(_vm.order_basic.total_order_amount))])])], 2)])]), _vm._v(" "), _vm._m(2)])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -61602,7 +61506,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "d-flex justify-content-center mb-5"
-  }, [_vm._v("\n                Powered by "), _c("img", {
+  }, [_vm._v("\n                    Powered by "), _c("img", {
     staticClass: "powered-by ml-2",
     attrs: {
       src: "/images/logo_word_mark.png"
@@ -63259,7 +63163,7 @@ var render = function render() {
     attrs: {
       "for": "sale_price"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Total Sale Price")) + " (" + _vm._s(_vm.currency_code) + ")")]), _vm._v(" "), _c("input", {
+  }, [_vm._v(_vm._s(_vm.$t("Total Sale Price Per Unit")) + " (" + _vm._s(_vm.currency_code) + ")")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -63297,7 +63201,39 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("sale_price_including_tax")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("sale_price_including_tax")))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.errors.first("sale_price_including_tax")))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "total_sale_price_including_tax"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Total Price")) + " (" + _vm._s(_vm.currency_code) + ")")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.total_sale_price_including_tax,
+      expression: "total_sale_price_including_tax"
+    }],
+    staticClass: "form-control form-control-custom",
+    attrs: {
+      type: "number",
+      name: "total_sale_price_including_tax",
+      placeholder: _vm.$t("Please enter total sale price"),
+      autocomplete: "off",
+      step: "1",
+      min: "0",
+      readonly: _vm.is_taxcode_inclusive == false
+    },
+    domProps: {
+      value: _vm.total_sale_price_including_tax
+    },
+    on: {
+      input: [function ($event) {
+        if ($event.target.composing) return;
+        _vm.total_sale_price_including_tax = $event.target.value;
+      }, _vm.calculate_sale_prices]
+    }
+  })])]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-2"
   }, [_c("div", {
     staticClass: "form-group col-md-3"
@@ -63819,12 +63755,6 @@ var render = function render() {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
-      "for": "name"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("GST Paid For Product")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.product.gst_paid_for_product))])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
       "for": "email"
     }
   }, [_vm._v(_vm._s(_vm.$t("Supplier")))]), _vm._v(" "), _vm.product.supplier != null ? _c("p", [_vm._v(_vm._s(_vm.product.supplier.name) + " (" + _vm._s(_vm.product.supplier.supplier_code) + ")")]) : _c("p", [_vm._v("-")])]), _vm._v(" "), _c("div", {
@@ -63894,7 +63824,13 @@ var render = function render() {
     attrs: {
       "for": "sale_amount_excluding_tax"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Sale Price Excluding Tax")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.product.sale_amount_excluding_tax))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Sale Price Per Unit")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.product.sale_amount_excluding_tax))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "sale_amount_excluding_tax"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Total Price")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.product.total_sale_price_including_tax))])]), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -64887,7 +64823,7 @@ var render = function render() {
     staticClass: "col-md-2 offset-md-7 text-right"
   }, [_c("span", {
     staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Shipping Charges")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Other Charges")))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-2"
   }, [_c("input", {
     directives: [{
@@ -64923,47 +64859,6 @@ var render = function render() {
       error: _vm.errors.has("shipping_charge")
     }
   }, [_vm._v(_vm._s(_vm.errors.first("shipping_charge")))])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-row mb-3"
-  }, [_c("div", {
-    staticClass: "col-md-2 offset-md-7 text-right"
-  }, [_c("span", {
-    staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Packing Charges")))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-2"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.packing_charge,
-      expression: "packing_charge"
-    }, {
-      name: "validate",
-      rawName: "v-validate",
-      value: "decimal|min_value:0",
-      expression: "'decimal|min_value:0'"
-    }],
-    staticClass: "form-control form-control-custom",
-    attrs: {
-      type: "number",
-      name: "packing_charge",
-      autocomplete: "off",
-      step: "0.01",
-      min: "0"
-    },
-    domProps: {
-      value: _vm.packing_charge
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-        _vm.packing_charge = $event.target.value;
-      }, _vm.calculate_price]
-    }
-  }), _vm._v(" "), _c("span", {
-    "class": {
-      error: _vm.errors.has("packing_charge")
-    }
-  }, [_vm._v(_vm._s(_vm.errors.first("packing_charge")))])])]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-3"
   }, [_c("div", {
     staticClass: "col-md-2 offset-md-7 text-right"
@@ -65745,7 +65640,7 @@ var render = function render() {
     staticClass: "col-md-2 offset-md-7 text-right"
   }, [_c("span", {
     staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Shipping Charges")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Other Charges")))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-2"
   }, [_c("input", {
     directives: [{
@@ -65781,47 +65676,6 @@ var render = function render() {
       error: _vm.errors.has("shipping_charge")
     }
   }, [_vm._v(_vm._s(_vm.errors.first("shipping_charge")))])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-row mb-3"
-  }, [_c("div", {
-    staticClass: "col-md-2 offset-md-7 text-right"
-  }, [_c("span", {
-    staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Packing Charges")))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-2"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.packing_charge,
-      expression: "packing_charge"
-    }, {
-      name: "validate",
-      rawName: "v-validate",
-      value: "decimal|min_value:0",
-      expression: "'decimal|min_value:0'"
-    }],
-    staticClass: "form-control form-control-custom",
-    attrs: {
-      type: "number",
-      name: "packing_charge",
-      autocomplete: "off",
-      step: "0.01",
-      min: "0"
-    },
-    domProps: {
-      value: _vm.packing_charge
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-        _vm.packing_charge = $event.target.value;
-      }, _vm.calculate_price]
-    }
-  }), _vm._v(" "), _c("span", {
-    "class": {
-      error: _vm.errors.has("packing_charge")
-    }
-  }, [_vm._v(_vm._s(_vm.errors.first("packing_charge")))])])]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-3"
   }, [_c("div", {
     staticClass: "col-md-2 offset-md-7 text-right"
@@ -67105,7 +66959,7 @@ var render = function render() {
     attrs: {
       "for": "discount_percentage"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Discount %")))])]), _vm._v(" "), _vm.tax_option == "GST" ? _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Discount %")))])]), _vm._v(" "), _vm.tax_option == "gst" ? _c("div", {
     staticClass: "form-group col-md-1 mb-1"
   }, [_c("label", {
     attrs: {
@@ -67211,7 +67065,7 @@ var render = function render() {
         name: "product.unit_price_" + index,
         "data-vv-as": "Unit Price",
         autocomplete: "off",
-        step: "0.01",
+        step: "1",
         min: "0"
       },
       domProps: {
@@ -67263,7 +67117,7 @@ var render = function render() {
       "class": {
         error: _vm.errors.has("product.discount_percentage_" + index)
       }
-    }, [_vm._v(_vm._s(_vm.errors.first("product.discount_percentage_" + index)))])]), _vm._v(" "), _vm.tax_option == "GST" ? _c("div", {
+    }, [_vm._v(_vm._s(_vm.errors.first("product.discount_percentage_" + index)))])]), _vm._v(" "), _vm.tax_option == "gst" ? _c("div", {
       staticClass: "form-group col-md-1"
     }, [_c("input", {
       directives: [{
@@ -67283,7 +67137,7 @@ var render = function render() {
         name: "product.tax_percentage_" + index,
         "data-vv-as": "Tax %",
         autocomplete: "off",
-        step: "0.01",
+        step: "1",
         min: "0"
       },
       domProps: {
@@ -67319,7 +67173,7 @@ var render = function render() {
         name: "product.amount_" + index,
         "data-vv-as": "Amount",
         autocomplete: "off",
-        step: "0.01",
+        step: "1",
         min: "0",
         readonly: "true"
       },
@@ -67365,7 +67219,7 @@ var render = function render() {
     staticClass: "col-md-2 offset-md-7 text-right"
   }, [_c("span", {
     staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Shipping Charges")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Other Charges")))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-2"
   }, [_c("input", {
     directives: [{
@@ -67384,7 +67238,7 @@ var render = function render() {
       type: "number",
       name: "shipping_charge",
       autocomplete: "off",
-      step: "0.01",
+      step: "1",
       min: "0"
     },
     domProps: {
@@ -67401,47 +67255,6 @@ var render = function render() {
       error: _vm.errors.has("shipping_charge")
     }
   }, [_vm._v(_vm._s(_vm.errors.first("shipping_charge")))])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-row mb-3"
-  }, [_c("div", {
-    staticClass: "col-md-2 offset-md-7 text-right"
-  }, [_c("span", {
-    staticClass: "align-text-top"
-  }, [_vm._v(_vm._s(_vm.$t("Packing Charges")))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-2"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.packing_charge,
-      expression: "packing_charge"
-    }, {
-      name: "validate",
-      rawName: "v-validate",
-      value: "decimal|min_value:0",
-      expression: "'decimal|min_value:0'"
-    }],
-    staticClass: "form-control form-control-custom",
-    attrs: {
-      type: "number",
-      name: "packing_charge",
-      autocomplete: "off",
-      step: "0.01",
-      min: "0"
-    },
-    domProps: {
-      value: _vm.packing_charge
-    },
-    on: {
-      input: [function ($event) {
-        if ($event.target.composing) return;
-        _vm.packing_charge = $event.target.value;
-      }, _vm.calculate_price]
-    }
-  }), _vm._v(" "), _c("span", {
-    "class": {
-      error: _vm.errors.has("packing_charge")
-    }
-  }, [_vm._v(_vm._s(_vm.errors.first("packing_charge")))])])]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-3"
   }, [_c("div", {
     staticClass: "col-md-2 offset-md-7 text-right"
@@ -83651,7 +83464,7 @@ var render = function render() {
       name: "amount",
       placeholder: _vm.$t("Please enter the amount"),
       autocomplete: "off",
-      step: "0.01",
+      step: "1",
       min: "0"
     },
     domProps: {
