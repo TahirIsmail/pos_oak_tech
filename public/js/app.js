@@ -55441,12 +55441,7 @@ var render = function render() {
     }
   }, [_c("span", [_vm._v(" © " + _vm._s(_vm.year) + " " + _vm._s(_vm.company) + " · "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.version))])]), _vm._v(" "), _c("languageswitchercomponent", {
-    attrs: {
-      languages: _vm.languages,
-      selected_language: _vm.selected_language
-    }
-  })], 1)]);
+  }, [_vm._v(_vm._s(_vm.version))])])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -57614,7 +57609,7 @@ var render = function render() {
     attrs: {
       "for": "product_title"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Product Title")))]), _vm._v(" "), _c("input", {
+  }, [_vm._v(_vm._s(_vm.$t("Product Model")))]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -57625,7 +57620,7 @@ var render = function render() {
     attrs: {
       type: "text",
       name: "product_title",
-      placeholder: _vm.$t("Product Title"),
+      placeholder: _vm.$t("Product Model"),
       autocomplete: "off"
     },
     domProps: {

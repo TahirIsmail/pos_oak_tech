@@ -163,6 +163,7 @@
                 <div class="mb-2" v-if="customer.customer_type == 'WALKIN'">
                     <span class="text-subhead">{{ $t("Documents") }}</span>
                 </div>
+                
                 <div class="form-row mb-2" v-if="customer.customer_type == 'WALKIN'">
                     <div class="form-group col-md-6">
                         <label for="">{{ $t("CNIC IMAGE") }}</label>

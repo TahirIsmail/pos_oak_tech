@@ -896,11 +896,18 @@ class Product extends Controller
                     ['products.product_code', 'like', '%' . trim($product_code) . '%']
                 ]);
             }
+            // if (isset($product_title) && $product_title != '') {
+            //     $query->where([
+            //         ['products.name', 'like', '%' . trim($product_title) . '%']
+            //     ]);
+            // }
             if (isset($product_title) && $product_title != '') {
-                $query->where([
-                    ['products.name', 'like', '%' . trim($product_title) . '%']
-                ]);
+                $query->whereHas('product_specifications', function ($query) use ($product_title) {
+                    $query->where('specification_label', 'Model');
+                    $query->where('specification_details', 'like', '%' . trim($product_title) . '%');
+                });
             }
+            
             if (isset($product_category) && $product_category != '') {
 
 

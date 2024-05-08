@@ -40,8 +40,8 @@
                             <input type="text" name="barcode" v-model="barcode" class="form-control form-control-lg" ref="barcode" :placeholder="$t('Scan Barcode')"  autocomplete="off">
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="product_title">{{ $t("Product Title") }}</label>
-                            <input type="text" name="product_title" v-model="product_title" class="form-control form-control-lg" :placeholder="$t('Product Title')"  autocomplete="off">
+                            <label for="product_title">{{ $t("Product Model") }}</label>
+                            <input type="text" name="product_title" v-model="product_title" class="form-control form-control-lg" :placeholder="$t('Product Model')"  autocomplete="off">
                         </div>
                         
                         <div class="form-group col-md-3">

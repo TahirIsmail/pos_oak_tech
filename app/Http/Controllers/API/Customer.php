@@ -90,7 +90,11 @@ class Customer extends Controller
                 $item_array[$key][] = $customer['created_at_label'];
                 $item_array[$key][] = $customer['updated_at_label'];
                 $item_array[$key][] = (isset($customer['created_by']) && isset($customer['created_by']['fullname'])) ? $customer['created_by']['fullname'] : '-';
-                $item_array[$key][] = view('customer.layouts.customer_actions', array('customer' => $customer))->render();
+                if ($customer['customer_type'] !== 'WALKIN') {
+                    $item_array[$key][] = view('customer.layouts.customer_actions', array('customer' => $customer))->render();
+                }else{
+                    $item_array[$key][] = '';
+                }
             }
 
             $response = [
