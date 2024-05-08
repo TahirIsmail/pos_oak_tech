@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
             <div class="card">
             <form @submit.prevent="submit_form" class="mb-3">
@@ -64,7 +65,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('currency') }">{{ errors.first('currency') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-3" v-if="invoice_type == 'gst'">
                         <label for="tax_option">{{ $t("Tax Option") }}</label>
                         <select name="tax_option" v-model="tax_option" v-validate="''" class="form-control form-control-custom custom-select">
                             <option value="">Choose Tax Option..</option>
@@ -298,6 +299,7 @@
             currency_list: Array,
             invoice_data: [Array, Object],
             tax_options: [Array, Object],
+            invoice_type: String
         },
 
         watch: {
@@ -548,6 +550,7 @@
                             formData.append("terms", this.terms);
                             formData.append("tax_option", this.tax_option);
                             formData.append("products", JSON.stringify(this.products));
+                            formData.append("invoice_type", this.invoice_type)
 
                             axios.post(this.api_link, formData).then((response) => {
                                 if(response.data.status_code == 200) {

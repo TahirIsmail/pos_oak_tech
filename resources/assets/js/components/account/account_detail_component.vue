@@ -18,6 +18,7 @@
             <div class="mb-2">
                 <span class="text-subhead">{{ $t("Basic Information") }}</span>
             </div>
+            
             <div class="form-row mb-2">
                 <div class="form-group col-md-3">
                     <label for="account_name">{{ $t("Account Code") }}</label>

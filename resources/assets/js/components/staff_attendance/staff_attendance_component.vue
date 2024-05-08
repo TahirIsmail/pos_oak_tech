@@ -319,7 +319,7 @@ export default {
   background-color: #fff;
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, .125);
-  border-radius: 0.25rem;
+  border-radius: 10px;
 }
 
 .form-row {

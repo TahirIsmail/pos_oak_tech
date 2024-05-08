@@ -1,11 +1,11 @@
 <style>
 .jumbotron {
-  background-color: #f8f8f8;
+  background-color: #238dff;
   padding: 30px;
   border-radius: 10px;
   margin: 20px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: #333;
+  box-shadow: 0 4px 6px rgba(209, 217, 220, 0.1);
+  color: #238dff !important;
   /* Text color */
 }
 
@@ -77,7 +77,6 @@
           </div>
         </div>
 
-       
         <div class="">
           <date-picker
             type="month"
@@ -103,11 +102,11 @@
         <div class="col-md-12">
           <div class="row">
             <div
-              class="col-sm-12 col-md-12 col-lg-6   mb-5"
+              class="col-sm-12 col-md-12 col-lg-6 mb-5"
               style="margin-bottom: 30px"
             >
               <div
-                class="row1 ap-po-details ap-po-details--2 radius-xl bg-white d-flex "
+                class="row1 ap-po-details ap-po-details--2 radius-xl bg-white d-flex"
                 style="padding: 25px"
               >
                 <div class="col-sm-12 col-md-6 col-lg-6">
@@ -137,14 +136,14 @@
             </div>
 
             <div
-              class="col-sm-12 col-md-12 col-lg-6  mb-5"
+              class="col-sm-12 col-md-12 col-lg-6 mb-5"
               style="margin-bottom: 30px"
             >
               <div
-                class=" row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
+                class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
                 style="padding: 25px"
               >
-              <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-6 col-lg-6">
                   <div class="overview-content">
                     <h1>7,461</h1>
                     <p>Users/Customers</p>
@@ -170,12 +169,15 @@
               <!-- Card 2 End  -->
             </div>
 
-            <div class="col-sm-12 col-md-12 col-lg-6  mb-5" style="margin-bottom: 30px">
+            <div
+              class="col-sm-12 col-md-12 col-lg-6 mb-5"
+              style="margin-bottom: 30px"
+            >
               <div
-                class="row1  ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
+                class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
                 style="padding: 25px"
               >
-              <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-6 col-lg-6">
                   <div class="overview-content">
                     <h1>7,461</h1>
                     <p>Staff</p>
@@ -201,12 +203,15 @@
               <!-- Card 3 End  -->
             </div>
 
-            <div class="col-sm-12 col-md-12 col-lg-6  mb-5" style="margin-bottom: 30px">
+            <div
+              class="col-sm-12 col-md-12 col-lg-6 mb-5"
+              style="margin-bottom: 30px"
+            >
               <div
                 class="row1 ap-po-details ap-po-details--2 p-25 radius-xl bg-white d-flex justify-content-between"
                 style="padding: 25px"
               >
-              <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-6 col-lg-6">
                   <div class="overview-content">
                     <h1>7,461</h1>
                     <p>Purchase Order</p>
@@ -456,7 +461,7 @@
                       <div class="parentContainer">
                         <div>
                           <canvas
-                            class="canvasdispaly"
+                          
                             id="barChartCashflow_Y"
                           ></canvas>
                         </div>
@@ -1005,7 +1010,7 @@
 
           <!--  ====================== Total detail per month ========== ////  -->
 
-          <div class="col-md-12" style="margin-top: 30px">
+          <div class="col-md-12" style="margin-top: 30px; margin-bottom: 30px;">
             <div class="row">
               <div
                 class="col-sm-12 col-md-12 col-lg-3"
@@ -1030,7 +1035,10 @@
                   <div class="forcast__chart">
                     <div class="parentContainer">
                       <div>
-                        <canvas class=" forcart_canvas" ref="lineChartCanvas"></canvas>
+                        <canvas
+                          class="forcart_canvas"
+                          ref="lineChartCanvas"
+                        ></canvas>
                       </div>
                     </div>
                   </div>
@@ -1061,7 +1069,10 @@
                   <div class="forcast__chart">
                     <div class="parentContainer">
                       <div>
-                        <canvas class=" forcart_canvas" ref="lineChartCanvastvalue"></canvas>
+                        <canvas
+                          class="forcart_canvas"
+                          ref="lineChartCanvastvalue"
+                        ></canvas>
                       </div>
                     </div>
                   </div>
@@ -1092,7 +1103,10 @@
                   <div class="forcast__chart">
                     <div class="parentContainer">
                       <div>
-                        <canvas class=" forcart_canvas" ref="lineChartCanvastRevenue"></canvas>
+                        <canvas
+                          class="forcart_canvas"
+                          ref="lineChartCanvastRevenue"
+                        ></canvas>
                       </div>
                     </div>
                   </div>
@@ -1123,7 +1137,10 @@
                   <div class="forcast__chart">
                     <div class="parentContainer">
                       <div>
-                        <canvas class=" forcart_canvas" ref="lineChartCanvastInvoices"></canvas>
+                        <canvas
+                          class="forcart_canvas"
+                          ref="lineChartCanvastInvoices"
+                        ></canvas>
                       </div>
                     </div>
                   </div>
@@ -1411,9 +1428,6 @@ export default {
       return date != "" ? moment(date).format("YYYY-MM") : "";
     },
 
-  
-   
-
     createChart() {
       const ctx = this.$refs.myChart;
 
@@ -1489,10 +1503,10 @@ export default {
               ],
             },
             plugins: {
-          legend: {
-            display: false,
-          },
-        },
+              legend: {
+                display: false,
+              },
+            },
           },
         });
       }
@@ -1578,10 +1592,10 @@ export default {
               ],
             },
             plugins: {
-          legend: {
-            display: false,
-          },
-        },
+              legend: {
+                display: false,
+              },
+            },
           },
         });
       }
@@ -1667,103 +1681,103 @@ export default {
               ],
             },
             plugins: {
-          legend: {
-            display: false,
-          },
-        },
+              legend: {
+                display: false,
+              },
+            },
           },
         });
       }
     },
 
     totalPurchase() {
-  const selector = "myChart15Canvas";
-  const bgColor = "#2C99FF20";
-  const hBgColor = "#2C99FF";
-  const label = "Total";
+      const selector = "myChart15Canvas";
+      const bgColor = "#2C99FF20";
+      const hBgColor = "#2C99FF";
+      const label = "Total";
 
-  const canvas = this.$refs.myChart15Canvas;
-  if (canvas) {
-    const chart = new Chart(canvas, {
-      type: "bar",
-      data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-        datasets: [
-          {
-            label: label,
-            data: this.chartData,
-            backgroundColor: bgColor,
-            hoverBackgroundColor: hBgColor,
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: true,
-        responsive: true,
-        legend: {
-          display: false,
-          labels: {
-            display: false,
-          },
-        },
-        tooltips: {
-          mode: "label",
-          intersect: false,
-          position: "average",
-          enabled: false,
-          custom: this.customTooltips,
-          callbacks: {
-            label: (tooltipItem, data) => {
-              const dstLabel = data.datasets[tooltipItem.datasetIndex].label;
-              const { yLabel } = tooltipItem;
-              return `<span class="chart-data">${yLabel}</span> <span class="data-label">${dstLabel}</span>`;
-            },
-            labelColor: (tooltipItem, chart) => {
-              const dataset = chart.config.data.datasets[tooltipItem.datasetIndex];
-              return {
-                backgroundColor: dataset.hoverBackgroundColor,
-                borderColor: "transparent",
-                usePointStyle: true,
-              };
-            },
-          },
-        },
-        scales: {
-          yAxes: [
-            {
-              stacked: true,
-              gridLines: {
-                display: false, // Remove y-axis grid lines
+      const canvas = this.$refs.myChart15Canvas;
+      if (canvas) {
+        const chart = new Chart(canvas, {
+          type: "bar",
+          data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            datasets: [
+              {
+                label: label,
+                data: this.chartData,
+                backgroundColor: bgColor,
+                hoverBackgroundColor: hBgColor,
               },
-              ticks: {
+            ],
+          },
+          options: {
+            maintainAspectRatio: true,
+            responsive: true,
+            legend: {
+              display: false,
+              labels: {
                 display: false,
               },
             },
-          ],
-          xAxes: [
-            {
-              stacked: true,
-              barPercentage: 1,
-              gridLines: {
-                
-                display: false, // Remove x-axis grid lines
+            tooltips: {
+              mode: "label",
+              intersect: false,
+              position: "average",
+              enabled: false,
+              custom: this.customTooltips,
+              callbacks: {
+                label: (tooltipItem, data) => {
+                  const dstLabel =
+                    data.datasets[tooltipItem.datasetIndex].label;
+                  const { yLabel } = tooltipItem;
+                  return `<span class="chart-data">${yLabel}</span> <span class="data-label">${dstLabel}</span>`;
+                },
+                labelColor: (tooltipItem, chart) => {
+                  const dataset =
+                    chart.config.data.datasets[tooltipItem.datasetIndex];
+                  return {
+                    backgroundColor: dataset.hoverBackgroundColor,
+                    borderColor: "transparent",
+                    usePointStyle: true,
+                  };
+                },
               },
-              ticks: {
+            },
+            scales: {
+              yAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: false, // Remove y-axis grid lines
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  stacked: true,
+                  barPercentage: 1,
+                  gridLines: {
+                    display: false, // Remove x-axis grid lines
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              ],
+            },
+            plugins: {
+              legend: {
                 display: false,
               },
             },
-          ],
-        },
-        plugins: {
-          legend: {
-            display: false,
           },
-        },
-      },
-    });
-  }
-},
-
+        });
+      }
+    },
 
     initializeCashflowChart() {
       const ctx = this.$refs.cashflowChartCanvas;

@@ -1,8 +1,8 @@
 @extends('layouts.layout')
 <style>
-    .dataTables_scroll{
+    /* .dataTables_scroll{
         overflow: hidden !important;
-    }
+    } */
 </style>
 @section('content')
     <div class="row">
@@ -12,12 +12,26 @@
                     <div class="mr-auto">
                         <span class="text-title">{{ __('Invoices') }}</span>
                     </div>
-                    <div class="">
+
+                    {{-- <div class="">
                         @if (check_access(['A_ADD_INVOICE'], true))
                             <a href="{{ route('add_invoice') }}" role="button"
                                 class="btn btn-primary">{{ __('New Invoice') }}</a>
                         @endif
+                    </div> --}}
+                    <div class="btn-group">
+                        @if (check_access(['A_ADD_INVOICE'], true))
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ __('New Invoice') }}
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ route('add_invoice', ['type' => 'gst']) }}">Invoice with GST</a>
+                                <a class="dropdown-item" href="{{ route('add_invoice', ['type' => 'cash']) }}">Invoice with Cash</a>
+                            </div>
+                        @endif
                     </div>
+                    
+                    
                 </div>
 
                 <div class="my-4">

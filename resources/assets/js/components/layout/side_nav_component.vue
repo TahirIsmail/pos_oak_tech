@@ -39,3 +39,18 @@
       }
   }
 </script>
+
+<style scoped>
+.side_nav {
+    background-color: #1850a5 !important;
+}
+
+
+.module {
+    color:  #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+
+</style>

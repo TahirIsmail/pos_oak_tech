@@ -18,6 +18,7 @@ use App\Models\Customer as CustomerModel;
 use App\Http\Resources\SettingEmailResource;
 use App\Http\Resources\SettingSmsResource;
 use App\Http\Resources\SettingAppResource;
+use App\Models\User;
 
 class Setting extends Controller
 {
@@ -74,6 +75,8 @@ class Setting extends Controller
             $app_setting_data = new SettingAppResource($app_setting);
         }
         $data['setting_data'] = $app_setting_data;
+        $contact_person = User::with('role')->whereNotNull('company_contact_person')->get();
+        $data['contact_person'] = $contact_person;
 
         // $data['customer'] = CustomerModel::where('customers.customer_type', 'DEFAULT')->first();
 
@@ -118,9 +121,11 @@ class Setting extends Controller
         $data['chost'] = trim($_SERVER['HTTP_HOST']);
         $data['cip'] = trim($_SERVER['REMOTE_ADDR']);
 
-        // dd($data);
+        $users = User::with('role')->whereNotIn('role_id', [2, 3])->get();
+        $data['users'] = $users;
+        $contact_person = User::whereNotNull('company_contact_person')->get();
+        $data['contact_person'] = $contact_person;
 
-        
         return view('setting.app.edit_app_setting', $data);
     }
 

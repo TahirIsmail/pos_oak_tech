@@ -224,6 +224,10 @@ Vue.component('add-customer-complaint-component', require('./components/complain
 Vue.component('viewcustomercomplaint', require('./components/complaint/view_customer_complaint_component.vue').default);
 
 
+Vue.component('adddemandformcomponent', require('./components/demand_form/add_demand_form_component.vue').default);
+
+
+
 
 // Vue.component('addexpensecomponent',require('./components/expense/add_expense_component.vue').default);
 Vue.component('expensedetailcomponent',require('./components/expense/detail_expense_component.vue').default);

@@ -123,18 +123,88 @@
                     </div>
                 </div>
 
-                <!-- <hr> -->
+                <hr> 
+               <div class="d-flex flex-wrap mb-1">
+                    <div class="mr-auto">
+                        <span class="text-subhead">{{ $t("Select Contact Persons") }}</span>
+                    </div>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-4">
+                        <label for="gender">{{ $t("Contact Person") }}</label>
+                        <select name="contact_person" v-model="contact_person" class="form-control form-control-custom custom-select">
+                            <option selected disabled>Choose Contact Person..</option>
+                            <option v-for="user in users" :key="user.id" :value="user.id"> {{ `${user.fullname} (${user.role.label})` }}</option>                           
+                        </select>
+                        </div>
+                </div>
 
-                <!-- <div class="d-flex flex-wrap mb-1">
+               <!-- <hr> 
+               <div class="d-flex flex-wrap mb-1">
+                    <div class="mr-auto">
+                        <span class="text-subhead">{{ $t("Contact Persons") }}</span>
+                    </div>
+                </div>
+                <div id="main_2dev">
+                    <div v-for="(person, index) in contact_persons" :key="index" class="form-row mb-2">
+                        <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`position ${index}`">{{ $t("Job Post") }}</label>
+                        <select :name="`position ${index}`" v-model="person.position"
+                                class="form-control form-control-custom custom-select">
+                                <option selected disabled>Choose Employer Post..</option>
+                                <option value="Sales Person">Sales Person</option>
+                                <option value="Accountant">Accountant</option>
+                                <option value="Point of Content">Point of Content</option>
+                                <option value="Other">Other</option>                                
+                            </select>
+                        <span :class="{ 'error': errors.has(`position ${index}`) }">{{ errors.first(`position ${index}`) }}</span>
+                      </div>
+
+                      <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Name ${index}`">{{ $t("Name") }}</label>
+                        <input
+                        :name="`Name ${index}`"
+                        v-model="person.name"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Name')"
+                        />
+                        <span :class="{ 'error': errors.has(`Name ${index}`) }">{{ errors.first(`Name ${index}`) }}</span>
+                      </div>
+                      <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Email ${index}`">{{ $t("Email") }}</label>
+                        <input
+                        :name="`Email ${index}`"
+                        v-model="person.email"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Email')"
+                        />
+                        <span :class="{ 'error': errors.has(`Email ${index}`) }">{{ errors.first(`Email ${index}`) }}</span>
+                      </div>
+                      <div class="form-group col-sm-12 col-md-10 col-lg-4">
+                        <label :for="`Mobile ${index}`">{{ $t("Mobile") }}</label>
+                        <input
+                        :name="`Mobile ${index}`"
+                        v-model="person.mobile"
+                        class="form-control form-control-custom"
+                        :placeholder="$t('Enter Mobile')"
+                        />
+                        <span :class="{ 'error': errors.has(`Mobile ${index}`) }">{{ errors.first(`Mobile ${index}`) }}</span>
+                      </div>
+                    </div>
+                    <div class="w-100 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary mr-5 mb-2" @click="addContactPerson">Add More Persons</button>
+                    </div>
+                </div> -->
+
+                 <!-- <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Default Customer Details") }}</span>
                     </div>
                     <div class="">
                         
                     </div>
-                </div> -->
-
-                <!-- <div class="form-row mb-2">
+                </div>
+                 <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="name">{{ $t("Name") }}</label>
                         <input type="text" name="name" v-model="name" v-validate="'max:250'" class="form-control form-control-custom" :placeholder="$t('Please enter name')"  autocomplete="off">
@@ -240,7 +310,7 @@
                 modal           : false,
                 show_modal      : false,
                 api_link        : '/api/update_setting_app',
-
+                contact_person: (this.company_contact_person == null) ? '' : this.company_contact_person[0].id,
                 company_name    : (this.setting_data.length == 0)?'':this.setting_data.company_name,
                 app_title    : (this.setting_data.length == 0)?'':this.setting_data.app_title,
                 app_timezone    : (this.setting_data.length == 0)?'':this.setting_data.timezone,
@@ -272,18 +342,22 @@
         },
         props: {
             setting_data: [Array, Object],
+            users: [Array, Object],
+            company_contact_person: [Array, Object],
             date_time_formats: Array,
             date_formats: Array,
             timezones: [Array, Object],
             deactivation_eligible: Boolean,
             chost: String,
             cip: String,
+
             // customer: [Array, Object],
         },
         mounted() {
             console.log('Edit App setting page loaded');
         },
         methods: {
+        
             submit_form(){
                 this.$validator.validateAll().then((result) => {
                     if (result) {
@@ -307,6 +381,7 @@
                             formData.append("invoice_print_logo", invoice_print_logo_file);
                             formData.append("navbar_logo", navbar_logo_file);
                             formData.append("favicon", favicon_file);
+                            formData.append("company_contact_person", this.contact_person);
 
                             axios.post(this.api_link, formData).then((response) => {
                                 

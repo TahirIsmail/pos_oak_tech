@@ -15,7 +15,7 @@
                 </div>
 
                 <button class="navbar-toggler dropdown-toggle" type="button" data-toggle="collapse" data-target="#small_menu_toogler" aria-controls="small_menu_toogler" aria-expanded="false" aria-label="Toggle actions">
-                    <img :src="logged_user_data.profile_image" class="d-inline-block rounded-circle mr-2 top-nav-profile" alt="">
+                    <img :src="logged_user_data.profile_image" class="d-inline-block rounded-circle mr-2 top-nav-profile" alt="" style="background-color: #fff;">
                 </button>
 
 

@@ -1,197 +1,199 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap mb-4">
-                <div class="mr-auto">
-                   <div class="d-flex">
-                        <div>
-                            <span class="text-title"> <span class='text-muted'>{{ $t("Category") }}</span> {{ category.label }} ({{ category.category_code }}) </span>
+            <div class="card p-4">
+                <div class="d-flex flex-wrap mb-4">
+                    <div class="mr-auto">
+                       <div class="d-flex">
+                            <div>
+                                <span class="text-title"> <span class='text-muted'>{{ $t("Category") }}</span> {{ category.label }} ({{ category.category_code }}) </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="">
-                    <span v-bind:class="category.status.color">{{ category.status.label }}</span>
-                </div>
-            </div>            
-            <div class="form-row mb-2">
-                <p v-html="server_errors" v-bind:class="[error_class]"></p>
-                <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-info mr-1 w-100" v-on:click="add_child_category()" v-bind:disabled="add_child_category_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_child_category_processing == true"></i> {{ $t("Add Child Category") }}</button>
-                </div>
-                <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-info mr-1 w-100" v-on:click="add_category_specifications()" v-bind:disabled="add_category_specifications_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specifications_processing == true"></i> {{ $t("Add Category Specifications") }}</button>
-                </div>
-                <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-info mr-1 w-100" v-on:click="add_category_specification_details()" v-bind:disabled="add_category_specification_details_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specification_details_processing == true"></i> {{ $t("Add Specification Values") }}</button>
-                </div>
-            </div>
-            <hr>
-
-            <div class="mb-2">
-                <span class="text-subhead">{{ $t("Basic Information") }}</span>
-            </div>
-            <div class="form-row mb-2">
-                <div class="form-group col-md-2">
-                    <label for="category_code">{{ $t("Category Code") }}</label>
-                    <p>{{ category.category_code  }}</p>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="label">{{ $t("Category Name") }}</label>
-                    <p>{{ category.label }}</p>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="label">{{ $t("Sub Category Name") }}</label>
-                    <p style="font-weight: 600;" v-for="cate in category.subcategories" :key="cate.id">{{ cate.sub_category_name }}</p>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="created_on">{{ $t("Created On") }}</label>
-                    <p>{{ category.created_at }}</p>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="updated_on">{{ $t("Updated On") }}</label>
-                    <p>{{ category.updated_at }}</p>
+                    <div class="">
+                        <span v-bind:class="category.status.color">{{ category.status.label }}</span>
+                    </div>
                 </div>            
-                <div class="form-group col-md-6">
-                    <label for="description">{{ $t("Description") }}</label>
-                    <p>{{ (category.description) ? category.description: '--' }}</p>
+                <div class="form-row mb-2">
+                    <p v-html="server_errors" v-bind:class="[error_class]"></p>
+                    <div class="form-group col-md-4">
+                        <button type="submit" class="btn btn-primary mr-1 w-100" v-on:click="add_child_category()" v-bind:disabled="add_child_category_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_child_category_processing == true"></i> {{ $t("Add Child Category") }}</button>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <button type="submit" class="btn btn-primary mr-1 w-100" v-on:click="add_category_specifications()" v-bind:disabled="add_category_specifications_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specifications_processing == true"></i> {{ $t("Add Category Specifications") }}</button>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <button type="submit" class="btn btn-primary mr-1 w-100" v-on:click="add_category_specification_details()" v-bind:disabled="add_category_specification_details_processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="add_category_specification_details_processing == true"></i> {{ $t("Add Specification Values") }}</button>
+                    </div>
                 </div>
-            </div>
-            <div class="form-row mb-2">
-                <div class="form-group col-md-3">
-                    <select id="subCategoryId" v-validate="'required'" name="Sub Category" v-model="subCategoryId" class="form-control" @change="ViewChildCategoryF()">
-                        <option value="" disabled>Select Sub Category</option>
-                        <option v-for="s_category in category.subcategories" :key="s_category.id" :value="s_category.id">{{ s_category.sub_category_name }}</option>
-                    </select>
+                <hr>
+    
+                <div class="mb-2">
+                    <span class="text-subhead">{{ $t("Basic Information") }}</span>
                 </div>
-                <div class="form-group col-md-3">
-                    <select id="childCategoryId" v-validate="'required'" name="Sub Category" v-model="childCategoryId" class="form-control" @change="ViewCategorySpecificationF()">
-                        <option value="" disabled>Select Child Category</option>
-                        <option v-for="c_category in ViewChildCategory" :key="c_category.id" :value="c_category.id">{{ c_category.child_category }}</option>
-
-                    </select>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-2">
+                        <label for="category_code">{{ $t("Category Code") }}</label>
+                        <p>{{ category.category_code  }}</p>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="label">{{ $t("Category Name") }}</label>
+                        <p>{{ category.label }}</p>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="label">{{ $t("Sub Category Name") }}</label>
+                        <p style="font-weight: 600;" v-for="cate in category.subcategories" :key="cate.id">{{ cate.sub_category_name }}</p>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="created_on">{{ $t("Created On") }}</label>
+                        <p>{{ category.created_at }}</p>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="updated_on">{{ $t("Updated On") }}</label>
+                        <p>{{ category.updated_at }}</p>
+                    </div>            
+                    <div class="form-group col-md-6">
+                        <label for="description">{{ $t("Description") }}</label>
+                        <p>{{ (category.description) ? category.description: '--' }}</p>
+                    </div>
                 </div>
-                <div class="form-group col-md-3">
-                    <select id="categorySpecificationId" v-validate="'required'" name="Sub Category" v-model="categorySpecificationId" class="form-control" @change="ViewSpecificationValuesF() ">
-                        <option value="" disabled>Select Category Specifications</option>
-                        <option v-for="c_specification in ViewCategorySpecification" :key="c_specification.id" :value="c_specification.id">{{ c_specification.category_specification_label }}</option>
-
-                    </select>
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-3">
+                        <select id="subCategoryId" v-validate="'required'" name="Sub Category" v-model="subCategoryId" class="form-control" @change="ViewChildCategoryF()">
+                            <option value="" disabled>Select Sub Category</option>
+                            <option v-for="s_category in category.subcategories" :key="s_category.id" :value="s_category.id">{{ s_category.sub_category_name }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <select id="childCategoryId" v-validate="'required'" name="Sub Category" v-model="childCategoryId" class="form-control" @change="ViewCategorySpecificationF()">
+                            <option value="" disabled>Select Child Category</option>
+                            <option v-for="c_category in ViewChildCategory" :key="c_category.id" :value="c_category.id">{{ c_category.child_category }}</option>
+    
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <select id="categorySpecificationId" v-validate="'required'" name="Sub Category" v-model="categorySpecificationId" class="form-control" @change="ViewSpecificationValuesF() ">
+                            <option value="" disabled>Select Category Specifications</option>
+                            <option v-for="c_specification in ViewCategorySpecification" :key="c_specification.id" :value="c_specification.id">{{ c_specification.category_specification_label }}</option>
+    
+                        </select>
+                    </div>
+                   
                 </div>
-               
-            </div>
-            <div class="form-row mb-2">
-                <div class="col-12" v-if="mainTable">
-                    <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Sub Category</th>
-                            <th scope="col">Child Category</th>
-                            <th scope="col">Category Specifications</th>
-                            <th scope="col">Specification Values</th>
-                            <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            <th colspan="7" class="text-center">Select From Option To View</th>                            
-                            </tr>                           
-                        </tbody>
-                    </table>
-
+                <div class="form-row mb-2">
+                    <div class="col-12" v-if="mainTable">
+                        <table class="table">
+                            <thead class="btn-primary">
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Sub Category</th>
+                                <th scope="col">Child Category</th>
+                                <th scope="col">Category Specifications</th>
+                                <th scope="col">Specification Values</th>
+                                <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                <th colspan="7" class="text-center">Select From Option To View</th>                            
+                                </tr>                           
+                            </tbody>
+                        </table>
+    
+                    </div>
+    
+    
+                    <div class="col-12" v-if="ViewChildCategoryStatus">
+                        <table class="table">
+                            <thead class="btn-primary">
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Child Category</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="child_category in ViewChildCategory" :key="child_category.id">
+                                    <td>{{ child_category.id }}</td>
+                                    <td 
+                                    :contenteditable="child_category.isEditable ? 'true' : 'false'"  
+                                    @input="onEditInput(child_category)"
+                                    @blur="save_in_table(child_category, child_category.id, 'child_category')"
+                                    >{{ child_category.child_category }}</td>
+                                    <td>Active</td>
+                                    <td><button class="btn" @click="toggleEdit(child_category)" >
+                                        <i :class="{'fas fa-edit': !child_category.isEditable, 'fas fa-check': child_category.isEditable}"  style="color:green">
+                                    </i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                    </div>
+    
+    
+                    <div class="col-12" v-if="ViewCategorySpecificationStatus">
+                        <table class="table">
+                            <thead class="btn-primary">
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Category Specification</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="spec in ViewCategorySpecification" :key="spec.id">
+                                    <td>{{ spec.id }}</td>
+                                    <td
+                                    :contenteditable="spec.isEditable ? 'true' : 'false'"
+                                    @input="onEditInput(spec)"
+                                    @blur="save_in_table(spec, spec.id, 'category_specification')"
+                                    >{{ spec.category_specification_label }}</td>
+                                    <td>Active</td>
+                                    <td><button class="btn" @click="toggleEdit(spec)" >
+                                        <i :class="{'fas fa-edit': !spec.isEditable, 'fas fa-check': spec.isEditable}"  style="color:green">
+                                    </i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                    </div>
+    
+    
+    
+                    <div class="col-12" v-if="ViewSpecificationValuesStatus">
+                        <table class="table">
+                            <thead class="btn-primary">
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Specification Value</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="value in ViewSpecificationValues" :key="value.id">
+                                    <td>{{ value.id }}</td>
+                                    <td
+                                    :contenteditable="value.isEditable ? 'true' : 'false'"
+                                    @input="onEditInput(value)"
+                                    @blur="save_in_table(value, value.id, 'specification_value')"
+                                    
+                                    >{{ value.values }}</td>
+                                    <td>Active</td>
+                                    <td><button class="btn" @click="toggleEdit(value)" >
+                                        <i :class="{'fas fa-edit': !value.isEditable, 'fas fa-check': value.isEditable}"  style="color:green">
+                                    </i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                    </div>
+    
+    
                 </div>
-
-
-                <div class="col-12" v-if="ViewChildCategoryStatus">
-                    <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Child Category</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="child_category in ViewChildCategory" :key="child_category.id">
-                                <td>{{ child_category.id }}</td>
-                                <td 
-                                :contenteditable="child_category.isEditable ? 'true' : 'false'"  
-                                @input="onEditInput(child_category)"
-                                @blur="save_in_table(child_category, child_category.id, 'child_category')"
-                                >{{ child_category.child_category }}</td>
-                                <td>Active</td>
-                                <td><button class="btn" @click="toggleEdit(child_category)" >
-                                    <i :class="{'fas fa-edit': !child_category.isEditable, 'fas fa-check': child_category.isEditable}"  style="color:green">
-                                </i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-
-                <div class="col-12" v-if="ViewCategorySpecificationStatus">
-                    <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Category Specification</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="spec in ViewCategorySpecification" :key="spec.id">
-                                <td>{{ spec.id }}</td>
-                                <td
-                                :contenteditable="spec.isEditable ? 'true' : 'false'"
-                                @input="onEditInput(spec)"
-                                @blur="save_in_table(spec, spec.id, 'category_specification')"
-                                >{{ spec.category_specification_label }}</td>
-                                <td>Active</td>
-                                <td><button class="btn" @click="toggleEdit(spec)" >
-                                    <i :class="{'fas fa-edit': !spec.isEditable, 'fas fa-check': spec.isEditable}"  style="color:green">
-                                </i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-
-
-                <div class="col-12" v-if="ViewSpecificationValuesStatus">
-                    <table class="table">
-                        <thead class="" style="background:#17a2b8;color:white;">
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Specification Value</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="value in ViewSpecificationValues" :key="value.id">
-                                <td>{{ value.id }}</td>
-                                <td
-                                :contenteditable="value.isEditable ? 'true' : 'false'"
-                                @input="onEditInput(value)"
-                                @blur="save_in_table(value, value.id, 'specification_value')"
-                                
-                                >{{ value.values }}</td>
-                                <td>Active</td>
-                                <td><button class="btn" @click="toggleEdit(value)" >
-                                    <i :class="{'fas fa-edit': !value.isEditable, 'fas fa-check': value.isEditable}"  style="color:green">
-                                </i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-
             </div>
 
         </div>

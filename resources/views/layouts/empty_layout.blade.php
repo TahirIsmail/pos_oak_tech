@@ -14,7 +14,7 @@ License: For each use you must have a valid license purchased only from above li
         <body>
             @include('layouts.preloader')
             <div class="wrapper">
-                <div class="content ml-0 p-0">
+                <div class="content ml-0 p-0" style=" background-image: linear-gradient(135deg, #0E3EDA,#56BBF1) !important;">
                     @yield('content')
                 </div>
             </div>     

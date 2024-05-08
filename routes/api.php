@@ -319,6 +319,13 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/quotation/{slack}', 'API\Quotation@show');
     Route::post('/quotation_list', 'API\Quotation@list');
 
+
+
+    // Demand form 
+    Route::post('/add_demand_form', 'API\DemandController@add_demand_form');
+    Route::post('/demand_form_data_fetch', 'API\DemandController@index');
+
+
     //payment gateway
     Route::post('/get_stripe_payment_intent', 'API\PaymentGateway@get_stripe_payment_intent');
     Route::post('/record_stripe_payment_success', 'API\PaymentGateway@record_stripe_payment_success');

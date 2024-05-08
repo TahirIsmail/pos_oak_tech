@@ -53,6 +53,8 @@ class AuthenticateUser
             if (!empty($user_exists)) {
                 
                 $request->logged_user_id        = $user_id;
+                $request->supplier_id           = $user_exists->supplier_id;
+                $request->customer_id           = $user_exists->customer_id;
                 $request->logged_user_slack     = $user_exists->slack;
                 $request->logged_user_role_id   = $user_exists->role_id;
                 $request->is_super_admin        = ($user_exists->role_id == 1)?true:false;

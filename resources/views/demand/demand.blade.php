@@ -1,44 +1,32 @@
 @extends('layouts.layout')
-<style>
-    .dataTables_scroll{
-        overflow: hidden !important;
-    }
-</style>
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-
                 <div class="card-header d-flex flex-wrap mb-4">
                     <div class="mr-auto">
-                        <span class="text-title">{{ __('Suppliers') }}</span>
+                        <span class="text-title">{{ __('Demands') }}</span>
                     </div>
                     <div class="">
-                        @if (check_access(['A_ADD_SUPPLIER'], true))
-                            <a href="{{ route('add_supplier') }}" role="button"
-                                class="btn btn-primary">{{ __('New Supplier') }}</a>
+                        @if (check_access(['A_ADD_DEMAND'], true))
+                            <a href="{{ route('add_demand_form') }}" role="button"
+                                class="btn btn-primary">{{ __('New Demand Form') }}</a>
                         @endif
                     </div>
                 </div>
 
-                <div class="table-responsive my-4">
+                <div class="my-4">
                     <table id="listing-table" class="table display nowrap w-100">
                         <thead>
-                            <tr>
-                                <th>{{ __('Supplier Name') }}</th>
-                                <th>{{ __('Supplier Code') }}</th>
-                                <th>{{ __('Status') }}</th>
-                                <th>{{ __('Created On') }}</th>
-                                <th>{{ __('Updated On') }}</th>
-                                <th>{{ __('Created By') }}</th>
-                                <th>{{ __('Action') }}</th>
-                            </tr>
+                           <th>#</th>
+                           <th>Suppliers</th>
+                           <th>Products Details</th>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
@@ -48,11 +36,12 @@
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/datatable.js') }}"></script>
-    <script src="{{ asset('js/pages/suppliers.js') }}"></script>
+    {{-- <script src="{{ asset('js/pages/quotations.js') }}"></script> --}}
+    <script src="{{ asset('js/pages/demand_form.js') }}"></script>
     <script>
         'use strict';
-        var suppliers = new Suppliers();
-        suppliers.load_listing_table();
+        var demand_form = new DemandForm();
+        demand_form.load_listing_table();
     </script>
 @endpush
 <style scoped>
@@ -65,19 +54,18 @@
 
 
     .card {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    /* border: 1px solid rgba(0, 0, 0, .125); */
-    margin-bottom: 30px !important;
-    /* border-radius: 10px !important; */
-}
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, .125);
+        border-radius: 10px !important;
+    }
 
     .page-item.active .page-link {
         z-index: 3;

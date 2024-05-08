@@ -637,6 +637,7 @@ class Invoice extends Controller
         $invoice_data = [
             "store_id" => $request->logged_user_store_id,
             "invoice_reference" => $request->invoice_reference,
+            "invoice_type" => $request->invoice_type,
             "invoice_date" => $request->invoice_date,
             "invoice_due_date" => $request->invoice_due_date,
             "parent_po_id" => (isset($request->parent_po_id) && $request->parent_po_id != '')?$request->parent_po_id:NULL,

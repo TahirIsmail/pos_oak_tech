@@ -144,56 +144,57 @@
                     </div>
                 </div>
 
+                <div v-show="bill_to == 'CUSTOMER'">
+                    <div class="form-row mb-2">
+                        <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                            <label for="category">{{ $t("Category") }}</label>
+                            <select name="category" v-model="category"  @change="fetchSub_Categories()" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose Category..</option>
+                                <option
+                                v-for="category in categories"
+                                :key="category.id"
+                                :value="category.id"
+                               
+                                >
+                                {{ category.label }} ({{ category.category_code }})
+                                </option>
+                                    
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                            <label for="sub_category">{{ $t("Sub Category") }}</label>
+                            <select name="sub_category" v-model="sub_category" @change="fetch_companies()" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose Sub Category...</option>
+                                <option
+                                v-for="scategory in subCategories"
+                                :key="scategory.id"
+                                :value="scategory.id"                           
+                                >
+                                {{ scategory.sub_category_name }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                            <label for="brand_name">{{ $t("Brand Name") }}</label>
+                            <select name="brand_name" v-model="brand_name" class="form-control form-control-custom custom-select">
+                                <option value="" disabled>Choose Brand Name...</option>
+                                <option
+                                v-for="company in companies"
+                                :key="company.id"
+                                :value="company.id"  
+                                >
+                                {{ company.category_company_name }}
+                                </option>
+                            </select>
+                        </div> -->                    
+                    </div>
+    
+                    <div class="form-row mb-2">
+                        <div class="form-group col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" @click="fetchProducts()">Search Product</button>
+                        </div>
+                    </div>
 
-                <div class="form-row mb-2">
-                    <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                        <label for="category">{{ $t("Category") }}</label>
-                        <select name="category" v-model="category"  @change="fetchSub_Categories()" class="form-control form-control-custom custom-select">
-                            <option value="" disabled>Choose Category..</option>
-                            <option
-                            v-for="category in categories"
-                            :key="category.id"
-                            :value="category.id"
-                           
-                            >
-                            {{ category.label }} ({{ category.category_code }})
-                            </option>
-                                
-                        </select>
-                    </div>
-                    <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                        <label for="sub_category">{{ $t("Sub Category") }}</label>
-                        <select name="sub_category" v-model="sub_category" @change="fetch_companies()" class="form-control form-control-custom custom-select">
-                            <option value="" disabled>Choose Sub Category...</option>
-                            <option
-                            v-for="scategory in subCategories"
-                            :key="scategory.id"
-                            :value="scategory.id"                           
-                            >
-                            {{ scategory.sub_category_name }}
-                            </option>
-                        </select>
-                    </div>
-                    <!-- <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                        <label for="brand_name">{{ $t("Brand Name") }}</label>
-                        <select name="brand_name" v-model="brand_name" class="form-control form-control-custom custom-select">
-                            <option value="" disabled>Choose Brand Name...</option>
-                            <option
-                            v-for="company in companies"
-                            :key="company.id"
-                            :value="company.id"  
-                            >
-                            {{ company.category_company_name }}
-                            </option>
-                        </select>
-                    </div> -->
-                    
-                </div>
-
-                <div class="form-row mb-2">
-                    <div class="form-group col-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" @click="fetchProducts()">Search Product</button>
-                    </div>
                 </div>
 
 
@@ -230,7 +231,7 @@
                             <input type="number" v-bind:name="'product.quantity_' + index" v-model="product.quantity"
                                 v-validate="'required|decimal|min_value:1'" data-vv-as="Quantity"
                                 class="form-control form-control-custom" autocomplete="off" step="0.01" min="0"
-                                v-on:input="calculate_price" readonly>
+                                v-on:input="calculate_price">
                             <span v-bind:class="{ 'error': errors.has('product.quantity_' + index) }">{{
                                 errors.first('product.quantity_' + index) }}</span>
                         </div>

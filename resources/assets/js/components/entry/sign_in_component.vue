@@ -1,8 +1,8 @@
 
 <template>
-    <div class="container pt-3 entry_form">
+    <div class="container pt-3 entry_form"   >
         <div class="d-flex justify-content-center pt-2">
-            <div class="container1  col-sm-12 col-md-6 col-lg-4 col-lg-4 pt-5 pb-3">
+            <div class="container1  col-sm-12 col-md-6 col-lg-4 col-lg-4 pt-5 pb-3" style=" background-color: white !important;">
                 <img :src="company_logo" class="d-block mb-4 entry_logo mt-3 ml-auto mr-auto" alt="OAK">
                 <span class="text-display-0 d-block mb-3 text-center">Sign in</span>
                 <p v-html="server_errors" v-bind:class="[error_class]"></p>

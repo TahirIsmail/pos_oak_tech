@@ -199,6 +199,11 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_quotation/{slack?}', "Quotation@add_quotation")->name('edit_quotation');
     Route::get('/print_quotation/{slack}', "Quotation@print_quotation")->name('print_quotation');
 
+    //demands 
+    Route::get('/Demands', "DemandController@index")->name('Demands');
+    Route::get('/add_demand_form', "DemandController@add_demand_form")->name('add_demand_form');
+
+
     //payment gateway
     Route::get('/payment_gateway/{type}/{slack}', "Order@payment_gateway")->name('payment_gateway');
 
