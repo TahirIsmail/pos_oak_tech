@@ -387,7 +387,7 @@ class Order extends Controller
 
         $invoice_print_type = $order_data['store']['invoice_type'];
 
-        // dd($invoice_print_type);
+        // dd($order_data);
         
         switch($invoice_print_type){
             case 'A4':

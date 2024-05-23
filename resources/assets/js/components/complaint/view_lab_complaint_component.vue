@@ -1,6 +1,5 @@
 <template>
     <div class="row card p-4">
-      
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -150,22 +149,6 @@
                 >{{ $t("PDF") }}</a
               >
             </div>
-  
-            <div v-if="delete_access">
-              <button
-                type="submit"
-                class="btn btn-danger mr-1"
-                v-if="delete_access == true"
-                v-on:click="delete_category()"
-                v-bind:disabled="delete_processing == true"
-              >
-                <i
-                  class="fa fa-circle-notch fa-spin"
-                  v-if="delete_processing == true"
-                ></i>
-                {{ $t("Delete Complaint") }}
-              </button>
-            </div>
           </div>
         </div>
   
@@ -227,12 +210,6 @@
             <label for="created_by">{{ $t("Assign to LabTechnician") }}</label>
   
             <p v-if="complaint.user">{{ complaint.user.fullname }} ({{ complaint.user.email }})</p>
-          </div>
-
-          <div class="form-group col-md-3" v-if="!is_customer">
-            <label for="created_by">{{ $t("Assign to Field Engineer") }}</label>
-  
-            <p v-if="complaint.field_user">{{ complaint.field_user.fullname }} ({{ complaint.field_user.email }})</p>
           </div>
   
           <div

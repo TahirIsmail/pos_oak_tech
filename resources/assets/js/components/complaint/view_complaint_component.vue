@@ -1,6 +1,5 @@
 <template>
     <div class="row card p-4">
-      
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -34,20 +33,7 @@
           <p v-html="server_errors" v-bind:class="[error_class]"></p>
           
           <div class="ml-auto d-flex">
-            <div v-if="assign_access">
-              <button
-                type="submit"
-                class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id == null || complaint.assign_to_lab_staff_id == 0"
-                v-on:click="assigncomplaint_to_labtachnician()"
-                v-bind:disabled="assign_processing == true"
-              >
-                <i
-                  class="fa fa-circle-notch fa-spin"
-                  v-if="assign_processing == true"
-                ></i>
-                {{ $t("Assign Complaint") }}
-              </button>
+            <div>
   
               <button
                 type="button"
@@ -64,19 +50,9 @@
               <button
                 type="submit"
                 class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null && is_lab_tech"
+                v-if="complaint.assign_to_field_staff_id != null && is_lab_tech"
                 v-on:click="request_for_product()">
                 {{ $t("Add Required Product") }}
-              </button>
-            </div>
-
-            <div v-if="complaint.complaint_completed_date == null">
-              <button
-                type="submit"
-                class="btn btn-primary mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null && is_lab_tech"
-                v-on:click="add_remarks()">
-                {{ $t("Add Remarks") }}
               </button>
             </div>
 
@@ -114,58 +90,6 @@
               </button>
             </div>
   
-            <div
-              v-if="Customer_complaint_make_invoice && complaint.complaint_completed_date != null && complaint.final_total_amount == null"
-            >
-              <button
-                type="submit"
-                class="btn btn-success mr-1"
-                v-if="Customer_complaint_make_invoice"
-                v-on:click="make_complaint_invoice()"
-              >
-                {{ $t("Generate Invoice") }}
-              </button>
-            </div>
-  
-            <div
-              v-if="Customer_complaint_make_invoice && complaint.complaint_completed_date != null && complaint.final_total_amount != null"
-            >
-              <button
-                type="submit"
-                class="btn btn-success mr-1"
-                v-if="Customer_complaint_make_invoice"
-                v-on:click="record_payment_invoice()"
-              >
-                {{ $t("Record Payment") }}
-              </button>
-            </div>
-  
-            <div
-              v-if="payment_pending_amount == 0 && complaint.final_total_amount != null"
-            >
-              <a
-                class="btn btn-outline-primary mr-1"
-                v-bind:href="'/print_complaint_invoice/'+complaint_slack"
-                target="_blank"
-                >{{ $t("PDF") }}</a
-              >
-            </div>
-  
-            <div v-if="delete_access">
-              <button
-                type="submit"
-                class="btn btn-danger mr-1"
-                v-if="delete_access == true"
-                v-on:click="delete_category()"
-                v-bind:disabled="delete_processing == true"
-              >
-                <i
-                  class="fa fa-circle-notch fa-spin"
-                  v-if="delete_processing == true"
-                ></i>
-                {{ $t("Delete Complaint") }}
-              </button>
-            </div>
           </div>
         </div>
   
@@ -222,18 +146,7 @@
               {{ complaint.status }}
             </p>
           </div>
-  
-          <div class="form-group col-md-3" v-if="!is_customer">
-            <label for="created_by">{{ $t("Assign to LabTechnician") }}</label>
-  
-            <p v-if="complaint.user">{{ complaint.user.fullname }} ({{ complaint.user.email }})</p>
-          </div>
-
-          <div class="form-group col-md-3" v-if="!is_customer">
-            <label for="created_by">{{ $t("Assign to Field Engineer") }}</label>
-  
-            <p v-if="complaint.field_user">{{ complaint.field_user.fullname }} ({{ complaint.field_user.email }})</p>
-          </div>
+                  
   
           <div
             class="form-group col-md-3"
@@ -374,83 +287,7 @@
           <span class="text-subhead">{{ $t("Transactions") }}</span>
         </div>
   
-        <div class="table-responsive mb-2" v-if="transactions.length>0">
-          <table class="table table-striped display nowrap text-nowrap w-100">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-  
-                <th scope="col">{{ $t("Transaction Code") }}</th>
-  
-                <th scope="col">{{ $t("Transaction Date") }}</th>
-  
-                <th scope="col">{{ $t("Payment Method") }}</th>
-  
-                <th scope="col" class="text-right">{{ $t("Amount") }}</th>
-  
-                <th scope="col" class="text-right">
-                  {{ $t("Received Amount") }}
-                </th>
-  
-                <th scope="col">{{ $t("Created On") }}</th>
-  
-                <th scope="col">{{ $t("Action") }}</th>
-              </tr>
-            </thead>
-  
-            <tbody>
-              <tr
-                v-for="(transaction, key, index) in transactions"
-                v-bind:value="transactions.slack"
-                v-bind:key="index"
-              >
-                <th scope="col">{{ key+1 }}</th>
-  
-                <td>{{ transaction.transaction_code }}</td>
-  
-                <td>{{ transaction.transaction_date }}</td>
-  
-                <td>{{ transaction.payment_method }}</td>
-  
-                <td class="text-right">{{ transaction.amount }}</td>
-  
-                <td class="text-center">{{ transaction.received_amount }}</td>
-  
-                <td>{{ transaction.created_at }}</td>
-  
-                <td>
-                  <div class="dropdown" v-show="transaction.detail_link != ''">
-                    <button
-                      class="btn btn-sm btn-outline-primary dropdown-toggle actions-dropdown-btn"
-                      type="button"
-                      id="dropdown"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      <i class="fas fa-ellipsis-h actions-dropdown"></i>
-                    </button>
-  
-                    <div
-                      class="dropdown-menu dropdown-menu-right"
-                      aria-labelledby="dropdown"
-                    >
-                      <a
-                        v-bind:href="transaction.detail_link"
-                        class="dropdown-item"
-                        >{{ $t("View") }}</a
-                      >
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-  
-        <div v-else>
-          <p>No transactions found</p>
-        </div>
+        
       </div>
   
       <modalcomponent
@@ -1135,30 +972,9 @@
         </template>
         <template v-slot:modal-body>
           <div class="form-row mb-2">
+            
             <div class="form-group col-md-4">
-              <label for="billable">{{ $t("BILLABLE") }}</label>
-  
-              <select
-                name="billable"
-                v-model="billable"
-                v-validate="'required'"
-                class="form-control form-control-custom custom-select"
-              >
-                <option value="" disabled>Choose Billable..</option>
-  
-                <option value="Yes">Yes</option>
-  
-                <option value="No">No</option>
-              </select>
-  
-              <span
-                v-bind:class="{ 'error' : errors.has('billable') }"
-                >{{ errors.first('billable') }}</span
-              >
-            </div>
-  
-            <div class="form-group col-md-4">
-              <label for="complaint_status">{{ $t("Complaint Status") }}</label>
+              <label for="complaint_status">{{ $t("Update Status") }}</label>
   
               <select
                 name="complaint_status"
@@ -1167,78 +983,17 @@
                 class="form-control form-control-custom custom-select"
               >
                 <option value="" disabled>Choose Complaint Status..</option>  
-                <option value="Equipment">Equipment</option>  
-                <option value="Remove for Workshop">Remove for Workshop</option>  
-                <option value="Backup">Backup</option>  
-                <option value="Repaired reinstalled">Repaired reinstalled</option>
+                <option value="Move for Workshop">Move for Workshop</option>
                 <option value="Not Repairable">Not Repairable</option>
                 <option value="Replacement Required">Replacement Required</option>
-              </select>
-  
+                <option value="Part Required">Part Required</option>
+              </select>  
               <span
                 v-bind:class="{ 'error' : errors.has('complaint_status') }"
                 >{{ errors.first('complaint_status') }}</span
               >
             </div>
-
-
-            <div class="form-group col-md-4">
-              <label for="c_status">{{ $t("Complaint Customer Status") }}</label>  
-              <select
-                name="c_status"
-                v-model="c_status"
-                class="form-control form-control-custom custom-select"
-              >
-                <option value="" disabled>Choose Complaint Customer Status..</option>  
-                <option value="Complaint Logged">Complaint Logged</option>
-                <option value="Complaint Assigned">Complaint Assigned</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Complaint Complete">Complaint Complete</option>
-                <option value="Approval Pending">Approval Pending</option>
-                <option value="Not Repairable">Not Repairable</option>                           
-              </select>              
-            </div>
-
-            <div class="form-group col-md-4">
-              <label for="status">{{ $t("Status") }}</label>  
-              <select
-                name="status"
-                v-model="status"
-                class="form-control form-control-custom custom-select"
-              >
-                <option value="" disabled>Choose Status..</option>  
-                <option value="Ready">Ready</option>
-                <option value="Engineer">Engineer</option>
-                <option value="Delivered">Delivered</option>                        
-              </select>              
-            </div>
   
-            <div class="form-group col-md-4">
-              <label for="type_of_service">{{ $t("Type of Services") }}</label>
-  
-              <select
-                name="type_of_service"
-                v-model="type_of_service"
-                v-validate="'required'"
-                class="form-control form-control-custom custom-select"
-              >
-                <option value="" disabled>Choose Type of Services..</option>
-  
-                <option value="Warranty">Warranty</option>
-                <option value="With Parts">SLA With Parts</option>
-                <option value="Without Parts">SLA Without Parts</option>
-                <option value="Per Call">Per Call</option>
-                <option value="OAK Stock">OAK Stock</option>
-  
-  
-  
-              </select>
-  
-              <span
-                v-bind:class="{ 'error' : errors.has('type_of_service') }"
-                >{{ errors.first('type_of_service') }}</span
-              >
-            </div>
   
             <div class="form-group col-md-4">
               <label for="complaint_ok">{{ $t("Complaint Ok") }}</label>
@@ -1265,7 +1020,7 @@
             <div class="form-group col-md-4">
               <label
                 for="picked_for_workshop"
-                >{{ $t("Picked for Workshop") }}</label
+                >{{ $t("Moved To Workshop") }}</label
               >
   
               <select
@@ -1287,141 +1042,10 @@
               >
             </div>
 
-
-            <div class="form-group col-md-4">
-              <label
-                for="equipment_s_no"
-                >{{ $t("Equipment S.No") }}</label
-              >
-  
-              <input
-                name="equipment_s_no"
-                v-model="equipment_s_no"
-                class="form-control form-control-custom"
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="equipment_specs"
-                >{{ $t("Equipment Specs") }}</label
-              >
-  
-              <input
-                name="equipment_specs"
-                v-model="equipment_specs"
-                class="form-control form-control-custom"
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="accessories"
-                >{{ $t("Accessories") }}</label
-              >  
-              <input
-                name="accessories"
-                v-model="accessories"
-                class="form-control form-control-custom"
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="Invoice_number"
-                >{{ $t("Invoice Number") }} <small>(In Case of Warranty)</small></label
-              >  
-              <input
-                name="Invoice_number"
-                v-model="Invoice_number"
-                class="form-control form-control-custom"
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="po_number"
-                >{{ $t("PO Number") }} <small>(In Case of Warranty)</small></label
-              >  
-              <input
-                name="po_number"
-                v-model="po_number"
-                class="form-control form-control-custom"
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="condition"
-                >{{ $t("Condition") }}</label
-              >
-  
-              <select
-                name="condition"
-                v-model="condition"
-                class="form-control form-control-custom custom-select"
-              >
-                <option value="" disabled>Choose Condition..</option>  
-                <option value="Good Condition">Good Condition</option>  
-                <option value="Normal Condition">Normal Condition</option>
-                <option value="Damaged Condition">Damaged Condition</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="equipment_part_serial_number"
-                >{{ $t("Equipment Part") }} <small>(Serial Number)</small></label
-              >  
-              <input
-                name="equipment_part_serial_number"
-                v-model="equipment_part_serial_number"
-                class="form-control form-control-custom"
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="outsource_date"
-                >{{ $t("OutSource Date") }} </label
-              >  
-              <input
-                type="date"
-                name="outsource_date"
-                v-model="outsource_date"
-                class="form-control form-control-custom"
-              />
-            </div>
-            <div class="form-group col-md-4">
-              <label
-                for="return_date"
-                >{{ $t("Return Date") }} </label
-              >  
-              <input
-                type="date"
-                name="return_date"
-                v-model="return_date"
-                class="form-control form-control-custom"
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label
-                for="delivery_date"
-                >{{ $t("Delivery Date") }} </label
-              >  
-              <input
-                type="date"
-                name="delivery_date"
-                v-model="delivery_date"
-                class="form-control form-control-custom"
-              />
-            </div>
-
             <div class="form-group col-md-8">
               <label
                 for="fault_report_by_customer"
-                >{{ $t("Fault Report By Customer") }} </label
+                >{{ $t("Fault") }} </label
               >  
               <textarea
                 name="fault_report_by_customer"
@@ -2364,8 +1988,7 @@
               this.$on("close", function() {
                   this.show_modal = false;
               });
-              //     }
-              // });
+             
           }
       }
   }

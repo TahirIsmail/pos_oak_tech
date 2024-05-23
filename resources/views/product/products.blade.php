@@ -36,23 +36,16 @@
         </div> --}}
 
         <div class="my-4">
-            <table id="listing-table" class=" table nowrap">
+            <table id="listing-table" class="table" style="width: 100%!important;">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>{{ __("Serial No#") }}</th>
-                        <th>{{ __("Name") }}</th>
+                        <th>{{ __("Product Name") }}</th>
+                        <th>{{ __("Product Model") }}</th>
                         <th>{{ __("Supplier") }}</th>
-                        <th>{{ __("Category") }}</th>
-                        <th>{{ __("GST Paid on Product") }}</th>
-                        <th>{{ __("Discount Code") }}</th>
-                        <th>{{ __("Quantity") }}</th>
-                        <th>{{ __("Amount") }}</th>
-                        <th>{{ __("Status") }}</th>
-                        {{-- <th>{{ __("Product Status") }}</th>
-                        <th>{{ __("Created On") }}</th>
-                        <th>{{ __("Updated On") }}</th> --}}
-                        <th>{{ __("Created By") }}</th>
+                        <th>{{ __("Qty") }}</th>
+                        <th>{{ __("Selling Price") }}</th>
                         <th>{{ __("Action") }}</th>
                     </tr>
                 </thead>

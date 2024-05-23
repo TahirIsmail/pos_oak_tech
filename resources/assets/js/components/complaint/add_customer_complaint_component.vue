@@ -1,17 +1,17 @@
 <template>
     <div class="card p-4">
-        
+       
         <form @submit.prevent="submit_form">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
-                    <span class="text-title" v-if="complaint_slack == ''">{{
+                    <span class="text-title" v-if="complaint_slack.length === 0">{{
                         $t("Add Customer Complaint")
                     }}</span>
                     <span class="text-title" v-else>{{ $t("Edit Customer Complaint") }}
                     </span>
                 </div>
                 <div class="">
-                    <button v-if="complaint_slack == ''" type="submit" class="btn btn-primary"
+                    <button v-if="complaint_slack.length === 0" type="submit" class="btn btn-primary"
                         v-bind:disabled="processing == true">
                         <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
                         {{ $t("Save") }}
@@ -33,6 +33,7 @@
                         <option value="" disabled selected>Choose Customer Category...</option>
                         <option value="CUSTOM">Corporate</option>
                         <option value="WALKIN">Walkin</option>
+                        <option value="DEALER">DEALER</option>
                     </select>
                     <span v-bind:class="{ 'error': errors.has('customer_category') }">{{ errors.first('customer_category')
                     }}</span>
@@ -122,13 +123,12 @@
 
                 <div class="form-group col-sm-12 col-md-4">
                     <label for="end_user_details">{{ $t("End User Details") }}</label>
-                    <input type="text" name="end_user_details" v-model="end_user_details" v-validate="'required'"
+                    <input type="text" name="end_user_details" v-model="end_user_details"
                         class="form-control form-control-custom" rows="5" :placeholder="$t('Enter End User Details')" />
                     <span v-bind:class="{ error: errors.has('end_user_details') }">{{
                         errors.first("end_user_details")
                     }}</span>
                 </div>
-
 
                 <div class="form-group col-sm-12 col-md-4">
                     <label for="service_required">{{ $t("Choose Service Required") }}</label>
@@ -136,19 +136,25 @@
                         <option value="" disabled>Select Service Required...</option>
                         <option value="On-Site">On-Site</option>
                         <option value="Pickup for Workshop">Pickup for Workshop</option>
-                        <option value="Deliver by Customer">Deliver by Customer</option>
-                       
+                        <option value="Deliver by Customer">Deliver by Customer</option>                       
                     </select>
                     <!-- <span v-bind:class="{ 'error': errors.has('service_required') }">{{ errors.first('service_required')
                     }}</span> -->
                 </div>
+                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                    <label for="assigned_to">{{ $t("Assigned To Field Engg") }}</label>
+                    <select name="assigned_to" v-model="assigned_to_field_enng" class="form-control form-control-custom">
+                        <option value="" disabled>Select...</option>
+                        <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                    </select>
+                    
+                </div>
 
                  <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
-                    <label for="assigned_to">{{ $t("Assigned To") }}</label>
+                    <label for="assigned_to">{{ $t("Assigned To Lab Engg") }}</label>
                     <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
                         <option value="" disabled>Select...</option>
-                        <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>
-                       
+                        <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
                     </select>
                     
                 </div>
@@ -200,7 +206,7 @@
 export default {
 
     data() {
-
+        const complaintsDataIsEmpty = !this.complaints_data || Object.keys(this.complaints_data).length === 0;
         return {
             max: 5,
             server_errors: "",
@@ -208,34 +214,30 @@ export default {
             modal: false,
             show_modal: false,
             customer_list: [],
-            
-
             error_class: "",
-            complaint_slack: this.complaints_data.length === 0 ? '' : this.complaints_data.slack,
-            selectedCustomer: this.complaints_data.length === 0 || this.complaints_data.customer == null ? (this.is_customer ? this.customer_slack : '') : this.complaints_data.customer.slack,
-
-            selectedOrder: this.complaints_data.length === 0 && this.complaints_data.order == null ? '' : this.complaints_data.order.slack,
-            product_id: this.complaints_data.length === 0 && this.complaints_data.product_id == null ? '' : this.complaints_data.product_id,
+            api_link: complaintsDataIsEmpty ? "/api/submit_customer_complaint" : `/api/update_customer_complaint/${this.complaints_data.slack}`,
+            complaint_slack: complaintsDataIsEmpty ? '' : this.complaints_data.slack,
+            selectedCustomer: complaintsDataIsEmpty || !this.complaints_data.customer ? (this.is_customer ? this.customer_slack : '') : this.complaints_data.customer.slack,
+            selectedOrder: complaintsDataIsEmpty || !this.complaints_data.order ? '' : this.complaints_data.order?.slack || '',
+            product_id: complaintsDataIsEmpty || !this.complaints_data.product_id ? '' : this.complaints_data.product_id,
             customerInvoices: [],
-            orderProducts: [],
-            api_link: this.complaints_data.length === 0 ? "/api/submit_customer_complaint" : "/api/update_customer_complaint/" + this.complaints_data.slack,
-            // complaint_slack: this.complaints_data.length === 0 && this.complaints_data.slack !== null ? this.complaints_data.slack : null,
-            complaint_ref: this.complaints_data.length === 0 ? '' : this.complaints_data.complaint_ref,
-            complaint_status: this.complaints_data.length === 0 && this.complaints_data.complaint_status !== null ? this.complaints_data.complaint_status : null,
-            description: this.complaints_data.length === 0 ? '' : this.complaints_data.description,
-            customer_category: '',
-            service_type: '',
-            equipment_type: '',
-            equipment_make: '',
-            service_required: '',
-            assigned_to: '',
-            poc_name: '',
-            complaint_status: '',
-            model: '',
-            serial_no: '',
-            complaint_details: '',
-            end_user_details: '',
-            customer_feedback: '',
+            orderProducts: '',
+            complaint_ref: complaintsDataIsEmpty ? '' : this.complaints_data.complaint_ref,
+            complaint_status: complaintsDataIsEmpty ? '' : this.complaints_data.c_status,
+            description: complaintsDataIsEmpty ? '' : this.complaints_data.description,
+            customer_category: complaintsDataIsEmpty ? '' : this.complaints_data.customer?.customer_type || '',
+            service_type: complaintsDataIsEmpty ? '' : this.complaints_data.type_of_service,
+            equipment_type: complaintsDataIsEmpty ? '' : this.complaints_data.equipment_type,
+            equipment_make: complaintsDataIsEmpty ? '' : this.complaints_data.equipment_make,
+            service_required: complaintsDataIsEmpty ? '' : this.complaints_data.service_required,
+            assigned_to: complaintsDataIsEmpty ? '' : this.complaints_data.user?.slack || '',
+            assigned_to_field_enng: complaintsDataIsEmpty ? '' : this.complaints_data.field_user?.slack || '',
+            poc_name: complaintsDataIsEmpty ? '' : this.complaints_data.poc_name,
+            model: complaintsDataIsEmpty ? '' : this.complaints_data.model,
+            serial_no: complaintsDataIsEmpty ? '' : this.complaints_data.serial_no,
+            complaint_details: complaintsDataIsEmpty ? '' : this.complaints_data.complaint_details,
+            end_user_details: complaintsDataIsEmpty ? '' : this.complaints_data.end_user_details,
+            customer_feedback: ''
 
         };
 
@@ -252,51 +254,36 @@ export default {
         complaints_data: {
             immediate: true,
             handler() {
-                this.fetchCustomerOrders();
-                this.fetchOrderProducts();
+                
+                this.fetchCustomers();
             },
         },
     },
     methods: {
+        async fetchCustomers() {
+        if (this.customer_category) {
+        
+            const formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append("customer_category", this.customer_category);
 
-        fetchCustomers(){
-            if(this.customer_category){
-                // alert(this.customer_category);
-                const formData = new FormData();
-                formData.append("access_token", window.settings.access_token);
-                formData.append("customer_category", this.customer_category);
-                axios.post('/api/fetchCustomers', formData)
-                    .then(response => {
-                        if(response.status == 200){
-                            console.log(response.data.data);
-                            this.customer_list = response.data.data;
-
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-
-            }
-        },
-        fetchCustomerOrders() {
-
-            if (this.selectedCustomer) {
-
-                const formData = new FormData();
-                formData.append("access_token", window.settings.access_token);
-                formData.append("customer_slack", this.selectedCustomer);
-
+            try {
+                const response = await axios.post('/api/fetchCustomers', formData);
+              
                 
-                axios.post('/api/customer_orders', formData)
-                    .then(response => {
-                        this.customerInvoices = response.data.data;
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+
+                if (response.status === 200) {
+                    this.customer_list = response.data.data;
+                  
+                }
+                
+            } catch (error) {
+                console.error(error);
             }
-        },
+        }
+
+    },
+
         submit_form() {
             this.$validator.validateAll().then((result) => {
                 if (result) {
@@ -316,10 +303,11 @@ export default {
                         formData.append("end_user_details", this.end_user_details);
                         formData.append("service_required", this.service_required);
                         formData.append("assigned_to", this.assigned_to);
+                        formData.append("assigned_to_field_enng", this.assigned_to_field_enng);
                         formData.append("poc_name", this.poc_name);
                         formData.append("complaint_status", this.complaint_status);
                         // formData.append("customer_feedback", this.customer_feedback);
-                        
+                        console.log(...formData);
                         axios
                             .post(this.api_link, formData)
                             .then((response) => {
@@ -357,24 +345,7 @@ export default {
         },
 
 
-        fetchOrderProducts() {
-
-            if (this.selectedOrder) {
-
-                const formData = new FormData();
-                formData.append("access_token", window.settings.access_token);
-                formData.append("order_slack", this.selectedOrder);
-                console.log(...formData);
-                axios.post('/api/customer_orders_products', formData)
-                    .then(response => {
-                        console.log(response.data.data[0]);
-                        this.orderProducts = response.data.data;
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
-        }
+        
     }
 }
 </script>

@@ -1139,8 +1139,8 @@ export default {
               {
                 label: "New Vendors/Suppliers",
                 data: this.total_suppliers_per_month,
-                backgroundColor: "#FF69A520",
-                hoverBackgroundColor: "#FF69A5",
+                backgroundColor: "#FF69A5",
+                hoverBackgroundColor: "#FF69A520",
               },
             ],
           },
@@ -1302,8 +1302,8 @@ export default {
 
     staff() {
       const selector = "myChart14";
-      const bgColor = "#20C99720";
-      const hBgColor = "#20C997";
+      const bgColor = "#20C997";
+      const hBgColor = "#20C99720";
       const label = "New Staff";
 
       const ctx = this.$refs.myChart14Ref;
@@ -1391,8 +1391,8 @@ export default {
 
     totalPurchase() {
       const selector = "myChart15Canvas";
-      const bgColor = "#2C99FF20";
-      const hBgColor = "#2C99FF";
+      const bgColor = "#2C99FF";
+      const hBgColor = "#2C99FF20";
       const label = "Total Purchase Orders";
 
       const canvas = this.$refs.myChart15Canvas;

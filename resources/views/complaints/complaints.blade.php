@@ -13,27 +13,23 @@
                 <div class="mr-auto">
                     <span class="text-title">{{ __("Complaints") }}</span>
                 </div>
-                <div class="">
+                {{-- <div class="">
                     @if (check_access(array('A_ADD_CUSTOMER_COMPLAINT'), true))
                         <a href="{{ route('add_complaints')}}" role="button" class="btn btn-primary">{{ __("New Customer Complaint") }}</a>
                     @endif
-                </div>
+                </div> --}}
             </div>
     
             <div class="my-4">
-                <table id="listing" class="table display nowrap w-100">
+                <table id="complaints_listing" class="table display nowrap w-100">
                     <thead>
                         <tr>
     
                             <th>{{ __("Complaint Ticket") }}</th>
                             <th>{{ __("Complaint Date & time")}}</th>
-                            <th>{{ __("Complaint Customer")}}</th>         
-                            {{-- <th>{{ __("Equipment Type") }}</th>
-                            <th>{{ __("Equipment Make")}}</th> --}}
+                            <th>{{ __("Complaint Customer")}}</th> 
                             <th>{{ __("Model") }}</th>
                             <th>{{ __("Serial No") }}</th>
-                            {{-- <th>{{ __("Complaint Details") }}</th>
-                            <th>{{ __("End User Details") }}</th> --}}
                             <th>{{ __("Complaint Status") }}</th>
                             <th>{{ __("Action") }}</th>
                         </tr>
@@ -57,7 +53,7 @@
     <script>
         'use strict';
         var complaints = new Complaints();
-        complaints.load_customer_complaint_listing_table();
+        complaints.load_complaints_listing_table();
     </script>
 @endpush
 

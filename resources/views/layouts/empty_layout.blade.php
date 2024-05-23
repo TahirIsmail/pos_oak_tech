@@ -10,6 +10,7 @@ License: For each use you must have a valid license purchased only from above li
 -->
 <html lang="en">
     @include('layouts.header')
+    
     <div id="app">
         <body>
             @include('layouts.preloader')

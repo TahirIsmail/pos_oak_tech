@@ -1,6 +1,7 @@
 
 <template>
     <div class="container pt-3 entry_form">
+        
         <div class="d-flex justify-content-center pt-2">
             <div class="container1  col-sm-12 col-md-6 col-lg-4 col-lg-4 pt-5 pb-3">
                 <img :src="company_logo" class="d-block mb-4 entry_logo mt-3 ml-auto mr-auto" alt="OAK">
@@ -94,6 +95,7 @@ export default {
 
 
 <style scoped>
+
 .container1 {
     
     box-shadow: 0 4px 6px rgba(79, 49, 202, 0.1), 

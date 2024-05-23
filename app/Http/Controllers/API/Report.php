@@ -30,7 +30,7 @@ use App\Exports\QuotationExport;
 use App\Exports\TransactionExport;
 use App\Exports\SaleTaxExport;
 use App\Exports\BillingCounterExport;
-
+use App\Exports\ProductsReportExport;
 use App\Models\OrderProduct as OrderProductModel;
 use App\Models\Category as CategoryModel;
 use App\Models\Product as ProductModel;
@@ -104,6 +104,52 @@ class Report extends Controller
 
             $file_data = Excel::raw(
                 new ProductExport(
+                    $params
+                ),
+                \Maatwebsite\Excel\Excel::XLSX
+            );
+            
+            //$download_link = asset($this->view_path.$filename);
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Product report generated successfully",
+                    "data" => [
+                        "filename" => $filename
+                    ],
+                    "link" => "data:application/vnd.ms-excel;base64,".base64_encode($file_data),
+                ], 'SUCCESS'
+            ));
+
+        }catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+    }
+
+    public function sale_product_report(Request $request){
+        try {
+            
+            $params = [
+                'from_created_date' => $request->from_created_date,
+                'to_created_date' => $request->to_created_date,
+                'supplier' => $request->supplier,
+                'category' => $request->category,
+                'tax_code' => $request->tax_code,
+                'discount_code' => $request->discount_code,
+                'product_type' => $request->product_type,
+                'status' => $request->status,
+            ];
+
+           
+            $filename = 'product_report_'.date('Y_m_d_h_i_s').'_'.uniqid().'.xlsx';
+           
+            $file_data = Excel::raw(
+                new ProductsReportExport(
                     $params
                 ),
                 \Maatwebsite\Excel\Excel::XLSX

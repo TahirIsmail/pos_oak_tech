@@ -3,56 +3,25 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Complaints as ModelsComplaints;
-use DataTables;
-use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\OrderProduct;
-use App\Models\Product;
-use App\Models\Customer;
+use App\Models\Account as AccountModel;
 use App\Models\Category;
 use App\Models\ComplaintCharge;
-use App\Models\User;
-use App\Models\PurchaseOrder;
+use App\Models\Complaints as ModelsComplaints;
+use App\Models\Customer;
 use App\Models\Invoice;
-
-use Illuminate\Support\Facades\DB;
-
-use App\Models\Store as StoreModel;
-use App\Models\Country as CountryModel;
-use App\Models\MasterStatus as MasterStatusModel;
-use App\Models\MasterTransactionType as MasterTransactionTypeModel;
-use App\Models\Account as AccountModel;
-use App\Models\PaymentMethod as PaymentMethodModel;
-
-
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
-
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\KitchenResource;
-
-use App\Models\Order as OrderModel;
-use App\Models\OrderProduct as OrderProductModel;
-use App\Models\Product as ProductModel;
-use App\Models\Customer as CustomerModel;
-use App\Models\TaxcodeType as TaxcodeTypeModel;
-use App\Models\Transaction as TransactionModel;
-use App\Models\MasterOrderType as MasterOrderTypeModel;
-use App\Models\Table as TableModel;
-use App\Models\BusinessRegister as BusinessRegisterModel;
-use App\Models\User as UserModel;
-use App\Models\MasterBillingType as MasterBillingTypeModel;
-use App\Models\ProductIngredient as ProductIngredientModel;
-use App\Models\OrderProductLogs;
-
-use App\Http\Resources\Collections\OrderCollection;
-
-use App\Http\Controllers\API\Notification as NotificationAPI;
-use App\Http\Controllers\API\Otp as OtpAPI;
 use App\Models\InvoiceProduct;
+use App\Models\MasterTransactionType as MasterTransactionTypeModel;
+use App\Models\PaymentMethod as PaymentMethodModel;
+use App\Models\Product;
+use App\Models\Store as StoreModel;
+use App\Models\Transaction as TransactionModel;
+use App\Models\User;
+use Carbon\Carbon;
+use DataTables;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Complaints extends Controller
 {
@@ -63,7 +32,7 @@ class Complaints extends Controller
      */
     public function index(Request $request)
     {
-        
+
         $data['action_key'] = 'A_VIEW_CUSTOMER_COMPLAINTS_LISTING';
         if (check_access(array($data['action_key']), true) == false) {
             $response = $this->no_access_response_for_listing_table();
@@ -77,13 +46,95 @@ class Complaints extends Controller
             } else {
                 $data = ModelsComplaints::with('customer')->get();
             }
-            // dd($data);
+
             return DataTables::of($data)
-                ->addIndexColumn()             
-              
+                ->addIndexColumn()
+
                 ->addColumn('action', function ($row) {
                     $data['row'] = $row;
                     return view('complaints.layouts.complaints_actions', $data)->render();
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function complaints(Request $request)
+    {
+        $data['action_key'] = 'VIEW_FIELD_COMPLAINTS_LISTING';
+        $data['action_only_listing'] = 'VIEW_ONLY_COMPLAINTS';
+        $data['action_all_listing'] = 'VIEW_ALL_COMPLAINTS_LISTING';
+        
+        // Check initial access
+        if (check_access(array($data['action_key']), true) == false) {
+            return $this->no_access_response_for_listing_table();
+        }
+        
+        if ($request->ajax()) {
+            // Initialize complaints data variable
+            $complaints = null;
+        
+            // Role-specific data retrieval
+            if ($request->logged_user_role_id == 2) {
+                // Customer-specific complaints
+                $complaints = ModelsComplaints::with('customer')
+                    ->where('customer_id', $request->logged_user_customer_id)
+                    ->get();
+            } else if ($request->logged_user_role_id == 1) {
+                // Admin can view all complaints
+                $complaints = ModelsComplaints::with('customer')->get();
+            } else {
+                // Field staff specific complaints
+                if (check_access(array($data['action_only_listing']), true) == true) {
+                    $complaints = ModelsComplaints::with('customer')
+                        ->where('assign_to_field_staff_id', $request->logged_user_id)
+                        ->get();
+                }
+        
+                // View all complaints if permitted
+                if (check_access(array($data['action_all_listing']), true) == true) {
+                    $complaints = ModelsComplaints::with('customer')->get();
+                }
+            }
+        
+            // Debugging the retrieved data
+            // dd($complaints);
+            return DataTables::of($complaints)
+                ->addIndexColumn()
+
+                ->addColumn('action', function ($row) {
+                    $data['row'] = $row;
+                    return view('complaints.layouts.field_engg_complaints_action', $data)->render();
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function lab_complaints_listing(Request $request)
+    {
+
+        $data['action_key'] = 'A_VIEW_CUSTOMER_COMPLAINTS_LISTING';
+        if (check_access(array($data['action_key']), true) == false) {
+            $response = $this->no_access_response_for_listing_table();
+            return $response;
+        }
+
+        if ($request->ajax()) {
+
+            if ($request->logged_user_role_id == 1) {
+                $data = ModelsComplaints::with('customer')->get();
+            } else {
+                $data = ModelsComplaints::with('customer')->where('assign_to_lab_staff_id', $request->logged_user_id)->get();
+
+            }
+            // dd($data);
+            return DataTables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('action', function ($row) {
+                    $data['row'] = $row;
+                    return view('complaints.layouts.lab_engg_complaints_action', $data)->render();
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -105,11 +156,18 @@ class Complaints extends Controller
             }
 
             $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
-            if(isset($request->assigned_to) && $request->assigned_to != null) {
+            if (isset($request->assigned_to) && $request->assigned_to != null) {
                 $assigned_to = User::select('id')->where('slack', $request->assigned_to)->get();
             } else {
                 $assigned_to = null;
             }
+
+            if (isset($request->assigned_to_field_enng) && $request->assigned_to_field_enng != null) {
+                $assigned_to_field_enng = User::select('id')->where('slack', $request->assigned_to_field_enng)->get();
+            } else {
+                $assigned_to_field_enng = null;
+            }
+
             $ticket = $this->generate_ticket("complaints");
             $currentTime = Carbon::now();
             $time = $currentTime->format('H:i:s');
@@ -134,7 +192,9 @@ class Complaints extends Controller
                     "complaint_details" => $request->complaint_details,
                     "end_user_details" => $request->end_user_details,
                     "service_required" => $request->service_required,
+                    "type_of_service" => $request->service_type,
                     "assign_to_lab_staff_id" => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
+                    "assign_to_field_staff_id" => isset($assigned_to_field_enng[0]) ? $assigned_to_field_enng[0]->id : '',
                     "poc_name" => $request->poc_name,
                     "c_status" => $request->complaint_status,
                 ];
@@ -152,28 +212,50 @@ class Complaints extends Controller
                 }
             } else {
                 $customer_complaints = [
-
-                    "order_id" => $order_id[0]->id,
-                    "customer_id" => $customer_id[0]->id,
-                    "product_id" => $request->product_id,
-                    "complaint_ref" => $request->complaint_ref,
-                    "description" => $request->descriptions,
-
+                    "customer_id" => $customer_id[0]->id ?? null, // Use null coalescing operator to handle potential null values
+                    "user_name" => $customer_id[0]->name ?? null,
+                    "equipment_type" => $request->equipment_type ?? null,
+                    "equipment_make" => $request->equipment_make ?? null,
+                    "model" => $request->model ?? null,
+                    "serial_no" => $request->serial_no ?? null,
+                    "complaint_details" => $request->complaint_details ?? null,
+                    "end_user_details" => $request->end_user_details ?? null,
+                    "service_required" => $request->service_required ?? null,
+                    "type_of_service" => $request->service_type,
+                    "assign_to_lab_staff_id" => $assigned_to[0]->id ?? null, // Use null coalescing operator
+                    "assign_to_field_staff_id" => $assigned_to_field_enng[0]->id ?? null,
+                    "poc_name" => $request->poc_name ?? null,
+                    "c_status" => $request->complaint_status ?? null,
                 ];
+
                 $conditions = [
                     "slack" => $slack,
                 ];
-                $customer_complaint = ModelsComplaints::updateOrInsert($conditions, $customer_complaints);
-                if ($customer_complaint) {
+
+                try {
+                    // Assuming ModelsComplaints is your Eloquent model
+                    $customer_complaint = ModelsComplaints::updateOrCreate($conditions, $customer_complaints);
+
                     return response()->json($this->generate_response(
-                        array(
-                            "message" => "Customer Complaints Update successfully",
+                        [
+                            "message" => "Customer Complaints Updated successfully",
                             "data" => $customer_complaint,
                             'msg' => 'success',
-                        ),
+                        ],
                         'SUCCESS'
                     ));
+                } catch (\Exception $e) {
+                    // Handle exceptions if any
+                    return response()->json($this->generate_response(
+                        [
+                            "message" => "An error occurred while updating customer complaints.",
+                            "error" => $e->getMessage(),
+                            'msg' => 'error',
+                        ],
+                        'ERROR'
+                    ), 500); // Return 500 status code for internal server error
                 }
+
             }
         } catch (Exception $e) {
             return response()->json($this->generate_response(
@@ -184,7 +266,6 @@ class Complaints extends Controller
             ));
         }
     }
-
 
     public function customer_orders(Request $request)
     {
@@ -218,7 +299,6 @@ class Complaints extends Controller
         }
     }
 
-
     public function customer_orders_products(Request $request)
     {
         try {
@@ -250,7 +330,6 @@ class Complaints extends Controller
         }
     }
 
-
     public function delete_complaint($slack)
     {
         try {
@@ -264,9 +343,6 @@ class Complaints extends Controller
             $del = ModelsComplaints::where('slack', $slack)->delete();
 
             DB::commit();
-
-
-
 
             return response()->json($this->generate_response(
                 array(
@@ -301,9 +377,9 @@ class Complaints extends Controller
                 // Update the model's attributes
                 $complaint->update([
                     'assign_to_lab_staff_id' => $lab_technician_id->id,
-                    'admin_remark'           => $request->admin_remark,
-                    'due_date'                    => $request->due_date,
-                    'complaint_status'       => 'Process',
+                    'admin_remark' => $request->admin_remark,
+                    'due_date' => $request->due_date,
+                    'complaint_status' => 'Process',
                 ]);
             }
 
@@ -329,12 +405,11 @@ class Complaints extends Controller
     {
         try {
 
-
             $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
 
             $complaint->final_lab_staff_remark = $request->final_lab_staff_remark;
             $complaint->complaint_status = 'Completed Complaint';
-            $complaint->complaint_completed_date =  date('Y-m-d');
+            $complaint->complaint_completed_date = date('Y-m-d');
             $complaint->save();
             if ($complaint) {
                 return response()->json($this->generate_response(
@@ -365,7 +440,6 @@ class Complaints extends Controller
         }
     }
 
-
     public function assign_products_complaint(Request $request)
     {
         $complaint_id = ModelsComplaints::select('id')->where('slack', $request->complaint_slack)->first();
@@ -384,31 +458,30 @@ class Complaints extends Controller
         }
     }
 
-
     public function change_complaint_status(Request $request)
     {
         $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
 
         if ($complaint) {
             $complaint->update([
-               'billable' => $request->billable,
-               'complaint_status_label' => $request->complaint_status_label,
-               'type_of_service' => $request->type_of_service,
-               'complaint_ok' => $request->complaint_ok,
-               'picked_for_workshop' => $request->picked_for_workshop,
-               'equipment_S_no' => $request->equipment_s_no,
-               'equipment_specs' => $request->equipment_specs,
-               'accessories' => $request->accessories,
-               'invoice_number' => $request->invoice_number,
-               'po_number' => $request->po_number,
-               'complaint_condition' => $request->condition,
-               'equipment_part_serial_number' => $request->equipment_part_serial_number,
-               'outsource_date' => $request->outsource_date,
-               'return_date' => $request->return_date,
-               'delivery_date' => $request->delivery_date,
-               'fault_report_by_customer' => $request->fault_report_by_customer,
-               'c_status' => $request->c_status,
-               'status' => $request->status,
+                'billable' => $request->billable,
+                'complaint_status_label' => $request->complaint_status_label,
+                'type_of_service' => $request->type_of_service,
+                'complaint_ok' => $request->complaint_ok,
+                'picked_for_workshop' => $request->picked_for_workshop,
+                'equipment_S_no' => $request->equipment_s_no,
+                'equipment_specs' => $request->equipment_specs,
+                'accessories' => $request->accessories,
+                'invoice_number' => $request->invoice_number,
+                'po_number' => $request->po_number,
+                'complaint_condition' => $request->condition,
+                'equipment_part_serial_number' => $request->equipment_part_serial_number,
+                'outsource_date' => $request->outsource_date,
+                'return_date' => $request->return_date,
+                'delivery_date' => $request->delivery_date,
+                'fault_report_by_customer' => $request->fault_report_by_customer,
+                'c_status' => $request->c_status,
+                'status' => $request->status,
             ]);
 
             return response()->json($this->generate_response(
@@ -429,11 +502,11 @@ class Complaints extends Controller
 
         if ($complaint) {
             $complaint->update([
-               'parts_required' => $request->parts_required,
-               'outsource' => $request->outsource,
-               'out_source_item' => $request->outsource_item,
-               'ready_date' => $request->ready_date,
-               'diagnose_by_engg' => $request->diagnose_by_engg,              
+                'parts_required' => $request->parts_required,
+                'outsource' => $request->outsource,
+                'out_source_item' => $request->outsource_item,
+                'ready_date' => $request->ready_date,
+                'diagnose_by_engg' => $request->diagnose_by_engg,
             ]);
 
             return response()->json($this->generate_response(
@@ -448,14 +521,13 @@ class Complaints extends Controller
         }
     }
 
-
     public function add_customer_feedback(Request $request)
     {
         $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
 
         if ($complaint) {
             $complaint->update([
-               'customer_feedback' => $request->customer_feedback,                         
+                'customer_feedback' => $request->customer_feedback,
             ]);
 
             return response()->json($this->generate_response(
@@ -508,10 +580,6 @@ class Complaints extends Controller
 
                 $complaintCharges = ComplaintCharge::create($complaint_charges);
             }
-
-
-
-
 
             DB::commit();
 
@@ -570,7 +638,7 @@ class Complaints extends Controller
             ->where('transaction_type_constant', '=', trim('EXPENSE'))
             ->first();
 
-        $data['transaction_type'] =  $income_transaction_type_data;
+        $data['transaction_type'] = $income_transaction_type_data;
         $data['accounts'] = AccountModel::select('accounts.slack', 'accounts.label', 'master_account_type.label as account_type_label')
             ->masterAccountTypeJoin()
             ->active()
@@ -585,7 +653,7 @@ class Complaints extends Controller
 
         $store_data = StoreModel::select('currency_name', 'currency_code', 'printnode_enabled')
             ->where([
-                ['stores.id', '=', request()->logged_user_store_id]
+                ['stores.id', '=', request()->logged_user_store_id],
             ])
             ->active()
             ->first();
@@ -627,7 +695,6 @@ class Complaints extends Controller
         }
     }
 
-
     public function complaint_submit_transaction(Request $request)
     {
 
@@ -635,7 +702,6 @@ class Complaints extends Controller
         $payment_method_id = PaymentMethodModel::where('slack', $request->payment_method)->first();
         $complaint_id = ModelsComplaints::with('customer')->where('slack', $request->complaint_slack)->first();
         $customer = Customer::where('id', $complaint_id->customer_id)->first();
-       
 
         $transaction = [
             "slack" => $this->generate_slack("transactions"),
@@ -657,7 +723,7 @@ class Complaints extends Controller
             "pg_transaction_status" => '',
             "notes" => '',
             "transaction_date" => date('Y-m-d'),
-            "created_by" => $request->logged_user_id
+            "created_by" => $request->logged_user_id,
         ];
 
         // dd($transaction);
@@ -668,7 +734,7 @@ class Complaints extends Controller
         $code_start = (isset($code_start_config)) ? $code_start_config : 100;
 
         $transaction_code = [
-            "transaction_code" => ($code_start + $transaction_id)
+            "transaction_code" => ($code_start + $transaction_id),
         ];
         TransactionModel::where('id', $transaction_id)
             ->update($transaction_code);
@@ -677,13 +743,12 @@ class Complaints extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Transaction updated successfully",
-                    "data" => $transaction_id
+                    "data" => $transaction_id,
                 ),
                 'SUCCESS'
             ));
         }
     }
-
 
     public function fetchCategorySubcategory(Request $request)
     {
@@ -699,7 +764,6 @@ class Complaints extends Controller
             ));
         }
     }
-
 
     public function fetchCategoryProduct(Request $request)
     {
@@ -756,7 +820,7 @@ class Complaints extends Controller
                 $complaint_update = [
                     'admin_again_remark' => $request->admin_again_remark,
                     'due_date' => $request->extend_date,
-                    'complaint_status'   => 'Request Completed'
+                    'complaint_status' => 'Request Completed',
                 ];
                 $complaint_id->update($complaint_update);
                 $product = Product::find($productId);

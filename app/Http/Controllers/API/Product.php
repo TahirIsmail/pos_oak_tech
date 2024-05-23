@@ -68,11 +68,13 @@ class Product extends Controller
             if ($request->ajax()) {
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
-                $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User', 'gst_on_product')
+                $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User', 'gst_on_product', 'product_specifications')
                   
                     ->where('quantity', '>', 0)
                     ->orderBy('id', 'desc')
                     ->get();
+
+                // dd($data);
 
                 return Datatables::of($data)
                     ->addIndexColumn()
@@ -80,9 +82,13 @@ class Product extends Controller
                     ->addColumn('supplier_id', function ($row) {
                         return $row['supplier']->name;
                     })
-                    ->addColumn('category', function ($row) {
-                        return $row['category']->label . '(' . $row['category']->category_code . ')';
+                    ->addColumn('model', function ($row) {
+                        $modelSpec = $row['product_specifications']->firstWhere('specification_label', 'Model');
+                        return $modelSpec ? $modelSpec['specification_details'] : '';
                     })
+                    // ->addColumn('category', function ($row) {
+                    //     return $row['category']->label . '(' . $row['category']->category_code . ')';
+                    // })
                     ->addColumn('sale_price_percentage', function ($row) {
                         if (isset($row['sale_price_percentage'])) {
                             return $row['sale_price_percentage'] .'% ';
@@ -90,40 +96,34 @@ class Product extends Controller
                             return '--';
                         }
                     })
-                    ->addColumn('discount_code_id', function ($row) {
-                        if (isset($row['discount_code'])) {
-                            return ($row['discount_code']->label . ' - ' . $row['discount_code']->discount_code);
-                        } else {
-                            return '--';
-                        }
-                    })
+                  
 
-                    ->addColumn('gst_paid_for_product', function ($row) {
-                        if ($row['gst_paid_for_product'] == 1) {
-                            return $row['gst_on_product'][0]->gst_percentage . '%';
-                        } else {
-                            return '--';
-                        }
-                    })
+                    // ->addColumn('gst_paid_for_product', function ($row) {
+                    //     if ($row['gst_paid_for_product'] == 1) {
+                    //         return $row['gst_on_product'][0]->gst_percentage . '%';
+                    //     } else {
+                    //         return '--';
+                    //     }
+                    // })
 
-                    ->addColumn('status', function ($row) {
-                        if ($row['status'] == 1) {
-                            return 'Active';
-                        } else {
-                            return 'InActive';
-                        }
-                    })
+                    // ->addColumn('status', function ($row) {
+                    //     if ($row['status'] == 1) {
+                    //         return 'Active';
+                    //     } else {
+                    //         return 'InActive';
+                    //     }
+                    // })
 
-                    ->addColumn('created_by', function ($row) {
-                        return $row['user']['fullname'] . ' (' . $row['user']['email'] . ')';
-                    })                   
+                    // ->addColumn('created_by', function ($row) {
+                    //     return $row['user']['fullname'] . ' (' . $row['user']['email'] . ')';
+                    // })                   
 
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;
                         return view('product.layouts.product_actions', $data)->render();
                     })
 
-                    ->rawColumns(['supplier_id', 'category', 'gst_paid_for_product', 'discount_code_id', 'status', 'created_by', 'action'])
+                    ->rawColumns(['supplier_id', 'model', 'action'])
                     ->make(true);
             }
 

@@ -15,6 +15,8 @@ use Carbon\Carbon;
 class ProductExport implements FromCollection, WithMapping, WithHeadings
 {
     use Exportable;
+
+    protected $serialNumber = 1;
     
     public function __construct(array $data = [])
     {
@@ -31,40 +33,39 @@ class ProductExport implements FromCollection, WithMapping, WithHeadings
         $discount_code = $this->data['discount_code'];
         $product_type = $this->data['product_type'];
         $status = $this->data['status'];
-        
 
-        $query = Product::query()
-        ->select('products.*', 'category.id', 'suppliers.id', 'tax_codes.id', 'discount_codes.id')
-        ->categoryJoin()
-        ->supplierJoin()
-        ->taxcodeJoin()
-        ->discountcodeJoin();
+        $query = Product::with('product_specifications.category_specification_details')
+            ->select('products.*', 'category.id as category_id', 'suppliers.id as supplier_id', 'tax_codes.id as tax_code_id', 'discount_codes.id as discount_code_id')
+            ->categoryJoin()
+            ->supplierJoin()
+            ->taxcodeJoin()
+            ->discountcodeJoin();
 
-        if($from_created_date != ''){
+        if ($from_created_date != '') {
             $from_created_date = strtotime($from_created_date);
             $from_created_date = date(config('app.sql_date_format'), $from_created_date);
             $from_created_date = $from_created_date . ' 00:00:00';
             $query = $query->where('products.created_at', '>=', $from_created_date);
         }
-        if($to_created_date != ''){
+        if ($to_created_date != '') {
             $to_created_date = strtotime($to_created_date);
             $to_created_date = date(config('app.sql_date_format'), $to_created_date);
             $to_created_date = $to_created_date . ' 23:59:59';
             $query = $query->where('products.created_at', '<=', $to_created_date);
         }
-        if($supplier != ''){
+        if ($supplier != '') {
             $query = $query->where('suppliers.slack', $supplier);
         }
-        if($category != ''){
-            $query = $query->where('category.slack', $category);
+        if ($category != '') {
+            $query = $query->where('products.category_id', $category);
         }
-        if($tax_code != ''){
+        if ($tax_code != '') {
             $query = $query->where('tax_codes.slack', $tax_code);
         }
-        if($discount_code != ''){
+        if ($discount_code != '') {
             $query = $query->where('discount_codes.slack', $discount_code);
         }
-        if(isset($status)){
+        if (isset($status)) {
             $query = $query->where('products.status', $status);
         }
 
@@ -77,64 +78,54 @@ class ProductExport implements FromCollection, WithMapping, WithHeadings
         });
 
         $products = $query->get();
-
         return $products;
     }
 
     public function headings(): array
     {
         return [
-            'PRODUCT CODE',
-            'NAME',
-            'DESCRIPTION',
-            'SUPPLIER CODE',
+            'S.NO',
+            'SERIAL NO',
+            'PRODUCT NAME',
+            'MODEL',
             'SUPPLIER NAME',
-            'CATEGORY CODE',
-            'CATEGORY NAME',
-            'TAX CODE',
-            'TAX PERCENTAGE',
-            'DISCOUNT CODE',
-            'DISCOUNT PERCENTAGE',
+            'CATEGORY NAME',          
             'QUANTITY',
-            'PURCHASE PRICE WITHOUT TAX',
-            'SALE PRICE WITHOUT TAX',
+            'PURCHASE PRICE',
+            'SALE PRICE',
             'STATUS',
-            'CREATED AT',
             'CREATED BY',
-            'UPDATED AT',
-            'UPDATED BY'
         ];
     }
 
     public function map($product): array
     {
         $product = collect(new ProductResource($product));
+        $modelDetails = '';
+        if (isset($product['product_specifications'])) {
+            foreach ($product['product_specifications'] as $specification) {
+                if ($specification['specification_label'] === 'Model') {
+                    $modelDetails = $specification['specification_details'];
+                    break;
+                }
+            }
+        }
         return [
+            $this->serialNumber++,
             (isset($product['product_code']))?$product['product_code']:'',
             (isset($product['name']))?$product['name']:'',
-            (isset($product['description']))?$product['description']:'',
+            $modelDetails,
             
-            (isset($product['supplier']['supplier_code']))?$product['supplier']['supplier_code']:'',
             (isset($product['supplier']['name']))?$product['supplier']['name']:'',
 
-            (isset($product['category']['category_code']))?$product['category']['category_code']:'',
-            (isset($product['category']['label']))?$product['category']['label']:'',
-
-            (isset($product['tax_code']['tax_code']))?$product['tax_code']['tax_code']:'',
-            (isset($product['tax_code']['total_tax_percentage']))?$product['tax_code']['total_tax_percentage']:'',
-
-            (isset($product['discount_code']['discount_code']))?$product['discount_code']['discount_code']:'',
-            (isset($product['discount_code']['discount_percentage']))?$product['discount_code']['discount_percentage']:'',
-
+            (isset($product['category']['label']))?$product['category']['label']:'',         
+            
             (isset($product['quantity']))?$product['quantity']:'',
-            (isset($product['purchase_amount_excluding_tax']))?$product['purchase_amount_excluding_tax']:'',
-            (isset($product['sale_amount_excluding_tax']))?$product['sale_amount_excluding_tax']:'',
+            (isset($product['purchase_amount_excluding_tax'])) ? number_format($product['purchase_amount_excluding_tax']):'',
+            (isset($product['sale_amount_excluding_tax'])) ? number_format($product['sale_amount_excluding_tax']):'',
 
             (isset($product['status']['label']))?$product['status']['label']:'',
-            (isset($product['created_at_label']))?$product['created_at_label']:'',
             (isset($product['created_by']['fullname']))?$product['created_by']['fullname']:'',
-            (isset($product['updated_at_label']))?$product['updated_at_label']:'',
-            (isset($product['updated_by']['fullname']))?$product['updated_by']['fullname']:'',
         ];
     }
 }

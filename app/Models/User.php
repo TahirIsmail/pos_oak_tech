@@ -155,6 +155,10 @@ class User extends Model
         return $this->hasMany(Complaints::class, 'assign_to_lab_staff_id', 'id');
     }
 
+    public function assignComplaintFieldEngg(){
+        return $this->hasMany(Complaints::class, 'assign_to_field_staff_id', 'id');
+    }
+
     public function supplier(){
         return $this->hasOne(Supplier::class, 'supplier_id');
     }

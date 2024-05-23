@@ -72,30 +72,17 @@ class Products{
                     data: 'name'
                 },
                 {
+                    data: 'model'
+                },
+                {
                     data: 'supplier_id'
                 },
-                {
-                    data: 'category'
-                },
-                {
-                    data: 'gst_paid_for_product'
-                },  
-                {
-                    data: 'discount_code_id'
-                },  
                 {
                     data: 'quantity'
                 },  
                 {
                     data: 'sale_amount_excluding_tax'
-                },
-                {
-                    data: 'status'
-                },
-               
-                {
-                    data: 'created_by'
-                },    
+                },     
                 {
                     data: 'action'
                 },    

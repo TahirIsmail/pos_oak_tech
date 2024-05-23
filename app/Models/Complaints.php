@@ -36,6 +36,9 @@ class Complaints extends Model
     public function user(){
         return $this->belongsTo(User::class, 'assign_to_lab_staff_id');
     }
+    public function field_user(){
+        return $this->belongsTo(User::class, 'assign_to_field_staff_id');
+    }
     public function getComplaintCreatedAtAttribute(){
         return Carbon::parse($this->attributes['created_at'])->diffForHumans();
     }

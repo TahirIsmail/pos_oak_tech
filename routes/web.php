@@ -15,7 +15,7 @@
     
     */
     Route::get('/customer_signin',"CustomerEntry@customer_signin")->name('customer_home');
-    Route::get('/customer_forgot_password', "CustomerEntry@forgot_password")->name('forgot_password');
+    Route::get('/customer_forgot_password', "CustomerEntry@forgot_password")->name('customer_forgot_password');
 
     // ----------------------------------------------------------------//
     Route::get('/', "Entry@sign_in")->name('home');
@@ -342,8 +342,14 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/add_complaints', "ComplaintsController@add_complaints")->name('add_complaints');
     Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
     Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
+    Route::get('/view_complaint/{slack?}', "ComplaintsController@open_complaint")->name('view_complaint');
+    Route::get('/view_lab_complaint/{slack?}', "ComplaintsController@open_lab_complaint")->name('view_lab_complaint');
 
     Route::get('/print_complaint_invoice/{slack}', "ComplaintsController@print_invoice")->name('print_complaint_invoice');
+
+
+    Route::get('/complaints','ComplaintsController@complaints')->name('complaints');
+    Route::get('/lab_complaints','ComplaintsController@lab_complaints')->name('lab_complaints');
 
 
     // Route::get('/expenses','ExpensesController@index')->name('expenses');

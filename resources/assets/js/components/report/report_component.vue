@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card p-4">
             <div class="card-header d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">
@@ -15,7 +15,7 @@
                 </div>
             </div>
 
-            <form @submit.prevent="download_sale_tax_report('sales_tax_report_form')" data-vv-scope="sales_tax_report_form" class="mb-2">
+            <!-- <form @submit.prevent="download_sale_tax_report('sales_tax_report_form')" data-vv-scope="sales_tax_report_form" class="mb-2">
                 <div class="d-flex flex-wrap mb-2">
                     <div class="mr-auto">
                     <div class="d-flex">
@@ -51,9 +51,9 @@
                 </div>
             </form>
 
-            <hr class='mb-4'>
+            <hr class='mb-4'> -->
 
-            <form @submit.prevent="download_billing_counter_report('billing_counter_report_form')" data-vv-scope="billing_counter_report_form" class="mb-2">
+            <!-- <form @submit.prevent="download_billing_counter_report('billing_counter_report_form')" data-vv-scope="billing_counter_report_form" class="mb-2">
                 <div class="d-flex flex-wrap mb-2">
                     <div class="mr-auto">
                     <div class="d-flex">
@@ -79,9 +79,9 @@
                         <date-picker :lang='date.lang' :format="date.format" v-model="billing_counter_report_form.to_date" input-class="form-control bg-white" :placeholder="$t('Select to created date')"></date-picker>
                     </div>
                 </div>
-            </form>
+            </form> -->
 
-            <hr class='mb-4'>
+            <!-- <hr class='mb-4'> -->
 
             <form @submit.prevent="download_user_report('user_report_form')" data-vv-scope="user_report_form" class="mb-2">
                 <div class="d-flex flex-wrap mb-2">
@@ -141,7 +141,8 @@
                         </div>
                     </div>
                     <div class="">
-                        <button type="submit" class="btn btn-primary" v-bind:disabled="product_report_form.processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="product_report_form.processing == true"></i> {{ $t("Download") }}</button>
+                        <button type="submit" class="btn btn-primary" v-bind:disabled="product_report_form.processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="product_report_form.processing == true"></i> {{ $t("Download Generic Report") }}</button>
+                        <button type="button" @click="download_sale_product_report('sale_product_report_form')" class="btn btn-primary" v-bind:disabled="sale_product_report_form.processing == true"> <i class='fa fa-circle-notch fa-spin'  v-if="sale_product_report_form.processing == true"></i> {{ $t("Download Sale Report") }}</button>
                     </div>
                 </div>
 
@@ -178,47 +179,19 @@
                         <label for="category">{{ $t("Category") }}</label>
                         <select name="category" v-model="product_report_form.category" v-validate="''" class="form-control form-control-custom custom-select">
                             <option value="">Choose Category..</option>
-                            <option v-for="(category, index) in categories" v-bind:value="category.slack" v-bind:key="index">
+                            <option v-for="(category, index) in categories" v-bind:value="category.id" v-bind:key="index">
                                 {{ category.category_code }} - {{ category.label }}
                             </option>
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('category') }">{{ errors.first('category') }}</span> 
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="tax_code">{{ $t("Tax Code") }}</label>
-                        <select name="tax_code" v-model="product_report_form.tax_code" v-validate="''" class="form-control form-control-custom custom-select">
-                            <option value="">Choose Tax Code..</option>
-                            <option v-for="(taxcode, index) in taxcodes" v-bind:value="taxcode.slack" v-bind:key="index">
-                                {{ taxcode.label }}
-                            </option>
-                        </select>
-                        <span v-bind:class="{ 'error' : errors.has('tax_code') }">{{ errors.first('tax_code') }}</span> 
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="discount_code">{{ $t("Discount Code") }}</label>
-                        <select name="discount_code" v-model="product_report_form.discount_code" v-validate="''" class="form-control form-control-custom custom-select">
-                            <option value="">Choose Discount Code..</option>
-                            <option v-for="(discount_code, index) in discountcodes" v-bind:value="discount_code.slack" v-bind:key="index">
-                                {{ discount_code.label }}
-                            </option>
-                        </select>
-                        <span v-bind:class="{ 'error' : errors.has('discount_code') }">{{ errors.first('discount_code') }}</span> 
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="status">{{ $t("Status") }}</label>
-                        <select name="status" v-model="product_report_form.status" class="form-control form-control-custom custom-select">
-                            <option value="">Choose Status..</option>
-                            <option v-for="(status, index) in user_statuses" v-bind:value="status.value" v-bind:key="index">
-                                {{ status.label }}
-                            </option>
-                        </select> 
-                    </div>
+                  
                 </div>
             </form>
 
             <hr class='mb-4'>
 
-            <form @submit.prevent="download_order_report('order_report_form')" data-vv-scope="order_report_form" class="mb-2">
+            <!-- <form @submit.prevent="download_order_report('order_report_form')" data-vv-scope="order_report_form" class="mb-2">
                 <div class="d-flex flex-wrap mb-2">
                     <div class="mr-auto">
                     <div class="d-flex">
@@ -255,7 +228,7 @@
                 </div>
             </form>
 
-            <hr class='mb-4'>
+            <hr class='mb-4'> -->
 
             <form @submit.prevent="download_purchase_order_report('purchase_order_report_form')" data-vv-scope="purchase_order_report_form" class="mb-2">
                 <div class="d-flex flex-wrap mb-2">
@@ -680,6 +653,21 @@
                     status : ''
                 },
 
+                sale_product_report_form: {
+                    server_errors : '',
+                    error_class   : '',
+                    processing    : false,
+
+                    from_created_date : '',
+                    to_created_date : '',
+                    supplier : '',
+                    category : '',
+                    tax_code : '',
+                    discount_code : '',
+                    product_type: 'billing_products',
+                    status : ''
+                },
+
                 order_report_form: {
                     server_errors : '',
                     error_class   : '',
@@ -901,6 +889,7 @@
             },
 
             download_product_report(scope){
+              
                 this.$validator.validateAll(scope).then((result) => {
                     if (result) {
                         this.product_report_form.processing = true;
@@ -939,6 +928,53 @@
                         });
                     }
                 });
+            },
+
+            download_sale_product_report(scope){   
+                if(this.product_report_form.category == "" || this.product_report_form.category == null){
+                    alert("Please Select Category First");
+                }
+                else{
+
+                    this.$validator.validateAll('product_report_form').then((result) => {
+                          if (result) {
+                              this.sale_product_report_form.processing = true;
+                              var formData = new FormData();
+      
+                              formData.append("access_token", window.settings.access_token);
+                              formData.append("from_created_date", this.convert_date_format(this.product_report_form.from_created_date));
+                              formData.append("to_created_date", this.convert_date_format(this.product_report_form.to_created_date));
+                              formData.append("supplier", this.product_report_form.supplier);
+                              formData.append("category", this.product_report_form.category);
+                              formData.append("tax_code", this.product_report_form.tax_code);
+                              formData.append("discount_code", this.product_report_form.discount_code);
+                              formData.append("product_type", this.product_report_form.product_type);
+                              formData.append("status", this.product_report_form.status);
+      
+                              axios.post('/api/sale_product_report', formData).then((response) => {
+                                  this.sale_product_report_form.processing = false;
+                                  if(response.data.status_code == 200) {
+                                      if(typeof response.data.link != 'undefined' && response.data.link != ""){
+                                          this.download_excel_document(response.data.link, response.data.data.filename);
+                                      }else{
+                                          location.reload();
+                                      }
+                                  }else{
+                                      try{
+                                          var error_json = JSON.parse(response.data.msg);
+                                          this.sale_product_report_form.server_errors = this.loop_api_errors(error_json);
+                                      }catch(err){
+                                          this.sale_product_report_form.server_errors = response.data.msg;
+                                      }
+                                      this.sale_product_report_form.error_class = 'error';
+                                  }
+                              })
+                              .catch((error) => {
+                                  console.log(error);
+                              });
+                          }
+                      });
+                }           
             },
 
             download_order_report(scope){

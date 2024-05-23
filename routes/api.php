@@ -245,6 +245,7 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/taxcode_report', 'API\Report@taxcode_report');
     Route::post('/discountcode_report', 'API\Report@discountcode_report');
     Route::post('/product_report', 'API\Report@product_report');
+    Route::post('/sale_product_report', 'API\Report@sale_product_report');
     Route::post('/store_report', 'API\Report@store_report');
     Route::post('/order_report', 'API\Report@order_report');
     Route::post('/purchase_order_report', 'API\Report@purchase_order_report');
@@ -464,6 +465,8 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //Customer Complaints
     Route::post('/customer_complaints', 'API\Complaints@index');
+    Route::post('/complaints', 'API\Complaints@complaints');
+    Route::post('/lab_complaints_listing', 'API\Complaints@lab_complaints_listing');
     Route::post('/customer_orders', 'API\Complaints@customer_orders');
     Route::post('/customer_orders_products', 'API\Complaints@customer_orders_products');
     Route::post('/submit_customer_complaint','API\Complaints@store');

@@ -1036,6 +1036,7 @@ class Customer extends Controller
     public function fetchCustomers(Request $request)
     {
         $customers = CustomerModel::select('slack', 'id', 'name', 'email')->where('customer_type', $request->customer_category)->get();
+      
         return response()->json($this->generate_response(
             array(
                 "message" => "Customer deleted successfully",
