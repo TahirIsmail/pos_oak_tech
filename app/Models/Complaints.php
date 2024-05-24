@@ -56,4 +56,18 @@ class Complaints extends Model
     public function storeData(){
         return $this->hasOne('App\Models\Store', 'id', 'store_id');
     }
+    public function complaint_assign_to_field_enggs(){
+        return $this->hasMany(ComplaintAssignToFieldEngg::class, 'complaint_id');
+    }
+    public function complaint_assign_to_lab_enggs(){
+        return $this->hasMany(CompaintAssignToLabEngg::class, 'complaint_id');
+    }
+
+    public function part_requests(){
+        return $this->hasMany(PartRequest::class, 'complaint_id');
+    }
+
+    public function request_to_store(){
+        return $this->hasMany(RequestToStore::class, 'complaint_id');
+    }
 }

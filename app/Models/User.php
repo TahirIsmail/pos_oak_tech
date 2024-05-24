@@ -173,5 +173,13 @@ class User extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_child_id');
     }
+
+    public function part_requests(){
+        return $this->hasMany(PartRequest::class, 'engineer_id');
+    }
+
+    public function request_to_store(){
+        return $this->hasMany(RequestToStore::class, 'user_id');
+    }
     
 }

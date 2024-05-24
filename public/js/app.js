@@ -22645,6 +22645,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       show_modal: false,
       customer_list: [],
       error_class: "",
+      assign_to: complaintsDataIsEmpty ? '' : this.complaints_data.assign_to,
       api_link: complaintsDataIsEmpty ? "/api/submit_customer_complaint" : "/api/update_customer_complaint/".concat(this.complaints_data.slack),
       complaint_slack: complaintsDataIsEmpty ? '' : this.complaints_data.slack,
       selectedCustomer: complaintsDataIsEmpty || !this.complaints_data.customer ? this.is_customer ? this.customer_slack : '' : this.complaints_data.customer.slack,
@@ -22729,7 +22730,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           _this2.$on("submit", function () {
             var _console;
             // alert(this.api_link);
-            // this.processing = true;
+            _this2.processing = true;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
             formData.append("customer_slack", _this2.selectedCustomer);
@@ -22745,6 +22746,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             formData.append("assigned_to_field_enng", _this2.assigned_to_field_enng);
             formData.append("poc_name", _this2.poc_name);
             formData.append("complaint_status", _this2.complaint_status);
+            formData.append("assign_to", _this2.assign_to);
             // formData.append("customer_feedback", this.customer_feedback);
             (_console = console).log.apply(_console, _toConsumableArray(formData));
             axios.post(_this2.api_link, formData).then(function (response) {
@@ -22834,6 +22836,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   props: {
     labusers: Array,
     complaint: Array,
+    user_data: Array,
     assign_access: Boolean,
     requirement_request_access: Boolean,
     Customer_complaint_make_invoice: Boolean,
@@ -23332,19 +23335,19 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.show_modal = true;
       this.$on("submit", function () {
         var _this18 = this;
-        // this.processing = true;
+        this.processing = true;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
-        formData.append("lab_staff_remark", this.lab_staff_remark);
+        formData.append("field_staff_remark", this.lab_staff_remark);
         formData.append('complaint_slack', this.complaint_slack);
-        axios.post('/api/request_requirement', formData).then(function (response) {
-          if (response.data.status_code == 200) {
+        formData.append('field_engineer', 'Field_Engineer');
+        axios.post('/api/field_eng_request_requirement', formData).then(function (response) {
+          if (response.status == 200) {
             _this18.show_response_message(response.data.msg, 'Success');
-            if (response.data.link != "") {
-              location.reload();
-            } else {
-              location.reload();
-            }
+            _this18.show_modal = false;
+            _this18.processing = false;
+            _this18.required_product = false;
+            window.location.reload();
           } else {
             _this18.show_modal = false;
             _this18.processing = false;
@@ -23456,7 +23459,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       account: '',
       transactions: [],
       notes: ''
-    }, _defineProperty(_ref, "transaction_type_data", ''), _defineProperty(_ref, "complaint_status_modal", false), _defineProperty(_ref, "add_customer_feedback", false), _defineProperty(_ref, "add_remark_modal", false), _defineProperty(_ref, "delete_processing", false), _defineProperty(_ref, "show_payment_modal", false), _defineProperty(_ref, "show_modal", false), _defineProperty(_ref, "show_assign_complaint", false), _defineProperty(_ref, "complaint_complete", false), _defineProperty(_ref, "delete_access", true), _defineProperty(_ref, "assign_processing", false), _defineProperty(_ref, "required_product", false), _defineProperty(_ref, "assign_required_product", false), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "tax_component_count", 0), _defineProperty(_ref, "server_errors", ''), _defineProperty(_ref, "categories", []), _defineProperty(_ref, "category", ''), _defineProperty(_ref, "scategories", []), _defineProperty(_ref, "currency_codes", []), _defineProperty(_ref, "payment_total_amount", 0), _defineProperty(_ref, "products", []), _defineProperty(_ref, "charge_label", [""]), _defineProperty(_ref, "charge_price", [""]), _defineProperty(_ref, "complaint_product_ids", []), _defineProperty(_ref, "Selectedproducts", []), _defineProperty(_ref, "ComplaintProducts", []), _defineProperty(_ref, "complaint_invoice", false), _defineProperty(_ref, "payment_received_amount", 0), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "product_ids", []), _defineProperty(_ref, "ComplaintRecord", []), _defineProperty(_ref, "s_category", ''), _defineProperty(_ref, "extend_date", ''), _defineProperty(_ref, "submit_complaint_technician", false), _defineProperty(_ref, "labtechnician", ''), _defineProperty(_ref, "final_lab_staff_remark", ''), _defineProperty(_ref, "due_date", ''), _defineProperty(_ref, "admin_remark", ''), _defineProperty(_ref, "lab_staff_remark", ''), _defineProperty(_ref, "admin_again_remark", ''), _defineProperty(_ref, "requirement_request", this.complaint.lab_staff_remark ? this.complaint.lab_staff_remark : null), _defineProperty(_ref, "complaint_slack", this.complaint.slack), _defineProperty(_ref, "delete_category_api_link", '/api/delete_complaint/' + this.complaint.slack), _defineProperty(_ref, "charges", []), _defineProperty(_ref, "billable", this.complaint.billable ? this.complaint.billable : ''), _defineProperty(_ref, "parts_required", this.complaint.parts_required ? this.complaint.parts_required : ''), _defineProperty(_ref, "complaint_status", this.complaint.complaint_status_label ? this.complaint.complaint_status_label : ''), _defineProperty(_ref, "type_of_service", this.complaint.type_of_service ? this.complaint.type_of_service : ''), _defineProperty(_ref, "complaint_ok", this.complaint.complaint_ok ? this.complaint.complaint_ok : ''), _defineProperty(_ref, "picked_for_workshop", this.complaint.picked_for_workshop ? this.complaint.picked_for_workshop : ''), _defineProperty(_ref, "equipment_s_no", this.complaint.equipments_S_no ? this.complaint.equipments_S_no : ''), _defineProperty(_ref, "equipment_specs", this.complaint.equipment_specs ? this.complaint.equipment_specs : ''), _defineProperty(_ref, "accessories", this.complaint.accessories ? this.complaint.accessories : ''), _defineProperty(_ref, "invoice_number", this.complaint.invoice_number ? this.complaint.invoice_number : ''), _defineProperty(_ref, "po_number", this.complaint.po_number ? this.complaint.po_number : ''), _defineProperty(_ref, "condition", this.complaint.complaint_condition ? this.complaint.complaint_condition : ''), _defineProperty(_ref, "equipment_part_serial_number", this.complaint.equipment_part_serial_number ? this.complaint.equipment_part_serial_number : ''), _defineProperty(_ref, "outsource_date", this.complaint.outsource_date ? this.complaint.outsource_date : ''), _defineProperty(_ref, "return_date", this.complaint.return_date ? this.complaint.return_date : ''), _defineProperty(_ref, "delivery_date", this.complaint.delivery_date ? this.complaint.delivery_date : ''), _defineProperty(_ref, "fault_report_by_customer", this.complaint.fault_report_by_customer ? this.complaint.fault_report_by_customer : ''), _defineProperty(_ref, "outsource", this.complaint.outsource ? this.complaint.outsource : ''), _defineProperty(_ref, "outsource_item", this.complaint.out_source_item ? this.complaint.out_source_item : ''), _defineProperty(_ref, "ready_date", this.complaint.ready_date ? this.complaint.ready_date : ''), _defineProperty(_ref, "diagnose_by_engg", this.complaint.diagnose_by_engg ? this.complaint.diagnose_by_engg : ''), _defineProperty(_ref, "customer_feedback", this.complaint.customer_feedback ? this.complaint.customer_feedback : ''), _defineProperty(_ref, "c_status", this.complaint.c_status ? this.complaint.c_status : ''), _defineProperty(_ref, "status", this.complaint.status ? this.complaint.status : ''), _ref;
+    }, _defineProperty(_ref, "transaction_type_data", ''), _defineProperty(_ref, "complaint_status_modal", false), _defineProperty(_ref, "add_customer_feedback", false), _defineProperty(_ref, "request_part_store", false), _defineProperty(_ref, "add_remark_modal", false), _defineProperty(_ref, "delete_processing", false), _defineProperty(_ref, "show_payment_modal", false), _defineProperty(_ref, "show_modal", false), _defineProperty(_ref, "show_assign_complaint", false), _defineProperty(_ref, "complaint_complete", false), _defineProperty(_ref, "delete_access", true), _defineProperty(_ref, "assign_processing", false), _defineProperty(_ref, "required_product", false), _defineProperty(_ref, "assign_required_product", false), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "tax_component_count", 0), _defineProperty(_ref, "server_errors", ''), _defineProperty(_ref, "categories", []), _defineProperty(_ref, "category", ''), _defineProperty(_ref, "scategories", []), _defineProperty(_ref, "currency_codes", []), _defineProperty(_ref, "payment_total_amount", 0), _defineProperty(_ref, "products", []), _defineProperty(_ref, "charge_label", [""]), _defineProperty(_ref, "charge_price", [""]), _defineProperty(_ref, "complaint_product_ids", []), _defineProperty(_ref, "Selectedproducts", []), _defineProperty(_ref, "ComplaintProducts", []), _defineProperty(_ref, "complaint_invoice", false), _defineProperty(_ref, "payment_received_amount", 0), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "product_ids", []), _defineProperty(_ref, "ComplaintRecord", []), _defineProperty(_ref, "s_category", ''), _defineProperty(_ref, "extend_date", ''), _defineProperty(_ref, "submit_complaint_technician", false), _defineProperty(_ref, "labtechnician", ''), _defineProperty(_ref, "final_lab_staff_remark", ''), _defineProperty(_ref, "due_date", ''), _defineProperty(_ref, "admin_remark", ''), _defineProperty(_ref, "lab_staff_remark", ''), _defineProperty(_ref, "admin_again_remark", ''), _defineProperty(_ref, "requirement_request", this.complaint.lab_staff_remark ? this.complaint.lab_staff_remark : null), _defineProperty(_ref, "complaint_slack", this.complaint.slack), _defineProperty(_ref, "delete_category_api_link", '/api/delete_complaint/' + this.complaint.slack), _defineProperty(_ref, "charges", []), _defineProperty(_ref, "billable", this.complaint.billable ? this.complaint.billable : ''), _defineProperty(_ref, "parts_required", this.complaint.parts_required ? this.complaint.parts_required : ''), _defineProperty(_ref, "complaint_status", this.complaint.complaint_status_label ? this.complaint.complaint_status_label : ''), _defineProperty(_ref, "type_of_service", this.complaint.type_of_service ? this.complaint.type_of_service : ''), _defineProperty(_ref, "complaint_ok", this.complaint.complaint_ok ? this.complaint.complaint_ok : ''), _defineProperty(_ref, "picked_for_workshop", this.complaint.picked_for_workshop ? this.complaint.picked_for_workshop : ''), _defineProperty(_ref, "equipment_s_no", this.complaint.equipments_S_no ? this.complaint.equipments_S_no : ''), _defineProperty(_ref, "equipment_specs", this.complaint.equipment_specs ? this.complaint.equipment_specs : ''), _defineProperty(_ref, "accessories", this.complaint.accessories ? this.complaint.accessories : ''), _defineProperty(_ref, "invoice_number", this.complaint.invoice_number ? this.complaint.invoice_number : ''), _defineProperty(_ref, "po_number", this.complaint.po_number ? this.complaint.po_number : ''), _defineProperty(_ref, "condition", this.complaint.complaint_condition ? this.complaint.complaint_condition : ''), _defineProperty(_ref, "equipment_part_serial_number", this.complaint.equipment_part_serial_number ? this.complaint.equipment_part_serial_number : ''), _defineProperty(_ref, "outsource_date", this.complaint.outsource_date ? this.complaint.outsource_date : ''), _defineProperty(_ref, "return_date", this.complaint.return_date ? this.complaint.return_date : ''), _defineProperty(_ref, "delivery_date", this.complaint.delivery_date ? this.complaint.delivery_date : ''), _defineProperty(_ref, "fault_report_by_customer", this.complaint.fault_report_by_customer ? this.complaint.fault_report_by_customer : ''), _defineProperty(_ref, "outsource", this.complaint.outsource ? this.complaint.outsource : ''), _defineProperty(_ref, "outsource_item", this.complaint.out_source_item ? this.complaint.out_source_item : ''), _defineProperty(_ref, "ready_date", this.complaint.ready_date ? this.complaint.ready_date : ''), _defineProperty(_ref, "diagnose_by_engg", this.complaint.diagnose_by_engg ? this.complaint.diagnose_by_engg : ''), _defineProperty(_ref, "customer_feedback", this.complaint.customer_feedback ? this.complaint.customer_feedback : ''), _defineProperty(_ref, "c_status", this.complaint.c_status ? this.complaint.c_status : ''), _defineProperty(_ref, "status", this.complaint.status ? this.complaint.status : ''), _defineProperty(_ref, "engineer_id", ''), _defineProperty(_ref, "request_id", ''), _defineProperty(_ref, "complaint_id", ''), _defineProperty(_ref, "request_detail", ''), _defineProperty(_ref, "request_text", ''), _defineProperty(_ref, "product_details", ''), _ref;
   },
   props: {
     labusers: Array,
@@ -23476,28 +23479,29 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     this.fetchComplaintRecord();
   },
   methods: {
-    addCharge: function addCharge() {
-      if (this.charges.length < 10) {
-        this.charges.push("");
-      }
+    formatEngineerType: function formatEngineerType(engineerType) {
+      return engineerType.replace(/_/g, ' ');
     },
-    add_complaint_status: function add_complaint_status() {
-      this.complaint_status_modal = true;
+    showPartRequestModal: function showPartRequestModal(request) {
+      this.request_id = request.id, this.engineer_id = request.engineer_id;
+      this.complaint_id = request.complaint_id;
+      this.request_detail = request.request;
+      this.request_text = 'Engineer Request for: ' + request.request;
+      this.request_part_store = true;
     },
-    add_remarks: function add_remarks() {
-      this.add_remark_modal = true;
-    },
-    add_feedback: function add_feedback() {
-      this.add_customer_feedback = true;
-    },
-    submit_customer_feedback: function submit_customer_feedback() {
-      var _this = this;
+    submit_request_to_store: function submit_request_to_store() {
+      var _console,
+        _this = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
-      formData.append('complaint_slack', this.complaint_slack);
-      formData.append('customer_feedback', this.customer_feedback);
-      axios.post('/api/add_customer_feedback', formData).then(function (response) {
-        if (response.data.status_code == 200) {
+      formData.append('request_id', this.request_id);
+      formData.append('engineer_id', this.engineer_id);
+      formData.append('complaint_id', this.complaint_id);
+      formData.append('request_detail', this.request_detail);
+      formData.append('product_details', this.product_details);
+      (_console = console).log.apply(_console, _toConsumableArray(formData));
+      axios.post('/api/add_request_product_store', formData).then(function (response) {
+        if (response.status == 200) {
           _this.show_response_message(response.data.msg, 'Success');
           location.reload();
         } else {
@@ -23515,17 +23519,27 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    submit_complaint_remarks: function submit_complaint_remarks() {
+    addCharge: function addCharge() {
+      if (this.charges.length < 10) {
+        this.charges.push("");
+      }
+    },
+    add_complaint_status: function add_complaint_status() {
+      this.complaint_status_modal = true;
+    },
+    add_remarks: function add_remarks() {
+      this.add_remark_modal = true;
+    },
+    add_feedback: function add_feedback() {
+      this.add_customer_feedback = true;
+    },
+    submit_customer_feedback: function submit_customer_feedback() {
       var _this2 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append('complaint_slack', this.complaint_slack);
-      formData.append('parts_required', this.parts_required);
-      formData.append('outsource', this.outsource);
-      formData.append('outsource_item', this.outsource_item);
-      formData.append('ready_date', this.ready_date);
-      formData.append('diagnose_by_engg', this.diagnose_by_engg);
-      axios.post('/api/change_complaint_remark_by_engg', formData).then(function (response) {
+      formData.append('customer_feedback', this.customer_feedback);
+      axios.post('/api/add_customer_feedback', formData).then(function (response) {
         if (response.data.status_code == 200) {
           _this2.show_response_message(response.data.msg, 'Success');
           location.reload();
@@ -23544,8 +23558,37 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    submit_complaint_status: function submit_complaint_status() {
+    submit_complaint_remarks: function submit_complaint_remarks() {
       var _this3 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append('complaint_slack', this.complaint_slack);
+      formData.append('parts_required', this.parts_required);
+      formData.append('outsource', this.outsource);
+      formData.append('outsource_item', this.outsource_item);
+      formData.append('ready_date', this.ready_date);
+      formData.append('diagnose_by_engg', this.diagnose_by_engg);
+      axios.post('/api/change_complaint_remark_by_engg', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this3.show_response_message(response.data.msg, 'Success');
+          location.reload();
+        } else {
+          _this3.show_modal = false;
+          _this3.processing = false;
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this3.loop_api_errors(error_json);
+          } catch (err) {
+            _this3.server_errors = response.data.msg;
+          }
+          _this3.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    submit_complaint_status: function submit_complaint_status() {
+      var _this4 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append("complaint_slack", this.complaint_slack);
@@ -23570,18 +23613,18 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       formData.append('status', this.status);
       axios.post('/api/change_complaint_status', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this3.show_response_message(response.data.msg, 'Success');
+          _this4.show_response_message(response.data.msg, 'Success');
           location.reload();
         } else {
-          _this3.show_modal = false;
-          _this3.processing = false;
+          _this4.show_modal = false;
+          _this4.processing = false;
           try {
             var error_json = JSON.parse(response.data.msg);
-            _this3.loop_api_errors(error_json);
+            _this4.loop_api_errors(error_json);
           } catch (err) {
-            _this3.server_errors = response.data.msg;
+            _this4.server_errors = response.data.msg;
           }
-          _this3.error_class = 'error';
+          _this4.error_class = 'error';
         }
       })["catch"](function (error) {
         console.log(error);
@@ -23592,7 +23635,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.$off("close");
       this.show_modal = true;
       this.$on("submit", function () {
-        var _this4 = this;
+        var _this5 = this;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
         formData.append("complaint_slack", this.complaint_slack);
@@ -23601,18 +23644,18 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         formData.append('complaint_product_ids', this.complaint_product_ids);
         axios.post('/api/complaint_invoice_make', formData).then(function (response) {
           if (response.data.status_code == 200) {
-            _this4.show_response_message(response.data.msg, 'Success');
+            _this5.show_response_message(response.data.msg, 'Success');
             location.reload();
           } else {
-            _this4.show_modal = false;
-            _this4.processing = false;
+            _this5.show_modal = false;
+            _this5.processing = false;
             try {
               var error_json = JSON.parse(response.data.msg);
-              _this4.loop_api_errors(error_json);
+              _this5.loop_api_errors(error_json);
             } catch (err) {
-              _this4.server_errors = response.data.msg;
+              _this5.server_errors = response.data.msg;
             }
-            _this4.error_class = 'error';
+            _this5.error_class = 'error';
           }
         })["catch"](function (error) {
           console.log(error);
@@ -23623,47 +23666,22 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       });
     },
     fetchComplaintRecord: function fetchComplaintRecord() {
-      var _this5 = this;
+      var _this6 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append("complaint_slack", this.complaint_slack);
       axios.post('/api/fetchComplaintRecord', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this5.ComplaintRecord = response.data.data.complaints;
-          _this5.transactions = response.data.data.complaints[0].transactions;
-          _this5.currency_codes = response.data.data.currency_codes;
-          _this5.payment_pending_amount = response.data.data.total_pending_amount;
-          _this5.payment_total_amount = response.data.data.total_complaint_amount_invoice;
-          _this5.payment_received_amount = response.data.data.total_received_amount;
+          _this6.ComplaintRecord = response.data.data.complaints;
+          _this6.transactions = response.data.data.complaints[0].transactions;
+          _this6.currency_codes = response.data.data.currency_codes;
+          _this6.payment_pending_amount = response.data.data.total_pending_amount;
+          _this6.payment_total_amount = response.data.data.total_complaint_amount_invoice;
+          _this6.payment_received_amount = response.data.data.total_received_amount;
           // this.payment_pending_amount = response.data.data.total_pending_amount;
-          _this5.transaction_type = response.data.data.transaction_type;
-          _this5.payment_methods = response.data.data.payment_methods;
-          _this5.accounts = response.data.data.accounts;
-        } else {
-          try {
-            var error_json = JSON.parse(response.data.msg);
-            _this5.loop_api_errors(error_json);
-          } catch (err) {
-            _this5.server_errors = response.data.msg;
-          }
-          _this5.error_class = 'error';
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    make_complaint_invoice: function make_complaint_invoice() {
-      var _this6 = this;
-      var formData = new FormData();
-      formData.append("access_token", window.settings.access_token);
-      formData.append("complaint_slack", this.complaint_slack);
-      axios.post('/api/assign_products_complaint', formData).then(function (response) {
-        if (response.data.status_code == 200) {
-          _this6.ComplaintProducts = response.data.data.products;
-          _this6.complaint_product_ids = _this6.ComplaintProducts.map(function (product) {
-            return product.id;
-          });
-          _this6.complaint_invoice = true;
+          _this6.transaction_type = response.data.data.transaction_type;
+          _this6.payment_methods = response.data.data.payment_methods;
+          _this6.accounts = response.data.data.accounts;
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
@@ -23677,16 +23695,41 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    assign_required_product_on_requested: function assign_required_product_on_requested() {
+    make_complaint_invoice: function make_complaint_invoice() {
       var _this7 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("complaint_slack", this.complaint_slack);
+      axios.post('/api/assign_products_complaint', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this7.ComplaintProducts = response.data.data.products;
+          _this7.complaint_product_ids = _this7.ComplaintProducts.map(function (product) {
+            return product.id;
+          });
+          _this7.complaint_invoice = true;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this7.loop_api_errors(error_json);
+          } catch (err) {
+            _this7.server_errors = response.data.msg;
+          }
+          _this7.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    assign_required_product_on_requested: function assign_required_product_on_requested() {
+      var _this8 = this;
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this7.$off("submit");
-          _this7.$off("close");
-          _this7.show_modal = true;
-          _this7.$on("submit", function () {
-            var _console,
-              _this8 = this;
+          _this8.$off("submit");
+          _this8.$off("close");
+          _this8.show_modal = true;
+          _this8.$on("submit", function () {
+            var _console2,
+              _this9 = this;
             // this.processing = true;
 
             var formData = new FormData();
@@ -23695,63 +23738,41 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
             formData.append('complaint_slack', this.complaint_slack);
             formData.append('extend_date', this.extend_date);
             formData.append('product_ids', this.product_ids);
-            (_console = console).log.apply(_console, _toConsumableArray(formData));
+            (_console2 = console).log.apply(_console2, _toConsumableArray(formData));
             axios.post('/api/assign_product_to_technician', formData).then(function (response) {
               if (response.data.status_code == 200) {
-                _this8.show_response_message(response.data.msg, 'Success');
+                _this9.show_response_message(response.data.msg, 'Success');
                 location.reload();
               } else {
-                _this8.show_modal = false;
-                _this8.processing = false;
+                _this9.show_modal = false;
+                _this9.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this8.loop_api_errors(error_json);
+                  _this9.loop_api_errors(error_json);
                 } catch (err) {
-                  _this8.server_errors = response.data.msg;
+                  _this9.server_errors = response.data.msg;
                 }
-                _this8.error_class = 'error';
+                _this9.error_class = 'error';
               }
-              _this8.delete_processing = false;
+              _this9.delete_processing = false;
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this7.$on("close", function () {
+          _this8.$on("close", function () {
             this.show_modal = false;
           });
         }
       });
     },
     fetchCategorySubcategoryMounted: function fetchCategorySubcategoryMounted() {
-      var _this9 = this;
+      var _this10 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       axios.post('/api/fetchCategorySubcategory', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this9.categories = response.data.data;
+          _this10.categories = response.data.data;
           console.log(response.data.data);
-        } else {
-          try {
-            var error_json = JSON.parse(response.data.msg);
-            _this9.loop_api_errors(error_json);
-          } catch (err) {
-            _this9.server_errors = response.data.msg;
-          }
-          _this9.error_class = 'error';
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    fetchCategoryProduct: function fetchCategoryProduct() {
-      var _this10 = this;
-      var formData = new FormData();
-      formData.append("access_token", window.settings.access_token);
-      formData.append("category_slack", this.category);
-      axios.post('/api/fetchCategoryProduct', formData).then(function (response) {
-        if (response.data.status_code == 200) {
-          _this10.scategories = response.data.data.subCategories;
-          _this10.products = response.data.data.products;
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
@@ -23765,14 +23786,14 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    fetchSubCategoryProduct: function fetchSubCategoryProduct() {
+    fetchCategoryProduct: function fetchCategoryProduct() {
       var _this11 = this;
-      // alert(this.s_category);
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
-      formData.append("sub_category_id", this.s_category);
-      axios.post('/api/fetchSubCategoryProduct', formData).then(function (response) {
+      formData.append("category_slack", this.category);
+      axios.post('/api/fetchCategoryProduct', formData).then(function (response) {
         if (response.data.status_code == 200) {
+          _this11.scategories = response.data.data.subCategories;
           _this11.products = response.data.data.products;
         } else {
           try {
@@ -23787,14 +23808,15 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    fetchSelectedProducts: function fetchSelectedProducts() {
+    fetchSubCategoryProduct: function fetchSubCategoryProduct() {
       var _this12 = this;
+      // alert(this.s_category);
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
-      formData.append("product_ids[]", this.product_ids);
-      axios.post('/api/fetchSelectedProduct', formData).then(function (response) {
+      formData.append("sub_category_id", this.s_category);
+      axios.post('/api/fetchSubCategoryProduct', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this12.Selectedproducts = response.data.data.products;
+          _this12.products = response.data.data.products;
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
@@ -23808,16 +23830,37 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    assign_complaint_to_labtechnician: function assign_complaint_to_labtechnician() {
+    fetchSelectedProducts: function fetchSelectedProducts() {
       var _this13 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("product_ids[]", this.product_ids);
+      axios.post('/api/fetchSelectedProduct', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this13.Selectedproducts = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this13.loop_api_errors(error_json);
+          } catch (err) {
+            _this13.server_errors = response.data.msg;
+          }
+          _this13.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    assign_complaint_to_labtechnician: function assign_complaint_to_labtechnician() {
+      var _this14 = this;
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this13.$off("submit");
-          _this13.$off("close");
-          _this13.show_modal = true;
-          _this13.$on("submit", function () {
-            var _console2,
-              _this14 = this;
+          _this14.$off("submit");
+          _this14.$off("close");
+          _this14.show_modal = true;
+          _this14.$on("submit", function () {
+            var _console3,
+              _this15 = this;
             this.processing = true;
             this.delete_processing = true;
             var formData = new FormData();
@@ -23826,28 +23869,28 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
             formData.append('complaint_slack', this.complaint_slack);
             formData.append('due_date', this.due_date);
             formData.append('admin_remark', this.admin_remark);
-            (_console2 = console).log.apply(_console2, _toConsumableArray(formData));
+            (_console3 = console).log.apply(_console3, _toConsumableArray(formData));
             axios.post('/api/assign_complaint_to_technician', formData).then(function (response) {
               if (response.data.status_code == 200) {
-                _this14.show_response_message(response.data.msg, 'Success');
+                _this15.show_response_message(response.data.msg, 'Success');
                 location.reload();
               } else {
-                _this14.show_modal = false;
-                _this14.processing = false;
+                _this15.show_modal = false;
+                _this15.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this14.loop_api_errors(error_json);
+                  _this15.loop_api_errors(error_json);
                 } catch (err) {
-                  _this14.server_errors = response.data.msg;
+                  _this15.server_errors = response.data.msg;
                 }
-                _this14.error_class = 'error';
+                _this15.error_class = 'error';
               }
-              _this14.delete_processing = false;
+              _this15.delete_processing = false;
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this13.$on("close", function () {
+          _this14.$on("close", function () {
             this.show_modal = false;
           });
         }
@@ -23878,38 +23921,38 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.assign_required_product = true;
     },
     submit_complaint_completed: function submit_complaint_completed() {
-      var _this15 = this;
+      var _this16 = this;
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this15.$off("submit");
-          _this15.$off("close");
-          _this15.show_modal = true;
-          _this15.$on("submit", function () {
-            var _this16 = this;
+          _this16.$off("submit");
+          _this16.$off("close");
+          _this16.show_modal = true;
+          _this16.$on("submit", function () {
+            var _this17 = this;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
             formData.append('final_lab_staff_remark', this.final_lab_staff_remark);
             formData.append('complaint_slack', this.complaint_slack);
             axios.post('/api/complaint_completed', formData).then(function (response) {
               if (response.data.status_code == 200) {
-                _this16.show_response_message(response.data.msg, 'Success');
+                _this17.show_response_message(response.data.msg, 'Success');
                 location.reload();
               } else {
-                _this16.show_modal = false;
-                _this16.processing = false;
+                _this17.show_modal = false;
+                _this17.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this16.loop_api_errors(error_json);
+                  _this17.loop_api_errors(error_json);
                 } catch (err) {
-                  _this16.server_errors = response.data.msg;
+                  _this17.server_errors = response.data.msg;
                 }
-                _this16.error_class = 'error';
+                _this17.error_class = 'error';
               }
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this15.$on("close", function () {
+          _this16.$on("close", function () {
             this.show_modal = false;
           });
         }
@@ -23920,55 +23963,16 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.$off("close");
       this.show_modal = true;
       this.$on("submit", function () {
-        var _this17 = this;
+        var _this18 = this;
         this.processing = true;
         this.delete_processing = true;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
         axios.post(this.delete_category_api_link, formData).then(function (response) {
           if (response.data.status_code == 200) {
-            _this17.show_response_message(response.data.msg, 'Success');
-            if (response.data.link != "") {
-              window.location.href = response.data.link;
-            } else {
-              location.reload();
-            }
-          } else {
-            _this17.show_modal = false;
-            _this17.processing = false;
-            try {
-              var error_json = JSON.parse(response.data.msg);
-              _this17.loop_api_errors(error_json);
-            } catch (err) {
-              _this17.server_errors = response.data.msg;
-            }
-            _this17.error_class = 'error';
-          }
-          _this17.delete_processing = false;
-        })["catch"](function (error) {
-          console.log(error);
-        });
-      });
-      this.$on("close", function () {
-        this.show_modal = false;
-      });
-    },
-    requested_for_required_product: function requested_for_required_product() {
-      this.$off("submit");
-      this.$off("close");
-      this.show_modal = true;
-      this.$on("submit", function () {
-        var _this18 = this;
-        // this.processing = true;
-        var formData = new FormData();
-        formData.append("access_token", window.settings.access_token);
-        formData.append("lab_staff_remark", this.lab_staff_remark);
-        formData.append('complaint_slack', this.complaint_slack);
-        axios.post('/api/request_requirement', formData).then(function (response) {
-          if (response.data.status_code == 200) {
             _this18.show_response_message(response.data.msg, 'Success');
             if (response.data.link != "") {
-              location.reload();
+              window.location.href = response.data.link;
             } else {
               location.reload();
             }
@@ -23988,6 +23992,45 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           console.log(error);
         });
       });
+      this.$on("close", function () {
+        this.show_modal = false;
+      });
+    },
+    requested_for_required_product: function requested_for_required_product() {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      this.$on("submit", function () {
+        var _this19 = this;
+        // this.processing = true;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        formData.append("lab_staff_remark", this.lab_staff_remark);
+        formData.append('complaint_slack', this.complaint_slack);
+        axios.post('/api/request_requirement', formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this19.show_response_message(response.data.msg, 'Success');
+            if (response.data.link != "") {
+              location.reload();
+            } else {
+              location.reload();
+            }
+          } else {
+            _this19.show_modal = false;
+            _this19.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this19.loop_api_errors(error_json);
+            } catch (err) {
+              _this19.server_errors = response.data.msg;
+            }
+            _this19.error_class = 'error';
+          }
+          _this19.delete_processing = false;
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
     },
     submit_transaction: function submit_transaction() {
       // this.$validator.validateAll().then((result) => {
@@ -23997,7 +24040,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.show_modal = true;
       // alert(this.show_modal);
       this.$on("submit", function () {
-        var _this19 = this;
+        var _this20 = this;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
         formData.append('complaint_slack', this.complaint_slack);
@@ -24010,18 +24053,18 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         formData.append('payment_total_amount', this.payment_total_amount);
         axios.post('/api/complaint_submit_transaction', formData).then(function (response) {
           if (response.data.status_code == 200) {
-            _this19.show_response_message(response.data.msg, 'Success');
+            _this20.show_response_message(response.data.msg, 'Success');
             location.reload();
           } else {
-            _this19.show_modal = false;
-            _this19.processing = false;
+            _this20.show_modal = false;
+            _this20.processing = false;
             try {
               var error_json = JSON.parse(response.data.msg);
-              _this19.loop_api_errors(error_json);
+              _this20.loop_api_errors(error_json);
             } catch (err) {
-              _this19.server_errors = response.data.msg;
+              _this20.server_errors = response.data.msg;
             }
-            _this19.error_class = 'error';
+            _this20.error_class = 'error';
           }
         })["catch"](function (error) {
           console.log(error);
@@ -44817,6 +44860,49 @@ var render = function render() {
     staticClass: "form-group col-sm-12 col-md-4"
   }, [_c("label", {
     attrs: {
+      "for": "assign_to"
+    }
+  }, [_vm._v("Assign To")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.assign_to,
+      expression: "assign_to"
+    }],
+    staticClass: "form-control form-control-custom",
+    attrs: {
+      id: "assign_to"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.assign_to = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      selected: "",
+      disabled: ""
+    }
+  }, [_vm._v("Please Select Engg")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "assigned_to_field_eng"
+    }
+  }, [_vm._v("Field Engineer")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "assigned_to_lab_eng"
+    }
+  }, [_vm._v("Lab Engineer")])])]) : _vm._e(), _vm._v(" "), !_vm.is_customer ? _c("div", {
+    staticClass: "w-100"
+  }, [_vm.assign_to == "assigned_to_field_eng" ? _c("div", {
+    staticClass: "form-group col-sm-12 col-md-4"
+  }, [_c("label", {
+    attrs: {
       "for": "assigned_to"
     }
   }, [_vm._v(_vm._s(_vm.$t("Assigned To Field Engg")))]), _vm._v(" "), _c("select", {
@@ -44853,7 +44939,7 @@ var render = function render() {
         value: engg.slack
       }
     }, [_vm._v(_vm._s(engg.fullname) + " (" + _vm._s(engg.assign_complaints_count) + ")")]);
-  })], 2)]) : _vm._e(), _vm._v(" "), !_vm.is_customer ? _c("div", {
+  })], 2)]) : _vm._e(), _vm._v(" "), _vm.assign_to == "assigned_to_lab_eng" ? _c("div", {
     staticClass: "form-group col-sm-12 col-md-4"
   }, [_c("label", {
     attrs: {
@@ -44893,7 +44979,7 @@ var render = function render() {
         value: engg.slack
       }
     }, [_vm._v(_vm._s(engg.fullname) + " (" + _vm._s(engg.assign_complaints_count) + ")")]);
-  })], 2)]) : _vm._e(), _vm._v(" "), !_vm.is_customer ? _c("div", {
+  })], 2)]) : _vm._e()]) : _vm._e(), _vm._v(" "), !_vm.is_customer ? _c("div", {
     staticClass: "form-group col-sm-12 col-md-4"
   }, [_c("label", {
     attrs: {
@@ -45033,7 +45119,14 @@ var render = function render() {
     staticClass: "text-title"
   }, [_c("span", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _vm.user_data.part_requests ? _c("div", {
+    staticClass: "d-flex flex-wrap mb-4"
+  }, _vm._l(_vm.user_data.part_requests, function (request) {
+    return _c("span", {
+      key: request.id,
+      staticClass: "alert alert-success"
+    }, [_vm._v("\n        " + _vm._s("Your Request for " + request.request + (request.request_status == 2 ? " Completed" : " is Pending")) + "\n      ")]);
+  }), 0) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("div", {
     staticClass: "ml-auto"
@@ -45139,7 +45232,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("Complaint Status")))]), _vm._v(" "), _c("p", {
     staticClass: "alert alert-success w-50"
-  }, [_vm._v("\n          " + _vm._s(_vm.complaint.c_status) + "\n        ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n          " + _vm._s(_vm.complaint.c_status) + "\n        ")])]), _vm._v(" "), _vm.complaint.complaint_status_label ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -45147,7 +45240,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("Status")))]), _vm._v(" "), _c("p", {
     staticClass: "alert alert-success w-50"
-  }, [_vm._v("\n          " + _vm._s(_vm.complaint.complaint_status_label) + "\n        ")])]), _vm._v(" "), !_vm.is_customer ? _c("div", {
+  }, [_vm._v("\n          " + _vm._s(_vm.complaint.complaint_status_label) + "\n        ")])]) : _vm._e(), _vm._v(" "), !_vm.is_customer && _vm.complaint.status ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -45188,12 +45281,6 @@ var render = function render() {
       "for": "created_by"
     }
   }, [_vm._v(_vm._s(_vm.$t("POC Name")))]), _vm._v(" "), _c("p", {}, [_vm._v(_vm._s(_vm.complaint.poc_name))])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "created_by"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Parts Required")))]), _vm._v(" "), _c("p", {}, [_vm._v(_vm._s(_vm.complaint.parts_required))])]), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -45261,7 +45348,47 @@ var render = function render() {
     attrs: {
       "for": "description"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Description")))]), _vm._v(" "), _c("p")])]), _vm._v(" "), _c("div", [_c("hr"), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Description")))]), _vm._v(" "), _c("p")])]), _vm._v(" "), _c("div", [_vm.user_data.part_requests ? _c("div", {
+    staticClass: "form-row mb-2 mt-2"
+  }, [_c("div", {
+    staticClass: "form-group col-12"
+  }, [_c("table", {
+    staticClass: "table table-striped display nowrap text-nowrap w-100"
+  }, [_c("thead", [_c("tr", [_c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("#")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Part Request")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Start Time")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Complete Time")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Status")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.user_data.part_requests, function (request, key, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("th", {
+      attrs: {
+        scope: "col"
+      }
+    }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.request))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.start_request_time))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.end_request_time))]), _vm._v(" "), request.request_status == 0 ? _c("td", [_c("span", {
+      staticClass: "alert alert-danger"
+    }, [_vm._v("Pending manager side")])]) : request.request_status == 1 ? _c("td", [_c("span", {
+      staticClass: "alert alert-danger"
+    }, [_vm._v("Pending store side")])]) : request.request_status == 2 && request.end_request_time != null ? _c("td", [_c("span", {
+      staticClass: "alert alert-info"
+    }, [_vm._v("Completed")])]) : _c("td")]);
+  }), 0)])])]) : _vm._e(), _vm._v(" "), _c("hr"), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
     staticClass: "mb-2"
   }, [_c("span", {
     staticClass: "text-subhead"
@@ -46972,7 +47099,16 @@ var render = function render() {
     staticClass: "text-title"
   }, [_c("span", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {}, [_vm.complaint.assign_to_field_engg == 1 ? _c("div", [_c("span", {
+    staticClass: "alert alert-info"
+  }, [_vm._v("\n              Complaint Assign To Field Engineer (" + _vm._s(_vm.complaint.field_user.fullname) + " (" + _vm._s(_vm.complaint.field_user.email) + ")) at \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time === null && _vm.complaint.complaint_assign_to_field_enggs[0].complaint_complete == "No" ? "Still Not Complete" : "Completed at " + _vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _c("div", _vm._l(_vm.complaint.part_requests, function (request) {
+    return _c("span", {
+      key: request.id,
+      staticClass: "alert alert-success"
+    }, [_vm._v("\n            " + _vm._s(request.engineer_type === "Field_Engineer" ? "Field Engineer ".concat(request.engineer.fullname, " has requested for ").concat(request.request, " at ").concat(request.start_request_time) + (request.end_request_time == null ? " but not complete yet" : " and completed at ".concat(request.end_request_time)) : "") + "\n          ")]);
+  }), 0), _vm._v(" "), _vm.complaint.assign_to_lab_engg == 1 ? _c("div", [_c("span", {
+    staticClass: "alert alert-info"
+  }, [_vm._v("\n              Complaint Assign To Field Engineer at (" + _vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + "))\n              " + _vm._s(_vm.complaint.assign_to_lab_engg[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.assign_to_lab_engg[0].assign_complaint_complete_time === null && _vm.complaint.assign_to_lab_engg[0].complaint_complete == "No" ? "Still Not Complete" : "Completed at " + _vm.complaint.assign_to_lab_engg[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("div", {
     staticClass: "ml-auto"
@@ -46990,7 +47126,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "ml-auto d-flex"
-  }, [_vm.assign_access ? _c("div", [_vm.complaint.assign_to_lab_staff_id == null || _vm.complaint.assign_to_lab_staff_id == 0 ? _c("button", {
+  }, [_vm.assign_access ? _c("div", [_vm.complaint.picked_for_workshop == "Yes" ? _c("div", [_vm.complaint.assign_to_lab_staff_id == null || _vm.complaint.assign_to_lab_staff_id == 0 ? _c("button", {
     staticClass: "btn btn-success mr-1",
     attrs: {
       type: "submit",
@@ -47003,7 +47139,7 @@ var render = function render() {
     }
   }, [_vm.assign_processing == true ? _c("i", {
     staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v("\n            " + _vm._s(_vm.$t("Assign Complaint")) + "\n          ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }) : _vm._e(), _vm._v("\n              " + _vm._s(_vm.$t("Assign Complaint")) + "\n            ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary mr-1",
     attrs: {
       type: "button"
@@ -47132,7 +47268,7 @@ var render = function render() {
     attrs: {
       "for": "label"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Customer Name")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.complaint.user_name))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Customer Name")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.complaint.user_name))])]), _vm._v(" "), _vm.complaint.c_status ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -47140,7 +47276,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("Complaint Status")))]), _vm._v(" "), _c("p", {
     staticClass: "alert alert-success w-50"
-  }, [_vm._v("\n          " + _vm._s(_vm.complaint.c_status) + "\n        ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n          " + _vm._s(_vm.complaint.c_status) + "\n        ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_status_label ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -47148,7 +47284,7 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.$t("Status")))]), _vm._v(" "), _c("p", {
     staticClass: "alert alert-success w-50"
-  }, [_vm._v("\n          " + _vm._s(_vm.complaint.complaint_status_label) + "\n        ")])]), _vm._v(" "), !_vm.is_customer ? _c("div", {
+  }, [_vm._v("\n          " + _vm._s(_vm.complaint.complaint_status_label) + "\n        ")])]) : _vm._e(), _vm._v(" "), !_vm.is_customer && _vm.complaint.status ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -47162,7 +47298,9 @@ var render = function render() {
     attrs: {
       "for": "created_by"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Assign to LabTechnician")))]), _vm._v(" "), _vm.complaint.user ? _c("p", [_vm._v(_vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + ")")]) : _vm._e()]) : _vm._e(), _vm._v(" "), !_vm.is_customer ? _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Assign to LabTechnician")))]), _vm._v(" "), _vm.complaint.user ? _c("p", [_vm._v(_vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + ")")]) : _vm._e(), _vm._v(" "), _c("p", {
+    staticClass: "alert alert-danger w-50"
+  }, [_vm._v("Not Assign Yet")])]) : _vm._e(), _vm._v(" "), !_vm.is_customer ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -47201,12 +47339,6 @@ var render = function render() {
       "for": "created_by"
     }
   }, [_vm._v(_vm._s(_vm.$t("POC Name")))]), _vm._v(" "), _c("p", {}, [_vm._v(_vm._s(_vm.complaint.poc_name))])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "created_by"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Parts Required")))]), _vm._v(" "), _c("p", {}, [_vm._v(_vm._s(_vm.complaint.parts_required))])]), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -47274,7 +47406,71 @@ var render = function render() {
     attrs: {
       "for": "description"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Description")))]), _vm._v(" "), _c("p")])]), _vm._v(" "), _c("div", [_c("hr"), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Description")))]), _vm._v(" "), _c("p")])]), _vm._v(" "), _vm.complaint.part_requests ? _c("div", {
+    staticClass: "form-row mb-2 mt-2"
+  }, [_c("div", {
+    staticClass: "form-group col-12"
+  }, [_c("table", {
+    staticClass: "table table-striped display nowrap text-nowrap w-100"
+  }, [_c("thead", [_c("tr", [_c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("#")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Engineer")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Engineer Type")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Part Request")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Start Time")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Complete Time")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Status")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Action")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.complaint.part_requests, function (request, key, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("th", {
+      attrs: {
+        scope: "col"
+      }
+    }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.engineer.fullname))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatEngineerType(request.engineer_type)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.request))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.start_request_time))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.end_request_time))]), _vm._v(" "), request.request_status == 0 ? _c("td", [_c("span", {
+      staticClass: "alert alert-danger"
+    }, [_vm._v("Pending manager side")])]) : request.request_status == 1 ? _c("td", [_c("span", {
+      staticClass: "alert alert-danger"
+    }, [_vm._v("Pending store side")])]) : request.request_status == 2 && request.end_request_time != null ? _c("td", [_c("span", {
+      staticClass: "alert alert-info"
+    }, [_vm._v("Completed")])]) : _c("td"), _vm._v(" "), _c("td", [request.request_status == 0 && request.end_request_time == null ? _c("div", [_c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        type: "button"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.showPartRequestModal(request);
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.$t("Request Product")))])]) : request.request_status == 1 && request.end_request_time == null ? _c("div", [_c("span", {
+      staticClass: "alert alert-danger"
+    }, [_vm._v("Pending...")])]) : request.request_status == 2 ? _c("div", [_vm._v("\n                  Completed Part Request\n              ")]) : _vm._e()])]);
+  }), 0)])])]) : _vm._e(), _vm._v(" "), _c("div", [_c("hr"), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
     staticClass: "mb-2"
   }, [_c("span", {
     staticClass: "text-subhead"
@@ -49519,6 +49715,176 @@ var render = function render() {
       },
       proxy: true
     }], null, false, 439204180)
+  }) : _vm._e(), _vm._v(" "), _vm.request_part_store ? _c("modalcomponent", {
+    attrs: {
+      modal_width: "modal-container-xl"
+    },
+    on: {
+      close: function close($event) {
+        _vm.request_part_store = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("Request Product")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-row mb-2"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_id,
+            expression: "request_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_id"
+          },
+          domProps: {
+            value: _vm.request_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.engineer_id,
+            expression: "engineer_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "engineer_id"
+          },
+          domProps: {
+            value: _vm.engineer_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.engineer_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.complaint_id,
+            expression: "complaint_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "complaint_id"
+          },
+          domProps: {
+            value: _vm.complaint_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.complaint_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_detail,
+            expression: "request_detail"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_detail"
+          },
+          domProps: {
+            value: _vm.request_detail
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_detail = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_text,
+            expression: "request_text"
+          }],
+          staticClass: "form-control",
+          attrs: {
+            name: "request_text",
+            readonly: ""
+          },
+          domProps: {
+            value: _vm.request_text
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_text = $event.target.value;
+            }
+          }
+        })]), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("label", {
+          attrs: {
+            "for": "product_details"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Details for Product")) + " ")]), _vm._v(" "), _c("textarea", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.product_details,
+            expression: "product_details"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            name: "product_details",
+            row: "1"
+          },
+          domProps: {
+            value: _vm.product_details
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.product_details = $event.target.value;
+            }
+          }
+        })])])];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "submit"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.submit_request_to_store();
+            }
+          }
+        }, [_vm._v("\n        Continue\n      ")])];
+      },
+      proxy: true
+    }], null, false, 3966357305)
   }) : _vm._e()], 1);
 };
 var staticRenderFns = [function () {

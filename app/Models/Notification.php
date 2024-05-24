@@ -79,4 +79,22 @@ class Notification extends Model
     public function parseDate($date){
         return ($date != null)?Carbon::parse($date)->format(config("app.date_time_format")):null;
     }
+
+    public $timestamps = true;
+
+    // Set the date format for created_at and updated_at
+    protected $dateFormat = 'Y-m-d H:i:s';
+
+    // Define the created_at attribute accessor
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->setTimezone('Asia/Karachi');
+    }
+
+    // Define the created_at attribute mutator
+    public function setCreatedAtAttribute($value)
+    {
+        $this->attributes['created_at'] = Carbon::parse($value)->setTimezone('Asia/Karachi');
+    }
+
 }

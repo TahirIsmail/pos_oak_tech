@@ -350,6 +350,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     Route::get('/complaints','ComplaintsController@complaints')->name('complaints');
     Route::get('/lab_complaints','ComplaintsController@lab_complaints')->name('lab_complaints');
+    Route::get('/product_request','ComplaintsController@product_request')->name('product_request');
 
 
     // Route::get('/expenses','ExpensesController@index')->name('expenses');

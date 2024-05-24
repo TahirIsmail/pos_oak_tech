@@ -5,13 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CompaintAssignToLabEngg extends Model
+class RequestToStore extends Model
 {
     use HasFactory;
-    protected $table = 'compaint_assign_to_lab_enggs';
+    protected $table = 'request_to_stores';
     protected $guarded = [];
 
+
+    public function part_request(){
+        return $this->belongsTo(PartRequest::class, 'request_id');
+    }
     public function complaint(){
         return $this->belongsTo(Complaints::class, 'complaint_id');
+    }
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

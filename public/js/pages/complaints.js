@@ -101,7 +101,6 @@ class Complaints{
     }
     load_lab_complaints_listing_table(){
         "use strict";
-       console.log("processing");
         var table = $('#lab_complaints_listing').DataTable({
            
             processing: true,
@@ -135,6 +134,44 @@ class Complaints{
                 {
                     data: 'action'
                 }         
+               
+            ]
+        });
+    }
+
+
+    product_request(){
+        "use strict";
+        var table = $('#product_request_table').DataTable({
+           
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/api/product_request_listing',
+                type : 'POST',
+                data : {
+                    access_token : window.settings.access_token
+                }              
+            },                      
+            columns: [
+                {
+                    data: 'id'
+                },  
+                {
+                    data: 'product_request'
+                },                
+                {
+                    data: 'user_id'
+                },
+                {
+                    data:'request_start_time'
+                },
+                {
+                    data: 'request_completed'
+                },
+                {
+                    data: 'action'
+                }       
                
             ]
         });

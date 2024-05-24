@@ -467,6 +467,7 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/customer_complaints', 'API\Complaints@index');
     Route::post('/complaints', 'API\Complaints@complaints');
     Route::post('/lab_complaints_listing', 'API\Complaints@lab_complaints_listing');
+    Route::post('/product_request_listing', 'API\Complaints@product_request_listing');
     Route::post('/customer_orders', 'API\Complaints@customer_orders');
     Route::post('/customer_orders_products', 'API\Complaints@customer_orders_products');
     Route::post('/submit_customer_complaint','API\Complaints@store');
@@ -489,6 +490,8 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/repairing_listing', 'API\RepairingLab@index');
     
     Route::post('/request_requirement','API\Complaints@request_requirement');
+    Route::post('/add_request_product_store','API\Complaints@add_request_product_store');
+    Route::post('/field_eng_request_requirement','API\Complaints@field_eng_request_requirement');
    
     Route::post('/fetchCategorySubcategory','API\Complaints@fetchCategorySubcategory');
 

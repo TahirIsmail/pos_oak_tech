@@ -1,5 +1,6 @@
 <template>
     <div class="row card p-4">
+     
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -11,11 +12,18 @@
               </div>
             </div>
           </div>
+
+          
   
           <div class="">
             <span></span>
           </div>
         </div>
+        <div class="d-flex flex-wrap mb-4" v-if="user_data.part_requests">
+          <span class="alert alert-success" v-for="request in user_data.part_requests" :key="request.id">
+            {{ 'Your Request for ' + request.request + (request.request_status == 2 ? ' Completed' : ' is Pending') }}
+          </span>
+          </div>
 
         <div class="d-flex flex-wrap mb-4">
           <div class="ml-auto">
@@ -131,7 +139,7 @@
               {{ complaint.c_status }}
             </p>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-3" v-if="complaint.complaint_status_label">
             <label for="label">{{ $t("Status") }}</label>
   
             <p class="alert alert-success w-50">
@@ -139,7 +147,7 @@
             </p>
           </div>
 
-          <div class="form-group col-md-3" v-if="!is_customer">
+          <div class="form-group col-md-3" v-if="!is_customer && complaint.status">
             <label for="label">{{ $t("Status For OAK") }}</label>
   
             <p class="alert alert-success w-50">
@@ -179,11 +187,6 @@
             <label for="created_by">{{ $t("POC Name") }}</label>
   
             <p class="">{{ complaint.poc_name }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Parts Required") }}</label>
-            <p class="">{{ complaint.parts_required }}</p>
           </div>
   
           <div class="form-group col-md-3">
@@ -272,6 +275,46 @@
         </div>
   
         <div>
+
+          
+        <div class="form-row mb-2 mt-2" v-if="user_data.part_requests">
+          <div class="form-group col-12">
+            <table class="table table-striped display nowrap text-nowrap w-100">
+            <thead>
+              <tr>
+                <th scope="col">#</th>  
+                <th scope="col">{{ $t("Part Request") }}</th>  
+                <th scope="col">{{ $t("Request Start Time") }}</th>
+                <th scope="col">{{ $t("Request Complete Time") }}</th>  
+                <th scope="col">{{ $t("Request Status") }}</th>  
+              </tr>
+            </thead>  
+            <tbody>
+              <tr
+                v-for="(request, key, index) in user_data.part_requests"               
+                v-bind:key="index"
+              >
+                <th scope="col">{{ key+1 }}</th>  
+                <td>{{ request.request }}</td>  
+                <td>{{ request.start_request_time }}</td>  
+                <td>{{ request.end_request_time }}</td>  
+                <td v-if="request.request_status == 0">
+                  <span class="alert alert-danger" >Pending manager side</span>
+                </td>
+                <td v-else-if="request.request_status == 1">
+                  <span class="alert alert-danger">Pending store side</span>
+                </td>
+                <td v-else-if="request.request_status == 2 && request.end_request_time != null">
+                  <span class="alert alert-info">Completed</span>
+                </td>
+                <td v-else></td>
+               
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
           <hr />
   
           <div class="mb-2" v-if="complaint.final_total_amount != null">
@@ -1334,6 +1377,7 @@
       props: {
           labusers: Array,
           complaint: Array,
+          user_data: Array,
           assign_access: Boolean,
           requirement_request_access: Boolean,
           Customer_complaint_make_invoice: Boolean,
@@ -1908,20 +1952,22 @@
               this.show_modal = true;
   
               this.$on("submit", function() {
-                  // this.processing = true;
+                  this.processing = true;
                   var formData = new FormData();
                   formData.append("access_token", window.settings.access_token);
-                  formData.append("lab_staff_remark", this.lab_staff_remark);
+                  formData.append("field_staff_remark", this.lab_staff_remark);
                   formData.append('complaint_slack', this.complaint_slack);
-                  axios.post('/api/request_requirement', formData).then((response) => {
-  
-                          if (response.data.status_code == 200) {
+                  formData.append('field_engineer', 'Field_Engineer');
+                  
+                  axios.post('/api/field_eng_request_requirement', formData).then((response) => {
+                    
+                          if (response.status == 200) {
                               this.show_response_message(response.data.msg, 'Success');
-                              if (response.data.link != "") {
-                                  location.reload();
-                              } else {
-                                  location.reload();
-                              }
+                              this.show_modal = false;
+                              this.processing = false;
+                              this.required_product = false;
+                              window.location.reload();
+                              
                           } else {
                               this.show_modal = false;
                               this.processing = false;

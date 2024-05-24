@@ -141,22 +141,32 @@
                     <!-- <span v-bind:class="{ 'error': errors.has('service_required') }">{{ errors.first('service_required')
                     }}</span> -->
                 </div>
-                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
-                    <label for="assigned_to">{{ $t("Assigned To Field Engg") }}</label>
-                    <select name="assigned_to" v-model="assigned_to_field_enng" class="form-control form-control-custom">
-                        <option value="" disabled>Select...</option>
-                        <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
-                    </select>
-                    
-                </div>
 
-                 <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
-                    <label for="assigned_to">{{ $t("Assigned To Lab Engg") }}</label>
-                    <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
-                        <option value="" disabled>Select...</option>
-                        <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                    <label for="assign_to">Assign To</label>
+                    <select v-model="assign_to" id="assign_to" class="form-control form-control-custom">
+                        <option selected disabled>Please Select Engg</option>
+                        <option value="assigned_to_field_eng">Field Engineer</option>
+                        <option value="assigned_to_lab_eng">Lab Engineer</option>
                     </select>
-                    
+                </div>
+                <div v-if="!is_customer" class="w-100">
+                    <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_field_eng'">
+                        <label for="assigned_to">{{ $t("Assigned To Field Engg") }}</label>
+                        <select name="assigned_to" v-model="assigned_to_field_enng" class="form-control form-control-custom">
+                            <option value="" disabled>Select...</option>
+                            <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                        </select>
+                        
+                    </div>
+    
+                     <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_lab_eng'">
+                        <label for="assigned_to">{{ $t("Assigned To Lab Engg") }}</label>
+                        <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
+                            <option value="" disabled>Select...</option>
+                            <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                        </select>                        
+                    </div>
                 </div>
 
                 <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
@@ -215,6 +225,7 @@ export default {
             show_modal: false,
             customer_list: [],
             error_class: "",
+            assign_to: complaintsDataIsEmpty ? '' : this.complaints_data.assign_to,
             api_link: complaintsDataIsEmpty ? "/api/submit_customer_complaint" : `/api/update_customer_complaint/${this.complaints_data.slack}`,
             complaint_slack: complaintsDataIsEmpty ? '' : this.complaints_data.slack,
             selectedCustomer: complaintsDataIsEmpty || !this.complaints_data.customer ? (this.is_customer ? this.customer_slack : '') : this.complaints_data.customer.slack,
@@ -290,7 +301,7 @@ export default {
                     this.show_modal = true;
                     this.$on("submit",() => {
                         // alert(this.api_link);
-                        // this.processing = true;
+                        this.processing = true;
                         const formData = new FormData();
                         formData.append("access_token", window.settings.access_token);
                         formData.append("customer_slack", this.selectedCustomer);
@@ -306,6 +317,7 @@ export default {
                         formData.append("assigned_to_field_enng", this.assigned_to_field_enng);
                         formData.append("poc_name", this.poc_name);
                         formData.append("complaint_status", this.complaint_status);
+                        formData.append("assign_to", this.assign_to)
                         // formData.append("customer_feedback", this.customer_feedback);
                         console.log(...formData);
                         axios

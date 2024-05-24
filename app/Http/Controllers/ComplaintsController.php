@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\API\Complaints;
+use App\Mail\ComplaintMailToEngineer;
 use Illuminate\Http\Request;
 use App\Models\Complaints as ComplaintModel;
 use App\Models\User as UserModel;
@@ -14,6 +15,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\ChildCategory;
 use App\Models\Role;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Config;
@@ -24,9 +26,9 @@ use function PHPUnit\Framework\isNull;
 
 class ComplaintsController extends Controller
 {
-    //
+
     public function index(Request $request)
-    {
+    {          
         $data['menu_key'] = 'MM_COMPLAIN';
         $data['sub_menu_key'] = 'SM_CUSTOMER_COMPLAINTS';
         check_access(array($data['menu_key'], $data['sub_menu_key']));
@@ -48,6 +50,14 @@ class ComplaintsController extends Controller
         check_access(array($data['menu_key'], $data['sub_menu_key']));
 
         return view('complaints.lab_complaints', $data);
+    }
+
+    public function product_request(Request $request){
+        $data['menu_key'] = 'MM_COMPLAIN';
+        $data['sub_menu_key'] = 'SM_PRODUCT_REQUEST';
+        check_access(array($data['menu_key'], $data['sub_menu_key']));
+
+        return view('complaints.product_request', $data);
     }
 
     public function add_complaints(Request $request,$slack = null)
@@ -128,8 +138,9 @@ class ComplaintsController extends Controller
         }])->whereNotIn('role_id', [1,2,3])->where('customer_child_id', null)->get();
         $data['labTechnician'] = $users;
         
-        $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user')->where('slack', '=', $slack)->first();
+        $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs', 'complaint_assign_to_field_enggs', 'part_requests.engineer')->where('slack', '=', $slack)->first();
         $data['complaint'] = $complaint;
+        // dd($complaint);
 
         $lab_tech = ($request->logged_user_id == $complaint->assign_to_lab_staff_id) ? true : false;
         $data['is_lab_tech'] = $lab_tech;
@@ -207,6 +218,8 @@ class ComplaintsController extends Controller
         $complaint = ComplaintModel::with('customer', 'order', 'product', 'user')->where('slack', '=', $slack)->first();
         $data['complaint'] = $complaint;
 
+        $user_data = User::with('part_requests')->where('id', $request->logged_user_id)->first();
+        $data['user_data'] = $user_data;
         $lab_tech = ($request->logged_user_id == $complaint->assign_to_field_staff_id) ? true : false;
         
         $data['is_lab_tech'] = $lab_tech;

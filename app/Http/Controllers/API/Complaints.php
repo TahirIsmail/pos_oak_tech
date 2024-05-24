@@ -3,16 +3,23 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ComplaintMailToEngineer;
 use App\Models\Account as AccountModel;
 use App\Models\Category;
+use App\Models\ComplaintAssignToFieldEngg;
+use App\Models\CompaintAssignToLabEngg;
 use App\Models\ComplaintCharge;
 use App\Models\Complaints as ModelsComplaints;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoiceProduct;
 use App\Models\MasterTransactionType as MasterTransactionTypeModel;
+use App\Models\Notification;
+use App\Models\PartRequest;
 use App\Models\PaymentMethod as PaymentMethodModel;
 use App\Models\Product;
+use App\Models\RequestToStore;
+use App\Models\Role;
 use App\Models\Store as StoreModel;
 use App\Models\Transaction as TransactionModel;
 use App\Models\User;
@@ -21,7 +28,9 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class Complaints extends Controller
 {
@@ -141,6 +150,42 @@ class Complaints extends Controller
         }
     }
 
+
+    public function product_request_listing(Request $request){
+        $data['action_key'] = 'VIEW_PRODUCT_REQUEST_LISTING';
+        if (check_access(array($data['action_key']), true) == false) {
+            $response = $this->no_access_response_for_listing_table();
+            return $response;
+        }
+
+        if ($request->ajax()) {        
+
+            $data = RequestToStore::with('user', 'part_request', 'complaint')->get();
+            
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('product_request', function ($row) {
+                   return $row['request'];
+                })
+                ->addColumn('user_id', function ($row) {
+                    return $row['user']->fullname . '('.$row['user']->email. ')';
+                 })
+                 ->addColumn('request_start_time', function ($row) {
+                    return $row['start_request_time'];
+                 })
+                 ->addColumn('request_completed', function ($row) {
+                    return ($row['end_request_time'] ? $row['end_request_time'] : 'Pending...');
+                 })
+
+                ->addColumn('action', function ($row) {
+                    $data['row'] = $row;
+                    return view('complaints.layouts.request_to_store_actions', $data)->render();
+                })
+                ->rawColumns(['action', 'product_request', 'user_id', 'request_start_time', 'request_completed'])
+                ->make(true);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -150,39 +195,38 @@ class Complaints extends Controller
     public function store(Request $request, $slack = null)
     {
         try {
-
             if (!check_access(['A_ADD_CUSTOMER_COMPLAINT'], true)) {
                 throw new Exception("Invalid request", 400);
             }
-
+        
+            DB::beginTransaction();
+        
             $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
             if (isset($request->assigned_to) && $request->assigned_to != null) {
-                $assigned_to = User::select('id')->where('slack', $request->assigned_to)->get();
+                $assigned_to = User::select('id', 'email')->where('slack', $request->assigned_to)->get();
             } else {
                 $assigned_to = null;
             }
-
+        
             if (isset($request->assigned_to_field_enng) && $request->assigned_to_field_enng != null) {
-                $assigned_to_field_enng = User::select('id')->where('slack', $request->assigned_to_field_enng)->get();
+                $assigned_to_field_enng = User::select('id', 'email')->where('slack', $request->assigned_to_field_enng)->get();
             } else {
                 $assigned_to_field_enng = null;
             }
-
+        
             $ticket = $this->generate_ticket("complaints");
-            $currentTime = Carbon::now();
+            $currentTime =  Carbon::now('Asia/Karachi');
             $time = $currentTime->format('H:i:s');
             $date = $currentTime->format('d-m-Y');
-            // dd($request->all(), $ticket, $time, $date, $customer_id[0]->id, $assigned_to[0]->id);
-
+        
             if ($slack == null) {
-
-                // dd($order_id[0]->id, $customer_id);
                 $customer_complaints = [
                     "slack" => $this->generate_slack("complaints"),
                     "store_id" => $request->logged_user_store_id,
                     "ticket" => $ticket,
                     "date" => $date,
                     "time" => $time,
+                    "assign_to" => $request->assign_to ?? null,
                     "customer_id" => $customer_id[0]->id,
                     "user_name" => $customer_id[0]->name,
                     "equipment_type" => $request->equipment_type,
@@ -195,16 +239,62 @@ class Complaints extends Controller
                     "type_of_service" => $request->service_type,
                     "assign_to_lab_staff_id" => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
                     "assign_to_field_staff_id" => isset($assigned_to_field_enng[0]) ? $assigned_to_field_enng[0]->id : '',
+                    "assign_to_field_engg" => ($request->assign_to == 'assigned_to_field_eng') ? 1 : 0,
+                    "assign_to_lab_engg" => ($request->assign_to == 'assigned_to_lab_eng') ? 1 : 0,
                     "poc_name" => $request->poc_name,
                     "c_status" => $request->complaint_status,
                 ];
-                // dd($customer_complaints);
-                $customer_complaints = ModelsComplaints::create($customer_complaints);
-                if ($customer_complaints) {
+        
+                $complaints = ModelsComplaints::create($customer_complaints);
+        
+                if ($complaints) {
+                    if($request->assign_to == 'assigned_to_field_eng'){
+                        $complaint_assign_to_field_enggs = [
+                            'complaint_id' => $complaints->id,
+                            'engg_id' => isset($assigned_to_field_enng[0]) ? $assigned_to_field_enng[0]->id : '',
+                            'assign_complaint_time' => now()->setTimezone('Asia/Karachi'),
+                        ];
+                        $save_assign_to_field_eng_table = ComplaintAssignToFieldEngg::create($complaint_assign_to_field_enggs);
+        
+                        $notification = [
+                            "slack" => $this->generate_slack("notifications"),
+                            "user_id" => isset($assigned_to_field_enng[0]) ? $assigned_to_field_enng[0]->id : '',
+                            "notification_text" => 'Field Complaint Assigned You Please Check Port to View Details',
+                            "created_by" => $request->logged_user_id
+                        ];
+                        
+                        $notification_id = Notification::create($notification)->id;
+                        $data['message'] = "Please Check Your Port For New Complaints Which is Assigned to you";
+                        Mail::to($assigned_to_field_enng[0]->email)->send(new ComplaintMailToEngineer($complaints, $data['message']));
+                    }
+                    elseif($request->assign_to == 'assigned_to_lab_eng'){
+                        $complaint_assign_to_lab_enggs = [
+                            'complaint_id' => $complaints->id,
+                            'engg_id' => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
+                            'assign_complaint_time' => now()->setTimezone('Asia/Karachi'),
+                        ];
+                        $save_assign_to_lab_eng_table = CompaintAssignToLabEngg::create($complaint_assign_to_lab_enggs);
+        
+                        $notification = [
+                            "slack" => $this->generate_slack("notifications"),
+                            "user_id" => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
+                            "notification_text" => 'Lab Complaint Assigned You Please Check Port to View Details',
+                            "created_by" => $request->logged_user_id,
+                            "created_at" => now()->setTimezone('Asia/Karachi'),
+                        ];
+                        
+                        $notification_id = Notification::create($notification)->id;
+                        
+                        $data['message'] = "Please Check Your Port For New Complaints Which is Assigned to you";
+                        Mail::to($assigned_to[0]->email)->send(new ComplaintMailToEngineer($complaints, $data['message']));
+                    }
+        
+                    DB::commit();
+        
                     return response()->json($this->generate_response(
                         array(
                             "message" => "Customer Complaints Submit successfully",
-                            "data" => $customer_complaints,
+                            "data" => $complaints,
                             'msg' => 'success',
                         ),
                         'SUCCESS'
@@ -212,7 +302,8 @@ class Complaints extends Controller
                 }
             } else {
                 $customer_complaints = [
-                    "customer_id" => $customer_id[0]->id ?? null, // Use null coalescing operator to handle potential null values
+                    "assign_to" => $request->assign_to ?? null,
+                    "customer_id" => $customer_id[0]->id ?? null,
                     "user_name" => $customer_id[0]->name ?? null,
                     "equipment_type" => $request->equipment_type ?? null,
                     "equipment_make" => $request->equipment_make ?? null,
@@ -222,42 +313,31 @@ class Complaints extends Controller
                     "end_user_details" => $request->end_user_details ?? null,
                     "service_required" => $request->service_required ?? null,
                     "type_of_service" => $request->service_type,
-                    "assign_to_lab_staff_id" => $assigned_to[0]->id ?? null, // Use null coalescing operator
+                    "assign_to_lab_staff_id" => $assigned_to[0]->id ?? null,
                     "assign_to_field_staff_id" => $assigned_to_field_enng[0]->id ?? null,
                     "poc_name" => $request->poc_name ?? null,
                     "c_status" => $request->complaint_status ?? null,
                 ];
-
+        
                 $conditions = [
                     "slack" => $slack,
                 ];
-
-                try {
-                    // Assuming ModelsComplaints is your Eloquent model
-                    $customer_complaint = ModelsComplaints::updateOrCreate($conditions, $customer_complaints);
-
-                    return response()->json($this->generate_response(
-                        [
-                            "message" => "Customer Complaints Updated successfully",
-                            "data" => $customer_complaint,
-                            'msg' => 'success',
-                        ],
-                        'SUCCESS'
-                    ));
-                } catch (\Exception $e) {
-                    // Handle exceptions if any
-                    return response()->json($this->generate_response(
-                        [
-                            "message" => "An error occurred while updating customer complaints.",
-                            "error" => $e->getMessage(),
-                            'msg' => 'error',
-                        ],
-                        'ERROR'
-                    ), 500); // Return 500 status code for internal server error
-                }
-
+        
+                $customer_complaint = ModelsComplaints::updateOrCreate($conditions, $customer_complaints);
+        
+                DB::commit();
+        
+                return response()->json($this->generate_response(
+                    [
+                        "message" => "Customer Complaints Updated successfully",
+                        "data" => $customer_complaint,
+                        'msg' => 'success',
+                    ],
+                    'SUCCESS'
+                ));
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
@@ -265,6 +345,7 @@ class Complaints extends Controller
                 )
             ));
         }
+        
     }
 
     public function customer_orders(Request $request)
@@ -692,6 +773,109 @@ class Complaints extends Controller
                 ),
                 'SUCCESS'
             ));
+        }
+    }
+
+    public function add_request_product_store(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Find store role users
+            $store_role = Role::where('label', 'store')->first();
+            if (!$store_role) {
+                throw new \Exception("Store role not found");
+            }
+    
+            $store_users = User::where('role_id', $store_role->id)->get();
+    
+            // Create request to store
+            $request_to_store = [
+                'complaint_id' => $request->complaint_id,
+                'request_id' => $request->request_id,
+                'user_id' => $request->logged_user_id,
+                'status' => 0,
+                'start_request_time' => now()->setTimezone('Asia/Karachi'),
+                'request' => $request->request_detail,
+            ];
+            $save_request_to_store = RequestToStore::create($request_to_store);
+    
+            $part_request = PartRequest::findOrFail($request->request_id);
+            $part_request->request_status = '1';
+            $part_request->save();
+    
+            // Create notifications and send emails
+            foreach ($store_users as $store_user) {
+                $notification = [
+                    "slack" => $this->generate_slack("notifications"),
+                    "user_id" => $store_user->id,
+                    "notification_text" => 'Complaint Manager Request for: ' . $request->request_detail,
+                    "created_by" => $request->logged_user_id
+                ];
+                Notification::create($notification);
+    
+                $data['message'] = "Complaint Manager Request for: " . $request->request_detail;
+                Mail::to($store_user->email)->send(new ComplaintMailToEngineer($request_to_store, $data['message']));
+            }
+    
+            DB::commit();
+    
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Request Submitted Successfully",
+                    "data" => '',
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Request Submission Failed",
+                    "data" => '',
+                    'msg' => 'error',
+                ],
+                'ERROR'
+            ), 500);
+        }
+    }
+
+
+    public function field_eng_request_requirement(Request $request)
+    {
+        $complaints = ModelsComplaints::where('slack', $request->complaint_slack)->get();
+        $field_assign_complaint = ComplaintAssignToFieldEngg::where('engg_id', $request->logged_user_id)->where('complaint_id', $complaints[0]->id)->first();
+        
+        $cse_role = Role::where('label', 'Cse')->get();
+        $cse_user = User::where('role_id', $cse_role[0]->id)->get();   
+        if ($complaints->count() > 0 && $field_assign_complaint) {
+            $complaint = $complaints->first();
+            $complaint->field_engg_part_request = 1;
+            $complaint->save();
+            $part_request = [
+                'complaint_id' => $complaints[0]->id,
+                'engineer_id' => $request->logged_user_id,
+                'engineer_type' => 'Field_Engineer',
+                'request' => $request->field_staff_remark,
+                'start_request_time' => now()->setTimezone('Asia/Karachi'),
+            ];
+            $request_part = PartRequest::create($part_request);
+
+            if($request_part){
+                foreach($cse_user as $cse){
+                    $notification = [
+                        "slack" => $this->generate_slack("notifications"),
+                        "user_id" => $cse['id'],
+                        "notification_text" => 'Field Engineer Request for: '. $request->field_staff_remark,
+                        "created_by" => $request->logged_user_id
+                    ];                
+                    $notification_id = Notification::create($notification)->id;
+                    $data['message'] = "Field Engineer Request for: " . $request->field_staff_remark;
+                    Mail::to($cse['email'])->send(new ComplaintMailToEngineer($complaints, $data['message']));
+                }
+            }
+          
+    
         }
     }
 

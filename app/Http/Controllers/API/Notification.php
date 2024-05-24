@@ -337,7 +337,7 @@ class Notification extends Controller
 
             $notifications =  new NotificationCollection(NotificationModel::select('*')->where('user_id', $request->logged_user_id)->active()
             ->orderBy('created_at', 'desc')->paginate(10));
-
+            // dd($notifications);
             DB::commit();
 
             return response()->json($this->generate_response(
