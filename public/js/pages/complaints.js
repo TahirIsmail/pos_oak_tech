@@ -140,6 +140,43 @@ class Complaints{
     }
 
 
+    load_out_source_complaints_listing_table(){
+        "use strict";
+        var table = $('#out_source_complaints_listing').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/api/out_source_complaints_listing',
+                type : 'POST',
+                data : {
+                    access_token : window.settings.access_token
+                }              
+            },                      
+            columns: [
+                {
+                    data: 'ticket'
+                },                
+                {
+                    data: 'date'
+                },
+                {
+                    data: 'model'
+                },
+                {
+                    data: 'serial_no'
+                },
+                {
+                    data: 'c_status'
+                },
+                {
+                    data: 'action'
+                }         
+               
+            ]
+        });
+    }
+
+
     product_request(){
         "use strict";
         var table = $('#product_request_table').DataTable({

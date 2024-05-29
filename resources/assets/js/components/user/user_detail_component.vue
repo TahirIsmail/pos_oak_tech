@@ -1,5 +1,6 @@
 <template>
     <div class=" row">
+        {{ user }}
         <div class=" col-md-12">
 
             <div class="d-flex flex-wrap mb-4">

@@ -23459,7 +23459,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       account: '',
       transactions: [],
       notes: ''
-    }, _defineProperty(_ref, "transaction_type_data", ''), _defineProperty(_ref, "complaint_status_modal", false), _defineProperty(_ref, "add_customer_feedback", false), _defineProperty(_ref, "request_part_store", false), _defineProperty(_ref, "add_remark_modal", false), _defineProperty(_ref, "delete_processing", false), _defineProperty(_ref, "show_payment_modal", false), _defineProperty(_ref, "show_modal", false), _defineProperty(_ref, "show_assign_complaint", false), _defineProperty(_ref, "complaint_complete", false), _defineProperty(_ref, "delete_access", true), _defineProperty(_ref, "assign_processing", false), _defineProperty(_ref, "required_product", false), _defineProperty(_ref, "assign_required_product", false), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "tax_component_count", 0), _defineProperty(_ref, "server_errors", ''), _defineProperty(_ref, "categories", []), _defineProperty(_ref, "category", ''), _defineProperty(_ref, "scategories", []), _defineProperty(_ref, "currency_codes", []), _defineProperty(_ref, "payment_total_amount", 0), _defineProperty(_ref, "products", []), _defineProperty(_ref, "charge_label", [""]), _defineProperty(_ref, "charge_price", [""]), _defineProperty(_ref, "complaint_product_ids", []), _defineProperty(_ref, "Selectedproducts", []), _defineProperty(_ref, "ComplaintProducts", []), _defineProperty(_ref, "complaint_invoice", false), _defineProperty(_ref, "payment_received_amount", 0), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "product_ids", []), _defineProperty(_ref, "ComplaintRecord", []), _defineProperty(_ref, "s_category", ''), _defineProperty(_ref, "extend_date", ''), _defineProperty(_ref, "submit_complaint_technician", false), _defineProperty(_ref, "labtechnician", ''), _defineProperty(_ref, "final_lab_staff_remark", ''), _defineProperty(_ref, "due_date", ''), _defineProperty(_ref, "admin_remark", ''), _defineProperty(_ref, "lab_staff_remark", ''), _defineProperty(_ref, "admin_again_remark", ''), _defineProperty(_ref, "requirement_request", this.complaint.lab_staff_remark ? this.complaint.lab_staff_remark : null), _defineProperty(_ref, "complaint_slack", this.complaint.slack), _defineProperty(_ref, "delete_category_api_link", '/api/delete_complaint/' + this.complaint.slack), _defineProperty(_ref, "charges", []), _defineProperty(_ref, "billable", this.complaint.billable ? this.complaint.billable : ''), _defineProperty(_ref, "parts_required", this.complaint.parts_required ? this.complaint.parts_required : ''), _defineProperty(_ref, "complaint_status", this.complaint.complaint_status_label ? this.complaint.complaint_status_label : ''), _defineProperty(_ref, "type_of_service", this.complaint.type_of_service ? this.complaint.type_of_service : ''), _defineProperty(_ref, "complaint_ok", this.complaint.complaint_ok ? this.complaint.complaint_ok : ''), _defineProperty(_ref, "picked_for_workshop", this.complaint.picked_for_workshop ? this.complaint.picked_for_workshop : ''), _defineProperty(_ref, "equipment_s_no", this.complaint.equipments_S_no ? this.complaint.equipments_S_no : ''), _defineProperty(_ref, "equipment_specs", this.complaint.equipment_specs ? this.complaint.equipment_specs : ''), _defineProperty(_ref, "accessories", this.complaint.accessories ? this.complaint.accessories : ''), _defineProperty(_ref, "invoice_number", this.complaint.invoice_number ? this.complaint.invoice_number : ''), _defineProperty(_ref, "po_number", this.complaint.po_number ? this.complaint.po_number : ''), _defineProperty(_ref, "condition", this.complaint.complaint_condition ? this.complaint.complaint_condition : ''), _defineProperty(_ref, "equipment_part_serial_number", this.complaint.equipment_part_serial_number ? this.complaint.equipment_part_serial_number : ''), _defineProperty(_ref, "outsource_date", this.complaint.outsource_date ? this.complaint.outsource_date : ''), _defineProperty(_ref, "return_date", this.complaint.return_date ? this.complaint.return_date : ''), _defineProperty(_ref, "delivery_date", this.complaint.delivery_date ? this.complaint.delivery_date : ''), _defineProperty(_ref, "fault_report_by_customer", this.complaint.fault_report_by_customer ? this.complaint.fault_report_by_customer : ''), _defineProperty(_ref, "outsource", this.complaint.outsource ? this.complaint.outsource : ''), _defineProperty(_ref, "outsource_item", this.complaint.out_source_item ? this.complaint.out_source_item : ''), _defineProperty(_ref, "ready_date", this.complaint.ready_date ? this.complaint.ready_date : ''), _defineProperty(_ref, "diagnose_by_engg", this.complaint.diagnose_by_engg ? this.complaint.diagnose_by_engg : ''), _defineProperty(_ref, "customer_feedback", this.complaint.customer_feedback ? this.complaint.customer_feedback : ''), _defineProperty(_ref, "c_status", this.complaint.c_status ? this.complaint.c_status : ''), _defineProperty(_ref, "status", this.complaint.status ? this.complaint.status : ''), _defineProperty(_ref, "engineer_id", ''), _defineProperty(_ref, "request_id", ''), _defineProperty(_ref, "complaint_id", ''), _defineProperty(_ref, "request_detail", ''), _defineProperty(_ref, "request_text", ''), _defineProperty(_ref, "product_details", ''), _ref;
+    }, _defineProperty(_ref, "transaction_type_data", ''), _defineProperty(_ref, "complaint_status_modal", false), _defineProperty(_ref, "add_customer_feedback", false), _defineProperty(_ref, "request_part_store", false), _defineProperty(_ref, "out_source_product_model", false), _defineProperty(_ref, "add_remark_modal", false), _defineProperty(_ref, "delete_processing", false), _defineProperty(_ref, "show_payment_modal", false), _defineProperty(_ref, "show_modal", false), _defineProperty(_ref, "show_assign_complaint", false), _defineProperty(_ref, "out_source_complaint", false), _defineProperty(_ref, "complaint_complete", false), _defineProperty(_ref, "delete_access", true), _defineProperty(_ref, "assign_processing", false), _defineProperty(_ref, "required_product", false), _defineProperty(_ref, "assign_required_product", false), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "tax_component_count", 0), _defineProperty(_ref, "server_errors", ''), _defineProperty(_ref, "categories", []), _defineProperty(_ref, "category", ''), _defineProperty(_ref, "scategories", []), _defineProperty(_ref, "currency_codes", []), _defineProperty(_ref, "payment_total_amount", 0), _defineProperty(_ref, "products", []), _defineProperty(_ref, "charge_label", [""]), _defineProperty(_ref, "charge_price", [""]), _defineProperty(_ref, "complaint_product_ids", []), _defineProperty(_ref, "Selectedproducts", []), _defineProperty(_ref, "ComplaintProducts", []), _defineProperty(_ref, "complaint_invoice", false), _defineProperty(_ref, "payment_received_amount", 0), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "product_ids", []), _defineProperty(_ref, "ComplaintRecord", []), _defineProperty(_ref, "s_category", ''), _defineProperty(_ref, "extend_date", ''), _defineProperty(_ref, "submit_complaint_technician", false), _defineProperty(_ref, "labtechnician", ''), _defineProperty(_ref, "final_lab_staff_remark", ''), _defineProperty(_ref, "due_date", ''), _defineProperty(_ref, "admin_remark", ''), _defineProperty(_ref, "lab_staff_remark", ''), _defineProperty(_ref, "admin_again_remark", ''), _defineProperty(_ref, "requirement_request", this.complaint.lab_staff_remark ? this.complaint.lab_staff_remark : null), _defineProperty(_ref, "complaint_slack", this.complaint.slack), _defineProperty(_ref, "delete_category_api_link", '/api/delete_complaint/' + this.complaint.slack), _defineProperty(_ref, "charges", []), _defineProperty(_ref, "billable", this.complaint.billable ? this.complaint.billable : ''), _defineProperty(_ref, "parts_required", this.complaint.parts_required ? this.complaint.parts_required : ''), _defineProperty(_ref, "complaint_status", this.complaint.complaint_status_label ? this.complaint.complaint_status_label : ''), _defineProperty(_ref, "type_of_service", this.complaint.type_of_service ? this.complaint.type_of_service : ''), _defineProperty(_ref, "complaint_ok", this.complaint.complaint_ok ? this.complaint.complaint_ok : ''), _defineProperty(_ref, "picked_for_workshop", this.complaint.picked_for_workshop ? this.complaint.picked_for_workshop : ''), _defineProperty(_ref, "equipment_s_no", this.complaint.equipments_S_no ? this.complaint.equipments_S_no : ''), _defineProperty(_ref, "equipment_specs", this.complaint.equipment_specs ? this.complaint.equipment_specs : ''), _defineProperty(_ref, "accessories", this.complaint.accessories ? this.complaint.accessories : ''), _defineProperty(_ref, "invoice_number", this.complaint.invoice_number ? this.complaint.invoice_number : ''), _defineProperty(_ref, "po_number", this.complaint.po_number ? this.complaint.po_number : ''), _defineProperty(_ref, "condition", this.complaint.complaint_condition ? this.complaint.complaint_condition : ''), _defineProperty(_ref, "equipment_part_serial_number", this.complaint.equipment_part_serial_number ? this.complaint.equipment_part_serial_number : ''), _defineProperty(_ref, "outsource_date", this.complaint.outsource_date ? this.complaint.outsource_date : ''), _defineProperty(_ref, "return_date", this.complaint.return_date ? this.complaint.return_date : ''), _defineProperty(_ref, "delivery_date", this.complaint.delivery_date ? this.complaint.delivery_date : ''), _defineProperty(_ref, "fault_report_by_customer", this.complaint.fault_report_by_customer ? this.complaint.fault_report_by_customer : ''), _defineProperty(_ref, "outsource", this.complaint.outsource ? this.complaint.outsource : ''), _defineProperty(_ref, "outsource_item", this.complaint.out_source_item ? this.complaint.out_source_item : ''), _defineProperty(_ref, "ready_date", this.complaint.ready_date ? this.complaint.ready_date : ''), _defineProperty(_ref, "diagnose_by_engg", this.complaint.diagnose_by_engg ? this.complaint.diagnose_by_engg : ''), _defineProperty(_ref, "customer_feedback", this.complaint.customer_feedback ? this.complaint.customer_feedback : ''), _defineProperty(_ref, "c_status", this.complaint.c_status ? this.complaint.c_status : ''), _defineProperty(_ref, "status", this.complaint.status ? this.complaint.status : ''), _defineProperty(_ref, "engineer_id", ''), _defineProperty(_ref, "request_id", ''), _defineProperty(_ref, "complaint_id", ''), _defineProperty(_ref, "request_detail", ''), _defineProperty(_ref, "request_text", ''), _defineProperty(_ref, "product_details", ''), _defineProperty(_ref, "product_on_request_id", ''), _defineProperty(_ref, "request_to_store_id", ''), _defineProperty(_ref, "out_source_vendor", ''), _ref;
   },
   props: {
     labusers: Array,
@@ -23470,7 +23470,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     delete_access: Boolean,
     is_lab_tech: Boolean,
     out_source_items: [Array, Object],
-    is_customer: Boolean
+    is_customer: Boolean,
+    out_source_vendors: [Array, Object]
   },
   mounted: function mounted() {
     console.log('Category detail page loaded');
@@ -23486,21 +23487,31 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.request_id = request.id, this.engineer_id = request.engineer_id;
       this.complaint_id = request.complaint_id;
       this.request_detail = request.request;
-      this.request_text = 'Engineer Request for: ' + request.request;
+      this.request_text = 'OutSource Request for: ' + request.request;
       this.request_part_store = true;
     },
-    submit_request_to_store: function submit_request_to_store() {
-      var _console,
-        _this = this;
+    OutSourceProduct: function OutSourceProduct(request) {
+      this.request_id = request.id, this.engineer_id = request.engineer_id;
+      this.complaint_id = request.complaint_id;
+      this.request_to_store_id = request.request_to_store[0].id;
+      this.product_on_request_id = request.request_to_store[0].store_assign_products_on_reqeusts[0].id;
+      this.request_detail = request.request;
+      this.request_text = 'Engineer Request for: ' + request.request;
+      this.out_source_product_model = true;
+    },
+    submit_out_source_product: function submit_out_source_product() {
+      var _this = this;
       var formData = new FormData();
+      this.processing = true;
       formData.append("access_token", window.settings.access_token);
       formData.append('request_id', this.request_id);
       formData.append('engineer_id', this.engineer_id);
       formData.append('complaint_id', this.complaint_id);
+      formData.append('product_on_request_id', this.product_on_request_id);
+      formData.append('request_to_store_id', this.request_to_store_id);
       formData.append('request_detail', this.request_detail);
       formData.append('product_details', this.product_details);
-      (_console = console).log.apply(_console, _toConsumableArray(formData));
-      axios.post('/api/add_request_product_store', formData).then(function (response) {
+      axios.post('/api/add_out_source_product', formData).then(function (response) {
         if (response.status == 200) {
           _this.show_response_message(response.data.msg, 'Success');
           location.reload();
@@ -23514,6 +23525,65 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
             _this.server_errors = response.data.msg;
           }
           _this.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    submit_out_source_complaint: function submit_out_source_complaint() {
+      var _console,
+        _this2 = this;
+      var formData = new FormData();
+      this.processing = true;
+      formData.append("access_token", window.settings.access_token);
+      formData.append('engineer_id', this.engineer_id);
+      formData.append('complaint_id', this.complaint_id);
+      formData.append('out_source_vendor', this.out_source_vendor);
+      formData.append('product_details', this.product_details);
+      (_console = console).log.apply(_console, _toConsumableArray(formData));
+      axios.post('/api/add_out_source_complaint', formData).then(function (response) {
+        if (response.status == 200) {
+          _this2.show_response_message(response.data.msg, 'Success');
+          location.reload();
+        } else {
+          _this2.show_modal = false;
+          _this2.processing = false;
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this2.loop_api_errors(error_json);
+          } catch (err) {
+            _this2.server_errors = response.data.msg;
+          }
+          _this2.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    submit_request_to_store: function submit_request_to_store() {
+      var _this3 = this;
+      this.processing = true;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append('request_id', this.request_id);
+      formData.append('engineer_id', this.engineer_id);
+      formData.append('complaint_id', this.complaint_id);
+      formData.append('request_detail', this.request_detail);
+      formData.append('product_details', this.product_details);
+      axios.post('/api/add_request_product_store', formData).then(function (response) {
+        if (response.status == 200) {
+          _this3.show_response_message(response.data.msg, 'Success');
+          location.reload();
+        } else {
+          _this3.show_modal = false;
+          _this3.processing = false;
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this3.loop_api_errors(error_json);
+          } catch (err) {
+            _this3.server_errors = response.data.msg;
+          }
+          _this3.error_class = 'error';
         }
       })["catch"](function (error) {
         console.log(error);
@@ -23534,32 +23604,32 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.add_customer_feedback = true;
     },
     submit_customer_feedback: function submit_customer_feedback() {
-      var _this2 = this;
+      var _this4 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append('complaint_slack', this.complaint_slack);
       formData.append('customer_feedback', this.customer_feedback);
       axios.post('/api/add_customer_feedback', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this2.show_response_message(response.data.msg, 'Success');
+          _this4.show_response_message(response.data.msg, 'Success');
           location.reload();
         } else {
-          _this2.show_modal = false;
-          _this2.processing = false;
+          _this4.show_modal = false;
+          _this4.processing = false;
           try {
             var error_json = JSON.parse(response.data.msg);
-            _this2.loop_api_errors(error_json);
+            _this4.loop_api_errors(error_json);
           } catch (err) {
-            _this2.server_errors = response.data.msg;
+            _this4.server_errors = response.data.msg;
           }
-          _this2.error_class = 'error';
+          _this4.error_class = 'error';
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     submit_complaint_remarks: function submit_complaint_remarks() {
-      var _this3 = this;
+      var _this5 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append('complaint_slack', this.complaint_slack);
@@ -23570,25 +23640,25 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       formData.append('diagnose_by_engg', this.diagnose_by_engg);
       axios.post('/api/change_complaint_remark_by_engg', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this3.show_response_message(response.data.msg, 'Success');
+          _this5.show_response_message(response.data.msg, 'Success');
           location.reload();
         } else {
-          _this3.show_modal = false;
-          _this3.processing = false;
+          _this5.show_modal = false;
+          _this5.processing = false;
           try {
             var error_json = JSON.parse(response.data.msg);
-            _this3.loop_api_errors(error_json);
+            _this5.loop_api_errors(error_json);
           } catch (err) {
-            _this3.server_errors = response.data.msg;
+            _this5.server_errors = response.data.msg;
           }
-          _this3.error_class = 'error';
+          _this5.error_class = 'error';
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     submit_complaint_status: function submit_complaint_status() {
-      var _this4 = this;
+      var _this6 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append("complaint_slack", this.complaint_slack);
@@ -23613,76 +23683,11 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       formData.append('status', this.status);
       axios.post('/api/change_complaint_status', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this4.show_response_message(response.data.msg, 'Success');
+          _this6.show_response_message(response.data.msg, 'Success');
           location.reload();
         } else {
-          _this4.show_modal = false;
-          _this4.processing = false;
-          try {
-            var error_json = JSON.parse(response.data.msg);
-            _this4.loop_api_errors(error_json);
-          } catch (err) {
-            _this4.server_errors = response.data.msg;
-          }
-          _this4.error_class = 'error';
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    complaint_invoice_make: function complaint_invoice_make() {
-      this.$off("submit");
-      this.$off("close");
-      this.show_modal = true;
-      this.$on("submit", function () {
-        var _this5 = this;
-        var formData = new FormData();
-        formData.append("access_token", window.settings.access_token);
-        formData.append("complaint_slack", this.complaint_slack);
-        formData.append('charge_label', this.charge_label);
-        formData.append('charge_price', this.charge_price);
-        formData.append('complaint_product_ids', this.complaint_product_ids);
-        axios.post('/api/complaint_invoice_make', formData).then(function (response) {
-          if (response.data.status_code == 200) {
-            _this5.show_response_message(response.data.msg, 'Success');
-            location.reload();
-          } else {
-            _this5.show_modal = false;
-            _this5.processing = false;
-            try {
-              var error_json = JSON.parse(response.data.msg);
-              _this5.loop_api_errors(error_json);
-            } catch (err) {
-              _this5.server_errors = response.data.msg;
-            }
-            _this5.error_class = 'error';
-          }
-        })["catch"](function (error) {
-          console.log(error);
-        });
-      });
-      this.$on("close", function () {
-        this.show_modal = false;
-      });
-    },
-    fetchComplaintRecord: function fetchComplaintRecord() {
-      var _this6 = this;
-      var formData = new FormData();
-      formData.append("access_token", window.settings.access_token);
-      formData.append("complaint_slack", this.complaint_slack);
-      axios.post('/api/fetchComplaintRecord', formData).then(function (response) {
-        if (response.data.status_code == 200) {
-          _this6.ComplaintRecord = response.data.data.complaints;
-          _this6.transactions = response.data.data.complaints[0].transactions;
-          _this6.currency_codes = response.data.data.currency_codes;
-          _this6.payment_pending_amount = response.data.data.total_pending_amount;
-          _this6.payment_total_amount = response.data.data.total_complaint_amount_invoice;
-          _this6.payment_received_amount = response.data.data.total_received_amount;
-          // this.payment_pending_amount = response.data.data.total_pending_amount;
-          _this6.transaction_type = response.data.data.transaction_type;
-          _this6.payment_methods = response.data.data.payment_methods;
-          _this6.accounts = response.data.data.accounts;
-        } else {
+          _this6.show_modal = false;
+          _this6.processing = false;
           try {
             var error_json = JSON.parse(response.data.msg);
             _this6.loop_api_errors(error_json);
@@ -23695,41 +23700,106 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
+    complaint_invoice_make: function complaint_invoice_make() {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      this.$on("submit", function () {
+        var _this7 = this;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        formData.append("complaint_slack", this.complaint_slack);
+        formData.append('charge_label', this.charge_label);
+        formData.append('charge_price', this.charge_price);
+        formData.append('complaint_product_ids', this.complaint_product_ids);
+        axios.post('/api/complaint_invoice_make', formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this7.show_response_message(response.data.msg, 'Success');
+            location.reload();
+          } else {
+            _this7.show_modal = false;
+            _this7.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this7.loop_api_errors(error_json);
+            } catch (err) {
+              _this7.server_errors = response.data.msg;
+            }
+            _this7.error_class = 'error';
+          }
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+      this.$on("close", function () {
+        this.show_modal = false;
+      });
+    },
+    fetchComplaintRecord: function fetchComplaintRecord() {
+      var _this8 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("complaint_slack", this.complaint_slack);
+      axios.post('/api/fetchComplaintRecord', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this8.ComplaintRecord = response.data.data.complaints;
+          _this8.transactions = response.data.data.complaints[0].transactions;
+          _this8.currency_codes = response.data.data.currency_codes;
+          _this8.payment_pending_amount = response.data.data.total_pending_amount;
+          _this8.payment_total_amount = response.data.data.total_complaint_amount_invoice;
+          _this8.payment_received_amount = response.data.data.total_received_amount;
+          // this.payment_pending_amount = response.data.data.total_pending_amount;
+          _this8.transaction_type = response.data.data.transaction_type;
+          _this8.payment_methods = response.data.data.payment_methods;
+          _this8.accounts = response.data.data.accounts;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this8.loop_api_errors(error_json);
+          } catch (err) {
+            _this8.server_errors = response.data.msg;
+          }
+          _this8.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     make_complaint_invoice: function make_complaint_invoice() {
-      var _this7 = this;
+      var _this9 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append("complaint_slack", this.complaint_slack);
       axios.post('/api/assign_products_complaint', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this7.ComplaintProducts = response.data.data.products;
-          _this7.complaint_product_ids = _this7.ComplaintProducts.map(function (product) {
+          _this9.ComplaintProducts = response.data.data.products;
+          _this9.complaint_product_ids = _this9.ComplaintProducts.map(function (product) {
             return product.id;
           });
-          _this7.complaint_invoice = true;
+          _this9.complaint_invoice = true;
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
-            _this7.loop_api_errors(error_json);
+            _this9.loop_api_errors(error_json);
           } catch (err) {
-            _this7.server_errors = response.data.msg;
+            _this9.server_errors = response.data.msg;
           }
-          _this7.error_class = 'error';
+          _this9.error_class = 'error';
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     assign_required_product_on_requested: function assign_required_product_on_requested() {
-      var _this8 = this;
+      var _this10 = this;
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this8.$off("submit");
-          _this8.$off("close");
-          _this8.show_modal = true;
-          _this8.$on("submit", function () {
+          _this10.$off("submit");
+          _this10.$off("close");
+          _this10.show_modal = true;
+          _this10.$on("submit", function () {
             var _console2,
-              _this9 = this;
+              _this11 = this;
             // this.processing = true;
 
             var formData = new FormData();
@@ -23741,82 +23811,38 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
             (_console2 = console).log.apply(_console2, _toConsumableArray(formData));
             axios.post('/api/assign_product_to_technician', formData).then(function (response) {
               if (response.data.status_code == 200) {
-                _this9.show_response_message(response.data.msg, 'Success');
+                _this11.show_response_message(response.data.msg, 'Success');
                 location.reload();
               } else {
-                _this9.show_modal = false;
-                _this9.processing = false;
+                _this11.show_modal = false;
+                _this11.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this9.loop_api_errors(error_json);
+                  _this11.loop_api_errors(error_json);
                 } catch (err) {
-                  _this9.server_errors = response.data.msg;
+                  _this11.server_errors = response.data.msg;
                 }
-                _this9.error_class = 'error';
+                _this11.error_class = 'error';
               }
-              _this9.delete_processing = false;
+              _this11.delete_processing = false;
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this8.$on("close", function () {
+          _this10.$on("close", function () {
             this.show_modal = false;
           });
         }
       });
     },
     fetchCategorySubcategoryMounted: function fetchCategorySubcategoryMounted() {
-      var _this10 = this;
+      var _this12 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       axios.post('/api/fetchCategorySubcategory', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this10.categories = response.data.data;
+          _this12.categories = response.data.data;
           console.log(response.data.data);
-        } else {
-          try {
-            var error_json = JSON.parse(response.data.msg);
-            _this10.loop_api_errors(error_json);
-          } catch (err) {
-            _this10.server_errors = response.data.msg;
-          }
-          _this10.error_class = 'error';
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    fetchCategoryProduct: function fetchCategoryProduct() {
-      var _this11 = this;
-      var formData = new FormData();
-      formData.append("access_token", window.settings.access_token);
-      formData.append("category_slack", this.category);
-      axios.post('/api/fetchCategoryProduct', formData).then(function (response) {
-        if (response.data.status_code == 200) {
-          _this11.scategories = response.data.data.subCategories;
-          _this11.products = response.data.data.products;
-        } else {
-          try {
-            var error_json = JSON.parse(response.data.msg);
-            _this11.loop_api_errors(error_json);
-          } catch (err) {
-            _this11.server_errors = response.data.msg;
-          }
-          _this11.error_class = 'error';
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    fetchSubCategoryProduct: function fetchSubCategoryProduct() {
-      var _this12 = this;
-      // alert(this.s_category);
-      var formData = new FormData();
-      formData.append("access_token", window.settings.access_token);
-      formData.append("sub_category_id", this.s_category);
-      axios.post('/api/fetchSubCategoryProduct', formData).then(function (response) {
-        if (response.data.status_code == 200) {
-          _this12.products = response.data.data.products;
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
@@ -23830,14 +23856,15 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    fetchSelectedProducts: function fetchSelectedProducts() {
+    fetchCategoryProduct: function fetchCategoryProduct() {
       var _this13 = this;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
-      formData.append("product_ids[]", this.product_ids);
-      axios.post('/api/fetchSelectedProduct', formData).then(function (response) {
+      formData.append("category_slack", this.category);
+      axios.post('/api/fetchCategoryProduct', formData).then(function (response) {
         if (response.data.status_code == 200) {
-          _this13.Selectedproducts = response.data.data.products;
+          _this13.scategories = response.data.data.subCategories;
+          _this13.products = response.data.data.products;
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
@@ -23851,16 +23878,59 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(error);
       });
     },
-    assign_complaint_to_labtechnician: function assign_complaint_to_labtechnician() {
+    fetchSubCategoryProduct: function fetchSubCategoryProduct() {
       var _this14 = this;
+      // alert(this.s_category);
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("sub_category_id", this.s_category);
+      axios.post('/api/fetchSubCategoryProduct', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this14.products = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this14.loop_api_errors(error_json);
+          } catch (err) {
+            _this14.server_errors = response.data.msg;
+          }
+          _this14.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchSelectedProducts: function fetchSelectedProducts() {
+      var _this15 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("product_ids[]", this.product_ids);
+      axios.post('/api/fetchSelectedProduct', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this15.Selectedproducts = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this15.loop_api_errors(error_json);
+          } catch (err) {
+            _this15.server_errors = response.data.msg;
+          }
+          _this15.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    assign_complaint_to_labtechnician: function assign_complaint_to_labtechnician() {
+      var _this16 = this;
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this14.$off("submit");
-          _this14.$off("close");
-          _this14.show_modal = true;
-          _this14.$on("submit", function () {
+          _this16.$off("submit");
+          _this16.$off("close");
+          _this16.show_modal = true;
+          _this16.$on("submit", function () {
             var _console3,
-              _this15 = this;
+              _this17 = this;
             this.processing = true;
             this.delete_processing = true;
             var formData = new FormData();
@@ -23872,25 +23942,25 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
             (_console3 = console).log.apply(_console3, _toConsumableArray(formData));
             axios.post('/api/assign_complaint_to_technician', formData).then(function (response) {
               if (response.data.status_code == 200) {
-                _this15.show_response_message(response.data.msg, 'Success');
+                _this17.show_response_message(response.data.msg, 'Success');
                 location.reload();
               } else {
-                _this15.show_modal = false;
-                _this15.processing = false;
+                _this17.show_modal = false;
+                _this17.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this15.loop_api_errors(error_json);
+                  _this17.loop_api_errors(error_json);
                 } catch (err) {
-                  _this15.server_errors = response.data.msg;
+                  _this17.server_errors = response.data.msg;
                 }
-                _this15.error_class = 'error';
+                _this17.error_class = 'error';
               }
-              _this15.delete_processing = false;
+              _this17.delete_processing = false;
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this14.$on("close", function () {
+          _this16.$on("close", function () {
             this.show_modal = false;
           });
         }
@@ -23914,6 +23984,12 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     request_for_product: function request_for_product() {
       this.required_product = true;
     },
+    OutSourceComplaint: function OutSourceComplaint(request) {
+      this.out_source_complaint = true;
+      this.engineer_id = request.assign_to_lab_staff_id;
+      this.complaint_id = request.id;
+      this.out_source_product_model = true;
+    },
     complaint_completed: function complaint_completed() {
       this.complaint_complete = true;
     },
@@ -23921,38 +23997,38 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.assign_required_product = true;
     },
     submit_complaint_completed: function submit_complaint_completed() {
-      var _this16 = this;
+      var _this18 = this;
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this16.$off("submit");
-          _this16.$off("close");
-          _this16.show_modal = true;
-          _this16.$on("submit", function () {
-            var _this17 = this;
+          _this18.$off("submit");
+          _this18.$off("close");
+          _this18.show_modal = true;
+          _this18.$on("submit", function () {
+            var _this19 = this;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
             formData.append('final_lab_staff_remark', this.final_lab_staff_remark);
             formData.append('complaint_slack', this.complaint_slack);
             axios.post('/api/complaint_completed', formData).then(function (response) {
               if (response.data.status_code == 200) {
-                _this17.show_response_message(response.data.msg, 'Success');
+                _this19.show_response_message(response.data.msg, 'Success');
                 location.reload();
               } else {
-                _this17.show_modal = false;
-                _this17.processing = false;
+                _this19.show_modal = false;
+                _this19.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this17.loop_api_errors(error_json);
+                  _this19.loop_api_errors(error_json);
                 } catch (err) {
-                  _this17.server_errors = response.data.msg;
+                  _this19.server_errors = response.data.msg;
                 }
-                _this17.error_class = 'error';
+                _this19.error_class = 'error';
               }
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this16.$on("close", function () {
+          _this18.$on("close", function () {
             this.show_modal = false;
           });
         }
@@ -23963,31 +24039,31 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.$off("close");
       this.show_modal = true;
       this.$on("submit", function () {
-        var _this18 = this;
+        var _this20 = this;
         this.processing = true;
         this.delete_processing = true;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
         axios.post(this.delete_category_api_link, formData).then(function (response) {
           if (response.data.status_code == 200) {
-            _this18.show_response_message(response.data.msg, 'Success');
+            _this20.show_response_message(response.data.msg, 'Success');
             if (response.data.link != "") {
               window.location.href = response.data.link;
             } else {
               location.reload();
             }
           } else {
-            _this18.show_modal = false;
-            _this18.processing = false;
+            _this20.show_modal = false;
+            _this20.processing = false;
             try {
               var error_json = JSON.parse(response.data.msg);
-              _this18.loop_api_errors(error_json);
+              _this20.loop_api_errors(error_json);
             } catch (err) {
-              _this18.server_errors = response.data.msg;
+              _this20.server_errors = response.data.msg;
             }
-            _this18.error_class = 'error';
+            _this20.error_class = 'error';
           }
-          _this18.delete_processing = false;
+          _this20.delete_processing = false;
         })["catch"](function (error) {
           console.log(error);
         });
@@ -24001,7 +24077,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.$off("close");
       this.show_modal = true;
       this.$on("submit", function () {
-        var _this19 = this;
+        var _this21 = this;
         // this.processing = true;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
@@ -24009,24 +24085,24 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         formData.append('complaint_slack', this.complaint_slack);
         axios.post('/api/request_requirement', formData).then(function (response) {
           if (response.data.status_code == 200) {
-            _this19.show_response_message(response.data.msg, 'Success');
+            _this21.show_response_message(response.data.msg, 'Success');
             if (response.data.link != "") {
               location.reload();
             } else {
               location.reload();
             }
           } else {
-            _this19.show_modal = false;
-            _this19.processing = false;
+            _this21.show_modal = false;
+            _this21.processing = false;
             try {
               var error_json = JSON.parse(response.data.msg);
-              _this19.loop_api_errors(error_json);
+              _this21.loop_api_errors(error_json);
             } catch (err) {
-              _this19.server_errors = response.data.msg;
+              _this21.server_errors = response.data.msg;
             }
-            _this19.error_class = 'error';
+            _this21.error_class = 'error';
           }
-          _this19.delete_processing = false;
+          _this21.delete_processing = false;
         })["catch"](function (error) {
           console.log(error);
         });
@@ -24040,7 +24116,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.show_modal = true;
       // alert(this.show_modal);
       this.$on("submit", function () {
-        var _this20 = this;
+        var _this22 = this;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
         formData.append('complaint_slack', this.complaint_slack);
@@ -24053,18 +24129,18 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         formData.append('payment_total_amount', this.payment_total_amount);
         axios.post('/api/complaint_submit_transaction', formData).then(function (response) {
           if (response.data.status_code == 200) {
-            _this20.show_response_message(response.data.msg, 'Success');
+            _this22.show_response_message(response.data.msg, 'Success');
             location.reload();
           } else {
-            _this20.show_modal = false;
-            _this20.processing = false;
+            _this22.show_modal = false;
+            _this22.processing = false;
             try {
               var error_json = JSON.parse(response.data.msg);
-              _this20.loop_api_errors(error_json);
+              _this22.loop_api_errors(error_json);
             } catch (err) {
-              _this20.server_errors = response.data.msg;
+              _this22.server_errors = response.data.msg;
             }
-            _this20.error_class = 'error';
+            _this22.error_class = 'error';
           }
         })["catch"](function (error) {
           console.log(error);
@@ -24133,6 +24209,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   props: {
     labusers: Array,
     complaint: Array,
+    user_data: [Array, Object],
     assign_access: Boolean,
     requirement_request_access: Boolean,
     Customer_complaint_make_invoice: Boolean,
@@ -24189,6 +24266,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     },
     submit_complaint_remarks: function submit_complaint_remarks() {
       var _this2 = this;
+      this.processing = true;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append('complaint_slack', this.complaint_slack);
@@ -24694,6 +24772,994 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
               _this19.server_errors = response.data.msg;
             }
             _this19.error_class = 'error';
+          }
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+      this.$on("close", function () {
+        this.show_modal = false;
+      });
+      //     }
+      // });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/index.esm.js");
+/* harmony import */ var vue2_datepicker_index_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-datepicker/index.css */ "./node_modules/vue2-datepicker/index.css");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _event_bus_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../event_bus.js */ "./resources/assets/js/event_bus.js");
+
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    var _ref;
+    return _ref = {
+      processing: false,
+      out_source_request: '',
+      transaction_type: [],
+      transaction_type_data: '',
+      amount: '',
+      payment_methods: [],
+      payment_method: '',
+      transaction_date: '',
+      accounts: [],
+      account: '',
+      transactions: [],
+      notes: ''
+    }, _defineProperty(_ref, "transaction_type_data", ''), _defineProperty(_ref, "complaint_status_modal", false), _defineProperty(_ref, "add_customer_feedback", false), _defineProperty(_ref, "request_part_store", false), _defineProperty(_ref, "add_remark_modal", false), _defineProperty(_ref, "delete_processing", false), _defineProperty(_ref, "show_payment_modal", false), _defineProperty(_ref, "show_modal", false), _defineProperty(_ref, "show_assign_complaint", false), _defineProperty(_ref, "complaint_complete", false), _defineProperty(_ref, "delete_access", true), _defineProperty(_ref, "assign_processing", false), _defineProperty(_ref, "required_product", false), _defineProperty(_ref, "assign_required_product", false), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "tax_component_count", 0), _defineProperty(_ref, "server_errors", ''), _defineProperty(_ref, "categories", []), _defineProperty(_ref, "category", ''), _defineProperty(_ref, "scategories", []), _defineProperty(_ref, "currency_codes", []), _defineProperty(_ref, "payment_total_amount", 0), _defineProperty(_ref, "products", []), _defineProperty(_ref, "charge_label", [""]), _defineProperty(_ref, "charge_price", [""]), _defineProperty(_ref, "complaint_product_ids", []), _defineProperty(_ref, "Selectedproducts", []), _defineProperty(_ref, "ComplaintProducts", []), _defineProperty(_ref, "complaint_invoice", false), _defineProperty(_ref, "payment_received_amount", 0), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "product_ids", []), _defineProperty(_ref, "ComplaintRecord", []), _defineProperty(_ref, "s_category", ''), _defineProperty(_ref, "extend_date", ''), _defineProperty(_ref, "submit_complaint_technician", false), _defineProperty(_ref, "labtechnician", ''), _defineProperty(_ref, "final_lab_staff_remark", ''), _defineProperty(_ref, "due_date", ''), _defineProperty(_ref, "admin_remark", ''), _defineProperty(_ref, "lab_staff_remark", ''), _defineProperty(_ref, "store_remark", ''), _defineProperty(_ref, "request_id", this.request_to_store.id), _defineProperty(_ref, "requirement_request", this.complaint.lab_staff_remark ? this.complaint.lab_staff_remark : null), _defineProperty(_ref, "complaint_slack", this.complaint.slack), _defineProperty(_ref, "delete_category_api_link", '/api/delete_complaint/' + this.complaint.slack), _defineProperty(_ref, "charges", []), _defineProperty(_ref, "billable", this.complaint.billable ? this.complaint.billable : ''), _defineProperty(_ref, "parts_required", this.complaint.parts_required ? this.complaint.parts_required : ''), _defineProperty(_ref, "complaint_status", this.complaint.complaint_status_label ? this.complaint.complaint_status_label : ''), _defineProperty(_ref, "type_of_service", this.complaint.type_of_service ? this.complaint.type_of_service : ''), _defineProperty(_ref, "complaint_ok", this.complaint.complaint_ok ? this.complaint.complaint_ok : ''), _defineProperty(_ref, "picked_for_workshop", this.complaint.picked_for_workshop ? this.complaint.picked_for_workshop : ''), _defineProperty(_ref, "equipment_s_no", this.complaint.equipments_S_no ? this.complaint.equipments_S_no : ''), _defineProperty(_ref, "equipment_specs", this.complaint.equipment_specs ? this.complaint.equipment_specs : ''), _defineProperty(_ref, "accessories", this.complaint.accessories ? this.complaint.accessories : ''), _defineProperty(_ref, "invoice_number", this.complaint.invoice_number ? this.complaint.invoice_number : ''), _defineProperty(_ref, "po_number", this.complaint.po_number ? this.complaint.po_number : ''), _defineProperty(_ref, "condition", this.complaint.complaint_condition ? this.complaint.complaint_condition : ''), _defineProperty(_ref, "equipment_part_serial_number", this.complaint.equipment_part_serial_number ? this.complaint.equipment_part_serial_number : ''), _defineProperty(_ref, "outsource_date", this.complaint.outsource_date ? this.complaint.outsource_date : ''), _defineProperty(_ref, "return_date", this.complaint.return_date ? this.complaint.return_date : ''), _defineProperty(_ref, "delivery_date", this.complaint.delivery_date ? this.complaint.delivery_date : ''), _defineProperty(_ref, "fault_report_by_customer", this.complaint.fault_report_by_customer ? this.complaint.fault_report_by_customer : ''), _defineProperty(_ref, "outsource", this.complaint.outsource ? this.complaint.outsource : ''), _defineProperty(_ref, "outsource_item", this.complaint.out_source_item ? this.complaint.out_source_item : ''), _defineProperty(_ref, "ready_date", this.complaint.ready_date ? this.complaint.ready_date : ''), _defineProperty(_ref, "diagnose_by_engg", this.complaint.diagnose_by_engg ? this.complaint.diagnose_by_engg : ''), _defineProperty(_ref, "customer_feedback", this.complaint.customer_feedback ? this.complaint.customer_feedback : ''), _defineProperty(_ref, "c_status", this.complaint.c_status ? this.complaint.c_status : ''), _defineProperty(_ref, "status", this.complaint.status ? this.complaint.status : ''), _defineProperty(_ref, "engineer_id", ''), _defineProperty(_ref, "complaint_id", ''), _defineProperty(_ref, "request_detail", ''), _defineProperty(_ref, "request_text", ''), _defineProperty(_ref, "product_details", ''), _defineProperty(_ref, "serial_no", ''), _defineProperty(_ref, "debounceTimeout", null), _ref;
+  },
+  props: {
+    complaint: Array
+  },
+  mounted: function mounted() {
+    console.log('Category detail page loaded');
+    _event_bus_js__WEBPACK_IMPORTED_MODULE_3__.event_bus.$on('cancel_complaint', this.cancel_complaint);
+    this.fetchCategorySubcategoryMounted();
+    this.fetchComplaintRecord();
+  },
+  methods: {
+    onKeyUp: function onKeyUp() {
+      var _this = this;
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(function () {
+        _this.SearchProducts();
+      }, 1000);
+    },
+    SearchProducts: function SearchProducts() {
+      var _this2 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("serial_no", this.serial_no);
+      axios.post('/api/search_products_against_serial_no', formData).then(function (response) {
+        if (response.status == 200) {
+          console.log(response.data.data.products);
+          _this2.products = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this2.loop_api_errors(error_json);
+          } catch (err) {
+            _this2.server_errors = response.data.msg;
+          }
+          _this2.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    addCharge: function addCharge() {
+      if (this.charges.length < 10) {
+        this.charges.push("");
+      }
+    },
+    add_complaint_status: function add_complaint_status() {
+      this.complaint_status_modal = true;
+    },
+    add_remarks: function add_remarks() {
+      this.add_remark_modal = true;
+    },
+    add_feedback: function add_feedback() {
+      this.add_customer_feedback = true;
+    },
+    fetchComplaintRecord: function fetchComplaintRecord() {
+      var _this3 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("complaint_slack", this.complaint_slack);
+      axios.post('/api/fetchComplaintRecord', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this3.ComplaintRecord = response.data.data.complaints;
+          _this3.transactions = response.data.data.complaints[0].transactions;
+          _this3.currency_codes = response.data.data.currency_codes;
+          _this3.payment_pending_amount = response.data.data.total_pending_amount;
+          _this3.payment_total_amount = response.data.data.total_complaint_amount_invoice;
+          _this3.payment_received_amount = response.data.data.total_received_amount;
+          // this.payment_pending_amount = response.data.data.total_pending_amount;
+          _this3.transaction_type = response.data.data.transaction_type;
+          _this3.payment_methods = response.data.data.payment_methods;
+          _this3.accounts = response.data.data.accounts;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this3.loop_api_errors(error_json);
+          } catch (err) {
+            _this3.server_errors = response.data.msg;
+          }
+          _this3.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    assign_required_product_on_requested: function assign_required_product_on_requested() {
+      var _this4 = this;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this4.$off("submit");
+          _this4.$off("close");
+          _this4.show_modal = true;
+          _this4.$on("submit", function () {
+            var _console,
+              _this5 = this;
+            this.processing = true;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('store_remark', this.store_remark);
+            formData.append('request_id', this.request_id);
+            formData.append('out_source_request', this.out_source_request);
+            formData.append('product_ids', this.product_ids);
+            (_console = console).log.apply(_console, _toConsumableArray(formData));
+            axios.post('/api/assign_product_to_technician', formData).then(function (response) {
+              if (response.status == 200) {
+                _this5.show_response_message(response.data.msg, 'Success');
+                location.reload();
+              } else {
+                _this5.show_modal = false;
+                _this5.processing = false;
+                try {
+                  var error_json = JSON.parse(response.data.msg);
+                  _this5.loop_api_errors(error_json);
+                } catch (err) {
+                  _this5.server_errors = response.data.msg;
+                }
+                _this5.error_class = 'error';
+              }
+              _this5.delete_processing = false;
+            })["catch"](function (error) {
+              console.log(error);
+            });
+          });
+          _this4.$on("close", function () {
+            this.show_modal = false;
+          });
+        }
+      });
+    },
+    fetchCategorySubcategoryMounted: function fetchCategorySubcategoryMounted() {
+      var _this6 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      axios.post('/api/fetchCategorySubcategory', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this6.categories = response.data.data;
+          console.log(response.data.data);
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this6.loop_api_errors(error_json);
+          } catch (err) {
+            _this6.server_errors = response.data.msg;
+          }
+          _this6.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchCategoryProduct: function fetchCategoryProduct() {
+      var _this7 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("category_slack", this.category);
+      axios.post('/api/fetchCategoryProduct', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this7.scategories = response.data.data.subCategories;
+          _this7.products = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this7.loop_api_errors(error_json);
+          } catch (err) {
+            _this7.server_errors = response.data.msg;
+          }
+          _this7.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchSubCategoryProduct: function fetchSubCategoryProduct() {
+      var _this8 = this;
+      // alert(this.s_category);
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("sub_category_id", this.s_category);
+      axios.post('/api/fetchSubCategoryProduct', formData).then(function (response) {
+        if (response.status == 200) {
+          _this8.products = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this8.loop_api_errors(error_json);
+          } catch (err) {
+            _this8.server_errors = response.data.msg;
+          }
+          _this8.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchSelectedProducts: function fetchSelectedProducts() {
+      var _this9 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("product_ids[]", this.product_ids);
+      axios.post('/api/fetchSelectedProduct', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this9.Selectedproducts = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this9.loop_api_errors(error_json);
+          } catch (err) {
+            _this9.server_errors = response.data.msg;
+          }
+          _this9.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    assign_complaint_to_labtechnician: function assign_complaint_to_labtechnician() {
+      var _this10 = this;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this10.$off("submit");
+          _this10.$off("close");
+          _this10.show_modal = true;
+          _this10.$on("submit", function () {
+            var _console2,
+              _this11 = this;
+            this.processing = true;
+            this.delete_processing = true;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('lab_staff_slack', this.labtechnician);
+            formData.append('complaint_slack', this.complaint_slack);
+            formData.append('due_date', this.due_date);
+            formData.append('admin_remark', this.admin_remark);
+            (_console2 = console).log.apply(_console2, _toConsumableArray(formData));
+            axios.post('/api/assign_complaint_to_technician', formData).then(function (response) {
+              if (response.data.status_code == 200) {
+                _this11.show_response_message(response.data.msg, 'Success');
+                location.reload();
+              } else {
+                _this11.show_modal = false;
+                _this11.processing = false;
+                try {
+                  var error_json = JSON.parse(response.data.msg);
+                  _this11.loop_api_errors(error_json);
+                } catch (err) {
+                  _this11.server_errors = response.data.msg;
+                }
+                _this11.error_class = 'error';
+              }
+              _this11.delete_processing = false;
+            })["catch"](function (error) {
+              console.log(error);
+            });
+          });
+          _this10.$on("close", function () {
+            this.show_modal = false;
+          });
+        }
+      });
+    },
+    assigncomplaint_to_labtachnician: function assigncomplaint_to_labtachnician() {
+      this.show_assign_complaint = true;
+    },
+    cancel_complaint: function cancel_complaint() {
+      this.$off("cancel_complaint");
+      this.show_assign_complaint = false;
+      this.required_product = false;
+      this.assign_required_product = false;
+      this.complaint_complete = false;
+      this.complaint_invoice = false;
+      this.show_payment_modal = false;
+    },
+    record_payment_invoice: function record_payment_invoice() {
+      this.show_payment_modal = true;
+    },
+    request_for_product: function request_for_product() {
+      this.required_product = true;
+    },
+    complaint_completed: function complaint_completed() {
+      this.complaint_complete = true;
+    },
+    assign_requested_product: function assign_requested_product() {
+      this.assign_required_product = true;
+    },
+    submit_complaint_completed: function submit_complaint_completed() {
+      var _this12 = this;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this12.$off("submit");
+          _this12.$off("close");
+          _this12.show_modal = true;
+          _this12.$on("submit", function () {
+            var _this13 = this;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('final_lab_staff_remark', this.final_lab_staff_remark);
+            formData.append('complaint_slack', this.complaint_slack);
+            axios.post('/api/complaint_completed', formData).then(function (response) {
+              if (response.data.status_code == 200) {
+                _this13.show_response_message(response.data.msg, 'Success');
+                location.reload();
+              } else {
+                _this13.show_modal = false;
+                _this13.processing = false;
+                try {
+                  var error_json = JSON.parse(response.data.msg);
+                  _this13.loop_api_errors(error_json);
+                } catch (err) {
+                  _this13.server_errors = response.data.msg;
+                }
+                _this13.error_class = 'error';
+              }
+            })["catch"](function (error) {
+              console.log(error);
+            });
+          });
+          _this12.$on("close", function () {
+            this.show_modal = false;
+          });
+        }
+      });
+    },
+    delete_category: function delete_category() {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      this.$on("submit", function () {
+        var _this14 = this;
+        this.processing = true;
+        this.delete_processing = true;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        axios.post(this.delete_category_api_link, formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this14.show_response_message(response.data.msg, 'Success');
+            if (response.data.link != "") {
+              window.location.href = response.data.link;
+            } else {
+              location.reload();
+            }
+          } else {
+            _this14.show_modal = false;
+            _this14.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this14.loop_api_errors(error_json);
+            } catch (err) {
+              _this14.server_errors = response.data.msg;
+            }
+            _this14.error_class = 'error';
+          }
+          _this14.delete_processing = false;
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+      this.$on("close", function () {
+        this.show_modal = false;
+      });
+    },
+    requested_for_required_product: function requested_for_required_product() {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      this.$on("submit", function () {
+        var _this15 = this;
+        // this.processing = true;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        formData.append("lab_staff_remark", this.lab_staff_remark);
+        formData.append('complaint_slack', this.complaint_slack);
+        axios.post('/api/request_requirement', formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this15.show_response_message(response.data.msg, 'Success');
+            if (response.data.link != "") {
+              location.reload();
+            } else {
+              location.reload();
+            }
+          } else {
+            _this15.show_modal = false;
+            _this15.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this15.loop_api_errors(error_json);
+            } catch (err) {
+              _this15.server_errors = response.data.msg;
+            }
+            _this15.error_class = 'error';
+          }
+          _this15.delete_processing = false;
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+    },
+    submit_transaction: function submit_transaction() {
+      // this.$validator.validateAll().then((result) => {
+      // if (result) {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      // alert(this.show_modal);
+      this.$on("submit", function () {
+        var _this16 = this;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        formData.append('complaint_slack', this.complaint_slack);
+        formData.append('received_amount', this.amount);
+        formData.append('notes', this.notes);
+        formData.append('payment_method', this.payment_method);
+        formData.append('account', this.account);
+        formData.append('transaction_type_data', this.transaction_type_data);
+        formData.append('transaction_date', this.transaction_date);
+        formData.append('payment_total_amount', this.payment_total_amount);
+        axios.post('/api/complaint_submit_transaction', formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this16.show_response_message(response.data.msg, 'Success');
+            location.reload();
+          } else {
+            _this16.show_modal = false;
+            _this16.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this16.loop_api_errors(error_json);
+            } catch (err) {
+              _this16.server_errors = response.data.msg;
+            }
+            _this16.error_class = 'error';
+          }
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+      this.$on("close", function () {
+        this.show_modal = false;
+      });
+      //     }
+      // });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/index.esm.js");
+/* harmony import */ var vue2_datepicker_index_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-datepicker/index.css */ "./node_modules/vue2-datepicker/index.css");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _event_bus_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../event_bus.js */ "./resources/assets/js/event_bus.js");
+
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    var _ref;
+    return _ref = {
+      processing: false,
+      out_source_request: '',
+      transaction_type: [],
+      transaction_type_data: '',
+      amount: '',
+      payment_methods: [],
+      payment_method: '',
+      transaction_date: '',
+      accounts: [],
+      account: '',
+      transactions: [],
+      notes: ''
+    }, _defineProperty(_ref, "transaction_type_data", ''), _defineProperty(_ref, "complaint_status_modal", false), _defineProperty(_ref, "add_customer_feedback", false), _defineProperty(_ref, "request_part_store", false), _defineProperty(_ref, "add_remark_modal", false), _defineProperty(_ref, "delete_processing", false), _defineProperty(_ref, "show_payment_modal", false), _defineProperty(_ref, "show_modal", false), _defineProperty(_ref, "show_assign_complaint", false), _defineProperty(_ref, "complaint_complete", false), _defineProperty(_ref, "delete_access", true), _defineProperty(_ref, "assign_processing", false), _defineProperty(_ref, "required_product", false), _defineProperty(_ref, "assign_required_product", false), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "tax_component_count", 0), _defineProperty(_ref, "server_errors", ''), _defineProperty(_ref, "categories", []), _defineProperty(_ref, "category", ''), _defineProperty(_ref, "scategories", []), _defineProperty(_ref, "currency_codes", []), _defineProperty(_ref, "payment_total_amount", 0), _defineProperty(_ref, "products", []), _defineProperty(_ref, "charge_label", [""]), _defineProperty(_ref, "charge_price", [""]), _defineProperty(_ref, "complaint_product_ids", []), _defineProperty(_ref, "Selectedproducts", []), _defineProperty(_ref, "ComplaintProducts", []), _defineProperty(_ref, "complaint_invoice", false), _defineProperty(_ref, "payment_received_amount", 0), _defineProperty(_ref, "payment_pending_amount", 0), _defineProperty(_ref, "product_ids", []), _defineProperty(_ref, "ComplaintRecord", []), _defineProperty(_ref, "s_category", ''), _defineProperty(_ref, "extend_date", ''), _defineProperty(_ref, "submit_complaint_technician", false), _defineProperty(_ref, "labtechnician", ''), _defineProperty(_ref, "final_lab_staff_remark", ''), _defineProperty(_ref, "due_date", ''), _defineProperty(_ref, "admin_remark", ''), _defineProperty(_ref, "lab_staff_remark", ''), _defineProperty(_ref, "store_remark", ''), _defineProperty(_ref, "request_id", this.request_to_store.id), _defineProperty(_ref, "requirement_request", this.complaint.lab_staff_remark ? this.complaint.lab_staff_remark : null), _defineProperty(_ref, "complaint_slack", this.complaint.slack), _defineProperty(_ref, "delete_category_api_link", '/api/delete_complaint/' + this.complaint.slack), _defineProperty(_ref, "charges", []), _defineProperty(_ref, "billable", this.complaint.billable ? this.complaint.billable : ''), _defineProperty(_ref, "parts_required", this.complaint.parts_required ? this.complaint.parts_required : ''), _defineProperty(_ref, "complaint_status", this.complaint.complaint_status_label ? this.complaint.complaint_status_label : ''), _defineProperty(_ref, "type_of_service", this.complaint.type_of_service ? this.complaint.type_of_service : ''), _defineProperty(_ref, "complaint_ok", this.complaint.complaint_ok ? this.complaint.complaint_ok : ''), _defineProperty(_ref, "picked_for_workshop", this.complaint.picked_for_workshop ? this.complaint.picked_for_workshop : ''), _defineProperty(_ref, "equipment_s_no", this.complaint.equipments_S_no ? this.complaint.equipments_S_no : ''), _defineProperty(_ref, "equipment_specs", this.complaint.equipment_specs ? this.complaint.equipment_specs : ''), _defineProperty(_ref, "accessories", this.complaint.accessories ? this.complaint.accessories : ''), _defineProperty(_ref, "invoice_number", this.complaint.invoice_number ? this.complaint.invoice_number : ''), _defineProperty(_ref, "po_number", this.complaint.po_number ? this.complaint.po_number : ''), _defineProperty(_ref, "condition", this.complaint.complaint_condition ? this.complaint.complaint_condition : ''), _defineProperty(_ref, "equipment_part_serial_number", this.complaint.equipment_part_serial_number ? this.complaint.equipment_part_serial_number : ''), _defineProperty(_ref, "outsource_date", this.complaint.outsource_date ? this.complaint.outsource_date : ''), _defineProperty(_ref, "return_date", this.complaint.return_date ? this.complaint.return_date : ''), _defineProperty(_ref, "delivery_date", this.complaint.delivery_date ? this.complaint.delivery_date : ''), _defineProperty(_ref, "fault_report_by_customer", this.complaint.fault_report_by_customer ? this.complaint.fault_report_by_customer : ''), _defineProperty(_ref, "outsource", this.complaint.outsource ? this.complaint.outsource : ''), _defineProperty(_ref, "outsource_item", this.complaint.out_source_item ? this.complaint.out_source_item : ''), _defineProperty(_ref, "ready_date", this.complaint.ready_date ? this.complaint.ready_date : ''), _defineProperty(_ref, "diagnose_by_engg", this.complaint.diagnose_by_engg ? this.complaint.diagnose_by_engg : ''), _defineProperty(_ref, "customer_feedback", this.complaint.customer_feedback ? this.complaint.customer_feedback : ''), _defineProperty(_ref, "c_status", this.complaint.c_status ? this.complaint.c_status : ''), _defineProperty(_ref, "status", this.complaint.status ? this.complaint.status : ''), _defineProperty(_ref, "engineer_id", ''), _defineProperty(_ref, "complaint_id", ''), _defineProperty(_ref, "request_detail", ''), _defineProperty(_ref, "request_text", ''), _defineProperty(_ref, "product_details", ''), _defineProperty(_ref, "serial_no", ''), _defineProperty(_ref, "debounceTimeout", null), _ref;
+  },
+  props: {
+    complaint: Array,
+    out_source_items: [Array, Object],
+    request_to_store: [Array, Object]
+  },
+  mounted: function mounted() {
+    console.log('Category detail page loaded');
+    _event_bus_js__WEBPACK_IMPORTED_MODULE_3__.event_bus.$on('cancel_complaint', this.cancel_complaint);
+    this.fetchCategorySubcategoryMounted();
+    this.fetchComplaintRecord();
+  },
+  methods: {
+    onKeyUp: function onKeyUp() {
+      var _this = this;
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(function () {
+        _this.SearchProducts();
+      }, 1000);
+    },
+    SearchProducts: function SearchProducts() {
+      var _this2 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("serial_no", this.serial_no);
+      axios.post('/api/search_products_against_serial_no', formData).then(function (response) {
+        if (response.status == 200) {
+          console.log(response.data.data.products);
+          _this2.products = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this2.loop_api_errors(error_json);
+          } catch (err) {
+            _this2.server_errors = response.data.msg;
+          }
+          _this2.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    addCharge: function addCharge() {
+      if (this.charges.length < 10) {
+        this.charges.push("");
+      }
+    },
+    add_complaint_status: function add_complaint_status() {
+      this.complaint_status_modal = true;
+    },
+    add_remarks: function add_remarks() {
+      this.add_remark_modal = true;
+    },
+    add_feedback: function add_feedback() {
+      this.add_customer_feedback = true;
+    },
+    fetchComplaintRecord: function fetchComplaintRecord() {
+      var _this3 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("complaint_slack", this.complaint_slack);
+      axios.post('/api/fetchComplaintRecord', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this3.ComplaintRecord = response.data.data.complaints;
+          _this3.transactions = response.data.data.complaints[0].transactions;
+          _this3.currency_codes = response.data.data.currency_codes;
+          _this3.payment_pending_amount = response.data.data.total_pending_amount;
+          _this3.payment_total_amount = response.data.data.total_complaint_amount_invoice;
+          _this3.payment_received_amount = response.data.data.total_received_amount;
+          // this.payment_pending_amount = response.data.data.total_pending_amount;
+          _this3.transaction_type = response.data.data.transaction_type;
+          _this3.payment_methods = response.data.data.payment_methods;
+          _this3.accounts = response.data.data.accounts;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this3.loop_api_errors(error_json);
+          } catch (err) {
+            _this3.server_errors = response.data.msg;
+          }
+          _this3.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    assign_required_product_on_requested: function assign_required_product_on_requested() {
+      var _this4 = this;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this4.$off("submit");
+          _this4.$off("close");
+          _this4.show_modal = true;
+          _this4.$on("submit", function () {
+            var _console,
+              _this5 = this;
+            this.processing = true;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('store_remark', this.store_remark);
+            formData.append('request_id', this.request_id);
+            formData.append('out_source_request', this.out_source_request);
+            formData.append('product_ids', this.product_ids);
+            (_console = console).log.apply(_console, _toConsumableArray(formData));
+            axios.post('/api/assign_product_to_technician', formData).then(function (response) {
+              if (response.status == 200) {
+                _this5.show_response_message(response.data.msg, 'Success');
+                location.reload();
+              } else {
+                _this5.show_modal = false;
+                _this5.processing = false;
+                try {
+                  var error_json = JSON.parse(response.data.msg);
+                  _this5.loop_api_errors(error_json);
+                } catch (err) {
+                  _this5.server_errors = response.data.msg;
+                }
+                _this5.error_class = 'error';
+              }
+              _this5.delete_processing = false;
+            })["catch"](function (error) {
+              console.log(error);
+            });
+          });
+          _this4.$on("close", function () {
+            this.show_modal = false;
+          });
+        }
+      });
+    },
+    fetchCategorySubcategoryMounted: function fetchCategorySubcategoryMounted() {
+      var _this6 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      axios.post('/api/fetchCategorySubcategory', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this6.categories = response.data.data;
+          console.log(response.data.data);
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this6.loop_api_errors(error_json);
+          } catch (err) {
+            _this6.server_errors = response.data.msg;
+          }
+          _this6.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchCategoryProduct: function fetchCategoryProduct() {
+      var _this7 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("category_slack", this.category);
+      axios.post('/api/fetchCategoryProduct', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this7.scategories = response.data.data.subCategories;
+          _this7.products = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this7.loop_api_errors(error_json);
+          } catch (err) {
+            _this7.server_errors = response.data.msg;
+          }
+          _this7.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchSubCategoryProduct: function fetchSubCategoryProduct() {
+      var _this8 = this;
+      // alert(this.s_category);
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("sub_category_id", this.s_category);
+      axios.post('/api/fetchSubCategoryProduct', formData).then(function (response) {
+        if (response.status == 200) {
+          _this8.products = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this8.loop_api_errors(error_json);
+          } catch (err) {
+            _this8.server_errors = response.data.msg;
+          }
+          _this8.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchSelectedProducts: function fetchSelectedProducts() {
+      var _this9 = this;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("product_ids[]", this.product_ids);
+      axios.post('/api/fetchSelectedProduct', formData).then(function (response) {
+        if (response.data.status_code == 200) {
+          _this9.Selectedproducts = response.data.data.products;
+        } else {
+          try {
+            var error_json = JSON.parse(response.data.msg);
+            _this9.loop_api_errors(error_json);
+          } catch (err) {
+            _this9.server_errors = response.data.msg;
+          }
+          _this9.error_class = 'error';
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    assign_complaint_to_labtechnician: function assign_complaint_to_labtechnician() {
+      var _this10 = this;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this10.$off("submit");
+          _this10.$off("close");
+          _this10.show_modal = true;
+          _this10.$on("submit", function () {
+            var _console2,
+              _this11 = this;
+            this.processing = true;
+            this.delete_processing = true;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('lab_staff_slack', this.labtechnician);
+            formData.append('complaint_slack', this.complaint_slack);
+            formData.append('due_date', this.due_date);
+            formData.append('admin_remark', this.admin_remark);
+            (_console2 = console).log.apply(_console2, _toConsumableArray(formData));
+            axios.post('/api/assign_complaint_to_technician', formData).then(function (response) {
+              if (response.data.status_code == 200) {
+                _this11.show_response_message(response.data.msg, 'Success');
+                location.reload();
+              } else {
+                _this11.show_modal = false;
+                _this11.processing = false;
+                try {
+                  var error_json = JSON.parse(response.data.msg);
+                  _this11.loop_api_errors(error_json);
+                } catch (err) {
+                  _this11.server_errors = response.data.msg;
+                }
+                _this11.error_class = 'error';
+              }
+              _this11.delete_processing = false;
+            })["catch"](function (error) {
+              console.log(error);
+            });
+          });
+          _this10.$on("close", function () {
+            this.show_modal = false;
+          });
+        }
+      });
+    },
+    assigncomplaint_to_labtachnician: function assigncomplaint_to_labtachnician() {
+      this.show_assign_complaint = true;
+    },
+    cancel_complaint: function cancel_complaint() {
+      this.$off("cancel_complaint");
+      this.show_assign_complaint = false;
+      this.required_product = false;
+      this.assign_required_product = false;
+      this.complaint_complete = false;
+      this.complaint_invoice = false;
+      this.show_payment_modal = false;
+    },
+    record_payment_invoice: function record_payment_invoice() {
+      this.show_payment_modal = true;
+    },
+    request_for_product: function request_for_product() {
+      this.required_product = true;
+    },
+    complaint_completed: function complaint_completed() {
+      this.complaint_complete = true;
+    },
+    assign_requested_product: function assign_requested_product() {
+      this.assign_required_product = true;
+    },
+    submit_complaint_completed: function submit_complaint_completed() {
+      var _this12 = this;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this12.$off("submit");
+          _this12.$off("close");
+          _this12.show_modal = true;
+          _this12.$on("submit", function () {
+            var _this13 = this;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append('final_lab_staff_remark', this.final_lab_staff_remark);
+            formData.append('complaint_slack', this.complaint_slack);
+            axios.post('/api/complaint_completed', formData).then(function (response) {
+              if (response.data.status_code == 200) {
+                _this13.show_response_message(response.data.msg, 'Success');
+                location.reload();
+              } else {
+                _this13.show_modal = false;
+                _this13.processing = false;
+                try {
+                  var error_json = JSON.parse(response.data.msg);
+                  _this13.loop_api_errors(error_json);
+                } catch (err) {
+                  _this13.server_errors = response.data.msg;
+                }
+                _this13.error_class = 'error';
+              }
+            })["catch"](function (error) {
+              console.log(error);
+            });
+          });
+          _this12.$on("close", function () {
+            this.show_modal = false;
+          });
+        }
+      });
+    },
+    delete_category: function delete_category() {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      this.$on("submit", function () {
+        var _this14 = this;
+        this.processing = true;
+        this.delete_processing = true;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        axios.post(this.delete_category_api_link, formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this14.show_response_message(response.data.msg, 'Success');
+            if (response.data.link != "") {
+              window.location.href = response.data.link;
+            } else {
+              location.reload();
+            }
+          } else {
+            _this14.show_modal = false;
+            _this14.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this14.loop_api_errors(error_json);
+            } catch (err) {
+              _this14.server_errors = response.data.msg;
+            }
+            _this14.error_class = 'error';
+          }
+          _this14.delete_processing = false;
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+      this.$on("close", function () {
+        this.show_modal = false;
+      });
+    },
+    requested_for_required_product: function requested_for_required_product() {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      this.$on("submit", function () {
+        var _this15 = this;
+        // this.processing = true;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        formData.append("lab_staff_remark", this.lab_staff_remark);
+        formData.append('complaint_slack', this.complaint_slack);
+        axios.post('/api/request_requirement', formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this15.show_response_message(response.data.msg, 'Success');
+            if (response.data.link != "") {
+              location.reload();
+            } else {
+              location.reload();
+            }
+          } else {
+            _this15.show_modal = false;
+            _this15.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this15.loop_api_errors(error_json);
+            } catch (err) {
+              _this15.server_errors = response.data.msg;
+            }
+            _this15.error_class = 'error';
+          }
+          _this15.delete_processing = false;
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+    },
+    submit_transaction: function submit_transaction() {
+      // this.$validator.validateAll().then((result) => {
+      // if (result) {
+      this.$off("submit");
+      this.$off("close");
+      this.show_modal = true;
+      // alert(this.show_modal);
+      this.$on("submit", function () {
+        var _this16 = this;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        formData.append('complaint_slack', this.complaint_slack);
+        formData.append('received_amount', this.amount);
+        formData.append('notes', this.notes);
+        formData.append('payment_method', this.payment_method);
+        formData.append('account', this.account);
+        formData.append('transaction_type_data', this.transaction_type_data);
+        formData.append('transaction_date', this.transaction_date);
+        formData.append('payment_total_amount', this.payment_total_amount);
+        axios.post('/api/complaint_submit_transaction', formData).then(function (response) {
+          if (response.data.status_code == 200) {
+            _this16.show_response_message(response.data.msg, 'Success');
+            location.reload();
+          } else {
+            _this16.show_modal = false;
+            _this16.processing = false;
+            try {
+              var error_json = JSON.parse(response.data.msg);
+              _this16.loop_api_errors(error_json);
+            } catch (err) {
+              _this16.server_errors = response.data.msg;
+            }
+            _this16.error_class = 'error';
           }
         })["catch"](function (error) {
           console.log(error);
@@ -45130,12 +46196,17 @@ var render = function render() {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("div", {
     staticClass: "ml-auto"
-  }, [_vm.complaint.assign_to_lab_staff_id != null ? _c("button", {
+  }, [_vm.complaint.complaint_completed_date == null ? _c("button", {
     staticClass: "alert alert-success mr-1",
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Assigned")) + "\n          ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Assigned")) + "\n          ")]) : _c("button", {
+    staticClass: "alert alert-success mr-1",
+    attrs: {
+      type: "submit"
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Completed")) + "\n          ")])])]), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("p", {
     "class": [_vm.error_class],
@@ -47099,25 +48170,39 @@ var render = function render() {
     staticClass: "text-title"
   }, [_c("span", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {}, [_vm.complaint.assign_to_field_engg == 1 ? _c("div", [_c("span", {
+  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])])]), _vm._v(" "), _c("div", {}, [_vm.complaint.assign_to_field_engg == "1" ? _c("div", [_c("span", {
     staticClass: "alert alert-info"
-  }, [_vm._v("\n              Complaint Assign To Field Engineer (" + _vm._s(_vm.complaint.field_user.fullname) + " (" + _vm._s(_vm.complaint.field_user.email) + ")) at \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time === null && _vm.complaint.complaint_assign_to_field_enggs[0].complaint_complete == "No" ? "Still Not Complete" : "Completed at " + _vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _c("div", _vm._l(_vm.complaint.part_requests, function (request) {
+  }, [_vm._v("\n              Complaint Assign To Field Engineer (" + _vm._s(_vm.complaint.field_user.fullname) + " (" + _vm._s(_vm.complaint.field_user.email) + ")) at \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time === null && _vm.complaint.complaint_assign_to_field_enggs[0].complaint_complete == "No" ? "Still Not Complete" : "Completed at " + _vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.part_requests ? _c("div", _vm._l(_vm.complaint.part_requests, function (request) {
     return _c("span", {
       key: request.id,
       staticClass: "alert alert-success"
     }, [_vm._v("\n            " + _vm._s(request.engineer_type === "Field_Engineer" ? "Field Engineer ".concat(request.engineer.fullname, " has requested for ").concat(request.request, " at ").concat(request.start_request_time) + (request.end_request_time == null ? " but not complete yet" : " and completed at ".concat(request.end_request_time)) : "") + "\n          ")]);
-  }), 0), _vm._v(" "), _vm.complaint.assign_to_lab_engg == 1 ? _c("div", [_c("span", {
+  }), 0) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.assign_to_lab_engg == "1" ? _c("div", [_c("span", {
     staticClass: "alert alert-info"
-  }, [_vm._v("\n              Complaint Assign To Field Engineer at (" + _vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + "))\n              " + _vm._s(_vm.complaint.assign_to_lab_engg[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.assign_to_lab_engg[0].assign_complaint_complete_time === null && _vm.complaint.assign_to_lab_engg[0].complaint_complete == "No" ? "Still Not Complete" : "Completed at " + _vm.complaint.assign_to_lab_engg[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n              Complaint Assign To Lab Engineer at (" + _vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + "))\n              " + _vm._s(_vm.complaint.complaint_assign_to_lab_enggs[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time === null && _vm.complaint.complaint_assign_to_lab_enggs[0].complaint_complete == "No" ? "Still Not Complete" : "Completed at " + _vm.complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.part_requests ? _c("div", _vm._l(_vm.complaint.part_requests, function (request) {
+    return _c("span", {
+      key: request.id,
+      staticClass: "alert alert-success"
+    }, [_vm._v("\n            " + _vm._s(request.engineer_type === "Lab_Engineer" ? "Lab Engineer ".concat(request.engineer.fullname, " has requested for ").concat(request.request, " at ").concat(request.start_request_time) + (request.end_request_time == null ? " but not complete yet" : " and completed at ".concat(request.end_request_time)) : "") + "\n          ")]);
+  }), 0) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.outsource == "Yes" ? _c("div", [_c("span", {
+    staticClass: "alert alert-info"
+  }, [_vm._v("\n              Lab Engineer (" + _vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + ")) wants to OutSource Complaint...\n          ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.out_source_vendor ? _c("div", [_c("span", {
+    staticClass: "alert alert-info"
+  }, [_vm._v("\n            Complaint OutSource To (" + _vm._s(_vm.complaint.out_source_vendor.vendor.fullname) + " (" + _vm._s(_vm.complaint.out_source_vendor.vendor.email) + "))\n            Vendor Start at " + _vm._s(_vm.complaint.out_source_vendor.start_time) + " \n            " + _vm._s(_vm.complaint.out_source_vendor.end_time == null ? "And Still Waiting..." : "And Completed at ".concat(_vm.complaint.out_source_vendor.end_time)) + "\n          ")])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("div", {
     staticClass: "ml-auto"
-  }, [_vm.complaint.assign_to_lab_staff_id != null ? _c("button", {
+  }, [_vm.complaint.complaint_completed_date == null ? _c("button", {
     staticClass: "alert alert-success mr-1",
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Assigned")) + "\n          ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Assigned")) + "\n          ")]) : _c("button", {
+    staticClass: "alert alert-success mr-1",
+    attrs: {
+      type: "submit"
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Completed")) + "\n          ")])])]), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("p", {
     "class": [_vm.error_class],
@@ -47149,7 +48234,17 @@ var render = function render() {
         return _vm.add_complaint_status();
       }
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Status")) + "\n          ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date == null ? _c("div", [_vm.complaint.assign_to_lab_staff_id != null && _vm.is_lab_tech ? _c("button", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Status")) + "\n          ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.outsource == "Yes" && !_vm.complaint.out_source_vendor ? _c("div", [_c("button", {
+    staticClass: "btn btn-success mr-1",
+    attrs: {
+      type: "submit"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.OutSourceComplaint(_vm.complaint);
+      }
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("OutSource Complaint")) + "\n          ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date == null ? _c("div", [_vm.complaint.assign_to_lab_staff_id != null && _vm.is_lab_tech ? _c("button", {
     staticClass: "btn btn-success mr-1",
     attrs: {
       type: "submit"
@@ -47179,17 +48274,7 @@ var render = function render() {
         return _vm.add_feedback();
       }
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Add Feedback")) + "\n          ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date == null ? _c("div", [_vm.complaint.assign_to_lab_staff_id != null && !_vm.is_customer ? _c("button", {
-    staticClass: "btn btn-success mr-1",
-    attrs: {
-      type: "submit"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.complaint_completed();
-      }
-    }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Complete")) + "\n          ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.requirement_request_access && _vm.complaint.complaint_completed_date == null ? _c("div", [_vm.requirement_request ? _c("button", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Add Feedback")) + "\n          ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.requirement_request_access && _vm.complaint.complaint_completed_date == null ? _c("div", [_vm.requirement_request ? _c("button", {
     staticClass: "btn btn-success mr-1",
     attrs: {
       type: "submit"
@@ -47298,7 +48383,7 @@ var render = function render() {
     attrs: {
       "for": "created_by"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Assign to LabTechnician")))]), _vm._v(" "), _vm.complaint.user ? _c("p", [_vm._v(_vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + ")")]) : _vm._e(), _vm._v(" "), _c("p", {
+  }, [_vm._v(_vm._s(_vm.$t("Assign to LabTechnician")))]), _vm._v(" "), _vm.complaint.user ? _c("p", [_vm._v(_vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + ")")]) : _c("p", {
     staticClass: "alert alert-danger w-50"
   }, [_vm._v("Not Assign Yet")])]) : _vm._e(), _vm._v(" "), !_vm.is_customer ? _c("div", {
     staticClass: "form-group col-md-3"
@@ -47306,7 +48391,9 @@ var render = function render() {
     attrs: {
       "for": "created_by"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Assign to Field Engineer")))]), _vm._v(" "), _vm.complaint.field_user ? _c("p", [_vm._v(_vm._s(_vm.complaint.field_user.fullname) + " (" + _vm._s(_vm.complaint.field_user.email) + ")")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date ? _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Assign to Field Engineer")))]), _vm._v(" "), _vm.complaint.field_user ? _c("p", [_vm._v(_vm._s(_vm.complaint.field_user.fullname) + " (" + _vm._s(_vm.complaint.field_user.email) + ")")]) : _c("p", {
+    staticClass: "alert alert-danger w-50"
+  }, [_vm._v("Not Assign")])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -47453,11 +48540,11 @@ var render = function render() {
       }
     }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.engineer.fullname))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatEngineerType(request.engineer_type)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.request))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.start_request_time))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.end_request_time))]), _vm._v(" "), request.request_status == 0 ? _c("td", [_c("span", {
       staticClass: "alert alert-danger"
-    }, [_vm._v("Pending manager side")])]) : request.request_status == 1 ? _c("td", [_c("span", {
+    }, [_vm._v("Pending manager side")])]) : request.request_status == 1 && request.request_to_store[0].status != 2 ? _c("td", [_c("span", {
       staticClass: "alert alert-danger"
-    }, [_vm._v("Pending store side")])]) : request.request_status == 2 && request.end_request_time != null ? _c("td", [_c("span", {
+    }, [_vm._v("Pending store side")])]) : request.request_status == 2 && request.end_request_time != null && request.request_to_store[0].status != 2 ? _c("td", [_c("span", {
       staticClass: "alert alert-info"
-    }, [_vm._v("Completed")])]) : _c("td"), _vm._v(" "), _c("td", [request.request_status == 0 && request.end_request_time == null ? _c("div", [_c("button", {
+    }, [_vm._v("Completed")])]) : request.request_to_store[0].status == 2 && request.request_to_store[0].end_request_time != null ? _c("td", [_vm._m(0, true)]) : _c("td"), _vm._v(" "), _c("td", [request.request_status == 0 && request.end_request_time == null ? _c("div", [_c("button", {
       staticClass: "btn btn-primary",
       attrs: {
         type: "button"
@@ -47467,9 +48554,19 @@ var render = function render() {
           return _vm.showPartRequestModal(request);
         }
       }
-    }, [_vm._v(_vm._s(_vm.$t("Request Product")))])]) : request.request_status == 1 && request.end_request_time == null ? _c("div", [_c("span", {
+    }, [_vm._v(_vm._s(_vm.$t("Request Product")))])]) : request.request_status == 1 && request.end_request_time == null && request.request_to_store[0].status != 2 ? _c("div", [_c("span", {
       staticClass: "alert alert-danger"
-    }, [_vm._v("Pending...")])]) : request.request_status == 2 ? _c("div", [_vm._v("\n                  Completed Part Request\n              ")]) : _vm._e()])]);
+    }, [_vm._v("Pending...")])]) : request.request_status == 2 && request.request_to_store[0].status != 2 ? _c("div", [_vm._v("\n                  Completed Part Request\n              ")]) : request.request_to_store[0].status == 2 && request.request_to_store[0].end_request_time != null ? _c("div", [_c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        type: "button"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.OutSourceProduct(request);
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.$t("OutSource Product")))])]) : _vm._e()])]);
   }), 0)])])]) : _vm._e(), _vm._v(" "), _c("div", [_c("hr"), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
     staticClass: "mb-2"
   }, [_c("span", {
@@ -49885,12 +50982,375 @@ var render = function render() {
       },
       proxy: true
     }], null, false, 3966357305)
+  }) : _vm._e(), _vm._v(" "), _vm.out_source_product_model ? _c("modalcomponent", {
+    attrs: {
+      modal_width: "modal-container-xl"
+    },
+    on: {
+      close: function close($event) {
+        _vm.out_source_product_model = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("OutSource Product")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-row mb-2"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_id,
+            expression: "request_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_id"
+          },
+          domProps: {
+            value: _vm.request_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.engineer_id,
+            expression: "engineer_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "engineer_id"
+          },
+          domProps: {
+            value: _vm.engineer_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.engineer_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.complaint_id,
+            expression: "complaint_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "complaint_id"
+          },
+          domProps: {
+            value: _vm.complaint_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.complaint_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.product_on_request_id,
+            expression: "product_on_request_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "product_on_request_id"
+          },
+          domProps: {
+            value: _vm.product_on_request_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.product_on_request_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_to_store_id,
+            expression: "request_to_store_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_to_store_id"
+          },
+          domProps: {
+            value: _vm.request_to_store_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_to_store_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_detail,
+            expression: "request_detail"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_detail"
+          },
+          domProps: {
+            value: _vm.request_detail
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_detail = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_text,
+            expression: "request_text"
+          }],
+          staticClass: "form-control",
+          attrs: {
+            name: "request_text",
+            readonly: ""
+          },
+          domProps: {
+            value: _vm.request_text
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_text = $event.target.value;
+            }
+          }
+        })]), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("label", {
+          attrs: {
+            "for": "product_details"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("OutSource Product Details")) + " ")]), _vm._v(" "), _c("textarea", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.product_details,
+            expression: "product_details"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            name: "product_details",
+            row: "1"
+          },
+          domProps: {
+            value: _vm.product_details
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.product_details = $event.target.value;
+            }
+          }
+        })])])];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "submit"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.submit_out_source_product();
+            }
+          }
+        }, [_vm._v("\n        Continue\n      ")])];
+      },
+      proxy: true
+    }], null, false, 1898380528)
+  }) : _vm._e(), _vm._v(" "), _vm.out_source_complaint ? _c("modalcomponent", {
+    attrs: {
+      modal_width: "modal-container-xl"
+    },
+    on: {
+      close: function close($event) {
+        _vm.out_source_complaint = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("OutSource Product")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-row mb-2"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.engineer_id,
+            expression: "engineer_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "engineer_id"
+          },
+          domProps: {
+            value: _vm.engineer_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.engineer_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.complaint_id,
+            expression: "complaint_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "complaint_id"
+          },
+          domProps: {
+            value: _vm.complaint_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.complaint_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-12"
+        }, [_c("label", {
+          attrs: {
+            "for": "out_source_vendor"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Out Source Vendor")))]), _vm._v(" "), _c("select", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.out_source_vendor,
+            expression: "out_source_vendor"
+          }, {
+            name: "validate",
+            rawName: "v-validate",
+            value: "required",
+            expression: "'required'"
+          }],
+          staticClass: "form-control form-control-custom custom-select",
+          attrs: {
+            name: "transaction_type"
+          },
+          on: {
+            change: function change($event) {
+              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+                return o.selected;
+              }).map(function (o) {
+                var val = "_value" in o ? o._value : o.value;
+                return val;
+              });
+              _vm.out_source_vendor = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+            }
+          }
+        }, [_c("option", {
+          attrs: {
+            value: ""
+          }
+        }, [_vm._v("Choose OutSource Vendor..")]), _vm._v(" "), _vm._l(_vm.out_source_vendors, function (vendor, index) {
+          return _c("option", {
+            key: index,
+            domProps: {
+              value: vendor.id
+            }
+          }, [_vm._v("\n                  " + _vm._s(vendor.fullname) + " (" + _vm._s(vendor.email) + ")\n                ")]);
+        })], 2)]), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("label", {
+          attrs: {
+            "for": "product_details"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("OutSource Product Details")) + " ")]), _vm._v(" "), _c("textarea", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.product_details,
+            expression: "product_details"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            name: "product_details",
+            row: "1"
+          },
+          domProps: {
+            value: _vm.product_details
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.product_details = $event.target.value;
+            }
+          }
+        })])])];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "submit"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.submit_out_source_complaint();
+            }
+          }
+        }, [_vm._v("\n        Continue\n      ")])];
+      },
+      proxy: true
+    }], null, false, 1813021554)
   }) : _vm._e()], 1);
 };
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {}, [_c("span")]);
+  return _c("span", {
+    staticClass: "alert alert-info"
+  }, [_vm._v("Complete "), _c("small", [_vm._v("(Request to OutSource)")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -49941,16 +51401,28 @@ var render = function render() {
     staticClass: "text-title"
   }, [_c("span", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _vm.user_data.part_requests ? _c("div", {
+    staticClass: "d-flex flex-wrap mb-4"
+  }, _vm._l(_vm.user_data.part_requests, function (request) {
+    return _c("span", {
+      key: request.id,
+      staticClass: "alert alert-success"
+    }, [_vm._v("\n        " + _vm._s("Your Request for " + request.request + (request.request_status == 2 && request.engineer_type == "Lab_Engineer" ? " Completed" : " is Pending")) + "\n      ")]);
+  }), 0) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("div", {
     staticClass: "ml-auto"
-  }, [_vm.complaint.assign_to_lab_staff_id != null ? _c("button", {
+  }, [_vm.complaint.complaint_completed_date == null ? _c("button", {
     staticClass: "alert alert-success mr-1",
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Assigned")) + "\n          ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Assigned")) + "\n          ")]) : _c("button", {
+    staticClass: "alert alert-success mr-1",
+    attrs: {
+      type: "submit"
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Completed")) + "\n          ")])])]), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("p", {
     "class": [_vm.error_class],
@@ -50224,20 +51696,10 @@ var render = function render() {
     attrs: {
       "for": "description"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Description")))]), _vm._v(" "), _c("p")])]), _vm._v(" "), _c("div", [_c("hr"), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
-    staticClass: "mb-2"
-  }, [_c("span", {
-    staticClass: "text-subhead"
-  }, [_vm._v("Product Information")])]) : _vm._e(), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
-    staticClass: "mb-2"
-  }, [_c("span", {
-    staticClass: "text-subhead"
-  }, [_vm._v("Other Charges Information")])]) : _vm._e()]), _vm._v(" "), _vm.complaint.final_total_amount != null ? _c("div", {
-    staticClass: "mb-2"
-  }, [_c("span", {
-    staticClass: "text-subhead"
-  }, [_vm._v(_vm._s(_vm.$t("Transactions")))])]) : _vm._e(), _vm._v(" "), _vm.transactions.length > 0 ? _c("div", {
-    staticClass: "table-responsive mb-2"
+  }, [_vm._v(_vm._s(_vm.$t("Description")))]), _vm._v(" "), _c("p")])]), _vm._v(" "), _c("div", [_vm.user_data.part_requests ? _c("div", {
+    staticClass: "form-row mb-2 mt-2"
+  }, [_c("div", {
+    staticClass: "form-group col-12"
   }, [_c("table", {
     staticClass: "table table-striped display nowrap text-nowrap w-100"
   }, [_c("thead", [_c("tr", [_c("th", {
@@ -50248,579 +51710,33 @@ var render = function render() {
     attrs: {
       scope: "col"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Transaction Code")))]), _vm._v(" "), _c("th", {
+  }, [_vm._v(_vm._s(_vm.$t("Part Request")))]), _vm._v(" "), _c("th", {
     attrs: {
       scope: "col"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Transaction Date")))]), _vm._v(" "), _c("th", {
+  }, [_vm._v(_vm._s(_vm.$t("Request Start Time")))]), _vm._v(" "), _c("th", {
     attrs: {
       scope: "col"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Payment Method")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right",
+  }, [_vm._v(_vm._s(_vm.$t("Request Complete Time")))]), _vm._v(" "), _c("th", {
     attrs: {
       scope: "col"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Amount")))]), _vm._v(" "), _c("th", {
-    staticClass: "text-right",
-    attrs: {
-      scope: "col"
-    }
-  }, [_vm._v("\n              " + _vm._s(_vm.$t("Received Amount")) + "\n            ")]), _vm._v(" "), _c("th", {
-    attrs: {
-      scope: "col"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Created On")))]), _vm._v(" "), _c("th", {
-    attrs: {
-      scope: "col"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Action")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.transactions, function (transaction, key, index) {
+  }, [_vm._v(_vm._s(_vm.$t("Request Status")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.user_data.part_requests, function (request, key, index) {
     return _c("tr", {
-      key: index,
-      attrs: {
-        value: _vm.transactions.slack
-      }
+      key: index
     }, [_c("th", {
       attrs: {
         scope: "col"
       }
-    }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.transaction_code))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.transaction_date))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.payment_method))]), _vm._v(" "), _c("td", {
-      staticClass: "text-right"
-    }, [_vm._v(_vm._s(transaction.amount))]), _vm._v(" "), _c("td", {
-      staticClass: "text-center"
-    }, [_vm._v(_vm._s(transaction.received_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.created_at))]), _vm._v(" "), _c("td", [_c("div", {
-      directives: [{
-        name: "show",
-        rawName: "v-show",
-        value: transaction.detail_link != "",
-        expression: "transaction.detail_link != ''"
-      }],
-      staticClass: "dropdown"
-    }, [_vm._m(1, true), _vm._v(" "), _c("div", {
-      staticClass: "dropdown-menu dropdown-menu-right",
-      attrs: {
-        "aria-labelledby": "dropdown"
-      }
-    }, [_c("a", {
-      staticClass: "dropdown-item",
-      attrs: {
-        href: transaction.detail_link
-      }
-    }, [_vm._v(_vm._s(_vm.$t("View")))])])])])]);
-  }), 0)])]) : _c("div", [_c("p", [_vm._v("No transactions found")])])]), _vm._v(" "), _vm.show_payment_modal ? _c("modalcomponent", {
-    attrs: {
-      modal_width: "modal-container-md"
-    },
-    on: {
-      close: function close($event) {
-        _vm.show_payment_modal = false;
-      }
-    },
-    scopedSlots: _vm._u([{
-      key: "modal-header",
-      fn: function fn() {
-        return [_vm._v(" Record Payment ")];
-      },
-      proxy: true
-    }, {
-      key: "modal-body",
-      fn: function fn() {
-        return [_c("div", {
-          staticClass: "col-md-12"
-        }, [_vm.payment_pending_amount > 0 ? _c("div", [_c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "transaction_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Total Amount")) + " (" + _vm._s(_vm.currency_codes.store_currency) + ")")]), _vm._v(" "), _c("div", {
-          staticClass: "text-subtitle"
-        }, [_vm._v(_vm._s(_vm.payment_total_amount))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "transaction_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Total Received Amount")) + "\n                (" + _vm._s(_vm.currency_codes.store_currency) + ")")]), _vm._v(" "), _c("div", {
-          staticClass: "text-subtitle"
-        }, [_vm._v(_vm._s(_vm.payment_received_amount))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "transaction_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Total Pending Amount")) + "\n                (" + _vm._s(_vm.currency_codes.store_currency) + ")")]), _vm._v(" "), _c("div", {
-          staticClass: "text-subtitle"
-        }, [_vm._v(_vm._s(_vm.payment_pending_amount))])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-md-6"
-        }, [_c("label", {
-          attrs: {
-            "for": "account"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Transaction Type")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.transaction_type_data,
-            expression: "transaction_type_data"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "transaction_type"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.transaction_type_data = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: ""
-          }
-        }, [_vm._v("Choose Transaction Type..")]), _vm._v(" "), _vm._l(_vm.transaction_type, function (transaction_type_item, index) {
-          return _c("option", {
-            key: index,
-            domProps: {
-              value: transaction_type_item
-            }
-          }, [_vm._v("\n                  " + _vm._s(transaction_type_item) + "\n                ")]);
-        })], 2)]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-6"
-        }, [_c("label", {
-          attrs: {
-            "for": "transaction_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Transaction Date")))]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.transaction_date,
-            expression: "transaction_date"
-          }],
-          ref: "transaction_date",
-          staticClass: "form-control form-control-custom bg-white",
-          attrs: {
-            type: "date",
-            name: "transaction_date",
-            placeholder: _vm.$t("Please enter transaction date"),
-            autocomplete: "off"
-          },
-          domProps: {
-            value: _vm.transaction_date
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.transaction_date = $event.target.value;
-            }
-          }
-        }), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("transaction_date")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("transaction_date")))])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-md-6"
-        }, [_c("label", {
-          attrs: {
-            "for": "payment_method"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Payment Method")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.payment_method,
-            expression: "payment_method"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "payment_method"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.payment_method = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: ""
-          }
-        }, [_vm._v("Choose Payment Method..")]), _vm._v(" "), _vm._l(_vm.payment_methods, function (payment_method, index) {
-          return _c("option", {
-            key: index,
-            domProps: {
-              value: payment_method.slack
-            }
-          }, [_vm._v("\n                  " + _vm._s(payment_method.label) + "\n                ")]);
-        })], 2), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("payment_method")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("payment_method")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-6"
-        }, [_c("label", {
-          attrs: {
-            "for": "account"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Account")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.account,
-            expression: "account"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "account"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.account = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: ""
-          }
-        }, [_vm._v("Choose Account..")]), _vm._v(" "), _vm._l(_vm.accounts, function (account, index) {
-          return _c("option", {
-            key: index,
-            domProps: {
-              value: account.slack
-            }
-          }, [_vm._v("\n                  " + _vm._s(account.label) + " (" + _vm._s(account.account_type_label) + ")\n                ")]);
-        })], 2), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("account")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("account")))])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-md-6"
-        }, [_c("label", {
-          attrs: {
-            "for": "amount"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Amount")) + " (" + _vm._s(_vm.currency_codes.store_currency) + ")")]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.amount,
-            expression: "amount"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required|decimal|max_value:".concat(_vm.payment_pending_amount),
-            expression: "`required|decimal|max_value:${payment_pending_amount}`"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            type: "number",
-            name: "amount",
-            placeholder: _vm.$t("Please enter the amount"),
-            autocomplete: "off",
-            step: "0.01",
-            min: "0"
-          },
-          domProps: {
-            value: _vm.amount
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.amount = $event.target.value;
-            }
-          }
-        }), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("amount")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("amount")))])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-md-12"
-        }, [_c("label", {
-          attrs: {
-            "for": "notes"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Notes")))]), _vm._v(" "), _c("textarea", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.notes,
-            expression: "notes"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "max:65535",
-            expression: "'max:65535'"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "notes",
-            rows: "3",
-            placeholder: _vm.$t("Enter notes")
-          },
-          domProps: {
-            value: _vm.notes
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.notes = $event.target.value;
-            }
-          }
-        }), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("notes")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("notes")))])])])]) : _c("div", [_c("p", [_vm._v("You have already made the payment(s).")])])])];
-      },
-      proxy: true
-    }, {
-      key: "modal-footer",
-      fn: function fn() {
-        return [_c("button", {
-          staticClass: "btn btn-light",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.cancel_complaint
-          }
-        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.submit_transaction
-          }
-        }, [_vm._v("\n        Continue\n      ")])];
-      },
-      proxy: true
-    }], null, false, 2215566328)
-  }) : _vm._e(), _vm._v(" "), _vm.show_assign_complaint == true ? _c("modalcomponent", {
-    attrs: {
-      modal_width: "modal-container-md"
-    },
-    on: {
-      close: function close($event) {
-        _vm.show_assign_complaint = false;
-      }
-    },
-    scopedSlots: _vm._u([{
-      key: "modal-header",
-      fn: function fn() {
-        return [_vm._v("\n      Assign Complaint To Available Lab Technician\n    ")];
-      },
-      proxy: true
-    }, {
-      key: "modal-body",
-      fn: function fn() {
-        return [_c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-sm-12 col-md-10 mx-auto"
-        }, [_c("label", {
-          attrs: {
-            "for": "labtechnician"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Choose Available Lab Technician")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.labtechnician,
-            expression: "labtechnician"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "labtechnician",
-            placeholder: "Choose Customers.."
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.labtechnician = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Lab Technician..")]), _vm._v(" "), _vm._l(_vm.labusers, function (technician, index) {
-          return _c("option", {
-            key: index,
-            attrs: {
-              placeholder: "Choose Customers.."
-            },
-            domProps: {
-              value: technician.slack
-            }
-          }, [_vm._v("\n              " + _vm._s(technician.fullname) + " - " + _vm._s(technician.email) + " - (" + _vm._s(technician.assign_complaints_count) + ")\n            ")]);
-        })], 2), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("labtechnician")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("labtechnician")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-sm-12 col-md-10 mx-auto"
-        }, [_c("label", {
-          attrs: {
-            "for": "due_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Due Date")))]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.due_date,
-            expression: "due_date"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            type: "date",
-            name: "due_date",
-            rows: "5",
-            placeholder: _vm.$t("Enter Complaint Reference")
-          },
-          domProps: {
-            value: _vm.due_date
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.due_date = $event.target.value;
-            }
-          }
-        }), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("due_date")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("due_date")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-sm-12 col-md-10 mx-auto"
-        }, [_c("label", {
-          attrs: {
-            "for": "name"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Admin Remark")))]), _vm._v(" "), _c("textarea", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.admin_remark,
-            expression: "admin_remark"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required|max:65535",
-            expression: "'required|max:65535'"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "admin_remark",
-            rows: "5",
-            placeholder: _vm.$t("Enter Remark")
-          },
-          domProps: {
-            value: _vm.admin_remark
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.admin_remark = $event.target.value;
-            }
-          }
-        }), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("admin_remark")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("admin_remark")))])])])];
-      },
-      proxy: true
-    }, {
-      key: "modal-footer",
-      fn: function fn() {
-        return [_c("button", {
-          staticClass: "btn btn-light",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.cancel_complaint
-          }
-        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
-          directives: [{
-            name: "show",
-            rawName: "v-show",
-            value: _vm.show_assign_complaint,
-            expression: "show_assign_complaint"
-          }],
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.assign_complaint_to_labtechnician
-          }
-        }, [_vm.submit_complaint_technician ? _c("i", {
-          staticClass: "fa fa-circle-notch fa-spin"
-        }) : _vm._e(), _vm._v("\n        Continue\n      ")])];
-      },
-      proxy: true
-    }], null, false, 444576151)
-  }) : _vm._e(), _vm._v(" "), _vm.required_product == true ? _c("modalcomponent", {
+    }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.request))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.start_request_time))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(request.end_request_time))]), _vm._v(" "), request.request_status == 0 ? _c("td", [_c("span", {
+      staticClass: "alert alert-danger"
+    }, [_vm._v("Pending manager side")])]) : request.request_status == 1 ? _c("td", [_c("span", {
+      staticClass: "alert alert-danger"
+    }, [_vm._v("Pending store side")])]) : request.request_status == 2 && request.end_request_time != null ? _c("td", [_c("span", {
+      staticClass: "alert alert-info"
+    }, [_vm._v("Completed")])]) : _c("td")]);
+  }), 0)])])]) : _vm._e()])]), _vm._v(" "), _vm.required_product == true ? _c("modalcomponent", {
     attrs: {
       modal_width: "modal-container-md"
     },
@@ -50986,1144 +51902,6 @@ var render = function render() {
       },
       proxy: true
     }], null, false, 3046241795)
-  }) : _vm._e(), _vm._v(" "), _vm.assign_required_product == true ? _c("modalcomponent", {
-    attrs: {
-      modal_width: "modal-container-xl"
-    },
-    on: {
-      close: function close($event) {
-        _vm.assign_required_product = false;
-      }
-    },
-    scopedSlots: _vm._u([{
-      key: "modal-header",
-      fn: function fn() {
-        return [_vm._v(" Add Require Products ")];
-      },
-      proxy: true
-    }, {
-      key: "modal-body",
-      fn: function fn() {
-        return [_c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-sm-12 col-md-6"
-        }, [_c("select", {
-          staticClass: "form-control form-control-custom"
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: "",
-            selected: ""
-          }
-        }, [_vm._v("Select Type...")])])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-sm-12 col-md-6"
-        }, [_c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.category,
-            expression: "category"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "category",
-            placeholder: "Choose Category.."
-          },
-          on: {
-            change: [function ($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.category = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }, _vm.fetchCategoryProduct]
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: "",
-            selected: ""
-          }
-        }, [_vm._v("Choose Category..")]), _vm._v(" "), _vm._l(_vm.categories, function (category, index) {
-          return _c("option", {
-            key: index,
-            attrs: {
-              placeholder: "Choose Category..."
-            },
-            domProps: {
-              value: category.slack
-            }
-          }, [_vm._v("\n              " + _vm._s(category.label) + " - " + _vm._s(category.category_code) + "\n            ")]);
-        })], 2)]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-sm-12 col-md-6"
-        }, [_c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.s_category,
-            expression: "s_category"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "scategory",
-            placeholder: "Choose Sub Category.."
-          },
-          on: {
-            change: [function ($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.s_category = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }, _vm.fetchSubCategoryProduct]
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: "",
-            selected: ""
-          }
-        }, [_vm._v("Choose Sub Category..")]), _vm._v(" "), _vm._l(_vm.scategories, function (scategory, index) {
-          return _c("option", {
-            key: index,
-            attrs: {
-              placeholder: "Choose Sub Category..."
-            },
-            domProps: {
-              value: scategory.id
-            }
-          }, [_vm._v("\n              " + _vm._s(scategory.sub_category_name) + "\n            ")]);
-        })], 2)]), _vm._v(" "), _vm.products.length > 0 ? _c("div", {
-          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
-        }, [_c("table", {
-          staticClass: "table"
-        }, [_c("tr", [_c("th", [_vm._v("Product Code")]), _vm._v(" "), _c("th", [_vm._v("Product Name")]), _vm._v(" "), _c("th", [_vm._v("Product Category")]), _vm._v(" "), _c("th", [_vm._v("Product Sub-Category")]), _vm._v(" "), _c("th", [_vm._v("Assign")])]), _vm._v(" "), _vm._l(_vm.products, function (product, index) {
-          return _c("tr", {
-            key: index
-          }, [_c("td", [_vm._v(_vm._s(product.product_code))]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("th", [_vm._v("\n                " + _vm._s(product.subcategory.category.label) + "\n                (" + _vm._s(product.subcategory.category.category_code) + ")\n              ")]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.subcategory.sub_category_name))]), _vm._v(" "), _c("td", [_c("input", {
-            directives: [{
-              name: "model",
-              rawName: "v-model",
-              value: _vm.product_ids,
-              expression: "product_ids"
-            }],
-            attrs: {
-              type: "checkbox",
-              name: "product_id"
-            },
-            domProps: {
-              value: product.id,
-              checked: Array.isArray(_vm.product_ids) ? _vm._i(_vm.product_ids, product.id) > -1 : _vm.product_ids
-            },
-            on: {
-              change: [function ($event) {
-                var $$a = _vm.product_ids,
-                  $$el = $event.target,
-                  $$c = $$el.checked ? true : false;
-                if (Array.isArray($$a)) {
-                  var $$v = product.id,
-                    $$i = _vm._i($$a, $$v);
-                  if ($$el.checked) {
-                    $$i < 0 && (_vm.product_ids = $$a.concat([$$v]));
-                  } else {
-                    $$i > -1 && (_vm.product_ids = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
-                  }
-                } else {
-                  _vm.product_ids = $$c;
-                }
-              }, _vm.fetchSelectedProducts]
-            }
-          })])]);
-        })], 2)]) : _vm._e(), _vm._v(" "), _vm.Selectedproducts.length > 0 ? _c("div", {
-          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
-        }, [_c("table", {
-          staticClass: "table"
-        }, _vm._l(_vm.Selectedproducts, function (product, index) {
-          return _c("tr", {
-            key: index
-          }, [_c("td", [_vm._v(_vm._s(product.product_code))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("th", [_vm._v("\n                " + _vm._s(product.subcategory.category.label) + "\n                (" + _vm._s(product.subcategory.category.category_code) + ")\n              ")]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.subcategory.sub_category_name))]), _vm._v(" "), _c("td", [_c("input", {
-            directives: [{
-              name: "model",
-              rawName: "v-model",
-              value: _vm.product_ids,
-              expression: "product_ids"
-            }],
-            attrs: {
-              type: "checkbox",
-              name: "product_id"
-            },
-            domProps: {
-              value: product.id,
-              checked: Array.isArray(_vm.product_ids) ? _vm._i(_vm.product_ids, product.id) > -1 : _vm.product_ids
-            },
-            on: {
-              change: [function ($event) {
-                var $$a = _vm.product_ids,
-                  $$el = $event.target,
-                  $$c = $$el.checked ? true : false;
-                if (Array.isArray($$a)) {
-                  var $$v = product.id,
-                    $$i = _vm._i($$a, $$v);
-                  if ($$el.checked) {
-                    $$i < 0 && (_vm.product_ids = $$a.concat([$$v]));
-                  } else {
-                    $$i > -1 && (_vm.product_ids = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
-                  }
-                } else {
-                  _vm.product_ids = $$c;
-                }
-              }, _vm.fetchSelectedProducts]
-            }
-          })])]);
-        }), 0)]) : _vm._e(), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
-        }, [_c("label", {
-          attrs: {
-            "for": "extend_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Extend Date")))]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.extend_date,
-            expression: "extend_date"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            type: "date",
-            name: "extend_date",
-            rows: "5",
-            placeholder: _vm.$t("Extend date")
-          },
-          domProps: {
-            value: _vm.extend_date
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.extend_date = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
-        }, [_c("label", {
-          attrs: {
-            "for": "admin_again_remark"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Add Remark")))]), _vm._v(" "), _c("textarea", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.admin_again_remark,
-            expression: "admin_again_remark"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required|max:65535",
-            expression: "'required|max:65535'"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "admin_again_remark",
-            rows: "5",
-            placeholder: _vm.$t("Enter Remark")
-          },
-          domProps: {
-            value: _vm.admin_again_remark
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.admin_again_remark = $event.target.value;
-            }
-          }
-        }), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("admin_again_remark")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("admin_again_remark")))])])])];
-      },
-      proxy: true
-    }, {
-      key: "modal-footer",
-      fn: function fn() {
-        return [_c("button", {
-          staticClass: "btn btn-light",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.cancel_complaint
-          }
-        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.assign_required_product_on_requested
-          }
-        }, [_vm._v("\n        Assigned\n      ")])];
-      },
-      proxy: true
-    }], null, false, 1344854677)
-  }) : _vm._e(), _vm._v(" "), _vm.complaint_invoice == true ? _c("modalcomponent", {
-    attrs: {
-      modal_width: "modal-container-xl"
-    },
-    on: {
-      close: function close($event) {
-        _vm.complaint_invoice = false;
-      }
-    },
-    scopedSlots: _vm._u([{
-      key: "modal-header",
-      fn: function fn() {
-        return [_vm._v(" Make Complaint Invoice ")];
-      },
-      proxy: true
-    }, {
-      key: "modal-body",
-      fn: function fn() {
-        return [_vm.ComplaintProducts.length > 0 ? _c("div", {
-          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
-        }, [_c("h5", [_vm._v("Assign Products")]), _vm._v(" "), _c("table", {
-          staticClass: "table"
-        }, _vm._l(_vm.ComplaintProducts, function (product, index) {
-          return _c("tr", {
-            key: index
-          }, [_c("td", [_vm._v(_vm._s(product.product_code))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("th", [_vm._v("\n              " + _vm._s(product.subcategory.category.label) + "\n              (" + _vm._s(product.subcategory.category.category_code) + ")\n            ")]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.subcategory.sub_category_name))]), _vm._v(" "), _c("td", [_vm._v("\n              " + _vm._s(product.sale_amount_including_tax) + "\n            ")])]);
-        }), 0)]) : _vm._e(), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
-        }, [_c("h5", [_vm._v("Other Charges")]), _vm._v(" "), _vm._l(_vm.charges, function (charge, index) {
-          return _c("div", {
-            key: index
-          }, [_c("div", {
-            staticClass: "form-row mt-2"
-          }, [_c("div", {
-            staticClass: "form-group col-sm-6 col-md-6 mx-auto"
-          }, [_c("label", {
-            attrs: {
-              "for": "charge_label"
-            }
-          }, [_vm._v(_vm._s(_vm.$t("Add Charge Label")))]), _vm._v(" "), _c("input", {
-            directives: [{
-              name: "model",
-              rawName: "v-model",
-              value: _vm.charge_label[index],
-              expression: "charge_label[index]"
-            }],
-            staticClass: "form-control form-control-custom",
-            attrs: {
-              type: "text",
-              name: "charge_label"
-            },
-            domProps: {
-              value: _vm.charge_label[index]
-            },
-            on: {
-              input: function input($event) {
-                if ($event.target.composing) return;
-                _vm.$set(_vm.charge_label, index, $event.target.value);
-              }
-            }
-          })]), _vm._v(" "), _c("div", {
-            staticClass: "form-group col-sm-6 col-md-6 mx-auto"
-          }, [_c("label", {
-            attrs: {
-              "for": "charge_price"
-            }
-          }, [_vm._v(_vm._s(_vm.$t("Add Charge Price")))]), _vm._v(" "), _c("input", {
-            directives: [{
-              name: "model",
-              rawName: "v-model",
-              value: _vm.charge_price[index],
-              expression: "charge_price[index]"
-            }],
-            staticClass: "form-control form-control-custom",
-            attrs: {
-              type: "number",
-              name: "charge_price"
-            },
-            domProps: {
-              value: _vm.charge_price[index]
-            },
-            on: {
-              input: function input($event) {
-                if ($event.target.composing) return;
-                _vm.$set(_vm.charge_price, index, $event.target.value);
-              }
-            }
-          })])])]);
-        }), _vm._v(" "), _c("div", {
-          staticClass: "d-flex justify-content-end"
-        }, [_vm.charges.length < 10 ? _c("button", {
-          staticClass: "btn btn-primary",
-          on: {
-            click: _vm.addCharge
-          }
-        }, [_vm._v("\n            Add Another Charge\n          ")]) : _vm._e()])], 2)];
-      },
-      proxy: true
-    }, {
-      key: "modal-footer",
-      fn: function fn() {
-        return [_c("button", {
-          staticClass: "btn btn-light",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.cancel_complaint
-          }
-        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: _vm.complaint_invoice_make
-          }
-        }, [_vm._v("\n        Complaint Invoice\n      ")])];
-      },
-      proxy: true
-    }], null, false, 329400372)
-  }) : _vm._e(), _vm._v(" "), _vm.complaint_status_modal ? _c("modalcomponent", {
-    attrs: {
-      modal_width: "modal-container-xl"
-    },
-    on: {
-      close: function close($event) {
-        _vm.complaint_status_modal = false;
-      }
-    },
-    scopedSlots: _vm._u([{
-      key: "modal-header",
-      fn: function fn() {
-        return [_vm._v("\n      " + _vm._s(_vm.$t("Add Complaint Status")) + "\n    ")];
-      },
-      proxy: true
-    }, {
-      key: "modal-body",
-      fn: function fn() {
-        return [_c("div", {
-          staticClass: "form-row mb-2"
-        }, [_c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "billable"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("BILLABLE")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.billable,
-            expression: "billable"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "billable"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.billable = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Billable..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Yes"
-          }
-        }, [_vm._v("Yes")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "No"
-          }
-        }, [_vm._v("No")])]), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("billable")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("billable")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "complaint_status"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Complaint Status")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.complaint_status,
-            expression: "complaint_status"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "complaint_status"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.complaint_status = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Complaint Status..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Equipment"
-          }
-        }, [_vm._v("Equipment")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Remove for Workshop"
-          }
-        }, [_vm._v("Remove for Workshop")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Backup"
-          }
-        }, [_vm._v("Backup")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Repaired reinstalled"
-          }
-        }, [_vm._v("Repaired reinstalled")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Not Repairable"
-          }
-        }, [_vm._v("Not Repairable")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Replacement Required"
-          }
-        }, [_vm._v("Replacement Required")])]), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("complaint_status")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("complaint_status")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "c_status"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Complaint Customer Status")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.c_status,
-            expression: "c_status"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "c_status"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.c_status = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Complaint Customer Status..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Complaint Logged"
-          }
-        }, [_vm._v("Complaint Logged")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Complaint Assigned"
-          }
-        }, [_vm._v("Complaint Assigned")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "In Progress"
-          }
-        }, [_vm._v("In Progress")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Complaint Complete"
-          }
-        }, [_vm._v("Complaint Complete")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Approval Pending"
-          }
-        }, [_vm._v("Approval Pending")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Not Repairable"
-          }
-        }, [_vm._v("Not Repairable")])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "status"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Status")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.status,
-            expression: "status"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "status"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.status = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Status..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Ready"
-          }
-        }, [_vm._v("Ready")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Engineer"
-          }
-        }, [_vm._v("Engineer")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Delivered"
-          }
-        }, [_vm._v("Delivered")])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "type_of_service"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Type of Services")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.type_of_service,
-            expression: "type_of_service"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "type_of_service"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.type_of_service = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Type of Services..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Warranty"
-          }
-        }, [_vm._v("Warranty")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "With Parts"
-          }
-        }, [_vm._v("SLA With Parts")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Without Parts"
-          }
-        }, [_vm._v("SLA Without Parts")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Per Call"
-          }
-        }, [_vm._v("Per Call")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "OAK Stock"
-          }
-        }, [_vm._v("OAK Stock")])]), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("type_of_service")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("type_of_service")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "complaint_ok"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Complaint Ok")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.complaint_ok,
-            expression: "complaint_ok"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "complaint_ok"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.complaint_ok = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose complaint_ok..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Yes"
-          }
-        }, [_vm._v("Yes")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "No"
-          }
-        }, [_vm._v("No")])]), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("complaint_ok")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("complaint_ok")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "picked_for_workshop"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Picked for Workshop")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.picked_for_workshop,
-            expression: "picked_for_workshop"
-          }, {
-            name: "validate",
-            rawName: "v-validate",
-            value: "required",
-            expression: "'required'"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "picked_for_workshop"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.picked_for_workshop = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose picked_for_workshop..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Yes"
-          }
-        }, [_vm._v("Yes")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "No"
-          }
-        }, [_vm._v("No")])]), _vm._v(" "), _c("span", {
-          "class": {
-            error: _vm.errors.has("picked_for_workshop")
-          }
-        }, [_vm._v(_vm._s(_vm.errors.first("picked_for_workshop")))])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "equipment_s_no"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Equipment S.No")))]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.equipment_s_no,
-            expression: "equipment_s_no"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "equipment_s_no"
-          },
-          domProps: {
-            value: _vm.equipment_s_no
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.equipment_s_no = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "equipment_specs"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Equipment Specs")))]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.equipment_specs,
-            expression: "equipment_specs"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "equipment_specs"
-          },
-          domProps: {
-            value: _vm.equipment_specs
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.equipment_specs = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "accessories"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Accessories")))]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.accessories,
-            expression: "accessories"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "accessories"
-          },
-          domProps: {
-            value: _vm.accessories
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.accessories = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "Invoice_number"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Invoice Number")) + " "), _c("small", [_vm._v("(In Case of Warranty)")])]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.Invoice_number,
-            expression: "Invoice_number"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "Invoice_number"
-          },
-          domProps: {
-            value: _vm.Invoice_number
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.Invoice_number = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "po_number"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("PO Number")) + " "), _c("small", [_vm._v("(In Case of Warranty)")])]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.po_number,
-            expression: "po_number"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "po_number"
-          },
-          domProps: {
-            value: _vm.po_number
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.po_number = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "condition"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Condition")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.condition,
-            expression: "condition"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "condition"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.condition = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Condition..")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Good Condition"
-          }
-        }, [_vm._v("Good Condition")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Normal Condition"
-          }
-        }, [_vm._v("Normal Condition")]), _vm._v(" "), _c("option", {
-          attrs: {
-            value: "Damaged Condition"
-          }
-        }, [_vm._v("Damaged Condition")])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "equipment_part_serial_number"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Equipment Part")) + " "), _c("small", [_vm._v("(Serial Number)")])]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.equipment_part_serial_number,
-            expression: "equipment_part_serial_number"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "equipment_part_serial_number"
-          },
-          domProps: {
-            value: _vm.equipment_part_serial_number
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.equipment_part_serial_number = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "outsource_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("OutSource Date")) + " ")]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.outsource_date,
-            expression: "outsource_date"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            type: "date",
-            name: "outsource_date"
-          },
-          domProps: {
-            value: _vm.outsource_date
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.outsource_date = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "return_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Return Date")) + " ")]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.return_date,
-            expression: "return_date"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            type: "date",
-            name: "return_date"
-          },
-          domProps: {
-            value: _vm.return_date
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.return_date = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "delivery_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Delivery Date")) + " ")]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.delivery_date,
-            expression: "delivery_date"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            type: "date",
-            name: "delivery_date"
-          },
-          domProps: {
-            value: _vm.delivery_date
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.delivery_date = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-8"
-        }, [_c("label", {
-          attrs: {
-            "for": "fault_report_by_customer"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Fault Report By Customer")) + " ")]), _vm._v(" "), _c("textarea", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.fault_report_by_customer,
-            expression: "fault_report_by_customer"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            name: "fault_report_by_customer",
-            row: "1"
-          },
-          domProps: {
-            value: _vm.fault_report_by_customer
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.fault_report_by_customer = $event.target.value;
-            }
-          }
-        })])])];
-      },
-      proxy: true
-    }, {
-      key: "modal-footer",
-      fn: function fn() {
-        return [_c("button", {
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "submit"
-          },
-          on: {
-            click: function click($event) {
-              return _vm.submit_complaint_status();
-            }
-          }
-        }, [_vm._v("\n        Continue\n      ")])];
-      },
-      proxy: true
-    }], null, false, 2790349115)
   }) : _vm._e(), _vm._v(" "), _vm.add_remark_modal ? _c("modalcomponent", {
     attrs: {
       modal_width: "modal-container-xl"
@@ -52241,73 +52019,6 @@ var render = function render() {
             value: "No"
           }
         }, [_vm._v("No")])])]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "outsource_item"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("OutSource Item")))]), _vm._v(" "), _c("select", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.outsource_item,
-            expression: "outsource_item"
-          }],
-          staticClass: "form-control form-control-custom custom-select",
-          attrs: {
-            name: "outsource_item"
-          },
-          on: {
-            change: function change($event) {
-              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-                return o.selected;
-              }).map(function (o) {
-                var val = "_value" in o ? o._value : o.value;
-                return val;
-              });
-              _vm.outsource_item = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-            }
-          }
-        }, [_c("option", {
-          attrs: {
-            value: "",
-            disabled: ""
-          }
-        }, [_vm._v("Choose Out-Source..")]), _vm._v(" "), _vm._l(_vm.out_source_items, function (item, index) {
-          return _c("option", {
-            key: index,
-            domProps: {
-              value: item
-            }
-          }, [_vm._v(_vm._s(item))]);
-        })], 2)]), _vm._v(" "), _c("div", {
-          staticClass: "form-group col-md-4"
-        }, [_c("label", {
-          attrs: {
-            "for": "ready_date"
-          }
-        }, [_vm._v(_vm._s(_vm.$t("Ready Date")))]), _vm._v(" "), _c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.ready_date,
-            expression: "ready_date"
-          }],
-          staticClass: "form-control form-control-custom",
-          attrs: {
-            type: "date",
-            name: "ready_date"
-          },
-          domProps: {
-            value: _vm.ready_date
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.ready_date = $event.target.value;
-            }
-          }
-        })]), _vm._v(" "), _c("div", {
           staticClass: "form-group col-md-8"
         }, [_c("label", {
           attrs: {
@@ -52343,17 +52054,20 @@ var render = function render() {
         return [_c("button", {
           staticClass: "btn btn-primary",
           attrs: {
-            type: "submit"
+            type: "submit",
+            disabled: _vm.processing == true
           },
           on: {
             click: function click($event) {
               return _vm.submit_complaint_remarks();
             }
           }
-        }, [_vm._v("\n        Continue\n      ")])];
+        }, [_vm.processing == true ? _c("i", {
+          staticClass: "fa fa-circle-notch fa-spin"
+        }) : _vm._e(), _vm._v("\n        Continue\n      ")])];
       },
       proxy: true
-    }], null, false, 3298065646)
+    }], null, false, 3343544371)
   }) : _vm._e(), _vm._v(" "), _vm.add_customer_feedback ? _c("modalcomponent", {
     attrs: {
       modal_width: "modal-container-xl"
@@ -52475,21 +52189,1094 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {}, [_c("span")]);
-}, function () {
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=template&id=51d806c5&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=template&id=51d806c5& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("button", {
-    staticClass: "btn btn-sm btn-outline-primary dropdown-toggle actions-dropdown-btn",
-    attrs: {
-      type: "button",
-      id: "dropdown",
-      "data-toggle": "dropdown",
-      "aria-haspopup": "true",
-      "aria-expanded": "false"
+  return _c("div", {
+    staticClass: "row card p-4"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "d-flex flex-wrap mb-4"
+  }, [_c("div", {
+    staticClass: "mr-auto"
+  }, [_c("div", {
+    staticClass: "d-flex"
+  }, [_c("div", [_c("span", {
+    staticClass: "text-title"
+  }, [_c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.$t("Fix Product")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {}, [_c("div", [_c("span", {
+    staticClass: "alert alert-success"
+  }, [_vm._v("\n            " + _vm._s(_vm.request_to_store.user.fullname) + " Has Request for " + _vm._s(_vm.request_to_store.request) + " at " + _vm._s(_vm.request_to_store.start_request_time) + " Please Assign Product to " + _vm._s(_vm.request_to_store.user.fullname) + "\n          ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex flex-wrap mb-4"
+  }, [_c("p", {
+    "class": [_vm.error_class],
+    domProps: {
+      innerHTML: _vm._s(_vm.server_errors)
     }
-  }, [_c("i", {
-    staticClass: "fas fa-ellipsis-h actions-dropdown"
-  })]);
+  }), _vm._v(" "), _c("div", {
+    staticClass: "ml-auto d-flex"
+  }, [!_vm.request_to_store.end_request_time ? _c("div", [_c("button", {
+    staticClass: "btn btn-success mr-1",
+    attrs: {
+      type: "submit"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.assign_requested_product();
+      }
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Requirement Assign")) + "\n          ")])]) : _vm._e()])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+    staticClass: "mb-2"
+  }, [_c("span", {
+    staticClass: "text-subhead"
+  }, [_vm._v(_vm._s(_vm.$t("Basic Information")))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-row mb-2"
+  }, [_c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Product Request")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.request_to_store.request))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Assign Time")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.request_to_store.start_request_time))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Status")))]), _vm._v(" "), _c("p", {
+    "class": _vm.request_to_store.end_request_time ? "alert alert-success w-50" : "alert alert-info w-50"
+  }, [_vm._v("\n          " + _vm._s(_vm.request_to_store.end_request_time ? "Completed" : "Pending...") + "\n        ")])]), _vm._v(" "), _vm.request_to_store.end_request_time ? _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Status")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.request_to_store.end_request_time))])]) : _vm._e()])]), _vm._v(" "), _vm.assign_required_product == true ? _c("modalcomponent", {
+    attrs: {
+      modal_width: "modal-container-xl"
+    },
+    on: {
+      close: function close($event) {
+        _vm.assign_required_product = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v(" Add Require Products ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-row mb-2"
+        }, [_c("div", {
+          staticClass: "form-group col-sm-12 col-md-6"
+        }, [_c("label", {
+          attrs: {
+            "for": "extend_date"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Enter Product Serial No  OR Product Model")))]), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.serial_no,
+            expression: "serial_no"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            type: "text"
+          },
+          domProps: {
+            value: _vm.serial_no
+          },
+          on: {
+            keyup: _vm.onKeyUp,
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.serial_no = $event.target.value;
+            }
+          }
+        })])]), _vm._v(" "), _c("div", {
+          staticClass: "form-row mb-2"
+        }, [_vm.products.length > 0 ? _c("div", {
+          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
+        }, [_c("table", {
+          staticClass: "table"
+        }, [_c("tr", [_c("th", [_vm._v("Product Serial")]), _vm._v(" "), _c("th", [_vm._v("Product Name")]), _vm._v(" "), _c("th", [_vm._v("Product Category")]), _vm._v(" "), _c("th", [_vm._v("Product Model")]), _vm._v(" "), _c("th", [_vm._v("Assign")])]), _vm._v(" "), _vm._l(_vm.products, function (product, index) {
+          return _c("tr", {
+            key: index
+          }, [_c("td", [_vm._v(_vm._s(product.product_code))]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("th", [_vm._v("\n                " + _vm._s(product.subcategory.category.label) + "\n                (" + _vm._s(product.subcategory.category.category_code) + ")\n              ")]), _vm._v(" "), _c("th", _vm._l(product.product_specifications, function (spec, index) {
+            return _c("span", {
+              key: index
+            }, [spec.specification_label == "Model" ? _c("p", [_vm._v("\n                        " + _vm._s(spec.specification_details) + "\n                    ")]) : _vm._e()]);
+          }), 0), _vm._v(" "), _c("td", [_c("input", {
+            directives: [{
+              name: "model",
+              rawName: "v-model",
+              value: _vm.product_ids,
+              expression: "product_ids"
+            }],
+            attrs: {
+              type: "checkbox",
+              name: "product_id"
+            },
+            domProps: {
+              value: product.id,
+              checked: Array.isArray(_vm.product_ids) ? _vm._i(_vm.product_ids, product.id) > -1 : _vm.product_ids
+            },
+            on: {
+              change: [function ($event) {
+                var $$a = _vm.product_ids,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false;
+                if (Array.isArray($$a)) {
+                  var $$v = product.id,
+                    $$i = _vm._i($$a, $$v);
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.product_ids = $$a.concat([$$v]));
+                  } else {
+                    $$i > -1 && (_vm.product_ids = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+                  }
+                } else {
+                  _vm.product_ids = $$c;
+                }
+              }, _vm.fetchSelectedProducts]
+            }
+          })])]);
+        })], 2)]) : _vm._e(), _vm._v(" "), _vm.Selectedproducts.length > 0 ? _c("div", {
+          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
+        }, [_c("table", {
+          staticClass: "table"
+        }, _vm._l(_vm.Selectedproducts, function (product, index) {
+          return _c("tr", {
+            key: index
+          }, [_c("td", [_vm._v(_vm._s(product.product_code))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("th", [_vm._v("\n                " + _vm._s(product.subcategory.category.label) + "\n                (" + _vm._s(product.subcategory.category.category_code) + ")\n              ")]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.subcategory.sub_category_name))]), _vm._v(" "), _c("td", [_c("input", {
+            directives: [{
+              name: "model",
+              rawName: "v-model",
+              value: _vm.product_ids,
+              expression: "product_ids"
+            }],
+            attrs: {
+              type: "checkbox",
+              name: "product_id"
+            },
+            domProps: {
+              value: product.id,
+              checked: Array.isArray(_vm.product_ids) ? _vm._i(_vm.product_ids, product.id) > -1 : _vm.product_ids
+            },
+            on: {
+              change: [function ($event) {
+                var $$a = _vm.product_ids,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false;
+                if (Array.isArray($$a)) {
+                  var $$v = product.id,
+                    $$i = _vm._i($$a, $$v);
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.product_ids = $$a.concat([$$v]));
+                  } else {
+                    $$i > -1 && (_vm.product_ids = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+                  }
+                } else {
+                  _vm.product_ids = $$c;
+                }
+              }, _vm.fetchSelectedProducts]
+            }
+          })])]);
+        }), 0)]) : _vm._e(), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-12 mx-auto"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.out_source_request,
+            expression: "out_source_request"
+          }],
+          attrs: {
+            type: "checkbox",
+            name: "product_id"
+          },
+          domProps: {
+            checked: Array.isArray(_vm.out_source_request) ? _vm._i(_vm.out_source_request, null) > -1 : _vm.out_source_request
+          },
+          on: {
+            change: function change($event) {
+              var $$a = _vm.out_source_request,
+                $$el = $event.target,
+                $$c = $$el.checked ? true : false;
+              if (Array.isArray($$a)) {
+                var $$v = null,
+                  $$i = _vm._i($$a, $$v);
+                if ($$el.checked) {
+                  $$i < 0 && (_vm.out_source_request = $$a.concat([$$v]));
+                } else {
+                  $$i > -1 && (_vm.out_source_request = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+                }
+              } else {
+                _vm.out_source_request = $$c;
+              }
+            }
+          }
+        }), _vm._v(" There's not that product in inventory\n        ")]), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
+        }, [_c("label", {
+          attrs: {
+            "for": "store_remark"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Add Remark")))]), _vm._v(" "), _c("textarea", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.store_remark,
+            expression: "store_remark"
+          }, {
+            name: "validate",
+            rawName: "v-validate",
+            value: "required|max:65535",
+            expression: "'required|max:65535'"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            name: "store_remark",
+            rows: "5",
+            placeholder: _vm.$t("Enter Remark")
+          },
+          domProps: {
+            value: _vm.store_remark
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.store_remark = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("span", {
+          "class": {
+            error: _vm.errors.has("store_remark")
+          }
+        }, [_vm._v(_vm._s(_vm.errors.first("store_remark")))])])])];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-light",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: _vm.cancel_complaint
+          }
+        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: _vm.assign_required_product_on_requested
+          }
+        }, [_vm._v("\n        Assigned\n      ")])];
+      },
+      proxy: true
+    }], null, false, 1352454270)
+  }) : _vm._e(), _vm._v(" "), _vm.show_modal ? _c("modalcomponent", {
+    on: {
+      close: function close($event) {
+        _vm.show_modal = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("Confirm")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("Are you sure you want to proceed?")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-light",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.$emit("close");
+            }
+          }
+        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button",
+            disabled: _vm.processing == true
+          },
+          on: {
+            click: function click($event) {
+              return _vm.$emit("submit");
+            }
+          }
+        }, [_vm.processing == true ? _c("i", {
+          staticClass: "fa fa-circle-notch fa-spin"
+        }) : _vm._e(), _vm._v("\n        Continue\n      ")])];
+      },
+      proxy: true
+    }], null, false, 439204180)
+  }) : _vm._e(), _vm._v(" "), _vm.request_part_store ? _c("modalcomponent", {
+    attrs: {
+      modal_width: "modal-container-xl"
+    },
+    on: {
+      close: function close($event) {
+        _vm.request_part_store = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("Request Product")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-row mb-2"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_id,
+            expression: "request_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_id"
+          },
+          domProps: {
+            value: _vm.request_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.engineer_id,
+            expression: "engineer_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "engineer_id"
+          },
+          domProps: {
+            value: _vm.engineer_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.engineer_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.complaint_id,
+            expression: "complaint_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "complaint_id"
+          },
+          domProps: {
+            value: _vm.complaint_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.complaint_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_detail,
+            expression: "request_detail"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_detail"
+          },
+          domProps: {
+            value: _vm.request_detail
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_detail = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_text,
+            expression: "request_text"
+          }],
+          staticClass: "form-control",
+          attrs: {
+            name: "request_text",
+            readonly: ""
+          },
+          domProps: {
+            value: _vm.request_text
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_text = $event.target.value;
+            }
+          }
+        })]), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("label", {
+          attrs: {
+            "for": "product_details"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Details for Product")) + " ")]), _vm._v(" "), _c("textarea", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.product_details,
+            expression: "product_details"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            name: "product_details",
+            row: "1"
+          },
+          domProps: {
+            value: _vm.product_details
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.product_details = $event.target.value;
+            }
+          }
+        })])])];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "submit"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.submit_request_to_store();
+            }
+          }
+        }, [_vm._v("\n        Continue\n      ")])];
+      },
+      proxy: true
+    }], null, false, 3966357305)
+  }) : _vm._e()], 1);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {}, [_c("span")]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=template&id=d12f2de0&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=template&id=d12f2de0& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "row card p-4"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "d-flex flex-wrap mb-4"
+  }, [_c("div", {
+    staticClass: "mr-auto"
+  }, [_c("div", {
+    staticClass: "d-flex"
+  }, [_c("div", [_c("span", {
+    staticClass: "text-title"
+  }, [_c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.$t("Product Request")))])])])])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {}, [_c("div", [_c("span", {
+    staticClass: "alert alert-success"
+  }, [_vm._v("\n            " + _vm._s(_vm.request_to_store.user.fullname) + " Has Request for " + _vm._s(_vm.request_to_store.request) + " at " + _vm._s(_vm.request_to_store.start_request_time) + " Please Assign Product to " + _vm._s(_vm.request_to_store.user.fullname) + "\n          ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex flex-wrap mb-4"
+  }, [_c("p", {
+    "class": [_vm.error_class],
+    domProps: {
+      innerHTML: _vm._s(_vm.server_errors)
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "ml-auto d-flex"
+  }, [!_vm.request_to_store.end_request_time ? _c("div", [_c("button", {
+    staticClass: "btn btn-success mr-1",
+    attrs: {
+      type: "submit"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.assign_requested_product();
+      }
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Requirement Assign")) + "\n          ")])]) : _vm._e()])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+    staticClass: "mb-2"
+  }, [_c("span", {
+    staticClass: "text-subhead"
+  }, [_vm._v(_vm._s(_vm.$t("Basic Information")))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-row mb-2"
+  }, [_c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Product Request")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.request_to_store.request))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Assign Time")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.request_to_store.start_request_time))])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Status")))]), _vm._v(" "), _c("p", {
+    "class": _vm.request_to_store.end_request_time ? "alert alert-success w-50" : "alert alert-info w-50"
+  }, [_vm._v("\n          " + _vm._s(_vm.request_to_store.end_request_time ? "Completed" : "Pending...") + "\n        ")])]), _vm._v(" "), _vm.request_to_store.end_request_time ? _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "category_code"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Request Status")))]), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.request_to_store.end_request_time))])]) : _vm._e()])]), _vm._v(" "), _vm.assign_required_product == true ? _c("modalcomponent", {
+    attrs: {
+      modal_width: "modal-container-xl"
+    },
+    on: {
+      close: function close($event) {
+        _vm.assign_required_product = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v(" Add Require Products ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-row mb-2"
+        }, [_c("div", {
+          staticClass: "form-group col-sm-12 col-md-6"
+        }, [_c("label", {
+          attrs: {
+            "for": "extend_date"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Enter Product Serial No  OR Product Model")))]), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.serial_no,
+            expression: "serial_no"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            type: "text"
+          },
+          domProps: {
+            value: _vm.serial_no
+          },
+          on: {
+            keyup: _vm.onKeyUp,
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.serial_no = $event.target.value;
+            }
+          }
+        })])]), _vm._v(" "), _c("div", {
+          staticClass: "form-row mb-2"
+        }, [_vm.products.length > 0 ? _c("div", {
+          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
+        }, [_c("table", {
+          staticClass: "table"
+        }, [_c("tr", [_c("th", [_vm._v("Product Serial")]), _vm._v(" "), _c("th", [_vm._v("Product Name")]), _vm._v(" "), _c("th", [_vm._v("Product Category")]), _vm._v(" "), _c("th", [_vm._v("Product Model")]), _vm._v(" "), _c("th", [_vm._v("Assign")])]), _vm._v(" "), _vm._l(_vm.products, function (product, index) {
+          return _c("tr", {
+            key: index
+          }, [_c("td", [_vm._v(_vm._s(product.product_code))]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("th", [_vm._v("\n                " + _vm._s(product.subcategory.category.label) + "\n                (" + _vm._s(product.subcategory.category.category_code) + ")\n              ")]), _vm._v(" "), _c("th", _vm._l(product.product_specifications, function (spec, index) {
+            return _c("span", {
+              key: index
+            }, [spec.specification_label == "Model" ? _c("p", [_vm._v("\n                        " + _vm._s(spec.specification_details) + "\n                    ")]) : _vm._e()]);
+          }), 0), _vm._v(" "), _c("td", [_c("input", {
+            directives: [{
+              name: "model",
+              rawName: "v-model",
+              value: _vm.product_ids,
+              expression: "product_ids"
+            }],
+            attrs: {
+              type: "checkbox",
+              name: "product_id"
+            },
+            domProps: {
+              value: product.id,
+              checked: Array.isArray(_vm.product_ids) ? _vm._i(_vm.product_ids, product.id) > -1 : _vm.product_ids
+            },
+            on: {
+              change: [function ($event) {
+                var $$a = _vm.product_ids,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false;
+                if (Array.isArray($$a)) {
+                  var $$v = product.id,
+                    $$i = _vm._i($$a, $$v);
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.product_ids = $$a.concat([$$v]));
+                  } else {
+                    $$i > -1 && (_vm.product_ids = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+                  }
+                } else {
+                  _vm.product_ids = $$c;
+                }
+              }, _vm.fetchSelectedProducts]
+            }
+          })])]);
+        })], 2)]) : _vm._e(), _vm._v(" "), _vm.Selectedproducts.length > 0 ? _c("div", {
+          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
+        }, [_c("table", {
+          staticClass: "table"
+        }, _vm._l(_vm.Selectedproducts, function (product, index) {
+          return _c("tr", {
+            key: index
+          }, [_c("td", [_vm._v(_vm._s(product.product_code))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("th", [_vm._v("\n                " + _vm._s(product.subcategory.category.label) + "\n                (" + _vm._s(product.subcategory.category.category_code) + ")\n              ")]), _vm._v(" "), _c("th", [_vm._v(_vm._s(product.subcategory.sub_category_name))]), _vm._v(" "), _c("td", [_c("input", {
+            directives: [{
+              name: "model",
+              rawName: "v-model",
+              value: _vm.product_ids,
+              expression: "product_ids"
+            }],
+            attrs: {
+              type: "checkbox",
+              name: "product_id"
+            },
+            domProps: {
+              value: product.id,
+              checked: Array.isArray(_vm.product_ids) ? _vm._i(_vm.product_ids, product.id) > -1 : _vm.product_ids
+            },
+            on: {
+              change: [function ($event) {
+                var $$a = _vm.product_ids,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false;
+                if (Array.isArray($$a)) {
+                  var $$v = product.id,
+                    $$i = _vm._i($$a, $$v);
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.product_ids = $$a.concat([$$v]));
+                  } else {
+                    $$i > -1 && (_vm.product_ids = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+                  }
+                } else {
+                  _vm.product_ids = $$c;
+                }
+              }, _vm.fetchSelectedProducts]
+            }
+          })])]);
+        }), 0)]) : _vm._e(), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-12 mx-auto"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.out_source_request,
+            expression: "out_source_request"
+          }],
+          attrs: {
+            type: "checkbox",
+            name: "product_id"
+          },
+          domProps: {
+            checked: Array.isArray(_vm.out_source_request) ? _vm._i(_vm.out_source_request, null) > -1 : _vm.out_source_request
+          },
+          on: {
+            change: function change($event) {
+              var $$a = _vm.out_source_request,
+                $$el = $event.target,
+                $$c = $$el.checked ? true : false;
+              if (Array.isArray($$a)) {
+                var $$v = null,
+                  $$i = _vm._i($$a, $$v);
+                if ($$el.checked) {
+                  $$i < 0 && (_vm.out_source_request = $$a.concat([$$v]));
+                } else {
+                  $$i > -1 && (_vm.out_source_request = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+                }
+              } else {
+                _vm.out_source_request = $$c;
+              }
+            }
+          }
+        }), _vm._v(" There's not that product in inventory\n        ")]), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-sm-12 col-md-12 mx-auto"
+        }, [_c("label", {
+          attrs: {
+            "for": "store_remark"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Add Remark")))]), _vm._v(" "), _c("textarea", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.store_remark,
+            expression: "store_remark"
+          }, {
+            name: "validate",
+            rawName: "v-validate",
+            value: "required|max:65535",
+            expression: "'required|max:65535'"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            name: "store_remark",
+            rows: "5",
+            placeholder: _vm.$t("Enter Remark")
+          },
+          domProps: {
+            value: _vm.store_remark
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.store_remark = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("span", {
+          "class": {
+            error: _vm.errors.has("store_remark")
+          }
+        }, [_vm._v(_vm._s(_vm.errors.first("store_remark")))])])])];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-light",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: _vm.cancel_complaint
+          }
+        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: _vm.assign_required_product_on_requested
+          }
+        }, [_vm._v("\n        Assigned\n      ")])];
+      },
+      proxy: true
+    }], null, false, 1352454270)
+  }) : _vm._e(), _vm._v(" "), _vm.show_modal ? _c("modalcomponent", {
+    on: {
+      close: function close($event) {
+        _vm.show_modal = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("Confirm")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("Are you sure you want to proceed?")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-light",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.$emit("close");
+            }
+          }
+        }, [_vm._v("\n        Cancel\n      ")]), _vm._v(" "), _c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button",
+            disabled: _vm.processing == true
+          },
+          on: {
+            click: function click($event) {
+              return _vm.$emit("submit");
+            }
+          }
+        }, [_vm.processing == true ? _c("i", {
+          staticClass: "fa fa-circle-notch fa-spin"
+        }) : _vm._e(), _vm._v("\n        Continue\n      ")])];
+      },
+      proxy: true
+    }], null, false, 439204180)
+  }) : _vm._e(), _vm._v(" "), _vm.request_part_store ? _c("modalcomponent", {
+    attrs: {
+      modal_width: "modal-container-xl"
+    },
+    on: {
+      close: function close($event) {
+        _vm.request_part_store = false;
+      }
+    },
+    scopedSlots: _vm._u([{
+      key: "modal-header",
+      fn: function fn() {
+        return [_vm._v("\n      " + _vm._s(_vm.$t("Request Product")) + "\n    ")];
+      },
+      proxy: true
+    }, {
+      key: "modal-body",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-row mb-2"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_id,
+            expression: "request_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_id"
+          },
+          domProps: {
+            value: _vm.request_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.engineer_id,
+            expression: "engineer_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "engineer_id"
+          },
+          domProps: {
+            value: _vm.engineer_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.engineer_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.complaint_id,
+            expression: "complaint_id"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "complaint_id"
+          },
+          domProps: {
+            value: _vm.complaint_id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.complaint_id = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_detail,
+            expression: "request_detail"
+          }],
+          attrs: {
+            type: "hidden",
+            name: "request_detail"
+          },
+          domProps: {
+            value: _vm.request_detail
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_detail = $event.target.value;
+            }
+          }
+        }), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.request_text,
+            expression: "request_text"
+          }],
+          staticClass: "form-control",
+          attrs: {
+            name: "request_text",
+            readonly: ""
+          },
+          domProps: {
+            value: _vm.request_text
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.request_text = $event.target.value;
+            }
+          }
+        })]), _vm._v(" "), _c("div", {
+          staticClass: "form-group col-md-12"
+        }, [_c("label", {
+          attrs: {
+            "for": "product_details"
+          }
+        }, [_vm._v(_vm._s(_vm.$t("Details for Product")) + " ")]), _vm._v(" "), _c("textarea", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.product_details,
+            expression: "product_details"
+          }],
+          staticClass: "form-control form-control-custom",
+          attrs: {
+            name: "product_details",
+            row: "1"
+          },
+          domProps: {
+            value: _vm.product_details
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.product_details = $event.target.value;
+            }
+          }
+        })])])];
+      },
+      proxy: true
+    }, {
+      key: "modal-footer",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "submit"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.submit_request_to_store();
+            }
+          }
+        }, [_vm._v("\n        Continue\n      ")])];
+      },
+      proxy: true
+    }], null, false, 3966357305)
+  }) : _vm._e()], 1);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {}, [_c("span")]);
 }];
 render._withStripped = true;
 
@@ -91302,7 +92089,7 @@ var render = function render() {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "row"
-  }, [_c("div", {
+  }, [_vm._v("\n    " + _vm._s(_vm.user) + "\n    "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "d-flex flex-wrap mb-4"
@@ -183753,6 +184540,84 @@ component.options.__file = "resources/assets/js/components/complaint/view_lab_co
 
 /***/ }),
 
+/***/ "./resources/assets/js/components/complaint/view_out_source_complaint_component.vue":
+/*!******************************************************************************************!*\
+  !*** ./resources/assets/js/components/complaint/view_out_source_complaint_component.vue ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _view_out_source_complaint_component_vue_vue_type_template_id_51d806c5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./view_out_source_complaint_component.vue?vue&type=template&id=51d806c5& */ "./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=template&id=51d806c5&");
+/* harmony import */ var _view_out_source_complaint_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./view_out_source_complaint_component.vue?vue&type=script&lang=js& */ "./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _view_out_source_complaint_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _view_out_source_complaint_component_vue_vue_type_template_id_51d806c5___WEBPACK_IMPORTED_MODULE_0__.render,
+  _view_out_source_complaint_component_vue_vue_type_template_id_51d806c5___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/assets/js/components/complaint/view_out_source_complaint_component.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/complaint/view_request_store_component.vue":
+/*!***********************************************************************************!*\
+  !*** ./resources/assets/js/components/complaint/view_request_store_component.vue ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _view_request_store_component_vue_vue_type_template_id_d12f2de0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./view_request_store_component.vue?vue&type=template&id=d12f2de0& */ "./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=template&id=d12f2de0&");
+/* harmony import */ var _view_request_store_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./view_request_store_component.vue?vue&type=script&lang=js& */ "./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _view_request_store_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _view_request_store_component_vue_vue_type_template_id_d12f2de0___WEBPACK_IMPORTED_MODULE_0__.render,
+  _view_request_store_component_vue_vue_type_template_id_d12f2de0___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/assets/js/components/complaint/view_request_store_component.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/assets/js/components/customer/add_customer_component.vue":
 /*!****************************************************************************!*\
   !*** ./resources/assets/js/components/customer/add_customer_component.vue ***!
@@ -188203,6 +189068,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************!*\
+  !*** ./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_view_out_source_complaint_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./view_out_source_complaint_component.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_view_out_source_complaint_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************!*\
+  !*** ./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_view_request_store_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./view_request_store_component.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_view_request_store_component_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/assets/js/components/customer/add_customer_component.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************!*\
   !*** ./resources/assets/js/components/customer/add_customer_component.vue?vue&type=script&lang=js& ***!
@@ -190239,6 +191136,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_lab_complaint_component_vue_vue_type_template_id_614f1f50___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_lab_complaint_component_vue_vue_type_template_id_614f1f50___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./view_lab_complaint_component.vue?vue&type=template&id=614f1f50& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_lab_complaint_component.vue?vue&type=template&id=614f1f50&");
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=template&id=51d806c5&":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=template&id=51d806c5& ***!
+  \*************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_out_source_complaint_component_vue_vue_type_template_id_51d806c5___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_out_source_complaint_component_vue_vue_type_template_id_51d806c5___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_out_source_complaint_component_vue_vue_type_template_id_51d806c5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./view_out_source_complaint_component.vue?vue&type=template&id=51d806c5& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_out_source_complaint_component.vue?vue&type=template&id=51d806c5&");
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=template&id=d12f2de0&":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=template&id=d12f2de0& ***!
+  \******************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_request_store_component_vue_vue_type_template_id_d12f2de0___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_request_store_component_vue_vue_type_template_id_d12f2de0___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_view_request_store_component_vue_vue_type_template_id_d12f2de0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./view_request_store_component.vue?vue&type=template&id=d12f2de0& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/js/components/complaint/view_request_store_component.vue?vue&type=template&id=d12f2de0&");
 
 
 /***/ }),
@@ -226488,8 +227419,10 @@ Vue.component('generatestaffpayroll', (__webpack_require__(/*! ./components/staf
 Vue.component('addexpensecomponent', (__webpack_require__(/*! ./components/expense/add_exp_component.vue */ "./resources/assets/js/components/expense/add_exp_component.vue")["default"]));
 Vue.component('add-customer-complaint-component', (__webpack_require__(/*! ./components/complaint/add_customer_complaint_component.vue */ "./resources/assets/js/components/complaint/add_customer_complaint_component.vue")["default"]));
 Vue.component('viewcustomercomplaint', (__webpack_require__(/*! ./components/complaint/view_customer_complaint_component.vue */ "./resources/assets/js/components/complaint/view_customer_complaint_component.vue")["default"]));
+Vue.component('viewrequeststore', (__webpack_require__(/*! ./components/complaint/view_request_store_component.vue */ "./resources/assets/js/components/complaint/view_request_store_component.vue")["default"]));
 Vue.component('viewcomplaint', (__webpack_require__(/*! ./components/complaint/view_complaint_component.vue */ "./resources/assets/js/components/complaint/view_complaint_component.vue")["default"]));
 Vue.component('viewlabcomplaint', (__webpack_require__(/*! ./components/complaint/view_lab_complaint_component.vue */ "./resources/assets/js/components/complaint/view_lab_complaint_component.vue")["default"]));
+Vue.component('viewoutsourcecomplaint', (__webpack_require__(/*! ./components/complaint/view_out_source_complaint_component.vue */ "./resources/assets/js/components/complaint/view_out_source_complaint_component.vue")["default"]));
 Vue.component('adddemandformcomponent', (__webpack_require__(/*! ./components/demand_form/add_demand_form_component.vue */ "./resources/assets/js/components/demand_form/add_demand_form_component.vue")["default"]));
 Vue.component('addquotationrequestcomponent', (__webpack_require__(/*! ./components/demand_form/add_quotation_request_component.vue */ "./resources/assets/js/components/demand_form/add_quotation_request_component.vue")["default"]));
 

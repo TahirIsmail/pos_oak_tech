@@ -3,8 +3,8 @@
         <i class="fas fa-ellipsis-h actions-dropdown"></i>
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown">
-        @if (check_access(array('VIEW_LAB_COMPLAINTS'), true))
-            <a href="view_lab_complaint/{{ $row->slack }}" class="dropdown-item">{{ __("View") }}</a>
+        @if (check_access(array('VIEW_OUT_SOURCE_COMPLAINTS'), true))
+            <a href="view_out_source_complaint/{{ $row->slack }}" class="dropdown-item">{{ __("View") }}</a>
         @endif
        
     </div>

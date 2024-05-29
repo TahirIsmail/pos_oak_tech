@@ -70,4 +70,8 @@ class Complaints extends Model
     public function request_to_store(){
         return $this->hasMany(RequestToStore::class, 'complaint_id');
     }
+
+    public function out_source_vendor(){
+        return $this->hasOne(OutSourceComplaint::class, 'complaint_id');
+    }
 }

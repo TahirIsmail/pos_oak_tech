@@ -467,6 +467,7 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/customer_complaints', 'API\Complaints@index');
     Route::post('/complaints', 'API\Complaints@complaints');
     Route::post('/lab_complaints_listing', 'API\Complaints@lab_complaints_listing');
+    Route::post('/out_source_complaints_listing', 'API\Complaints@out_source_complaints_listing');
     Route::post('/product_request_listing', 'API\Complaints@product_request_listing');
     Route::post('/customer_orders', 'API\Complaints@customer_orders');
     Route::post('/customer_orders_products', 'API\Complaints@customer_orders_products');
@@ -491,11 +492,14 @@ Route::group(['middleware' => ['token_auth']], function () {
     
     Route::post('/request_requirement','API\Complaints@request_requirement');
     Route::post('/add_request_product_store','API\Complaints@add_request_product_store');
+    Route::post('/add_out_source_product','API\Complaints@add_out_source_product');
     Route::post('/field_eng_request_requirement','API\Complaints@field_eng_request_requirement');
    
     Route::post('/fetchCategorySubcategory','API\Complaints@fetchCategorySubcategory');
 
     Route::post('/fetchCategoryProduct','API\Complaints@fetchCategoryProduct');
+    Route::post('/search_products_against_serial_no','API\Complaints@search_products_against_serial_no');
+    
     Route::post('/fetchSubCategoryProduct','API\Complaints@fetchSubCategoryProduct');
     Route::post('/fetchSelectedProduct','API\Complaints@fetchSelectedProduct');
     Route::post('/assign_product_to_technician','API\Complaints@assignProductToTechnician');
@@ -509,6 +513,7 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/add_customer_feedback','API\Complaints@add_customer_feedback');
 
 
+    Route::post('/add_out_source_complaint','API\Complaints@add_out_source_complaint');
     
 
 

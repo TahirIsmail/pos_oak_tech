@@ -223,9 +223,11 @@ Vue.component('addexpensecomponent',require('./components/expense/add_exp_compon
 
 Vue.component('add-customer-complaint-component', require('./components/complaint/add_customer_complaint_component.vue').default);
 Vue.component('viewcustomercomplaint', require('./components/complaint/view_customer_complaint_component.vue').default);
+Vue.component('viewrequeststore', require('./components/complaint/view_request_store_component.vue').default);
 Vue.component('viewcomplaint', require('./components/complaint/view_complaint_component.vue').default);
 Vue.component('viewlabcomplaint', require('./components/complaint/view_lab_complaint_component.vue').default);
 
+Vue.component('viewoutsourcecomplaint', require('./components/complaint/view_out_source_complaint_component.vue').default);
 
 Vue.component('adddemandformcomponent', require('./components/demand_form/add_demand_form_component.vue').default);
 

@@ -21,4 +21,8 @@ class RequestToStore extends Model
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function store_assign_products_on_reqeusts(){
+        return $this->hasMany(StoreAssignProductsOnReqeust::class, 'request_to_store_id');
+    }
 }

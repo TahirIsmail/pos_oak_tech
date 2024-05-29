@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\ComplaintMailToEngineer;
 use App\Models\Account as AccountModel;
 use App\Models\Category;
-use App\Models\ComplaintAssignToFieldEngg;
 use App\Models\CompaintAssignToLabEngg;
+use App\Models\ComplaintAssignToFieldEngg;
 use App\Models\ComplaintCharge;
 use App\Models\Complaints as ModelsComplaints;
 use App\Models\Customer;
@@ -15,11 +15,13 @@ use App\Models\Invoice;
 use App\Models\InvoiceProduct;
 use App\Models\MasterTransactionType as MasterTransactionTypeModel;
 use App\Models\Notification;
+use App\Models\OutSourceComplaint;
 use App\Models\PartRequest;
 use App\Models\PaymentMethod as PaymentMethodModel;
 use App\Models\Product;
 use App\Models\RequestToStore;
 use App\Models\Role;
+use App\Models\StoreAssignProductsOnReqeust;
 use App\Models\Store as StoreModel;
 use App\Models\Transaction as TransactionModel;
 use App\Models\User;
@@ -30,7 +32,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 
 class Complaints extends Controller
 {
@@ -73,16 +74,16 @@ class Complaints extends Controller
         $data['action_key'] = 'VIEW_FIELD_COMPLAINTS_LISTING';
         $data['action_only_listing'] = 'VIEW_ONLY_COMPLAINTS';
         $data['action_all_listing'] = 'VIEW_ALL_COMPLAINTS_LISTING';
-        
+
         // Check initial access
         if (check_access(array($data['action_key']), true) == false) {
             return $this->no_access_response_for_listing_table();
         }
-        
+
         if ($request->ajax()) {
             // Initialize complaints data variable
             $complaints = null;
-        
+
             // Role-specific data retrieval
             if ($request->logged_user_role_id == 2) {
                 // Customer-specific complaints
@@ -99,13 +100,13 @@ class Complaints extends Controller
                         ->where('assign_to_field_staff_id', $request->logged_user_id)
                         ->get();
                 }
-        
+
                 // View all complaints if permitted
                 if (check_access(array($data['action_all_listing']), true) == true) {
                     $complaints = ModelsComplaints::with('customer')->get();
                 }
             }
-        
+
             // Debugging the retrieved data
             // dd($complaints);
             return DataTables::of($complaints)
@@ -123,7 +124,7 @@ class Complaints extends Controller
     public function lab_complaints_listing(Request $request)
     {
 
-        $data['action_key'] = 'A_VIEW_CUSTOMER_COMPLAINTS_LISTING';
+        $data['action_key'] = 'VIEW_LAB_COMPLAINTS_LISTING';
         if (check_access(array($data['action_key']), true) == false) {
             $response = $this->no_access_response_for_listing_table();
             return $response;
@@ -150,32 +151,65 @@ class Complaints extends Controller
         }
     }
 
+    public function out_source_complaints_listing(Request $request)
+    {
 
-    public function product_request_listing(Request $request){
+        $data['action_key'] = 'VIEW_OUT_SOURCE_COMPLAINTS_LISTING';
+        if (check_access(array($data['action_key']), true) == false) {
+            $response = $this->no_access_response_for_listing_table();
+            return $response;
+        }
+       
+        if ($request->ajax()) {
+
+            if ($request->logged_user_role_id == 1) {
+                $data = ModelsComplaints::with('customer')->get();
+            } else {
+                $data = ModelsComplaints::with(['customer', 'out_source_vendor'])
+                ->whereHas('out_source_vendor', function ($query) use ($request) {
+                    $query->where('vendor_id', $request->logged_user_id);
+                })
+                ->get();
+            }
+           
+            return DataTables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('action', function ($row) {
+                    $data['row'] = $row;
+                    return view('complaints.layouts.out_source_complaint_actions', $data)->render();
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function product_request_listing(Request $request)
+    {
         $data['action_key'] = 'VIEW_PRODUCT_REQUEST_LISTING';
         if (check_access(array($data['action_key']), true) == false) {
             $response = $this->no_access_response_for_listing_table();
             return $response;
         }
 
-        if ($request->ajax()) {        
+        if ($request->ajax()) {
 
             $data = RequestToStore::with('user', 'part_request', 'complaint')->get();
-            
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('product_request', function ($row) {
-                   return $row['request'];
+                    return $row['request'];
                 })
                 ->addColumn('user_id', function ($row) {
-                    return $row['user']->fullname . '('.$row['user']->email. ')';
-                 })
-                 ->addColumn('request_start_time', function ($row) {
+                    return $row['user']->fullname . '(' . $row['user']->email . ')';
+                })
+                ->addColumn('request_start_time', function ($row) {
                     return $row['start_request_time'];
-                 })
-                 ->addColumn('request_completed', function ($row) {
+                })
+                ->addColumn('request_completed', function ($row) {
                     return ($row['end_request_time'] ? $row['end_request_time'] : 'Pending...');
-                 })
+                })
 
                 ->addColumn('action', function ($row) {
                     $data['row'] = $row;
@@ -198,27 +232,27 @@ class Complaints extends Controller
             if (!check_access(['A_ADD_CUSTOMER_COMPLAINT'], true)) {
                 throw new Exception("Invalid request", 400);
             }
-        
+
             DB::beginTransaction();
-        
+
             $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
             if (isset($request->assigned_to) && $request->assigned_to != null) {
                 $assigned_to = User::select('id', 'email')->where('slack', $request->assigned_to)->get();
             } else {
                 $assigned_to = null;
             }
-        
+
             if (isset($request->assigned_to_field_enng) && $request->assigned_to_field_enng != null) {
                 $assigned_to_field_enng = User::select('id', 'email')->where('slack', $request->assigned_to_field_enng)->get();
             } else {
                 $assigned_to_field_enng = null;
             }
-        
+
             $ticket = $this->generate_ticket("complaints");
-            $currentTime =  Carbon::now('Asia/Karachi');
+            $currentTime = Carbon::now('Asia/Karachi');
             $time = $currentTime->format('H:i:s');
             $date = $currentTime->format('d-m-Y');
-        
+
             if ($slack == null) {
                 $customer_complaints = [
                     "slack" => $this->generate_slack("complaints"),
@@ -244,37 +278,36 @@ class Complaints extends Controller
                     "poc_name" => $request->poc_name,
                     "c_status" => $request->complaint_status,
                 ];
-        
+
                 $complaints = ModelsComplaints::create($customer_complaints);
-        
+
                 if ($complaints) {
-                    if($request->assign_to == 'assigned_to_field_eng'){
+                    if ($request->assign_to == 'assigned_to_field_eng') {
                         $complaint_assign_to_field_enggs = [
                             'complaint_id' => $complaints->id,
                             'engg_id' => isset($assigned_to_field_enng[0]) ? $assigned_to_field_enng[0]->id : '',
                             'assign_complaint_time' => now()->setTimezone('Asia/Karachi'),
                         ];
                         $save_assign_to_field_eng_table = ComplaintAssignToFieldEngg::create($complaint_assign_to_field_enggs);
-        
+
                         $notification = [
                             "slack" => $this->generate_slack("notifications"),
                             "user_id" => isset($assigned_to_field_enng[0]) ? $assigned_to_field_enng[0]->id : '',
                             "notification_text" => 'Field Complaint Assigned You Please Check Port to View Details',
-                            "created_by" => $request->logged_user_id
+                            "created_by" => $request->logged_user_id,
                         ];
-                        
+
                         $notification_id = Notification::create($notification)->id;
                         $data['message'] = "Please Check Your Port For New Complaints Which is Assigned to you";
                         Mail::to($assigned_to_field_enng[0]->email)->send(new ComplaintMailToEngineer($complaints, $data['message']));
-                    }
-                    elseif($request->assign_to == 'assigned_to_lab_eng'){
+                    } elseif ($request->assign_to == 'assigned_to_lab_eng') {
                         $complaint_assign_to_lab_enggs = [
                             'complaint_id' => $complaints->id,
                             'engg_id' => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
                             'assign_complaint_time' => now()->setTimezone('Asia/Karachi'),
                         ];
                         $save_assign_to_lab_eng_table = CompaintAssignToLabEngg::create($complaint_assign_to_lab_enggs);
-        
+
                         $notification = [
                             "slack" => $this->generate_slack("notifications"),
                             "user_id" => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
@@ -282,15 +315,15 @@ class Complaints extends Controller
                             "created_by" => $request->logged_user_id,
                             "created_at" => now()->setTimezone('Asia/Karachi'),
                         ];
-                        
+
                         $notification_id = Notification::create($notification)->id;
-                        
+
                         $data['message'] = "Please Check Your Port For New Complaints Which is Assigned to you";
                         Mail::to($assigned_to[0]->email)->send(new ComplaintMailToEngineer($complaints, $data['message']));
                     }
-        
+
                     DB::commit();
-        
+
                     return response()->json($this->generate_response(
                         array(
                             "message" => "Customer Complaints Submit successfully",
@@ -318,15 +351,15 @@ class Complaints extends Controller
                     "poc_name" => $request->poc_name ?? null,
                     "c_status" => $request->complaint_status ?? null,
                 ];
-        
+
                 $conditions = [
                     "slack" => $slack,
                 ];
-        
+
                 $customer_complaint = ModelsComplaints::updateOrCreate($conditions, $customer_complaints);
-        
+
                 DB::commit();
-        
+
                 return response()->json($this->generate_response(
                     [
                         "message" => "Customer Complaints Updated successfully",
@@ -345,7 +378,7 @@ class Complaints extends Controller
                 )
             ));
         }
-        
+
     }
 
     public function customer_orders(Request $request)
@@ -443,6 +476,59 @@ class Complaints extends Controller
         }
     }
 
+    public function add_out_source_complaint(Request $request)
+    {
+        try {
+            
+            $out_source_vendor = User::findOrFail($request->out_source_vendor);
+
+            // Create the out-source complaint
+            $out_source = [
+                'complaint_id' => $request->complaint_id,
+                'engineer_id' => $request->engineer_id,
+                'vendor_id' => $request->out_source_vendor,
+                'details' => $request->product_details,
+                'start_time' => now()->setTimezone('Asia/Karachi'),
+            ];
+            OutSourceComplaint::create($out_source);
+
+            // Create a notification
+            $notification = [
+                "slack" => $this->generate_slack("notifications"),
+                "user_id" => $out_source_vendor->id,
+                "notification_text" => 'OAK Technology has assigned a product for repair. Please check it and fix it as soon as possible.',
+                "created_by" => $request->logged_user_id,
+            ];
+            Notification::create($notification);
+
+            // Send an email to the out-source vendor
+            $data['message'] = "OAK Technology has assigned a product for repair. Please check it and fix it as soon as possible.";
+            Mail::to($out_source_vendor->email)->send(new ComplaintMailToEngineer($out_source, $data['message']));
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Customer Complaint Assigned to Vendor Technician Successfully",
+                    "data" => '',
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+
+        } catch (\Exception $e) {
+            // Log the exception
+            // Log::error('Error in add_out_source_complaint: ' . $e->getMessage());
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Error in assigning complaint: " . $e->getMessage(),
+                    "data" => '',
+                    'msg' => 'error',
+                ],
+                'ERROR'
+            ), 500);
+        }
+    }
+
     public function assign_complaint_to_technician(Request $request)
     {
         try {
@@ -485,39 +571,63 @@ class Complaints extends Controller
     public function complaint_completed(Request $request)
     {
         try {
+            // Retrieve the complaint with associated lab and field engineers
+            $complaint = ModelsComplaints::with('complaint_assign_to_lab_enggs', 'complaint_assign_to_field_enggs')
+                ->where('slack', $request->complaint_slack)
+                ->firstOrFail();
 
-            $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+            $current_time = now()->setTimezone('Asia/Karachi');
+
+            if ($complaint->assign_to_field_engg == '1' && $complaint->field_complaint_completed_date == null) {
+                if (!empty($complaint->complaint_assign_to_field_enggs[0])) {
+                    $field_engineer = ComplaintAssignToFieldEngg::findOrFail($complaint->complaint_assign_to_field_enggs[0]->id);
+
+                    $field_engineer->assign_complaint_complete_time = $current_time;
+                    $field_engineer->complaint_complete = 'Yes';
+                    $field_engineer->remarks = $request->final_lab_staff_remark;
+                    $field_engineer->save();
+
+                }
+            }
+
+            if ($complaint->assign_to_lab_staff_id == '1' && $complaint->complaint_completed_date == null) {
+                if (!empty($complaint->complaint_assign_to_lab_enggs[0])) {
+                    $lab_engineer = CompaintAssignToLabEngg::findOrFail($complaint->complaint_assign_to_lab_enggs[0]->id);
+
+                    $lab_engineer->assign_complaint_complete_time = $current_time;
+                    $lab_engineer->complaint_complete = 'Yes';
+                    $lab_engineer->remarks = $request->final_lab_staff_remark;
+                    $lab_engineer->save();
+
+                }
+            }
 
             $complaint->final_lab_staff_remark = $request->final_lab_staff_remark;
             $complaint->complaint_status = 'Completed Complaint';
-            $complaint->complaint_completed_date = date('Y-m-d');
+            $complaint->c_status = 'Completed Complaint';
+            $complaint->complaint_completed_date = $current_time;
             $complaint->save();
-            if ($complaint) {
-                return response()->json($this->generate_response(
-                    array(
-                        "message" => "Customer Complaint Assign to Lab Technician Completed Successfully",
-                        "data" => '',
-                        'msg' => 'success',
-                    ),
-                    'SUCCESS'
-                ));
-            } else {
-                return response()->json($this->generate_response(
-                    array(
-                        "message" => "Some Error Occur",
-                        "data" => '',
-                        'msg' => 'Fail',
-                    ),
-                    'Fail'
-                ));
-            }
-        } catch (Exception $e) {
+
             return response()->json($this->generate_response(
-                array(
-                    "message" => $e->getMessage(),
-                    "status_code" => $e->getCode(),
-                )
+                [
+                    "message" => "Customer Complaint Assigned Technician Completed Successfully",
+                    "data" => '',
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
             ));
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Complaint completion failed: ' . $e->getMessage());
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Request Submission Failed: " . $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                    'msg' => 'error',
+                ],
+                'ERROR'
+            ), 500);
         }
     }
 
@@ -563,31 +673,6 @@ class Complaints extends Controller
                 'fault_report_by_customer' => $request->fault_report_by_customer,
                 'c_status' => $request->c_status,
                 'status' => $request->status,
-            ]);
-
-            return response()->json($this->generate_response(
-                array(
-                    "message" => "Complaint Status Change Successfully.",
-                    "data" => '',
-                    'msg' => 'success',
-                ),
-                'SUCCESS'
-            ));
-
-        }
-    }
-
-    public function change_complaint_remark_by_engg(Request $request)
-    {
-        $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
-
-        if ($complaint) {
-            $complaint->update([
-                'parts_required' => $request->parts_required,
-                'outsource' => $request->outsource,
-                'out_source_item' => $request->outsource_item,
-                'ready_date' => $request->ready_date,
-                'diagnose_by_engg' => $request->diagnose_by_engg,
             ]);
 
             return response()->json($this->generate_response(
@@ -757,25 +842,6 @@ class Complaints extends Controller
         }
     }
 
-    public function request_requirement(Request $request)
-    {
-
-        $complaints = ModelsComplaints::where('slack', $request->complaint_slack)->get();
-        if ($complaints->count() > 0) {
-            $complaint = $complaints->first();
-            $complaint->lab_staff_remark = $request->lab_staff_remark;
-            $complaint->save();
-            return response()->json($this->generate_response(
-                array(
-                    "message" => "Requirement Request Submitted Successfully",
-                    "data" => $complaint,
-                    'msg' => 'success',
-                ),
-                'SUCCESS'
-            ));
-        }
-    }
-
     public function add_request_product_store(Request $request)
     {
         DB::beginTransaction();
@@ -785,9 +851,9 @@ class Complaints extends Controller
             if (!$store_role) {
                 throw new \Exception("Store role not found");
             }
-    
+
             $store_users = User::where('role_id', $store_role->id)->get();
-    
+
             // Create request to store
             $request_to_store = [
                 'complaint_id' => $request->complaint_id,
@@ -798,27 +864,27 @@ class Complaints extends Controller
                 'request' => $request->request_detail,
             ];
             $save_request_to_store = RequestToStore::create($request_to_store);
-    
+
             $part_request = PartRequest::findOrFail($request->request_id);
             $part_request->request_status = '1';
             $part_request->save();
-    
+
             // Create notifications and send emails
             foreach ($store_users as $store_user) {
                 $notification = [
                     "slack" => $this->generate_slack("notifications"),
                     "user_id" => $store_user->id,
                     "notification_text" => 'Complaint Manager Request for: ' . $request->request_detail,
-                    "created_by" => $request->logged_user_id
+                    "created_by" => $request->logged_user_id,
                 ];
                 Notification::create($notification);
-    
+
                 $data['message'] = "Complaint Manager Request for: " . $request->request_detail;
                 Mail::to($store_user->email)->send(new ComplaintMailToEngineer($request_to_store, $data['message']));
             }
-    
+
             DB::commit();
-    
+
             return response()->json($this->generate_response(
                 [
                     "message" => "Request Submitted Successfully",
@@ -840,14 +906,240 @@ class Complaints extends Controller
         }
     }
 
+    public function add_out_source_product(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Validate request data
+            $this->validate($request, [
+                'request_id' => 'required',
+                'request_to_store_id' => 'required',
+                'product_on_request_id' => 'required',
+                'product_details' => 'required',
+            ]);
+
+            // Find the engineer
+            $engineer = User::findOrFail($request->engineer_id);
+
+            // Update PartRequest
+            $part_request = PartRequest::findOrFail($request->request_id);
+            $part_request->request_status = '2';
+            $part_request->end_request_time = now()->setTimezone('Asia/Karachi');
+            $part_request->admin_remarks = $request->product_details;
+            $part_request->save();
+
+            // Update RequestToStore
+            $request_to_store = RequestToStore::findOrFail($request->request_to_store_id);
+            $request_to_store->status = '1';
+            $request_to_store->save();
+
+            // Update StoreAssignProductsOnRequest
+            $product_on_request = StoreAssignProductsOnReqeust::findOrFail($request->product_on_request_id);
+            $product_on_request->product_details = $request->product_details;
+            $product_on_request->save();
+
+            // Create Notification
+            $notification = [
+                "slack" => $this->generate_slack("notifications"),
+                "user_id" => $engineer->id,
+                "notification_text" => 'Request Product Assign to you please check it and complete complaint as soon as possible',
+                "created_by" => $request->logged_user_id,
+            ];
+            Notification::create($notification);
+
+            // Send Email
+            $data['message'] = "Request Product Assign to you please check it and complete complaint as soon as possible";
+            Mail::to($engineer->email)->send(new ComplaintMailToEngineer($part_request, $data['message']));
+
+            DB::commit();
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Request Submitted Successfully",
+                    "data" => '',
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Log the exception
+            Log::error('Request Submission Failed: ' . $e->getMessage());
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Request Submission Failed",
+                    "data" => '',
+                    'msg' => 'error',
+                ],
+                'ERROR'
+            ), 500);
+        }
+    }
+
+    public function change_complaint_remark_by_engg(Request $request)
+    {
+        $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+        $cse_role = Role::where('label', 'Cse')->first();
+        if (!$cse_role) {
+            return response()->json($this->generate_response(
+                [
+                    "message" => "CSE role not found",
+                    "data" => '',
+                    'msg' => 'error',
+                ],
+                'ERROR'
+            ), 404);
+        }
+
+        $cse_users = User::where('role_id', $cse_role->id)->get();
+
+        if ($complaint) {
+            if ($request->outsource == 'Yes') {
+                $complaint->update([
+                    'outsource' => $request->outsource,
+                    'diagnose_by_engg' => $request->diagnose_by_engg,
+                ]);
+                foreach ($cse_users as $cse) {
+                    $notification = [
+                        "slack" => $this->generate_slack("notifications"),
+                        "user_id" => $cse->id,
+                        "notification_text" => 'Lab Engineer Request for OutSource that Complaint',
+                        "created_by" => $request->logged_user_id,
+                    ];
+                    Notification::create($notification);
+                    $data['message'] = "Lab Engineer Request for OutSource that Complaint";
+                    Mail::to($cse->email)->send(new ComplaintMailToEngineer($complaint, $data['message']));
+                }
+
+            } else {
+                $complaint->update([
+                    'parts_required' => $request->parts_required,
+                    'diagnose_by_engg' => $request->diagnose_by_engg,
+                ]);
+            }
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Complaint Status Change Successfully.",
+                    "data" => '',
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+
+        }
+    }
+
+    public function request_requirement(Request $request)
+    {
+        try {
+
+            $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+            if (!$complaint) {
+                return response()->json($this->generate_response(
+                    [
+                        "message" => "Complaint not found",
+                        "data" => '',
+                        'msg' => 'error',
+                    ],
+                    'ERROR'
+                ), 404);
+            }
+
+            // Check if the complaint is assigned to the lab engineer
+            $lab_assign_complaint = CompaintAssignToLabEngg::where('engg_id', $request->logged_user_id)
+                ->where('complaint_id', $complaint->id)
+                ->first();
+
+            if (!$lab_assign_complaint) {
+                return response()->json($this->generate_response(
+                    [
+                        "message" => "Lab assignment not found for the given complaint",
+                        "data" => '',
+                        'msg' => 'error',
+                    ],
+                    'ERROR'
+                ), 404);
+            }
+
+            // Retrieve CSE role and users
+            $cse_role = Role::where('label', 'Cse')->first();
+            if (!$cse_role) {
+                return response()->json($this->generate_response(
+                    [
+                        "message" => "CSE role not found",
+                        "data" => '',
+                        'msg' => 'error',
+                    ],
+                    'ERROR'
+                ), 404);
+            }
+
+            $cse_users = User::where('role_id', $cse_role->id)->get();
+
+            // Update complaint and create part request
+            $complaint->lab_engg_part_request = 1;
+            $complaint->save();
+
+            $part_request = [
+                'complaint_id' => $complaint->id,
+                'engineer_id' => $request->logged_user_id,
+                'engineer_type' => 'Lab_Engineer',
+                'request' => $request->lab_staff_remark,
+                'start_request_time' => now()->setTimezone('Asia/Karachi'),
+            ];
+            $request_part = PartRequest::create($part_request);
+
+            // Notify CSE users if part request is created successfully
+            if ($request_part) {
+                foreach ($cse_users as $cse) {
+                    $notification = [
+                        "slack" => $this->generate_slack("notifications"),
+                        "user_id" => $cse->id,
+                        "notification_text" => 'Lab Engineer Request for: ' . $request->field_staff_remark,
+                        "created_by" => $request->logged_user_id,
+                    ];
+                    Notification::create($notification);
+
+                    $data['message'] = "Lab Engineer Request for: " . $request->field_staff_remark;
+                    Mail::to($cse->email)->send(new ComplaintMailToEngineer($complaint, $data['message']));
+                }
+            }
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Requirement Request Submitted Successfully!",
+                    "data" => '',
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Request requirement failed: ' . $e->getMessage());
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Request Submission Failed: " . $e->getMessage(),
+                    "data" => '',
+                    'msg' => 'error',
+                ],
+                'ERROR'
+            ), 500);
+        }
+    }
 
     public function field_eng_request_requirement(Request $request)
     {
         $complaints = ModelsComplaints::where('slack', $request->complaint_slack)->get();
         $field_assign_complaint = ComplaintAssignToFieldEngg::where('engg_id', $request->logged_user_id)->where('complaint_id', $complaints[0]->id)->first();
-        
+
         $cse_role = Role::where('label', 'Cse')->get();
-        $cse_user = User::where('role_id', $cse_role[0]->id)->get();   
+        $cse_user = User::where('role_id', $cse_role[0]->id)->get();
         if ($complaints->count() > 0 && $field_assign_complaint) {
             $complaint = $complaints->first();
             $complaint->field_engg_part_request = 1;
@@ -861,21 +1153,28 @@ class Complaints extends Controller
             ];
             $request_part = PartRequest::create($part_request);
 
-            if($request_part){
-                foreach($cse_user as $cse){
+            if ($request_part) {
+                foreach ($cse_user as $cse) {
                     $notification = [
                         "slack" => $this->generate_slack("notifications"),
                         "user_id" => $cse['id'],
-                        "notification_text" => 'Field Engineer Request for: '. $request->field_staff_remark,
-                        "created_by" => $request->logged_user_id
-                    ];                
+                        "notification_text" => 'Field Engineer Request for: ' . $request->field_staff_remark,
+                        "created_by" => $request->logged_user_id,
+                    ];
                     $notification_id = Notification::create($notification)->id;
                     $data['message'] = "Field Engineer Request for: " . $request->field_staff_remark;
                     Mail::to($cse['email'])->send(new ComplaintMailToEngineer($complaints, $data['message']));
                 }
             }
-          
-    
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Requirement Request Submit Successfully!",
+                    "data" => '',
+                ),
+                'SUCCESS'
+            ));
+
         }
     }
 
@@ -972,6 +1271,36 @@ class Complaints extends Controller
         }
     }
 
+    public function search_products_against_serial_no(Request $request)
+    {
+        $products = Product::with('subcategory.category', 'product_specifications')
+            ->where('quantity', '>', '0')
+            ->where(function ($query) use ($request) {
+                $query->where('product_code', $request->serial_no);
+
+                // Ensure the serial_no is set and not empty
+                if (isset($request->serial_no) && $request->serial_no != '') {
+                    $query->orWhereHas('product_specifications', function ($query) use ($request) {
+                        $query->where('specification_label', 'Model')
+                            ->where('specification_details', 'like', '%' . trim($request->serial_no) . '%');
+                    });
+                }
+            })
+            ->get();
+
+        $data['products'] = $products;
+        if ($products) {
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "",
+                    "data" => $data,
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+        }
+    }
+
     public function fetchSubCategoryProduct(Request $request)
     {
         $products = Product::with('subcategory.category')->where('sub_category_id', $request->sub_category_id)->where('quantity', 1)->get();
@@ -991,45 +1320,106 @@ class Complaints extends Controller
     public function assignProductToTechnician(Request $request)
     {
         try {
-
-            if (!check_access(['A_REQUIREMENT_REQUEST_LABTECHNICIAN'], true)) {
+            // Check access permissions
+            if (!check_access(['VIEW_PRODUCT_REQUEST'], true)) {
                 throw new Exception("Invalid request", 400);
             }
-            $productIdsArray = explode(",", $request->product_ids);
-            $complaint_id = ModelsComplaints::where('slack', $request->complaint_slack)->first();
 
-            // dd($complaint_id);
+            // Extract product IDs and get related entities
+            $productIdsArray = explode(",", $request->product_ids);
+            $request_to_store = RequestToStore::findOrFail($request->request_id); // Use findOrFail to simplify
+            $part_request = PartRequest::findOrFail($request_to_store->request_id); // Use findOrFail to simplify
+            $cse = User::findOrFail($request_to_store->user_id);
+            $engineer = User::findOrFail($part_request->engineer_id);
+
             DB::beginTransaction();
-            foreach ($productIdsArray as $productId) {
-                $complaint_update = [
-                    'admin_again_remark' => $request->admin_again_remark,
-                    'due_date' => $request->extend_date,
-                    'complaint_status' => 'Request Completed',
+
+            if ($request->out_source_request) {
+
+                $request_to_store->update([
+                    'status' => "2",
+                    'end_request_time' => now()->setTimezone('Asia/Karachi'),
+                    'action_by' => $request->logged_user_id,
+                    'remarks' => $request->store_remark,
+                ]);
+
+                $store_assign_products_on_request = [
+                    'out_source_product' => "1",
+                    'request_to_store_id' => $request_to_store->id,
                 ];
-                $complaint_id->update($complaint_update);
-                $product = Product::find($productId);
-                // dd($productIdsArray);
-                $product->link_to_complaint = $complaint_id->id;
-                $product->quantity = 0;
-                $product->save();
+                StoreAssignProductsOnReqeust::create($store_assign_products_on_request);
+
+                $notification = [
+                    "slack" => $this->generate_slack("notifications"),
+                    "user_id" => $cse->id,
+                    "notification_text" => 'Please Out Source that product that is not available in inventory.',
+                    "created_by" => $request->logged_user_id,
+                ];
+
+                Notification::create($notification);
+                Mail::to($cse->email)->send(new ComplaintMailToEngineer($request_to_store, 'Please Out Source that product that is not available in inventory.'));
+            } else {
+
+                $request_to_store->update([
+                    'status' => "1",
+                    'end_request_time' => now()->setTimezone('Asia/Karachi'),
+                    'action_by' => $request->logged_user_id,
+                    'remarks' => $request->store_remark,
+                ]);
+
+                $part_request->update([
+                    'end_request_time' => now()->setTimezone('Asia/Karachi'),
+                    'request_status' => "2",
+                ]);
+
+                $notification = [
+                    "slack" => $this->generate_slack("notifications"),
+                    "user_id" => $cse->id,
+                    "notification_text" => 'Product Assigned on Your Request from Inventory. Please check it.',
+                    "created_by" => $request->logged_user_id,
+                ];
+                $notification_engineer = [
+                    "slack" => $this->generate_slack("notifications"),
+                    "user_id" => $engineer->id,
+                    "notification_text" => 'Product Assigned on Your Request from Inventory. Please check it.',
+                    "created_by" => $request->logged_user_id,
+                ];
+
+                foreach ($productIdsArray as $productId) {
+                    $store_assign_products_on_request = [
+                        'product_id' => $productId,
+                        'store_user_id' => $request->logged_user_id,
+                        'request_to_store_id' => $request_to_store->id,
+                    ];
+                    StoreAssignProductsOnReqeust::create($store_assign_products_on_request);
+
+                    $product = Product::findOrFail($productId);
+                    $product->decrement('quantity', 1);
+                }
+
+                Notification::create($notification);
+                Notification::create($notification_engineer);
+                Mail::to($cse->email)->send(new ComplaintMailToEngineer($request_to_store, 'Product Assigned on Your Request from Inventory. Please check it.'));
+                Mail::to($engineer->email)->send(new ComplaintMailToEngineer($request_to_store, 'Product Assigned on Your Request from Inventory. Please check it.'));
             }
+
             DB::commit();
-            if ($product) {
-                return response()->json($this->generate_response(
-                    array(
-                        "message" => "Requirement Request Completed Successfully!",
-                        "data" => '',
-                        'msg' => 'success',
-                    ),
-                    'SUCCESS'
-                ));
-            }
-        } catch (Exception $e) {
+
             return response()->json($this->generate_response(
-                array(
+                [
+                    "message" => "Requirement Request Completed Successfully!",
+                    "data" => '',
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            DB::rollBack(); // Rollback transaction on error
+            return response()->json($this->generate_response(
+                [
                     "message" => $e->getMessage(),
                     "status_code" => $e->getCode(),
-                )
+                ]
             ));
         }
     }

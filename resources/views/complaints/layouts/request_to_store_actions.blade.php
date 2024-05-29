@@ -1,10 +1,13 @@
+@php
+use Illuminate\Support\Facades\Crypt;
+@endphp
 <div class="dropdown">
     <button class="btn btn-sm btn-outline-primary dropdown-toggle actions-dropdown-btn" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-ellipsis-h actions-dropdown"></i>
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown">
         @if (check_access(array('VIEW_PRODUCT_REQUEST'), true))
-            <a href="view_request_to_store/{{ $row->slack }}" class="dropdown-item">{{ __("View") }}</a>
+            <a href="{{ url('view_request_to_store/' . Crypt::encryptString($row->id)) }}" class="dropdown-item">{{ __("View") }}</a>
         @endif
        
     </div>

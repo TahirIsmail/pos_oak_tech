@@ -30,9 +30,16 @@
               <button
                 type="submit"
                 class="alert alert-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null"
+                v-if="complaint.complaint_completed_date == null"
               >
                 {{ $t("Complaint Assigned") }}
+              </button>
+              <button
+                type="submit"
+                class="alert alert-success mr-1"
+                v-else
+              >
+                {{ $t("Complaint Completed") }}
               </button>
           </div>
         </div>
@@ -73,6 +80,8 @@
                 {{ $t("Add Feedback") }}
               </button>
             </div>
+
+           
   
             <div v-if="complaint.complaint_completed_date == null">
               <button

@@ -1,6 +1,6 @@
 <template>
     <div class="row card p-4">
-      
+    
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -13,13 +13,12 @@
             </div>
           </div>
   
-          <div class="">
-            <span></span>
-          </div>
+         
         </div>
 
         <div class="">
-            <div v-if="complaint.assign_to_field_engg == 1">
+          
+            <div v-if="complaint.assign_to_field_engg == '1'">
               <span class="alert alert-info">
                   Complaint Assign To Field Engineer ({{complaint.field_user.fullname }} ({{ complaint.field_user.email }})) at 
                   {{ complaint.complaint_assign_to_field_enggs[0].assign_complaint_time }}
@@ -32,8 +31,10 @@
                   }}
               </span>
             </div>
+            
+            
             <br>
-            <div>
+            <div v-if="complaint.part_requests">
               
               <span class="alert alert-success" v-for="request in complaint.part_requests" :key="request.id">
                 {{ request.engineer_type === 'Field_Engineer' 
@@ -46,17 +47,57 @@
               </span>
             </div>
 
-            <div v-if="complaint.assign_to_lab_engg == 1">
+            <br />
+            
+
+            <div v-if="complaint.assign_to_lab_engg == '1'">
               <span class="alert alert-info">
-                  Complaint Assign To Field Engineer at ({{ complaint.user.fullname }} ({{ complaint.user.email }}))
-                  {{ complaint.assign_to_lab_engg[0].assign_complaint_time }}
+                  Complaint Assign To Lab Engineer at ({{ complaint.user.fullname }} ({{ complaint.user.email }}))
+                  {{ complaint.complaint_assign_to_lab_enggs[0].assign_complaint_time }}
                   And 
                   {{
-                      (complaint.assign_to_lab_engg[0].assign_complaint_complete_time === null && 
-                      complaint.assign_to_lab_engg[0].complaint_complete == 'No') 
+                      (complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time === null && 
+                      complaint.complaint_assign_to_lab_enggs[0].complaint_complete == 'No') 
                       ? 'Still Not Complete' 
-                      : 'Completed at ' + complaint.assign_to_lab_engg[0].assign_complaint_complete_time
+                      : 'Completed at ' + complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time
                   }}
+              </span>
+            </div>
+
+            <br />
+
+            <div v-if="complaint.part_requests">
+              
+              <span class="alert alert-success" v-for="request in complaint.part_requests" :key="request.id">
+                {{ request.engineer_type === 'Lab_Engineer' 
+                  ? `Lab Engineer ${request.engineer.fullname} has requested for ${request.request} at ${request.start_request_time}` +
+                    (request.end_request_time == null 
+                      ? ' but not complete yet'
+                      : ` and completed at ${request.end_request_time}`)
+                  : '' 
+                }}
+              </span>
+            </div>
+             
+            <br />
+
+            <div v-if="complaint.outsource == 'Yes'">
+              <span class="alert alert-info">
+                  Lab Engineer ({{ complaint.user.fullname }} ({{ complaint.user.email }})) wants to OutSource Complaint...
+              </span>
+            </div>
+
+            <br />
+
+            <div v-if="complaint.out_source_vendor">
+              <span class="alert alert-info">
+                Complaint OutSource To ({{ complaint.out_source_vendor.vendor.fullname }} ({{ complaint.out_source_vendor.vendor.email }}))
+                Vendor Start at {{ complaint.out_source_vendor.start_time }} 
+                {{
+                  complaint.out_source_vendor.end_time == null 
+                  ? 'And Still Waiting...' 
+                  : `And Completed at ${complaint.out_source_vendor.end_time}`
+                }}
               </span>
             </div>
 
@@ -68,9 +109,16 @@
               <button
                 type="submit"
                 class="alert alert-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null"
+                v-if="complaint.complaint_completed_date == null"
               >
                 {{ $t("Complaint Assigned") }}
+              </button>
+              <button
+                type="submit"
+                class="alert alert-success mr-1"
+                v-else
+              >
+                {{ $t("Complaint Completed") }}
               </button>
           </div>
         </div>
@@ -106,6 +154,15 @@
               </button>
             </div>
   
+            <div v-if="complaint.outsource == 'Yes' && !complaint.out_source_vendor">
+              <button
+                type="submit"
+                class="btn btn-success mr-1"
+                v-on:click="OutSourceComplaint(complaint)"
+              >
+                {{ $t("OutSource Complaint") }}
+              </button>
+            </div>
             
   
             <div v-if="complaint.complaint_completed_date == null">
@@ -138,7 +195,7 @@
               </button>
             </div>
   
-            <div v-if="complaint.complaint_completed_date == null">
+            <!-- <div v-if="complaint.complaint_completed_date == null">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
@@ -147,7 +204,7 @@
               >
                 {{ $t("Complaint Complete") }}
               </button>
-            </div>
+            </div> -->
   
             <div
               v-if="requirement_request_access && complaint.complaint_completed_date == null"
@@ -274,13 +331,14 @@
             <label for="created_by">{{ $t("Assign to LabTechnician") }}</label>
   
             <p v-if="complaint.user">{{ complaint.user.fullname }} ({{ complaint.user.email }})</p>
-            <p class="alert alert-danger w-50">Not Assign Yet</p>
+            <p v-else class="alert alert-danger w-50">Not Assign Yet</p>
           </div>
 
           <div class="form-group col-md-3" v-if="!is_customer">
             <label for="created_by">{{ $t("Assign to Field Engineer") }}</label>
   
             <p v-if="complaint.field_user">{{ complaint.field_user.fullname }} ({{ complaint.field_user.email }})</p>
+            <p v-else class="alert alert-danger w-50">Not Assign</p>
           </div>
   
           <div
@@ -431,23 +489,34 @@
                 <td v-if="request.request_status == 0">
                   <span class="alert alert-danger" >Pending manager side</span>
                 </td>
-                <td v-else-if="request.request_status == 1">
+                <td v-else-if="request.request_status == 1 && request.request_to_store[0].status != 2" >
                   <span class="alert alert-danger">Pending store side</span>
                 </td>
-                <td v-else-if="request.request_status == 2 && request.end_request_time != null">
+                <td v-else-if="request.request_status == 2 && request.end_request_time != null && request.request_to_store[0].status != 2">
                   <span class="alert alert-info">Completed</span>
                 </td>
+                <td v-else-if="request.request_to_store[0].status == 2 && request.request_to_store[0].end_request_time != null">
+                  <span class="alert alert-info">Complete <small>(Request to OutSource)</small></span>
+                </td>
+
                 <td v-else></td>
                 <td>
                   <div v-if="request.request_status == 0 && request.end_request_time == null">
                     <button type="button" class="btn btn-primary" @click="showPartRequestModal(request)">{{ $t("Request Product") }}</button>
                   </div>
-                  <div v-else-if="request.request_status == 1 && request.end_request_time == null">
+                  <div v-else-if="request.request_status == 1 && request.end_request_time == null && request.request_to_store[0].status != 2">
                       <span class="alert alert-danger">Pending...</span>
                   </div>
-                  <div v-else-if="request.request_status == 2">
+                  
+                  <div v-else-if="request.request_status == 2 && request.request_to_store[0].status != 2">
                       Completed Part Request
                   </div>
+
+                  <div v-else-if="request.request_to_store[0].status == 2 && request.request_to_store[0].end_request_time != null">
+                    <button type="button" class="btn btn-primary" @click="OutSourceProduct(request)">{{ $t("OutSource Product") }}</button>
+                  </div>
+
+
                 </td>
               </tr>
             </tbody>
@@ -1754,6 +1823,113 @@
           </button>
         </template>
       </modalcomponent>
+
+      <modalcomponent
+        v-if="out_source_product_model"
+        v-on:close="out_source_product_model = false"
+        :modal_width="'modal-container-xl'"
+      >
+        <template v-slot:modal-header>
+          {{ $t("OutSource Product") }}
+        </template>
+        <template v-slot:modal-body>
+          <div class="form-row mb-2">
+            <input type="hidden" name="request_id" v-model="request_id" />
+            <input type="hidden" name="engineer_id" v-model="engineer_id" />
+            <input type="hidden" name="complaint_id" v-model="complaint_id" />
+            <input type="hidden" name="product_on_request_id" v-model="product_on_request_id" />
+            <input type="hidden" name="request_to_store_id" v-model="request_to_store_id" />
+            <input type="hidden" name="request_detail" v-model="request_detail" />
+            <div class="form-group col-md-12">
+              <input name="request_text" class="form-control" v-model="request_text" readonly />
+            </div>
+            <div class="form-group col-md-12">
+              <label
+                for="product_details"
+                >{{ $t("OutSource Product Details") }} </label
+              >  
+              <textarea
+                name="product_details"
+                v-model="product_details"
+                class="form-control form-control-custom"
+                row="1"
+              ></textarea>
+            </div>
+  
+  
+
+
+          </div>
+        </template>
+        <template v-slot:modal-footer>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            @click="submit_out_source_product()"
+          >
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
+
+      <modalcomponent
+        v-if="out_source_complaint"
+        v-on:close="out_source_complaint = false"
+        :modal_width="'modal-container-xl'"
+      >
+        <template v-slot:modal-header>
+          {{ $t("OutSource Product") }}
+        </template>
+        <template v-slot:modal-body>
+          <div class="form-row mb-2">
+            <input type="hidden" name="engineer_id" v-model="engineer_id" />
+            <input type="hidden" name="complaint_id" v-model="complaint_id" />
+
+            <div class="form-group col-12">
+              <label for="out_source_vendor">{{ $t("Out Source Vendor") }}</label>
+              <select
+                    name="transaction_type"
+                    v-model="out_source_vendor"
+                    v-validate="'required'"
+                    class="form-control form-control-custom custom-select"
+                  >
+                    <option value="">Choose OutSource Vendor..</option>
+  
+                    <option
+                      v-for="(vendor, index) in out_source_vendors"
+                      v-bind:value="vendor.id"
+                      v-bind:key="index"
+                    >
+                      {{vendor.fullname }} ({{ vendor.email }})
+                    </option>
+                  </select>
+  
+            </div>
+           
+            <div class="form-group col-md-12">
+              <label
+                for="product_details"
+                >{{ $t("OutSource Product Details") }} </label
+              >  
+              <textarea
+                name="product_details"
+                v-model="product_details"
+                class="form-control form-control-custom"
+                row="1"
+              ></textarea>
+            </div>
+          </div>
+        </template>
+        <template v-slot:modal-footer>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            @click="submit_out_source_complaint()"
+          >
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
     </div>
   </template>
   
@@ -1781,11 +1957,13 @@
               complaint_status_modal: false,
               add_customer_feedback: false,
               request_part_store: false,
+              out_source_product_model: false,
               add_remark_modal: false,
               delete_processing: false,
               show_payment_modal: false,
               show_modal: false,
               show_assign_complaint: false,
+              out_source_complaint: false,
               complaint_complete: false,
               delete_access: true,
               assign_processing: false,
@@ -1853,7 +2031,10 @@
               complaint_id: '',
               request_detail: '',
               request_text: '',
-              product_details: ''
+              product_details: '',
+              product_on_request_id: '',
+              request_to_store_id: '',
+              out_source_vendor: '',
           }
       },
       props: {
@@ -1865,7 +2046,8 @@
           delete_access: Boolean,
           is_lab_tech: Boolean,
           out_source_items: [Array, Object],
-          is_customer: Boolean
+          is_customer: Boolean,
+          out_source_vendors: [Array, Object]
       },
       mounted() {
           console.log('Category detail page loaded');
@@ -1882,10 +2064,93 @@
           this.engineer_id = request.engineer_id;
           this.complaint_id = request.complaint_id;
           this.request_detail = request.request;
-          this.request_text = 'Engineer Request for: ' + request.request;
+          this.request_text = 'OutSource Request for: ' + request.request;
           this.request_part_store = true;
         },
+        OutSourceProduct(request){
+          
+          this.request_id = request.id,     
+          this.engineer_id = request.engineer_id;
+          this.complaint_id = request.complaint_id;
+          this.request_to_store_id = request.request_to_store[0].id;
+          this.product_on_request_id = request.request_to_store[0].store_assign_products_on_reqeusts[0].id;
+          this.request_detail = request.request;
+          this.request_text = 'Engineer Request for: ' + request.request;
+          this.out_source_product_model = true;
+        },
+        submit_out_source_product(){
+          var formData = new FormData();
+          this.processing = true;
+          formData.append("access_token", window.settings.access_token);
+          formData.append('request_id', this.request_id);
+          formData.append('engineer_id', this.engineer_id);
+          formData.append('complaint_id', this.complaint_id);
+          formData.append('product_on_request_id', this.product_on_request_id);
+          formData.append('request_to_store_id', this.request_to_store_id);
+          formData.append('request_detail', this.request_detail);
+          formData.append('product_details', this.product_details);
+
+          axios.post('/api/add_out_source_product', formData).then((response) => {
+  
+            if (response.status == 200) {
+                this.show_response_message(response.data.msg, 'Success');
+
+                location.reload();
+
+            } else {
+                this.show_modal = false;
+                this.processing = false;
+                try {
+                    var error_json = JSON.parse(response.data.msg);
+                    this.loop_api_errors(error_json);
+                } catch (err) {
+                    this.server_errors = response.data.msg;
+                }
+                this.error_class = 'error';
+            }
+
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        },
+        submit_out_source_complaint(){
+          var formData = new FormData();
+          this.processing = true;
+          formData.append("access_token", window.settings.access_token);
+          formData.append('engineer_id', this.engineer_id);
+          formData.append('complaint_id', this.complaint_id);
+          formData.append('out_source_vendor', this.out_source_vendor);
+          formData.append('product_details', this.product_details);
+
+          console.log(...formData);
+
+          axios.post('/api/add_out_source_complaint', formData).then((response) => {
+  
+            if (response.status == 200) {
+                this.show_response_message(response.data.msg, 'Success');
+
+                location.reload();
+
+            } else {
+                this.show_modal = false;
+                this.processing = false;
+                try {
+                    var error_json = JSON.parse(response.data.msg);
+                    this.loop_api_errors(error_json);
+                } catch (err) {
+                    this.server_errors = response.data.msg;
+                }
+                this.error_class = 'error';
+            }
+
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        },
         submit_request_to_store(){
+          this.processing = true;
           var formData = new FormData();
           formData.append("access_token", window.settings.access_token);
           formData.append('request_id', this.request_id);
@@ -1893,15 +2158,10 @@
           formData.append('complaint_id', this.complaint_id);
           formData.append('request_detail', this.request_detail);
           formData.append('product_details', this.product_details);
-
-          console.log(...formData);
-          axios.post('/api/add_request_product_store', formData).then((response) => {
-  
+          axios.post('/api/add_request_product_store', formData).then((response) => {  
             if (response.status == 200) {
                 this.show_response_message(response.data.msg, 'Success');
-
                 location.reload();
-
             } else {
                 this.show_modal = false;
                 this.processing = false;
@@ -2377,6 +2637,14 @@
           request_for_product() {
               this.required_product = true;
           },
+
+          OutSourceComplaint(request) {
+              this.out_source_complaint = true;    
+              this.engineer_id = request.assign_to_lab_staff_id;
+              this.complaint_id = request.id;
+              this.out_source_product_model = true;
+          },
+
           complaint_completed() {
               this.complaint_complete = true
           },

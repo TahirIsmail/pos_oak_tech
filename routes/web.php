@@ -344,6 +344,8 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
     Route::get('/view_complaint/{slack?}', "ComplaintsController@open_complaint")->name('view_complaint');
     Route::get('/view_lab_complaint/{slack?}', "ComplaintsController@open_lab_complaint")->name('view_lab_complaint');
+    Route::get('/view_out_source_complaint/{slack?}', "ComplaintsController@view_out_source_complaint")->name('view_out_source_complaint');
+    Route::get('/view_request_to_store/{slack?}', "ComplaintsController@view_request_to_store")->name('view_request_to_store');
 
     Route::get('/print_complaint_invoice/{slack}', "ComplaintsController@print_invoice")->name('print_complaint_invoice');
 
@@ -351,6 +353,9 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/complaints','ComplaintsController@complaints')->name('complaints');
     Route::get('/lab_complaints','ComplaintsController@lab_complaints')->name('lab_complaints');
     Route::get('/product_request','ComplaintsController@product_request')->name('product_request');
+
+    Route::get('/out_source_complaints','ComplaintsController@out_source_complaints')->name('out_source_complaints');
+
 
 
     // Route::get('/expenses','ExpensesController@index')->name('expenses');

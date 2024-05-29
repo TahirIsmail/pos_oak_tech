@@ -140,6 +140,7 @@ class User extends Controller
         }
 
         $user_data = new UserResource($user);
+      
 
         $selected_stores = UserStoreModel::where([
             ['user_stores.user_id', '=', $user->id ]
