@@ -10,6 +10,9 @@ use App\Models\Supplier as SupplierModel;
 
 use App\Http\Resources\SupplierResource;
 use App\Models\SupplierPerformance;
+use App\Models\Role as RoleModel;
+use App\Models\User as UserModel;
+use App\Models\Store as StoreModel;
 
 class Supplier extends Controller
 {
@@ -83,6 +86,35 @@ class Supplier extends Controller
 
         return view('supplier.add_supplier', $data);
     }
+
+
+
+    public function add_out_source_vendor($slack = null){
+        //check access
+        $data['menu_key'] = 'MM_SUPPLIER';
+        $data['sub_menu_key'] = 'SM_SUPPLIERS';
+        $data['action_key'] = ($slack == null)?'A_ADD_SUPPLIER':'A_EDIT_SUPPLIER';
+        check_access(array($data['action_key']));
+
+        $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('SUPPLIER_STATUS')->active()->sortValueAsc()->get();
+        $data['supplier_data'] = null;
+        $data['roles'] = RoleModel::select('slack', 'label')->where('label', 'Outsource Vendor')->active()->sortLabelAsc()->get();
+
+        $data['stores'] =  StoreModel::select('slack', 'store_code', 'name', 'address')
+        ->active()
+        ->get();
+        $data['user_data'] = null;
+        $data['users'] = UserModel::whereNotIn('role_id', [2, 3])->where('customer_child_id', null)->get();
+        // $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('USER_STATUS')->active()->sortValueAsc()->get();
+        if(isset($slack)){    
+           
+        }
+        // dd($data);
+        return view('supplier.out_source_vendor', $data);
+    }
+
+
+
 
     //This is the function that loads the detail page
     public function detail($slack){

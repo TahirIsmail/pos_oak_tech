@@ -30,6 +30,9 @@ class Complaints extends Model
     public function order(){
         return $this->belongsTo(Invoice::class, 'order_id');
     }
+    public function customers(){
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
     public function customer(){
         return $this->belongsTo(Customer::class, 'customer_id');
     }

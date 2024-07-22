@@ -22,4 +22,9 @@ class PartRequest extends Model
     public function request_to_store(){
         return $this->hasMany(RequestToStore::class, 'request_id');
     }
+
+
+    public function assign_complaint_lab(){
+        return $this->belongsTo(CompaintAssignToLabEngg::class, 'assign_complaint_id');
+    }
 }

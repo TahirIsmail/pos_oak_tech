@@ -15,7 +15,14 @@
                 </div>
                 <div class="">
                     @if (check_access(array('A_ADD_CUSTOMER_COMPLAINT'), true))
-                        <a href="{{ route('add_complaints')}}" role="button" class="btn btn-primary">{{ __("New Customer Complaint") }}</a>
+                        {{-- <a href="{{ route('add_complaints')}}" role="button" class="btn btn-primary">{{ __("New Customer Complaint") }}</a> --}}
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('New Customer Complaint') }}
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ route('add_complaints', ['type' => 'field'])}}">Assign To Field Engg</a>
+                            <a class="dropdown-item" href="{{ route('add_complaints', ['type' => 'lab'])}}">Assign To Lab Engg</a>
+                        </div>
                     @endif
                 </div>
             </div>

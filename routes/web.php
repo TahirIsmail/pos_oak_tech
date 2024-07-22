@@ -124,6 +124,10 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_supplier/{slack?}', "Supplier@add_supplier")->name('edit_supplier');
     Route::get('/edit_supplier_performance/{slack?}', "Supplier@add_supplier_performa")->name('edit_supplier_performance');
 
+
+    // out source vendor 
+    Route::get('/add_out_source_vendor', "Supplier@add_out_source_vendor")->name('add_out_source_vendor');
+
     //tax code
     Route::get('/tax_codes', "Taxcode@index")->name('tax_codes');
     Route::get('/gst_on_product', "Taxcode@gst_on_product")->name('gst_on_product');
@@ -343,8 +347,8 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
     Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
     Route::get('/view_complaint/{slack?}', "ComplaintsController@open_complaint")->name('view_complaint');
-    Route::get('/view_lab_complaint/{slack?}', "ComplaintsController@open_lab_complaint")->name('view_lab_complaint');
-    Route::get('/view_out_source_complaint/{slack?}', "ComplaintsController@view_out_source_complaint")->name('view_out_source_complaint');
+    Route::get('/view_lab_complaint/{id?}', "ComplaintsController@open_lab_complaint")->name('view_lab_complaint');
+    Route::get('/view_out_source_complaint/{id?}', "ComplaintsController@view_out_source_complaint")->name('view_out_source_complaint');
     Route::get('/view_request_to_store/{slack?}', "ComplaintsController@view_request_to_store")->name('view_request_to_store');
 
     Route::get('/print_complaint_invoice/{slack}', "ComplaintsController@print_invoice")->name('print_complaint_invoice');

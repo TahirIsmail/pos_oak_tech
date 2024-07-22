@@ -48,6 +48,8 @@ class ProductsReportExport implements FromCollection, WithMapping, WithHeadings,
             ->taxcodeJoin()
             ->discountcodeJoin();
 
+ 
+
         if ($from_created_date != '') {
             $from_created_date = strtotime($from_created_date);
             $from_created_date = date(config('app.sql_date_format'), $from_created_date);
@@ -80,9 +82,9 @@ class ProductsReportExport implements FromCollection, WithMapping, WithHeadings,
             $query->mainProduct();
         });
 
-        $query = $query->when($product_type == 'ingredients', function ($query) {
-            $query->isIngredient();
-        });
+        // $query = $query->when($product_type == 'ingredients', function ($query) {
+        //     $query->isIngredient();
+        // });
 
         $products = $query->get();
         return $products;
@@ -91,7 +93,7 @@ class ProductsReportExport implements FromCollection, WithMapping, WithHeadings,
     public function headings(): array
     {
         $headings = [
-            'S.NO',
+            'Serial No#',
             'PRODUCT NAME',
         ];
 
@@ -107,7 +109,7 @@ class ProductsReportExport implements FromCollection, WithMapping, WithHeadings,
     public function map($product): array
     {
         $mapped = [
-            $this->serialNumber++,
+            $product->product_code ?? '',
             $product->name ?? '',
         ];
 
@@ -142,26 +144,24 @@ class ProductsReportExport implements FromCollection, WithMapping, WithHeadings,
         }
 
         // Create a row without the 'Model' for duplicate checking
-        $checkRow = array_filter($specificationDetails, function($key) {
-            return $key !== 'Model';
-        }, ARRAY_FILTER_USE_KEY);
+        // $checkRow = array_filter($specificationDetails, function($key) {
+        //     return $key !== 'Model';
+        // }, ARRAY_FILTER_USE_KEY);
 
         $saleAmount = $product->sale_amount_excluding_tax ?? null;
 
         // Check if the row is unique except for the 'Model'
-        $serializedRow = serialize($checkRow);
-        if (in_array($serializedRow, $this->seenRows)) {
-            return []; // Skip the row if it has already been seen
-        }
-
+        // $serializedRow = serialize($checkRow);
+        // if (in_array($serializedRow, $this->seenRows)) {
+        //     return []; // Skip the row if it has already been seen
+        // }
         // Add the row to the seen rows
-        $this->seenRows[] = $serializedRow;
-
+        // $this->seenRows[] = $serializedRow;
         // Append the 'Model' and sale amount to the mapped row
-        $specificationDetails = array_values($specificationDetails); // Re-index the array
+        
+        $specificationDetails = array_values($specificationDetails);
         $mapped = array_merge($mapped, $specificationDetails);
         $mapped[] = $saleAmount;
-
         return $mapped;
     }
 

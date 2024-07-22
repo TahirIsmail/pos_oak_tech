@@ -4,7 +4,7 @@
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown">
         @if (check_access(array('VIEW_LAB_COMPLAINTS'), true))
-            <a href="view_lab_complaint/{{ $row->slack }}" class="dropdown-item">{{ __("View") }}</a>
+            <a href="view_lab_complaint/{{ encrypt($row->id) }}" class="dropdown-item">{{ __("View") }}</a>
         @endif
        
     </div>

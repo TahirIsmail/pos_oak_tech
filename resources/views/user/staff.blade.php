@@ -10,7 +10,15 @@
                     </div>
                     <div class="">
                         @if (check_access(['A_ADD_USER'], true))
-                            <a href="{{ route('add_user') }}" role="button" class="btn btn-primary">{{ __('New User') }}</a>
+                            {{-- <a href="{{ route('add_user') }}" role="button" class="btn btn-primary"></a> --}}
+
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ __('New User') }}
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ route('add_user') }}" role="button"  >{{ __('New User') }}</a>
+                                <a class="dropdown-item" href="{{ route('add_out_source_vendor') }}" role="button">{{ __('New OutSource Vendor') }}</a>
+                            </div>
                         @endif
                     </div>
                 </div>

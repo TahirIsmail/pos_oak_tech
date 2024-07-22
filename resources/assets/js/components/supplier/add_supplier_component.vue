@@ -67,6 +67,7 @@
                                 class="form-control form-control-custom" :placeholder="$t('Enter Pincode')">
                             <span v-bind:class="{ 'error': errors.has('pincode') }">{{ errors.first('pincode') }}</span>
                         </div> -->
+                        
                         <div class="form-group col-sm-12 col-md-10 col-lg-4">
                             <label for="status">{{ $t("Status") }}</label><span style="color:red">*</span>
                             <select name="status" v-model="status" v-validate="'required|numeric'"

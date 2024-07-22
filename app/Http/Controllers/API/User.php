@@ -140,6 +140,7 @@ class User extends Controller
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
             
             $query = UserModel::select('users.*', 'master_status.label as status_label', 'master_status.color as status_color', 'roles.status as role_status' , 'roles.label as role_label')
+            
             ->take($limit)
             ->skip($offset)
             ->statusJoin()
@@ -305,6 +306,100 @@ class User extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "User created successfully", 
+                    "data"    => $user['slack']
+                ), 'SUCCESS'
+            ));
+
+        }catch(Exception $e){
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode()
+                )
+            ));
+        }
+    }
+
+
+    public function store_out_source_vendor(Request $request)
+    {
+        try {
+
+            if (!check_access(['A_ADD_SUPPLIER'], true)) {
+                throw new Exception("Invalid request", 400);
+            }
+
+            $this->validate_request($request);
+
+            // dd($request->all());
+            
+            //check user email already exists
+            $user_email_exists = UserModel::where('email', $request->email)->first();
+            if ($user_email_exists) {
+                throw new Exception("Email is already added, try signing in");
+            }
+
+            $role_data = RoleModel::select('id')->where('slack', '=', $request->role)->resolveSuperAdminRole()->active()->first();
+            if (!$role_data) {
+                throw new Exception("Invalid role selected", 400);
+            }
+
+            $password = Str::random(6);
+            $hashed_password = Hash::make($password);
+
+            DB::beginTransaction();
+
+            $user = [
+                "slack" => $this->generate_slack("users"),
+                "user_code" => Str::random(6),
+                "out_source_vendor" => 1,
+                "email" => $request->email,
+                "password" => $hashed_password,
+                "init_password" => $password,
+                "fullname" => $request->fullname,
+                "cnic" => $request->cnic,
+                "gender" => $request->gender,
+                "phone" => $request->phone,
+                "country" => $request->country,
+                "city" => $request->city,
+                "address" => $request->address,
+                "reference" => $request->reference,
+                "bank_name" => $request->bank_name,
+                "bank_code" => $request->bank_code,
+                "account_title" => $request->account_title,
+                "account_number" => $request->account_number,
+                "iban_number" => $request->iban_number,
+                "role_id" => $role_data->id,
+                "status" => $request->status,
+                "created_by" => $request->logged_user_id
+            ];
+            $user_id = UserModel::create($user)->id;
+
+            if($user_id){
+            $baseUrl = config('app.url');
+            $user['base_url'] = $baseUrl;
+            Event::dispatch(new UserCreationEvent($user));
+            }
+
+            $code_start_config = Config::get('constants.unique_code_start.user');
+            $code_start = (isset($code_start_config))?$code_start_config:100;
+            
+            $user_code = [
+                "user_code" => ($code_start+$user_id)
+            ];
+            UserModel::where('id', $user_id)
+            ->update($user_code);
+
+            $role_api = new RoleAPI();
+            $role_api->update_user_roles($request, $role_data->id);
+
+            $this->update_user_stores($request, $user['slack']);
+
+            DB::commit();
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Out Source Vendor created successfully", 
                     "data"    => $user['slack']
                 ), 'SUCCESS'
             ));

@@ -1,6 +1,6 @@
 <template>
     <div class="row card p-4">
-   
+    
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -17,9 +17,15 @@
             <span></span>
           </div>
         </div>
-        <div class="d-flex flex-wrap mb-4" v-if="user_data.part_requests">
+        <div class="d-flex flex-wrap mb-4" v-if="user_data && user_data.part_requests">
           <span class="alert alert-success" v-for="request in user_data.part_requests" :key="request.id">
             {{ 'Your Request for ' + request.request + (request.request_status == 2 && request.engineer_type == 'Lab_Engineer' ? ' Completed' : ' is Pending') }}
+          </span>
+          </div>
+          
+          <div class="d-flex flex-wrap mb-4" v-if="complaint.complaint_assign_to_lab_enggs[0].complaint_outsource_request == 1">
+          <span class="alert alert-success">
+            {{ 'Request for OutSource Product' }}
           </span>
           </div>
 
@@ -28,7 +34,7 @@
               <button
                 type="submit"
                 class="alert alert-success mr-1"
-                v-if="complaint.complaint_completed_date == null"
+                v-if="complaint.complaint_completed_date == null && complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time == null"
               >
                 {{ $t("Complaint Assigned") }}
               </button>
@@ -46,122 +52,40 @@
           <p v-html="server_errors" v-bind:class="[error_class]"></p>
           
           <div class="ml-auto d-flex">
-            <div v-if="assign_access">
-              <button
-                type="submit"
-                class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id == null || complaint.assign_to_lab_staff_id == 0"
-                v-on:click="assigncomplaint_to_labtachnician()"
-                v-bind:disabled="assign_processing == true"
-              >
-                <i
-                  class="fa fa-circle-notch fa-spin"
-                  v-if="assign_processing == true"
-                ></i>
-                {{ $t("Assign Complaint") }}
-              </button>
-  
-              <button
-                type="button"
-                class="btn btn-primary mr-1"
-                v-on:click="add_complaint_status()"
-              >
-                {{ $t("Complaint Status") }}
-              </button>
-            </div>
-  
+            
             
   
-            <div v-if="complaint.complaint_completed_date == null">
+            <div v-if="complaint.complaint_completed_date == null && complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time == null && complaint.complaint_assign_to_lab_enggs[0].complaint_outsource_request == 0">
               <button
                 type="submit"
-                class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null && is_lab_tech"
+                class="btn btn-success mr-1"                
                 v-on:click="request_for_product()">
                 {{ $t("Add Required Product") }}
               </button>
             </div>
 
-            <div v-if="complaint.complaint_completed_date == null">
+            <div v-if="complaint.complaint_completed_date == null && complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time == null && complaint.complaint_assign_to_lab_enggs[0].complaint_outsource_request == 0">
               <button
                 type="submit"
                 class="btn btn-primary mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null && is_lab_tech"
                 v-on:click="add_remarks()">
                 {{ $t("Add Remarks") }}
               </button>
             </div>
 
-            <div v-if="complaint.complaint_completed_date != null">
-              <button
-                type="submit"
-                class="btn btn-primary mr-1"
-                v-if="is_customer && complaint.customer_feedback == null"
-                v-on:click="add_feedback()">
-                {{ $t("Add Feedback") }}
-              </button>
-            </div>
+          
   
             <div v-if="complaint.complaint_completed_date == null">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null && !is_customer"
                 v-on:click="complaint_completed()"
               >
                 {{ $t("Complaint Complete") }}
               </button>
-            </div>
+            </div>  
+          
   
-            <div
-              v-if="requirement_request_access && complaint.complaint_completed_date == null"
-            >
-              <button
-                type="submit"
-                class="btn btn-success mr-1"
-                v-if="requirement_request"
-                v-on:click="assign_requested_product()"
-              >
-                {{ $t("Requirement Assign") }}
-              </button>
-            </div>
-  
-            <div
-              v-if="Customer_complaint_make_invoice && complaint.complaint_completed_date != null && complaint.final_total_amount == null"
-            >
-              <button
-                type="submit"
-                class="btn btn-success mr-1"
-                v-if="Customer_complaint_make_invoice"
-                v-on:click="make_complaint_invoice()"
-              >
-                {{ $t("Generate Invoice") }}
-              </button>
-            </div>
-  
-            <div
-              v-if="Customer_complaint_make_invoice && complaint.complaint_completed_date != null && complaint.final_total_amount != null"
-            >
-              <button
-                type="submit"
-                class="btn btn-success mr-1"
-                v-if="Customer_complaint_make_invoice"
-                v-on:click="record_payment_invoice()"
-              >
-                {{ $t("Record Payment") }}
-              </button>
-            </div>
-  
-            <div
-              v-if="payment_pending_amount == 0 && complaint.final_total_amount != null"
-            >
-              <a
-                class="btn btn-outline-primary mr-1"
-                v-bind:href="'/print_complaint_invoice/'+complaint_slack"
-                target="_blank"
-                >{{ $t("PDF") }}</a
-              >
-            </div>
           </div>
         </div>
   
@@ -203,34 +127,25 @@
               {{ complaint.c_status }}
             </p>
           </div>
-          <div class="form-group col-md-3">
-            <label for="label">{{ $t("Status") }}</label>
-  
+          <div class="form-group col-md-3" v-if="complaint.complaint_status_label">
+            <label for="label">{{ $t("Status") }}</label>  
             <p class="alert alert-success w-50">
               {{ complaint.complaint_status_label }}
             </p>
           </div>
 
-          <div class="form-group col-md-3" v-if="!is_customer">
-            <label for="label">{{ $t("Status For OAK") }}</label>
-  
+          <div class="form-group col-md-3" v-if="complaint.status">
+            <label for="label">{{ $t("Status For OAK") }}</label>  
             <p class="alert alert-success w-50">
               {{ complaint.status }}
             </p>
           </div>
-  
-          <div class="form-group col-md-3" v-if="!is_customer">
-            <label for="created_by">{{ $t("Assign to LabTechnician") }}</label>
-  
-            <p v-if="complaint.user">{{ complaint.user.fullname }} ({{ complaint.user.email }})</p>
-          </div>
-  
+
           <div
             class="form-group col-md-3"
             v-if="complaint.complaint_completed_date"
           >
-            <label for="created_by">{{ $t("Completed Date") }}</label>
-  
+            <label for="created_by">{{ $t("Completed Date") }}</label> 
             <p class="alert alert-success w-50">{{ complaint.complaint_completed_date }}</p>
           </div>
   
@@ -241,20 +156,17 @@
           </div>
   
           <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("End User Details") }}</label>
-  
+            <label for="created_by">{{ $t("End User Details") }}</label>  
             <p class="">{{ complaint.end_user_details }}</p>
           </div>
   
           <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Service Required") }}</label>
-  
+            <label for="created_by">{{ $t("Service Required") }}</label>  
             <p class="">{{ complaint.service_required }}</p>
           </div>
   
           <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("POC Name") }}</label>
-  
+            <label for="created_by">{{ $t("POC Name") }}</label>  
             <p class="">{{ complaint.poc_name }}</p>
           </div>
   
@@ -266,41 +178,17 @@
           <div class="form-group col-md-3">
             <label for="created_by">{{ $t("Service Type") }}</label>
             <p class="">{{ complaint.type_of_service }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Picked For Workshop") }}</label>
-            <p class="">{{ complaint.picked_for_workshop }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Equipment Make") }}</label>
-            <p class="">{{ complaint.equipment_make }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Model") }}</label>
-            <p class="">{{ complaint.model }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Serial No") }}</label>
-            <p class="">{{ complaint.serial_no }}</p>
-          </div>
+          </div>  
   
           <div class="form-group col-md-3" v-if="!is_customer">
             <div v-if="complaint.due_date">
-              <label for="created_by">{{ $t("due Date") }}</label>
-  
+              <label for="created_by">{{ $t("due Date") }}</label>  
               <p class="alert alert-danger w-50">{{ complaint.due_date }}</p>
             </div>
           </div>
   
           <div class="form-group col-md-3" v-if="complaint.admin_remark">
-            <label
-              for="created_by"
-              >{{ $t("Manager Remark to Lab Technician") }}</label
-            >  
+            <label for="created_by">{{ $t("Manager Remark to Lab Technician") }}</label>  
             <p> {{ complaint.admin_remark }} </p>
           </div>
   
@@ -311,11 +199,7 @@
             v-if="complaint.complaint_status == 'Request Completed' || complaint.complaint_status == 'Completed Complaint'"
           >
             <div v-if="complaint.lab_staff_remark">
-              <label
-                for=""
-                >{{ $t("Lab Technician Requirement Request.") }}</label
-              >
-  
+              <label for="" >{{ $t("Lab Technician Requirement Request.") }}</label>  
               <p>
                 <strong class="alert alert-success">
                   {{ complaint.lab_staff_remark }}
@@ -326,11 +210,7 @@
   
           <div class="form-group col-md-3" v-else>
             <div v-if="complaint.lab_staff_remark">
-              <label
-                for=""
-                >{{ $t("Lab Technician Requirement Request.") }}</label
-              >
-  
+              <label for="">{{ $t("Lab Technician Requirement Request.") }}</label>  
               <p>
                 <strong class="alert alert-danger">
                   {{ complaint.lab_staff_remark }}
@@ -342,15 +222,14 @@
   
         <div class="form-row mb-2">
           <div class="form-group col-md-6">
-            <label for="description">{{ $t("Description") }}</label>
-  
+            <label for="description">{{ $t("Description") }}</label>  
             <p></p>
           </div>
         </div>
   
         <div>
 
-          <div class="form-row mb-2 mt-2" v-if="user_data.part_requests">
+          <div class="form-row mb-2 mt-2" v-if="user_data && user_data.part_requests">
           <div class="form-group col-12">
             <table class="table table-striped display nowrap text-nowrap w-100">
             <thead>
@@ -380,8 +259,7 @@
                 <td v-else-if="request.request_status == 2 && request.end_request_time != null">
                   <span class="alert alert-info">Completed</span>
                 </td>
-                <td v-else></td>
-               
+                <td v-else></td>               
               </tr>
             </tbody>
           </table>
@@ -702,6 +580,7 @@
               admin_remark: '',
               lab_staff_remark: '',
               admin_again_remark: '',
+              assign_complaint_id: (this.complaint.complaint_assign_to_lab_enggs) ?  this.complaint.complaint_assign_to_lab_enggs[0].id : '',
               requirement_request: (this.complaint.lab_staff_remark) ? this.complaint.lab_staff_remark : null,
               complaint_slack: this.complaint.slack,
               delete_category_api_link: '/api/delete_complaint/' + this.complaint.slack,
@@ -806,6 +685,7 @@
             formData.append('complaint_slack', this.complaint_slack);
             formData.append('parts_required', this.parts_required);
             formData.append('outsource', this.outsource);
+            formData.append('assign_complaint_id', this.assign_complaint_id);
             formData.append('outsource_item', this.outsource_item);
             formData.append('ready_date', this.ready_date);
             formData.append('diagnose_by_engg', this.diagnose_by_engg);
@@ -1312,11 +1192,13 @@
               this.show_modal = true;
   
               this.$on("submit", function() {
-                  // this.processing = true;
+                  this.processing = true;
                   var formData = new FormData();
                   formData.append("access_token", window.settings.access_token);
                   formData.append("lab_staff_remark", this.lab_staff_remark);
                   formData.append('complaint_slack', this.complaint_slack);
+                  formData.append('assign_complaint_id', this.assign_complaint_id);
+                  console.log(...formData);
                   axios.post('/api/request_requirement', formData).then((response) => {
   
                           if (response.data.status_code == 200) {

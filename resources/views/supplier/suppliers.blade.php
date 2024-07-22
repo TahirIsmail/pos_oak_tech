@@ -17,6 +17,8 @@
                         @if (check_access(['A_ADD_SUPPLIER'], true))
                             <a href="{{ route('add_supplier') }}" role="button"
                                 class="btn btn-primary">{{ __('New Supplier') }}</a>
+
+                                
                         @endif
                     </div>
                 </div>

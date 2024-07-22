@@ -1,8 +1,7 @@
 <template>
-    <div class=" row">
-        {{ user }}
-        <div class=" col-md-12">
-
+    <div class="card row">
+        
+        <div class="col-md-12 p-4">
             <div class="d-flex flex-wrap mb-4">
                 <div class="mr-auto">
                    <div class="d-flex">

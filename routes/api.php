@@ -40,6 +40,9 @@ Route::group(['middleware' => ['token_auth']], function () {
     //user
     Route::post('/users', 'API\User@index');
     Route::post('/add_user', 'API\User@store');
+    Route::post('/add_out_source_user', 'API\User@store_out_source_vendor');
+
+
     Route::post('/update_user/{slack}', 'API\User@update')->name('update_user');
     Route::post('/reset_user_password/{slack}', 'API\User@reset_user_password');
     Route::post('/load_users', 'API\User@load_user_list');
@@ -482,6 +485,9 @@ Route::group(['middleware' => ['token_auth']], function () {
 
 
     Route::post('/complaint_submit_transaction','API\Complaints@complaint_submit_transaction');
+
+
+    Route::post('/out_source_complaint_complete','API\Complaints@out_source_complaint_complete');
 
 
 

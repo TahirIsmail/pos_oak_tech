@@ -24,172 +24,361 @@
             </div>
             <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
-            <div class="form-row mb-2">
 
-                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
-                    <label for="customer_category">{{ $t("Customer Category") }}</label>
-                    <select name="customer_category" v-model="customer_category" @change="fetchCustomers"
-                        v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customer Category...">
-                        <option value="" disabled selected>Choose Customer Category...</option>
-                        <option value="CUSTOM">Corporate</option>
-                        <option value="WALKIN">Walkin</option>
-                        <option value="DEALER">DEALER</option>
-                    </select>
-                    <span v-bind:class="{ 'error': errors.has('customer_category') }">{{ errors.first('customer_category')
-                    }}</span>
-                </div>
-
-
-                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
-                    <label for="selectedCustomer">{{ $t("Choose Customer") }}</label>
-                    <select name="selectedCustomer" v-model="selectedCustomer"
-                        v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customers..">
-                        <option value="" disabled selected>Choose Customers..</option>
-
-                        <option v-for="(customer_item, index) in customer_list" :value="customer_item.slack"
-                            placeholder="Choose Customers.." :key="index">
-                            {{ customer_item.name }} - {{ customer_item.email }}
-                        </option>
-                    </select>
-                    <span v-bind:class="{ 'error': errors.has('selectedCustomer') }">{{ errors.first('selectedCustomer')
-                    }}</span>
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="service_type">{{ $t("Choose Service Type") }}</label>
-                    <select name="service_type" v-model="service_type" class="form-control form-control-custom">
-                        <option value="" disabled selected>Select an Service Type...</option>
-                        <option value="warranty (Invoice or Purchase Order Number)">warranty (Invoice or Purchase Order Number)</option>
-                        <option value="SLA With Parts">SLA With Parts</option>
-                        <option value="SLA Without Parts">SLA Without Parts</option>
-                        <option value="Per Call">Per Call</option>
-                       
-                    </select>
-                    <!-- <span v-bind:class="{ 'error': errors.has('service_type') }">{{ errors.first('service_type')
-                    }}</span> -->
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="poc_name">{{ $t("POC Name") }}</label>
-                    <input name="poc_name" v-model="poc_name" class="form-control form-control-custom" />
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="equipment_type">{{ $t("Choose Equipment Type") }}</label>
-                    <select name="equipment_type" v-model="equipment_type" class="form-control form-control-custom">
-                        <option value="" disabled selected>Select an Equipment Type...</option>
-                        <option v-for="(type, index) in equipment_types" :key="index" :value="type">{{ type }}</option>
-                       
-                    </select>
-                    <!-- <span v-bind:class="{ 'error': errors.has('equipment_type') }">{{ errors.first('equipment_type')
-                    }}</span> -->
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="equipment_make">{{ $t("Equipment Make") }}</label>
-                    <input type="text" name="equipment_make" v-model="equipment_make" v-validate="'required'"
-                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Equipment Make')" />
-                    <span v-bind:class="{ error: errors.has('equipment_make') }">{{
-                        errors.first("equipment_make")
-                    }}</span>
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="model">{{ $t("Model") }}</label>
-                    <input type="text" name="model" v-model="model" v-validate="'required'"
-                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Model')" />
-                    <span v-bind:class="{ error: errors.has('model') }">{{
-                        errors.first("model")
-                    }}</span>
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="serial_no">{{ $t("Serial No") }}</label>
-                    <input type="text" name="serial_no" v-model="serial_no" v-validate="'required'"
-                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Serial No')" />
-                    <span v-bind:class="{ error: errors.has('serial_no') }">{{
-                        errors.first("serial_no")
-                    }}</span>
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="complaint_details">{{ $t("Complaint Details") }}</label>
-                    <input type="text" name="complaint_details" v-model="complaint_details" v-validate="'required'"
-                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Complaint Details')" />
-                    <span v-bind:class="{ error: errors.has('complaint_details') }">{{
-                        errors.first("complaint_details")
-                    }}</span>
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="end_user_details">{{ $t("End User Details") }}</label>
-                    <input type="text" name="end_user_details" v-model="end_user_details"
-                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter End User Details')" />
-                    <span v-bind:class="{ error: errors.has('end_user_details') }">{{
-                        errors.first("end_user_details")
-                    }}</span>
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4">
-                    <label for="service_required">{{ $t("Choose Service Required") }}</label>
-                    <select name="service_required" v-model="service_required" class="form-control form-control-custom">
-                        <option value="" disabled>Select Service Required...</option>
-                        <option value="On-Site">On-Site</option>
-                        <option value="Pickup for Workshop">Pickup for Workshop</option>
-                        <option value="Deliver by Customer">Deliver by Customer</option>                       
-                    </select>
-                    <!-- <span v-bind:class="{ 'error': errors.has('service_required') }">{{ errors.first('service_required')
-                    }}</span> -->
-                </div>
-
-                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
-                    <label for="assign_to">Assign To</label>
-                    <select v-model="assign_to" id="assign_to" class="form-control form-control-custom">
-                        <option selected disabled>Please Select Engg</option>
-                        <option value="assigned_to_field_eng">Field Engineer</option>
-                        <option value="assigned_to_lab_eng">Lab Engineer</option>
-                    </select>
-                </div>
-                <div v-if="!is_customer" class="w-100">
-                    <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_field_eng'">
-                        <label for="assigned_to">{{ $t("Assigned To Field Engg") }}</label>
-                        <select name="assigned_to" v-model="assigned_to_field_enng" class="form-control form-control-custom">
-                            <option value="" disabled>Select...</option>
-                            <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+            <div v-if="assign_type == 'lab'">
+                <div class="form-row mb-2">
+    
+                    <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="customer_category">{{ $t("Customer Category") }}</label>
+                        <select name="customer_category" v-model="customer_category" @change="fetchCustomers"
+                            v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customer Category...">
+                            <option value="" disabled selected>Choose Customer Category...</option>
+                            <option value="CUSTOM">Corporate</option>
+                            <option value="WALKIN">Walkin</option>
+                            <option value="DEALER">DEALER</option>
                         </select>
-                        
+                        <span v-bind:class="{ 'error': errors.has('customer_category') }">{{ errors.first('customer_category')
+                        }}</span>
                     </div>
     
-                     <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_lab_eng'">
-                        <label for="assigned_to">{{ $t("Assigned To Lab Engg") }}</label>
-                        <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
-                            <option value="" disabled>Select...</option>
-                            <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+    
+                    <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="selectedCustomer">{{ $t("Choose Customer") }}</label>
+                        <select name="selectedCustomer" v-model="selectedCustomer"
+                            v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customers..">
+                            <option value="" disabled selected>Choose Customers..</option>
+                            <option v-for="(customer_item, index) in customer_list" :value="customer_item.slack"
+                                placeholder="Choose Customers.." :key="index">
+                                {{ customer_item.name }} - {{ customer_item.email }}
+                            </option>
+                        </select>
+                        <span v-bind:class="{ 'error': errors.has('selectedCustomer') }">{{ errors.first('selectedCustomer')
+                        }}</span>
+                    </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="service_type">{{ $t("Choose Service Type") }}</label>
+                        <select name="service_type" v-model="service_type" class="form-control form-control-custom">
+                            <option value="" disabled selected>Select an Service Type...</option>
+                            <option value="warranty (Invoice or Purchase Order Number)">warranty (Invoice or Purchase Order Number)</option>
+                            <option value="SLA With Parts">SLA With Parts</option>
+                            <option value="SLA Without Parts">SLA Without Parts</option>
+                            <option value="Per Call">Per Call</option>                           
+                        </select>
+                        <!-- <span v-bind:class="{ 'error': errors.has('service_type') }">{{ errors.first('service_type')
+                        }}</span> -->
+                    </div>
+
+
+                    <div class="form-group col-sm-12 col-md-4" v-if="service_type == 'warranty (Invoice or Purchase Order Number)'">
+                        <label for="poc_name">{{ $t("Enter Invoice or Purchase Order Number") }}</label>
+                        <input name="poc_name" v-model="invoice_po_number" class="form-control form-control-custom" />
+                    </div>
+    
+                    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="poc_name">{{ $t("POC Name") }}</label>
+                        <input name="poc_name" v-model="poc_name" class="form-control form-control-custom" />
+                    </div>
+                    
+
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="mode_of_complaint">{{ $t("Mode of Complaint") }}</label>
+                        <select name="mode_of_complaint" v-model="mode_of_complaint" class="form-control form-control-custom">
+                            <option value="" disabled selected>Select Mode of Complaint...</option>
+                            <option value="Phone Call">Phone Call</option>
+                            <option value="Whatsapp">Whatsapp</option>
+                            <option value="Email">Email</option>
+                            <option value="Others">Others</option>                           
                         </select>                        
                     </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="equipment_type">{{ $t("Choose Equipment Type") }}</label>
+                        <select name="equipment_type" v-model="equipment_type" class="form-control form-control-custom">
+                            <option value="" disabled selected>Select an Equipment Type...</option>
+                            <option v-for="(type, index) in equipment_types" :key="index" :value="type">{{ type }}</option>                           
+                        </select>
+                        <!-- <span v-bind:class="{ 'error': errors.has('equipment_type') }">{{ errors.first('equipment_type')
+                        }}</span> -->
+                    </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="equipment_make">{{ $t("Equipment Make") }}</label>
+                        <input type="text" name="equipment_make" v-model="equipment_make" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Equipment Make')" />
+                        <span v-bind:class="{ error: errors.has('equipment_make') }">{{
+                            errors.first("equipment_make")
+                        }}</span>
+                    </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="model">{{ $t("Model") }}</label>
+                        <input type="text" name="model" v-model="model" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Model')" />
+                        <span v-bind:class="{ error: errors.has('model') }">{{
+                            errors.first("model")
+                        }}</span>
+                    </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="serial_no">{{ $t("Serial No") }}</label>
+                        <input type="text" name="serial_no" v-model="serial_no" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Serial No')" />
+                        <span v-bind:class="{ error: errors.has('serial_no') }">{{
+                            errors.first("serial_no")
+                        }}</span>
+                    </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="complaint_details">{{ $t("Complaint Details") }}</label>
+                        <input type="text" name="complaint_details" v-model="complaint_details" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Complaint Details')" />
+                        <span v-bind:class="{ error: errors.has('complaint_details') }">{{
+                            errors.first("complaint_details")
+                        }}</span>
+                    </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="end_user_details">{{ $t("End User Details") }}</label>
+                        <input type="text" name="end_user_details" v-model="end_user_details"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter End User Details')" />
+                        <span v-bind:class="{ error: errors.has('end_user_details') }">{{
+                            errors.first("end_user_details")
+                        }}</span>
+                    </div>
+    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="service_required">{{ $t("Choose Service Required") }}</label>
+                        <select name="service_required" v-model="service_required" class="form-control form-control-custom">
+                            <option value="" disabled>Select Service Required...</option>
+                            <option value="On-Site">On-Site</option>
+                            <option value="Pickup for Workshop">Pickup for Workshop</option>
+                            <option value="Deliver by Customer">Deliver by Customer</option>                       
+                        </select>
+                        <!-- <span v-bind:class="{ 'error': errors.has('service_required') }">{{ errors.first('service_required')
+                        }}</span> -->
+                    </div>
+    
+                    <!-- <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="assign_to">Assign To</label>
+                        <select v-model="assign_to" id="assign_to" class="form-control form-control-custom">
+                            <option selected disabled>Please Select Engg</option>
+                            <option value="assigned_to_field_eng">Field Engineer</option>
+                            <option value="assigned_to_lab_eng">Lab Engineer</option>
+                        </select>
+                    </div> -->
+                        <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_field_eng'">
+                            <label for="assigned_to">{{ $t("Assigned To Field Engg") }}</label>
+                            <select name="assigned_to" v-model="assigned_to_field_enng" class="form-control form-control-custom">
+                                <option value="" disabled>Select...</option>
+                                <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                            </select>                            
+                        </div>
+        
+                         <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_lab_eng'">
+                            <label for="assigned_to">{{ $t("Assigned To Lab Engg") }}</label>
+                            <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
+                                <option value="" disabled>Select...</option>
+                                <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                            </select>                        
+                        </div>
+    
+                    <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="complaint_status">{{ $t("Choose Status") }}</label>
+                        <select name="complaint_status" v-model="complaint_status" class="form-control form-control-custom">
+                            <option value="" disabled>Select Status...</option>
+                            <option value="Complaint Logged">Complaint Logged</option>
+                            <option value="Complaint Assigned">Complaint Assigned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Complete">Complete</option>
+                            <option value="Approval Pending">Approval Pending</option>
+                            <option value="Not Repairable">Not Repairable</option>
+                            <option value="Other">Other</option>                       
+                        </select>                    
+                    </div>
+                    
                 </div>
 
-                <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
-                    <label for="complaint_status">{{ $t("Choose Status") }}</label>
-                    <select name="complaint_status" v-model="complaint_status" class="form-control form-control-custom">
-                        <option value="" disabled>Select Status...</option>
-                        <option value="Complaint Logged">Complaint Logged</option>
-                        <option value="Complaint Assigned">Complaint Assigned</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Complete">Complete</option>
-                        <option value="Approval Pending">Approval Pending</option>
-                        <option value="Not Repairable">Not Repairable</option>
-                        <option value="CSE">CSE</option>                       
-                    </select>                    
+            </div>
+            <div v-if="assign_type == 'field'">
+                <div class="form-row mb-2">
+                    
+                    <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="customer_category">{{ $t("Customer Category") }}</label>
+                        <select name="customer_category" v-model="customer_category" @change="fetchCustomers"
+                            v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customer Category...">
+                            <option value="" disabled selected>Choose Customer Category...</option>
+                            <option value="CUSTOM">Corporate</option>
+                            <option value="WALKIN">Walkin</option>
+                            <option value="DEALER">DEALER</option>
+                        </select>
+                        <span v-bind:class="{ 'error': errors.has('customer_category') }">{{ errors.first('customer_category')
+                        }}</span>
+                    </div>
+
+
+                    <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="selectedCustomer">{{ $t("Choose Customer") }}</label>
+                        <select name="selectedCustomer" v-model="selectedCustomer"
+                            v-validate="'required'" class="form-control form-control-custom" placeholder="Choose Customers..">
+                            <option value="" disabled selected>Choose Customers..</option>
+                            <option v-for="(customer_item, index) in customer_list" :value="customer_item.slack"
+                                placeholder="Choose Customers.." :key="index">
+                                {{ customer_item.name }} - {{ customer_item.email }}
+                            </option>
+                        </select>
+                        <span v-bind:class="{ 'error': errors.has('selectedCustomer') }">{{ errors.first('selectedCustomer')
+                        }}</span>
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="service_type">{{ $t("Choose Service Type") }}</label>
+                        <select name="service_type" v-model="service_type" class="form-control form-control-custom">
+                            <option value="" disabled selected>Select an Service Type...</option>
+                            <option value="warranty (Invoice or Purchase Order Number)">warranty (Invoice or Purchase Order Number)</option>
+                            <option value="SLA With Parts">SLA With Parts</option>
+                            <option value="SLA Without Parts">SLA Without Parts</option>
+                            <option value="Per Call">Per Call</option>                           
+                        </select>
+                        <!-- <span v-bind:class="{ 'error': errors.has('service_type') }">{{ errors.first('service_type')
+                        }}</span> -->
+                    </div>
+
+
+                    <div class="form-group col-sm-12 col-md-4" v-if="service_type == 'warranty (Invoice or Purchase Order Number)'">
+                        <label for="poc_name">{{ $t("Enter Invoice or Purchase Order Number") }}</label>
+                        <input name="poc_name" v-model="invoice_po_number" class="form-control form-control-custom" />
+                    </div>
+
+
+
+
+                    
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="poc_name">{{ $t("POC Name") }}</label>
+                        <input name="poc_name" v-model="poc_name" class="form-control form-control-custom" />
+                    </div>
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="no_of_devices">{{ $t("No.of Devices") }}</label>
+                        <input type="number" min="1" name="no_of_devices" v-model="no_of_devices" class="form-control form-control-custom" />
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="mode_of_complaint">{{ $t("Mode of Complaint") }}</label>
+                        <select name="mode_of_complaint" v-model="mode_of_complaint" class="form-control form-control-custom">
+                            <option value="" disabled selected>Select Mode of Complaint...</option>
+                            <option value="Phone Call">Phone Call</option>
+                            <option value="Whatsapp">Whatsapp</option>
+                            <option value="Email">Email</option>
+                            <option value="Others">Others</option>                           
+                        </select>                        
+                    </div>
+
+                    <!-- <div class="form-group col-sm-12 col-md-4">
+                        <label for="equipment_type">{{ $t("Choose Equipment Type") }}</label>
+                        <select name="equipment_type" v-model="equipment_type" class="form-control form-control-custom">
+                            <option value="" disabled selected>Select an Equipment Type...</option>
+                            <option v-for="(type, index) in equipment_types" :key="index" :value="type">{{ type }}</option>                           
+                        </select>
+                        
+                    </div> -->
+
+                    <!-- <div class="form-group col-sm-12 col-md-4">
+                        <label for="equipment_make">{{ $t("Equipment Make") }}</label>
+                        <input type="text" name="equipment_make" v-model="equipment_make" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Equipment Make')" />
+                        <span v-bind:class="{ error: errors.has('equipment_make') }">{{
+                            errors.first("equipment_make")
+                        }}</span>
+                    </div> -->
+
+                    <!-- <div class="form-group col-sm-12 col-md-4">
+                        <label for="model">{{ $t("Model") }}</label>
+                        <input type="text" name="model" v-model="model" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Model')" />
+                        <span v-bind:class="{ error: errors.has('model') }">{{
+                            errors.first("model")
+                        }}</span>
+                    </div> -->
+
+                    <!-- <div class="form-group col-sm-12 col-md-4">
+                        <label for="serial_no">{{ $t("Serial No") }}</label>
+                        <input type="text" name="serial_no" v-model="serial_no" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Serial No')" />
+                        <span v-bind:class="{ error: errors.has('serial_no') }">{{
+                            errors.first("serial_no")
+                        }}</span>
+                    </div> -->
+
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="complaint_details">{{ $t("Complaint Details") }}</label>
+                        <input type="text" name="complaint_details" v-model="complaint_details" v-validate="'required'"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Complaint Details')" />
+                        <span v-bind:class="{ error: errors.has('complaint_details') }">{{
+                            errors.first("complaint_details")
+                        }}</span>
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="end_user_details">{{ $t("End User Details") }}</label>
+                        <input type="text" name="end_user_details" v-model="end_user_details"
+                            class="form-control form-control-custom" rows="5" :placeholder="$t('Enter End User Details')" />
+                        <span v-bind:class="{ error: errors.has('end_user_details') }">{{
+                            errors.first("end_user_details")
+                        }}</span>
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-4">
+                        <label for="service_required">{{ $t("Choose Service Required") }}</label>
+                        <select name="service_required" v-model="service_required" class="form-control form-control-custom">
+                            <option value="" disabled>Select Service Required...</option>
+                            <option value="On-Site">On-Site</option>
+                            <option value="Pickup for Workshop">Pickup for Workshop</option>
+                            <option value="Deliver by Customer">Deliver by Customer</option>                       
+                        </select>
+                        <!-- <span v-bind:class="{ 'error': errors.has('service_required') }">{{ errors.first('service_required')
+                        }}</span> -->
+                    </div>
+
+                    <!-- <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="assign_to">Assign To</label>
+                        <select v-model="assign_to" id="assign_to" class="form-control form-control-custom">
+                            <option selected disabled>Please Select Engg</option>
+                            <option value="assigned_to_field_eng">Field Engineer</option>
+                            <option value="assigned_to_lab_eng">Lab Engineer</option>
+                        </select>
+                    </div> -->
+                        <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_field_eng'">
+                            <label for="assigned_to">{{ $t("Assigned To Field Engg") }}</label>
+                            <select name="assigned_to" v-model="assigned_to_field_enng" class="form-control form-control-custom">
+                                <option value="" disabled>Select...</option>
+                                <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                            </select>                            
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-4" v-if="assign_to == 'assigned_to_lab_eng'">
+                            <label for="assigned_to">{{ $t("Assigned To Lab Engg") }}</label>
+                            <select name="assigned_to" v-model="assigned_to" class="form-control form-control-custom">
+                                <option value="" disabled>Select...</option>
+                                <option v-for="(engg, index) in lab_engineers" :key="index" :value="engg.slack">{{ engg.fullname }} ({{ engg.assign_complaints_count }})</option>                       
+                            </select>                        
+                        </div>
+
+                    <div class="form-group col-sm-12 col-md-4" v-if="!is_customer">
+                        <label for="complaint_status">{{ $t("Choose Status") }}</label>
+                        <select name="complaint_status" v-model="complaint_status" class="form-control form-control-custom">
+                            <option value="" disabled>Select Status...</option>
+                            <option value="Complaint Logged">Complaint Logged</option>
+                            <option value="Complaint Assigned">Complaint Assigned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Complete">Complete</option>
+                            <option value="Approval Pending">Approval Pending</option>
+                            <option value="Not Repairable">Not Repairable</option>
+                            <option value="Other">Other</option>                       
+                        </select>                    
+                    </div>                    
                 </div>
-                <!-- <div class="form-group col-sm-12 col-md-4">
-                    <label for="customer_feedback">{{ $t("Feedback") }}</label>
-                    <input type="text" name="customer_feedback" v-model="customer_feedback" v-validate="'required'"
-                        class="form-control form-control-custom" rows="5" :placeholder="$t('Enter Feedback')" />
-                    <span v-bind:class="{ error: errors.has('customer_feedback') }">{{
-                        errors.first("customer_feedback")
-                    }}</span>
-                </div> -->
             </div>
 
         </form>
@@ -218,6 +407,9 @@ export default {
     data() {
         const complaintsDataIsEmpty = !this.complaints_data || Object.keys(this.complaints_data).length === 0;
         return {
+            no_of_devices: complaintsDataIsEmpty ? '' : this.complaints_data.no_of_devices,
+            mode_of_complaint: complaintsDataIsEmpty ? '' : this.complaints_data.mode_of_complaint,
+            invoice_po_number: complaintsDataIsEmpty ? '' : this.complaints_data.invoice_po_number,
             max: 5,
             server_errors: "",
             processing: false,
@@ -225,7 +417,7 @@ export default {
             show_modal: false,
             customer_list: [],
             error_class: "",
-            assign_to: complaintsDataIsEmpty ? '' : this.complaints_data.assign_to,
+            assign_to: complaintsDataIsEmpty ? (this.assign_type == 'field' ? 'assigned_to_field_eng' : 'assigned_to_lab_eng') : this.complaints_data.assign_to,
             api_link: complaintsDataIsEmpty ? "/api/submit_customer_complaint" : `/api/update_customer_complaint/${this.complaints_data.slack}`,
             complaint_slack: complaintsDataIsEmpty ? '' : this.complaints_data.slack,
             selectedCustomer: complaintsDataIsEmpty || !this.complaints_data.customer ? (this.is_customer ? this.customer_slack : '') : this.complaints_data.customer.slack,
@@ -259,6 +451,7 @@ export default {
         equipment_types: Array,
         is_customer: Boolean,
         customer_slack: String,
+        assign_type: String
 
     },
     watch: {
@@ -269,6 +462,11 @@ export default {
                 this.fetchCustomers();
             },
         },
+        no_of_devices: function(value) {
+            if (value < 1) {
+                this.no_of_devices = 1;
+            }
+        }
     },
     methods: {
         async fetchCustomers() {
@@ -317,7 +515,11 @@ export default {
                         formData.append("assigned_to_field_enng", this.assigned_to_field_enng);
                         formData.append("poc_name", this.poc_name);
                         formData.append("complaint_status", this.complaint_status);
-                        formData.append("assign_to", this.assign_to)
+                        formData.append("assign_to", this.assign_to);
+                        formData.append('no_of_devices', this.no_of_devices);
+                        formData.append('mode_of_complaint', this.mode_of_complaint);
+                        formData.append('invoice_po_number', this.invoice_po_number);
+                        formData.append('assign_type', this.assign_type);
                         // formData.append("customer_feedback", this.customer_feedback);
                         console.log(...formData);
                         axios

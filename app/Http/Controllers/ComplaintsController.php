@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\API\Complaints;
 use App\Models\Category;
 use App\Models\ChildCategory;
+use App\Models\CompaintAssignToLabEngg;
 use App\Models\Complaints as ComplaintModel;
 use App\Models\Customer as CustomerModel;
+use App\Models\OutSourceComplaint;
 use App\Models\RequestToStore;
 use App\Models\Role;
 use App\Models\SubCategory;
@@ -110,6 +112,9 @@ class ComplaintsController extends Controller
 
         }
 
+
+        $data['assign_type'] = $request->input('type');
+
         if ($slack) {
 
             $complaint = ComplaintModel::with('customer', 'user', 'order', 'field_user')->where('slack', '=', $slack)->first();
@@ -118,7 +123,10 @@ class ComplaintsController extends Controller
             }
 
             $data['complaints_data'] = $complaint;
+            $data['assign_type'] = $complaint['assign_type'];
         }
+        
+        
 
         if ($request->logged_user_role_id == 2) {
             $customers = User::where('id', $request->logged_user_id)->get();
@@ -127,6 +135,8 @@ class ComplaintsController extends Controller
         }
 
         $data['customers_list'] = $customers;
+       
+        
 
         return view('complaints.add_customer_complaint', $data);
 
@@ -138,10 +148,21 @@ class ComplaintsController extends Controller
         $data['sub_menu_key'] = 'SM_CUSTOMER_COMPLAINTS';
         $data['action_key'] = 'A_VIEW_CUSTOMER_COMPLAINT';
         check_access(array($data['action_key']));
-        $users = UserModel::withCount(['assignComplaints' => function ($query) {
+        // $users = UserModel::with('role')->withCount(['assignComplaints' => function ($query) {
+        //     $query->where('complaint_status', '!=', 'Completed Complaint');
+        // }])->whereNotIn('role_id', [1, 2, 3])->where('customer_child_id', null)->get();
+        $users = UserModel::with('role')
+        ->withCount(['assignComplaints' => function ($query) {
             $query->where('complaint_status', '!=', 'Completed Complaint');
-        }])->whereNotIn('role_id', [1, 2, 3])->where('customer_child_id', null)->get();
+        }])
+        ->whereHas('role', function ($query) {
+            $query->where('label', 'Lab Engineer');
+        })
+        ->where('customer_child_id', null)
+        ->get();
         $data['labTechnician'] = $users;
+
+        // dd($users);
 
         $OutSource_Vendors = Role::where('label', 'Outsource Vendor')->first();
         
@@ -153,7 +174,7 @@ class ComplaintsController extends Controller
             $data['out_source_vendors'] = [];
         }
 
-        $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs', 'complaint_assign_to_field_enggs', 'part_requests.engineer', 'part_requests.request_to_store.store_assign_products_on_reqeusts', 'out_source_vendor.vendor')->where('slack', '=', $slack)->first();
+        $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs.users', 'complaint_assign_to_lab_enggs.part_requests.engineer', 'complaint_assign_to_field_enggs', 'part_requests.engineer', 'complaint_assign_to_lab_enggs.part_requests.request_to_store.store_assign_products_on_reqeusts', 'out_source_vendor.vendor')->where('slack', '=', $slack)->first();
         $data['complaint'] = $complaint;
 
 
@@ -238,19 +259,22 @@ class ComplaintsController extends Controller
     }
 
 
-    public function view_out_source_complaint(Request $request, $slack = null)
+    public function view_out_source_complaint(Request $request, $id = null)
     {
         
         $data['menu_key'] = 'MM_COMPLAIN';
         $data['sub_menu_key'] = 'SM_OUTSOURCE_COMPLAINTS';
         $data['action_key'] = 'VIEW_OUT_SOURCE_COMPLAINTS';
+
+       
         
         check_access(array($data['action_key']));
         try {
             
-            
-            $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs', 'complaint_assign_to_field_enggs', 'part_requests.engineer', 'out_source_vendor')->where('slack', '=', $slack)->first();
-            $data['complaint'] = $complaint;
+            $outsourceComplaint = OutSourceComplaint::with('complaint.customer', 'complaint.complaint_assign_to_lab_enggs', 'complaint.out_source_vendor')->where('id', $id)->first();
+            // dd($outsourceComplaint);
+            // $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs', 'complaint_assign_to_field_enggs', 'part_requests.engineer', 'out_source_vendor')->where('id', '=', $outsourceComplaint->complaint_id)->first();
+            $data['complaint'] = $outsourceComplaint;
 
             return view('complaints.view_out_source_complaint', $data);
         } catch (DecryptException $e) {
@@ -313,21 +337,49 @@ class ComplaintsController extends Controller
 
     public function open_lab_complaint(Request $request, $slack = null)
     {
+      
+        $id = decrypt($slack);
+        
+        
 
         $data['menu_key'] = 'MM_COMPLAIN';
         $data['sub_menu_key'] = 'SM_LAB_COMPLAINTS';
         $data['action_key'] = 'VIEW_LAB_COMPLAINTS';
         check_access(array($data['action_key']));
+
+
+
+        $compaint_assign_to_lab_enggs = CompaintAssignToLabEngg::with('complaint')->where('id', $id)->get();
+
+        // dd($compaint_assign_to_lab_enggs[0]['complaint']['slack']);
+
+
+
+
         $users = UserModel::withCount(['assignComplaints' => function ($query) {
             $query->where('complaint_status', '!=', 'Completed Complaint');
         }])->whereNotIn('role_id', [1, 2, 3])->where('customer_child_id', null)->get();
         $data['labTechnician'] = $users;
-        $complaint = ComplaintModel::with('customer', 'order', 'product', 'user')->where('slack', '=', $slack)->first();
+        $complaint = ComplaintModel::with([
+            'customer',
+            'order',
+            'product',
+            'user',
+            'complaint_assign_to_lab_enggs' => function($query) use ($id) {
+                $query->where('id', $id);
+            }
+        ])->where('slack', $compaint_assign_to_lab_enggs[0]['complaint']['slack'])->first();
+
+        // dd($complaint['complaint_assign_to_lab_enggs'][0]['id']);
+
+    
         $data['complaint'] = $complaint;
 
         $user_data = User::with(['part_requests' => function ($query) use ($complaint) {
             $query->where('complaint_id', $complaint->id);
+            $query->where('assign_complaint_id', $complaint['complaint_assign_to_lab_enggs'][0]['id']);
         }])
+
         ->where('id', $request->logged_user_id)
         ->whereHas('part_requests', function ($query) use ($complaint) {
             $query->where('complaint_id', $complaint->id);

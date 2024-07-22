@@ -11,26 +11,24 @@
                 </span>
               </div>
             </div>
-          </div>
-
-          
+          </div>          
   
           <div class="">
             <span></span>
           </div>
         </div>
-        <div class="d-flex flex-wrap mb-4" v-if="user_data.part_requests">
+        <div class="d-flex flex-wrap mb-4" v-if="user_data && user_data.part_requests">
           <span class="alert alert-success" v-for="request in user_data.part_requests" :key="request.id">
             {{ 'Your Request for ' + request.request + (request.request_status == 2 ? ' Completed' : ' is Pending') }}
           </span>
-          </div>
+        </div>
 
         <div class="d-flex flex-wrap mb-4">
           <div class="ml-auto">
               <button
                 type="submit"
                 class="alert alert-success mr-1"
-                v-if="complaint.complaint_completed_date == null"
+                v-if="complaint.complaint_completed_date == null" 
               >
                 {{ $t("Complaint Assigned") }}
               </button>
@@ -48,8 +46,7 @@
           <p v-html="server_errors" v-bind:class="[error_class]"></p>
           
           <div class="ml-auto d-flex">
-            <div>
-  
+            <div v-if="complaint.complaint_completed_date == null && complaint.picked_for_workshop != 'Yes'">
               <button
                 type="button"
                 class="btn btn-primary mr-1"
@@ -61,7 +58,7 @@
   
             
   
-            <div v-if="complaint.complaint_completed_date == null">
+            <div v-if="complaint.complaint_completed_date == null && complaint.picked_for_workshop != 'Yes'">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
@@ -69,21 +66,9 @@
                 v-on:click="request_for_product()">
                 {{ $t("Add Required Product") }}
               </button>
-            </div>
-
-            <div v-if="complaint.complaint_completed_date != null">
-              <button
-                type="submit"
-                class="btn btn-primary mr-1"
-                v-if="is_customer && complaint.customer_feedback == null"
-                v-on:click="add_feedback()">
-                {{ $t("Add Feedback") }}
-              </button>
-            </div>
-
-           
+            </div>          
   
-            <div v-if="complaint.complaint_completed_date == null">
+            <div v-if="complaint.complaint_completed_date == null && complaint.picked_for_workshop != 'Yes'">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
@@ -208,20 +193,7 @@
             <p class="">{{ complaint.picked_for_workshop }}</p>
           </div>
   
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Equipment Make") }}</label>
-            <p class="">{{ complaint.equipment_make }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Model") }}</label>
-            <p class="">{{ complaint.model }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="created_by">{{ $t("Serial No") }}</label>
-            <p class="">{{ complaint.serial_no }}</p>
-          </div>
+          
   
           <div class="form-group col-md-3" v-if="!is_customer">
             <div v-if="complaint.due_date">
@@ -286,7 +258,7 @@
         <div>
 
           
-        <div class="form-row mb-2 mt-2" v-if="user_data.part_requests">
+        <div class="form-row mb-2 mt-2" v-if="user_data && user_data.part_requests">
           <div class="form-group col-12">
             <table class="table table-striped display nowrap text-nowrap w-100">
             <thead>
@@ -326,18 +298,10 @@
 
           <hr />
   
-          <div class="mb-2" v-if="complaint.final_total_amount != null">
-            <span class="text-subhead">Product Information</span>
-          </div>
-  
-          <div class="mb-2" v-if="complaint.final_total_amount != null">
-            <span class="text-subhead">Other Charges Information</span>
-          </div>
+        
         </div>
   
-        <div class="mb-2" v-if="complaint.final_total_amount != null">
-          <span class="text-subhead">{{ $t("Transactions") }}</span>
-        </div>
+       
   
         
       </div>
@@ -1034,8 +998,7 @@
                 v-validate="'required'"
                 class="form-control form-control-custom custom-select"
               >
-                <option value="" disabled>Choose Complaint Status..</option>  
-                <option value="Move for Workshop">Move for Workshop</option>
+                <option value="" disabled>Choose Complaint Status..</option>
                 <option value="Not Repairable">Not Repairable</option>
                 <option value="Replacement Required">Replacement Required</option>
                 <option value="Part Required">Part Required</option>
@@ -1056,7 +1019,7 @@
                 v-validate="'required'"
                 class="form-control form-control-custom custom-select"
               >
-                <option value="" disabled>Choose complaint_ok..</option>
+                <option value="" disabled>Choose complaint ok..</option>
   
                 <option value="Yes">Yes</option>
   
@@ -1081,7 +1044,7 @@
                 v-validate="'required'"
                 class="form-control form-control-custom custom-select"
               >
-                <option value="" disabled>Choose picked_for_workshop..</option>
+                <option value="" disabled>Choose picked for workshop..</option>
   
                 <option value="Yes">Yes</option>
   
@@ -1092,6 +1055,11 @@
                 v-bind:class="{ 'error' : errors.has('picked_for_workshop') }"
                 >{{ errors.first('picked_for_workshop') }}</span
               >
+            </div>
+
+            <div class="form-group col-sm-12 col-md-4">
+              <label for="no_of_devices">{{ $t("No.of Devices") }}</label>
+              <input type="number" min="1" name="no_of_devices" v-model="no_of_devices" class="form-control form-control-custom" />
             </div>
 
             <div class="form-group col-md-8">
@@ -1381,6 +1349,7 @@
               customer_feedback: (this.complaint.customer_feedback) ? this.complaint.customer_feedback : '',
               c_status: (this.complaint.c_status) ? this.complaint.c_status : '',
               status: (this.complaint.status) ? this.complaint.status : '',
+              no_of_devices: (this.complaint.no_of_devices) ? this.complaint.no_of_devices : '',
           }
       },
       props: {
@@ -1506,7 +1475,8 @@
               formData.append('delivery_date', this.delivery_date);
               formData.append('fault_report_by_customer', this.fault_report_by_customer);  
               formData.append('c_status', this.c_status);
-              formData.append('status', this.status);        
+              formData.append('status', this.status);  
+              formData.append('no_of_devices', this.no_of_devices);      
   
               axios.post('/api/change_complaint_status', formData).then((response) => {
   
@@ -1798,7 +1768,7 @@
                       this.show_modal = true;
   
                       this.$on("submit", function() {
-                          this.processing = true;
+                          // this.processing = true;
                           this.delete_processing = true;
   
                           var formData = new FormData();

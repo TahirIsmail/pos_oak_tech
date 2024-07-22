@@ -230,6 +230,7 @@ Vue.component('viewlabcomplaint', require('./components/complaint/view_lab_compl
 Vue.component('viewoutsourcecomplaint', require('./components/complaint/view_out_source_complaint_component.vue').default);
 
 Vue.component('adddemandformcomponent', require('./components/demand_form/add_demand_form_component.vue').default);
+Vue.component('addoutsourcevendorcomponent', require('./components/supplier/add_out_source_vendor_component.vue').default);
 
 
 Vue.component('addquotationrequestcomponent', require('./components/demand_form/add_quotation_request_component.vue').default);

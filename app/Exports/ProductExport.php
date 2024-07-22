@@ -40,6 +40,7 @@ class ProductExport implements FromCollection, WithMapping, WithHeadings
             ->supplierJoin()
             ->taxcodeJoin()
             ->discountcodeJoin();
+      
 
         if ($from_created_date != '') {
             $from_created_date = strtotime($from_created_date);

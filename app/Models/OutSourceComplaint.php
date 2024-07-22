@@ -22,4 +22,7 @@ class OutSourceComplaint extends Model
     public function engineer(){
         return $this->belongsTo(User::class, 'engineer_id');
     }
+    public function lab_complaint(){
+        return $this->belongsTo(CompaintAssignToLabEngg::class, 'lab_complaint_id');
+    }
 }
