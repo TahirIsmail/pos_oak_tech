@@ -98,7 +98,7 @@ class Supplier extends Controller
 
         $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('SUPPLIER_STATUS')->active()->sortValueAsc()->get();
         $data['supplier_data'] = null;
-        $data['roles'] = RoleModel::select('slack', 'label')->where('label', 'Outsource Vendor')->active()->sortLabelAsc()->get();
+        $data['roles'] = RoleModel::select('slack', 'label')->where('label', 'Out Source Vendor')->active()->sortLabelAsc()->get();
 
         $data['stores'] =  StoreModel::select('slack', 'store_code', 'name', 'address')
         ->active()

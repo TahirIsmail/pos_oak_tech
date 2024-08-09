@@ -164,7 +164,7 @@ class ComplaintsController extends Controller
 
         // dd($users);
 
-        $OutSource_Vendors = Role::where('label', 'Outsource Vendor')->first();
+        $OutSource_Vendors = Role::where('label', 'Out Source Vendor')->first();
         
         if($OutSource_Vendors){
             $out_source_vendors = User::where('role_id', $OutSource_Vendors->id)->get();    

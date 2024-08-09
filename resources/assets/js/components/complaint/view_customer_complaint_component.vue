@@ -1,6 +1,5 @@
 <template>
     <div class="row card p-4">
-      <!-- {{ complaint.complaint_assign_to_lab_enggs[0] }} -->
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -30,25 +29,6 @@
                   }}
               </span>
             </div>
-            
-            
-            <br>
-
-
-            <div v-if="complaint.complaint_assign_to_lab_enggs[0] && complaint.complaint_assign_to_lab_enggs[0].part_requests.length > 0">
-              <div>
-                <span class="alert alert-success" v-for="request in complaint.complaint_assign_to_lab_enggs[0].part_requests" :key="request.id">
-                  {{ request.engineer_type === 'Field_Engineer' 
-                    ? `Field Engineer ${request.engineer.fullname} has requested for ${request.request} at ${request.start_request_time}` +
-                      (request.end_request_time == null 
-                        ? ' but not complete yet'
-                        : ` and completed at ${request.end_request_time}`)
-                    : '' 
-                  }}
-                </span>
-
-              </div>
-            </div>
 
             <br />
             
@@ -76,9 +56,9 @@
             </div>
             <br />
 
-            <div v-if="complaint.part_requests.length > 0">
+            <div v-if="complaint.part_requests && complaint.part_requests.length > 0">
               
-              <span class="alert alert-success" v-for="request in complaint.part_requests" :key="request.id">
+              <p class="alert alert-success" v-for="request in complaint.part_requests" :key="request.id">
                 {{ request.engineer_type === 'Lab_Engineer' 
                   ? `Lab Engineer ${request.engineer.fullname} has requested for ${request.request} at ${request.start_request_time}` +
                     (request.end_request_time == null
@@ -86,7 +66,7 @@
                       : ` and completed at ${request.end_request_time}`)
                   : '' 
                 }}
-              </span>
+              </p>
             </div>
              
             <br />
@@ -153,13 +133,13 @@
                 </button>
               </div>
   
-              <button
+              <!-- <button
                 type="button"
                 class="btn btn-primary mr-1"
                 v-on:click="add_complaint_status()"
               >
                 {{ $t("Complaint Status") }}
-              </button>
+              </button> -->
             </div>
   
             <div v-if="complaint.outsource == 'Yes' && !complaint.out_source_vendor">
@@ -203,16 +183,15 @@
               </button>
             </div>
   
-            <!-- <div v-if="complaint.complaint_completed_date == null">
+            <div v-if="complaint.complaint_completed_date == null">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
-                v-if="complaint.assign_to_lab_staff_id != null && !is_customer"
                 v-on:click="complaint_completed()"
               >
                 {{ $t("Complaint Complete") }}
               </button>
-            </div> -->
+            </div>
   
             <div
               v-if="requirement_request_access && complaint.complaint_completed_date == null"
@@ -494,6 +473,7 @@
                 <th scope="col">{{ $t("Serial No") }}</th>
                 <th scope="col">{{ $t("Assign Date") }}</th>
                 <th scope="col">{{ $t("Assigned To") }}</th>  
+                <th scope="col">{{ $t("Complaint Complete") }}</th>
                 <th scope="col">{{ $t("Status") }}</th>  
               </tr>
             </thead>
@@ -512,6 +492,15 @@
                 <td>{{ comp.serial_no }}</td>
                 <td>{{ comp.assign_complaint_time }}</td>
                 <td>{{ comp.users.fullname }}({{ comp.users.email }})</td>
+                <td v-if="comp.outsourced_complaint == 1 && comp.out_source_complaint_completed == 1 && comp.out_source_complaint_completed_time != null">
+                    <div class="alert alert-success">OutSource Complaint completed at {{ comp.out_source_complaint_completed_time }}</div>
+                </td>
+                <td v-else-if="comp.outsourced_complaint == 0 && comp.complaint_complete == 'Yes' && comp.assign_complaint_complete_time != null">
+                  <div class="alert alert-success">Complaint completed at {{ comp.assign_complaint_complete_time }}</div>
+                </td>
+                <td v-else>
+
+                </td>
                 <td v-if="comp.complaint_status == '0'">
                   <div class="alert alert-warning">Pending...</div>
                 </td>
@@ -530,11 +519,11 @@
         </div>
 
 
-        <div class="form-row mb-2 mt-2" v-if="complaint.complaint_assign_to_lab_enggs[0] && complaint.complaint_assign_to_lab_enggs[0].part_requests.length > 0">
+        <div class="form-row mb-2 mt-2" v-if="complaint.part_requests && complaint.part_requests.length > 0">
           <div>
             <h4>Part Requests</h4>
           </div>
-          <div class="form-group col-12">
+          <div class="table-responsive form-group col-12">
             <table class="table table-striped display nowrap text-nowrap w-100">
             <thead>
               <tr>
@@ -550,7 +539,7 @@
             </thead>  
             <tbody>
               <tr
-                v-for="(request, key, index) in complaint.complaint_assign_to_lab_enggs[0].part_requests"               
+                v-for="(request, key, index) in complaint.part_requests"               
                 v-bind:key="index"
               >
                 <th scope="col">{{ key+1 }}</th>  

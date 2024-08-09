@@ -1,6 +1,6 @@
 <template>
     <div class="row card p-4">
-    
+      
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -75,7 +75,7 @@
 
           
   
-            <div v-if="complaint.complaint_completed_date == null">
+            <div v-if="complaint.complaint_completed_date == null && complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time == null && complaint.complaint_assign_to_lab_enggs[0].complaint_outsource_request == 0">
               <button
                 type="submit"
                 class="btn btn-success mr-1"
@@ -878,7 +878,7 @@
                       this.show_modal = true;
   
                       this.$on("submit", function() {
-                          // this.processing = true;
+                          this.processing = true;
   
                           var formData = new FormData();
                           formData.append("access_token", window.settings.access_token);
@@ -1110,8 +1110,9 @@
                           formData.append("access_token", window.settings.access_token);
                           formData.append('final_lab_staff_remark', this.final_lab_staff_remark);
                           formData.append('complaint_slack', this.complaint_slack);
+                          formData.append('lab_complaint_id', this.assign_complaint_id);
   
-                          axios.post('/api/complaint_completed', formData).then((response) => {
+                          axios.post('/api/lab_complaint_completed', formData).then((response) => {
   
                                   if (response.data.status_code == 200) {
                                       this.show_response_message(response.data.msg, 'Success');

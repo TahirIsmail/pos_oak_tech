@@ -1617,7 +1617,7 @@
                       this.show_modal = true;
   
                       this.$on("submit", function() {
-                          // this.processing = true;
+                          this.processing = true;
   
                           var formData = new FormData();
                           formData.append("access_token", window.settings.access_token);
@@ -1768,7 +1768,7 @@
                       this.show_modal = true;
   
                       this.$on("submit", function() {
-                          // this.processing = true;
+                          this.processing = true;
                           this.delete_processing = true;
   
                           var formData = new FormData();

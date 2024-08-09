@@ -272,6 +272,7 @@ class Complaints extends Controller
             DB::beginTransaction();
 
             $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
+            
             if (isset($request->assigned_to) && $request->assigned_to != null) {
                 $assigned_to = User::select('id', 'email')->where('slack', $request->assigned_to)->get();
             } else {
@@ -303,10 +304,7 @@ class Complaints extends Controller
                     "assign_to" => $request->assign_to ?? null,
                     "customer_id" => $customer_id[0]->id,
                     "user_name" => $customer_id[0]->name,
-                    "equipment_type" => $request->equipment_type,
-                    "equipment_make" => $request->equipment_make,
-                    "model" => $request->model,
-                    "serial_no" => $request->serial_no,
+                    "equipment_type" => $request->equipment_type,                   
                     "complaint_details" => $request->complaint_details,
                     "end_user_details" => $request->end_user_details,
                     "service_required" => $request->service_required,
@@ -343,8 +341,12 @@ class Complaints extends Controller
                     } elseif ($request->assign_to == 'assigned_to_lab_eng') {
                         $complaint_assign_to_lab_enggs = [
                             'complaint_id' => $complaints->id,
+                            'complaint_ticket' => $ticket,
                             'engg_id' => isset($assigned_to[0]) ? $assigned_to[0]->id : '',
                             'assign_complaint_time' => now()->setTimezone('Asia/Karachi'),
+                            "make" => $request->equipment_make,
+                            "model" => $request->model,
+                            "serial_no" => $request->serial_no,
                         ];
                         $save_assign_to_lab_eng_table = CompaintAssignToLabEngg::create($complaint_assign_to_lab_enggs);
 
@@ -675,33 +677,77 @@ class Complaints extends Controller
 
             $current_time = now()->setTimezone('Asia/Karachi');
 
-            if ($complaint->assign_to_field_engg == '1' && $complaint->field_complaint_completed_date == null) {
-                if (!empty($complaint->complaint_assign_to_field_enggs[0])) {
-                    $field_engineer = ComplaintAssignToFieldEngg::findOrFail($complaint->complaint_assign_to_field_enggs[0]->id);
+            // if ($complaint->assign_to_field_engg == '1' && $complaint->field_complaint_completed_date == null) {
+            //     if (!empty($complaint->complaint_assign_to_field_enggs[0])) {
+            //         $field_engineer = ComplaintAssignToFieldEngg::findOrFail($complaint->complaint_assign_to_field_enggs[0]->id);
 
-                    $field_engineer->assign_complaint_complete_time = $current_time;
-                    $field_engineer->complaint_complete = 'Yes';
-                    $field_engineer->remarks = $request->final_lab_staff_remark;
-                    $field_engineer->save();
-                }
-            }
+            //         $field_engineer->assign_complaint_complete_time = $current_time;
+            //         $field_engineer->complaint_complete = 'Yes';
+            //         $field_engineer->remarks = $request->final_lab_staff_remark;
+            //         $field_engineer->save();
+            //     }
+            // }
 
-            if ($complaint->assign_to_lab_staff_id == '1' && $complaint->complaint_completed_date == null) {
-                if (!empty($complaint->complaint_assign_to_lab_enggs[0])) {
-                    $lab_engineer = CompaintAssignToLabEngg::findOrFail($complaint->complaint_assign_to_lab_enggs[0]->id);
+            // if ($complaint->assign_to_lab_staff_id == '1' && $complaint->complaint_completed_date == null) {
+            //     if (!empty($complaint->complaint_assign_to_lab_enggs[0])) {
+            //         $lab_engineer = CompaintAssignToLabEngg::findOrFail($complaint->complaint_assign_to_lab_enggs[0]->id);
 
-                    $lab_engineer->assign_complaint_complete_time = $current_time;
-                    $lab_engineer->complaint_complete = 'Yes';
-                    $lab_engineer->remarks = $request->final_lab_staff_remark;
-                    $lab_engineer->save();
-                }
-            }
+            //         $lab_engineer->assign_complaint_complete_time = $current_time;
+            //         $lab_engineer->complaint_complete = 'Yes';
+            //         $lab_engineer->remarks = $request->final_lab_staff_remark;
+            //         $lab_engineer->save();
+            //     }
+            // }
 
             $complaint->final_lab_staff_remark = $request->final_lab_staff_remark;
             $complaint->complaint_status = 'Completed Complaint';
             $complaint->c_status = 'Completed Complaint';
             $complaint->complaint_completed_date = $current_time;
             $complaint->save();
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Customer Complaint Assigned Technician Completed Successfully",
+                    "data" => '',
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Complaint completion failed: ' . $e->getMessage());
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Request Submission Failed: " . $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                    'msg' => 'error',
+                ],
+                'ERROR'
+            ), 500);
+        }
+    }
+
+
+    public function lab_complaint_completed(Request $request)
+    {
+        try {
+            // Retrieve the complaint with associated lab and field engineers
+            $complaint = ModelsComplaints::with('complaint_assign_to_lab_enggs', 'complaint_assign_to_field_enggs')
+                ->where('slack', $request->complaint_slack)
+                ->firstOrFail();
+            $labComplaint = CompaintAssignToLabEngg::where('id', $request->lab_complaint_id)->first();
+
+            $current_time = now()->setTimezone('Asia/Karachi');
+
+            if ($complaint && $labComplaint) {
+
+                    $labComplaint->assign_complaint_complete_time = $current_time;
+                    $labComplaint->complaint_complete = 'Yes';
+                    $labComplaint->complaint_status = '2';
+                    $labComplaint->remarks = $request->final_lab_staff_remark;
+                    $labComplaint->save();
+            }
 
             return response()->json($this->generate_response(
                 [
@@ -748,7 +794,8 @@ class Complaints extends Controller
                 $outSourceComplaint->save();
             }
 
-            $lab_complaint->out_source_complaint_complete = 1;
+            $lab_complaint->out_source_complaint_completed = 1;
+            $lab_complaint->out_source_complaint_completed_time = $current_time;
             $lab_complaint->save();
 
             $cseRole = Role::where('label', 'Cse')->first();
@@ -783,9 +830,8 @@ class Complaints extends Controller
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();
-            
+
             // Log the exception
-            Log::error('Complaint completion failed: ' . $e->getMessage());
 
             return response()->json($this->generate_response(
                 [

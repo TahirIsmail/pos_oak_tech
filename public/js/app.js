@@ -23077,8 +23077,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           _this7.$on("submit", function () {
             var _console,
               _this8 = this;
-            // this.processing = true;
-
+            this.processing = true;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
             formData.append('admin_again_remark', this.admin_again_remark);
@@ -23208,7 +23207,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           _this13.$on("submit", function () {
             var _console2,
               _this14 = this;
-            // this.processing = true;
+            this.processing = true;
             this.delete_processing = true;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
@@ -24485,8 +24484,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           _this7.$on("submit", function () {
             var _console,
               _this8 = this;
-            // this.processing = true;
-
+            this.processing = true;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
             formData.append('admin_again_remark', this.admin_again_remark);
@@ -24688,7 +24686,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
             formData.append("access_token", window.settings.access_token);
             formData.append('final_lab_staff_remark', this.final_lab_staff_remark);
             formData.append('complaint_slack', this.complaint_slack);
-            axios.post('/api/complaint_completed', formData).then(function (response) {
+            formData.append('lab_complaint_id', this.assign_complaint_id);
+            axios.post('/api/lab_complaint_completed', formData).then(function (response) {
               if (response.data.status_code == 200) {
                 _this16.show_response_message(response.data.msg, 'Success');
                 location.reload();
@@ -24907,7 +24906,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       var _console,
         _this = this;
       var formData = new FormData();
-      // this.processing = true;
+      this.processing = true;
       formData.append("access_token", window.settings.access_token);
       formData.append('out_source_id', this.out_source_id);
       formData.append('complaint_id', this.complaint_id);
@@ -24950,10 +24949,9 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.required_product = true;
     },
     OutSourceComplaint: function OutSourceComplaint(request) {
-      console.log(request);
-      this.out_source_id = request.complaint.out_source_vendor.id;
+      this.out_source_id = request.id;
       this.complaint_id = request.complaint.id;
-      this.lab_complaint = request.id;
+      this.lab_complaint = request.lab_complaint_id;
       this.out_source_complaint = true;
     },
     complaint_completed: function complaint_completed() {
@@ -25044,7 +25042,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.show_modal = true;
       this.$on("submit", function () {
         var _this5 = this;
-        // this.processing = true;
+        this.processing = true;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
         formData.append("lab_staff_remark", this.lab_staff_remark);
@@ -25539,7 +25537,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.show_modal = true;
       this.$on("submit", function () {
         var _this15 = this;
-        // this.processing = true;
+        this.processing = true;
         var formData = new FormData();
         formData.append("access_token", window.settings.access_token);
         formData.append("lab_staff_remark", this.lab_staff_remark);
@@ -48713,17 +48711,12 @@ var render = function render() {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])])]), _vm._v(" "), _c("div", {}, [_vm.complaint.assign_to_field_engg == "1" ? _c("div", [_c("span", {
     staticClass: "alert alert-info"
-  }, [_vm._v("\n              Complaint Assign To Field Engineer (" + _vm._s(_vm.complaint.field_user.fullname) + " (" + _vm._s(_vm.complaint.field_user.email) + ")) at \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time === null && _vm.complaint.complaint_assign_to_field_enggs[0].complaint_complete == "No" ? _vm.complaint.picked_for_workshop == "Yes" ? "Moved to It Workshop." : "Still Not Complete" : "Completed at " + _vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.complaint_assign_to_lab_enggs[0] && _vm.complaint.complaint_assign_to_lab_enggs[0].part_requests.length > 0 ? _c("div", [_c("div", _vm._l(_vm.complaint.complaint_assign_to_lab_enggs[0].part_requests, function (request) {
-    return _c("span", {
-      key: request.id,
-      staticClass: "alert alert-success"
-    }, [_vm._v("\n              " + _vm._s(request.engineer_type === "Field_Engineer" ? "Field Engineer ".concat(request.engineer.fullname, " has requested for ").concat(request.request, " at ").concat(request.start_request_time) + (request.end_request_time == null ? " but not complete yet" : " and completed at ".concat(request.end_request_time)) : "") + "\n            ")]);
-  }), 0)]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.assign_to_lab_engg == "1" ? _c("div", [_c("span", {
+  }, [_vm._v("\n              Complaint Assign To Field Engineer (" + _vm._s(_vm.complaint.field_user.fullname) + " (" + _vm._s(_vm.complaint.field_user.email) + ")) at \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_time) + "\n              And \n              " + _vm._s(_vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time === null && _vm.complaint.complaint_assign_to_field_enggs[0].complaint_complete == "No" ? _vm.complaint.picked_for_workshop == "Yes" ? "Moved to It Workshop." : "Still Not Complete" : "Completed at " + _vm.complaint.complaint_assign_to_field_enggs[0].assign_complaint_complete_time) + "\n          ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.assign_to_lab_engg == "1" ? _c("div", [_c("span", {
     staticClass: "alert alert-info"
   }, [_vm._v("\n            Complaint Assign To Lab Engineer at (" + _vm._s(_vm.complaint.user.fullname) + " (" + _vm._s(_vm.complaint.user.email) + ")) \n            " + _vm._s(_vm.complaint.complaint_assign_to_lab_enggs[0].assign_complaint_time) + "\n            And \n            " + _vm._s(_vm.complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time === null && _vm.complaint.complaint_assign_to_lab_enggs[0].complaint_complete == "No" ? _vm.complaint.complaint_assign_to_lab_enggs[0].request_for_part == "1" && _vm.complaint.complaint_assign_to_lab_enggs[0].request_for_out_source_at != null ? "OutSource Request at: " + _vm.complaint.complaint_assign_to_lab_enggs[0].request_for_out_source_at : "Still Not Complete" : "Completed at " + _vm.complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time) + "\n        ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_assign_to_lab_enggs.length > 1 ? _c("div", [_c("span", {
     staticClass: "alert alert-info"
-  }, [_vm._v("\n           Devices Assign To Lab Engineers\n        ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.part_requests.length > 0 ? _c("div", _vm._l(_vm.complaint.part_requests, function (request) {
-    return _c("span", {
+  }, [_vm._v("\n           Devices Assign To Lab Engineers\n        ")])]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), _vm.complaint.part_requests && _vm.complaint.part_requests.length > 0 ? _c("div", _vm._l(_vm.complaint.part_requests, function (request) {
+    return _c("p", {
       key: request.id,
       staticClass: "alert alert-success"
     }, [_vm._v("\n            " + _vm._s(request.engineer_type === "Lab_Engineer" ? "Lab Engineer ".concat(request.engineer.fullname, " has requested for ").concat(request.request, " at ").concat(request.start_request_time) + (request.end_request_time == null ? " but not complete yet" : " and completed at ".concat(request.end_request_time)) : "") + "\n          ")]);
@@ -48769,17 +48762,7 @@ var render = function render() {
     }
   }, [_vm.assign_processing == true ? _c("i", {
     staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v("\n              " + _vm._s(_vm.$t("Assign Complaint")) + "\n            ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary mr-1",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.add_complaint_status();
-      }
-    }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Status")) + "\n          ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.outsource == "Yes" && !_vm.complaint.out_source_vendor ? _c("div", [_c("button", {
+  }) : _vm._e(), _vm._v("\n              " + _vm._s(_vm.$t("Assign Complaint")) + "\n            ")]) : _vm._e()]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.complaint.outsource == "Yes" && !_vm.complaint.out_source_vendor ? _c("div", [_c("button", {
     staticClass: "btn btn-success mr-1",
     attrs: {
       type: "submit"
@@ -48819,7 +48802,17 @@ var render = function render() {
         return _vm.add_feedback();
       }
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Add Feedback")) + "\n          ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.requirement_request_access && _vm.complaint.complaint_completed_date == null ? _c("div", [_vm.requirement_request ? _c("button", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Add Feedback")) + "\n          ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date == null ? _c("div", [_c("button", {
+    staticClass: "btn btn-success mr-1",
+    attrs: {
+      type: "submit"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.complaint_completed();
+      }
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Complaint Complete")) + "\n          ")])]) : _vm._e(), _vm._v(" "), _vm.requirement_request_access && _vm.complaint.complaint_completed_date == null ? _c("div", [_vm.requirement_request ? _c("button", {
     staticClass: "btn btn-success mr-1",
     attrs: {
       type: "submit"
@@ -49078,6 +49071,10 @@ var render = function render() {
     attrs: {
       scope: "col"
     }
+  }, [_vm._v(_vm._s(_vm.$t("Complaint Complete")))]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
   }, [_vm._v(_vm._s(_vm.$t("Status")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.complaint.complaint_assign_to_lab_enggs, function (comp, key, index) {
     return _c("tr", {
       key: index,
@@ -49088,7 +49085,11 @@ var render = function render() {
       attrs: {
         scope: "col"
       }
-    }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.complaint.ticket))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.model))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.make))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.serial_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.assign_complaint_time))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.users.fullname) + "(" + _vm._s(comp.users.email) + ")")]), _vm._v(" "), comp.complaint_status == "0" ? _c("td", [_c("div", {
+    }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.complaint.ticket))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.model))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.make))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.serial_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.assign_complaint_time))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(comp.users.fullname) + "(" + _vm._s(comp.users.email) + ")")]), _vm._v(" "), comp.outsourced_complaint == 1 && comp.out_source_complaint_completed == 1 && comp.out_source_complaint_completed_time != null ? _c("td", [_c("div", {
+      staticClass: "alert alert-success"
+    }, [_vm._v("OutSource Complaint completed at " + _vm._s(comp.out_source_complaint_completed_time))])]) : comp.outsourced_complaint == 0 && comp.complaint_complete == "Yes" && comp.assign_complaint_complete_time != null ? _c("td", [_c("div", {
+      staticClass: "alert alert-success"
+    }, [_vm._v("Complaint completed at " + _vm._s(comp.assign_complaint_complete_time))])]) : _c("td"), _vm._v(" "), comp.complaint_status == "0" ? _c("td", [_c("div", {
       staticClass: "alert alert-warning"
     }, [_vm._v("Pending...")])]) : comp.complaint_status == "1" ? _c("td", [_c("button", {
       staticClass: "btn btn-primary",
@@ -49105,10 +49106,10 @@ var render = function render() {
     }, [_vm._v("Completed")])]) : comp.complaint_status == "3" ? _c("td", [_c("div", {
       staticClass: "alert alert-success"
     }, [_vm._v("OutSource To Vendor...")])]) : _vm._e()]);
-  }), 0)])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_assign_to_lab_enggs[0] && _vm.complaint.complaint_assign_to_lab_enggs[0].part_requests.length > 0 ? _c("div", {
+  }), 0)])]) : _vm._e(), _vm._v(" "), _vm.complaint.part_requests && _vm.complaint.part_requests.length > 0 ? _c("div", {
     staticClass: "form-row mb-2 mt-2"
   }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-12"
+    staticClass: "table-responsive form-group col-12"
   }, [_c("table", {
     staticClass: "table table-striped display nowrap text-nowrap w-100"
   }, [_c("thead", [_c("tr", [_c("th", {
@@ -49143,7 +49144,7 @@ var render = function render() {
     attrs: {
       scope: "col"
     }
-  }, [_vm._v(_vm._s(_vm.$t("Action")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.complaint.complaint_assign_to_lab_enggs[0].part_requests, function (request, key, index) {
+  }, [_vm._v(_vm._s(_vm.$t("Action")))])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.complaint.part_requests, function (request, key, index) {
     return _c("tr", {
       key: index
     }, [_c("th", {
@@ -52119,7 +52120,7 @@ var render = function render() {
         return _vm.add_remarks();
       }
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.$t("Add Remarks")) + "\n          ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date == null ? _c("div", [_c("button", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("Add Remarks")) + "\n          ")])]) : _vm._e(), _vm._v(" "), _vm.complaint.complaint_completed_date == null && _vm.complaint.complaint_assign_to_lab_enggs[0].assign_complaint_complete_time == null && _vm.complaint.complaint_assign_to_lab_enggs[0].complaint_outsource_request == 0 ? _c("div", [_c("button", {
     staticClass: "btn btn-success mr-1",
     attrs: {
       type: "submit"
@@ -52795,11 +52796,11 @@ var render = function render() {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.$t("Complaint")))])])])])])]), _vm._v(" "), _c("div", {}, [_vm.complaint.complaint.complaint_assign_to_lab_enggs[0] ? _c("div", [_c("span", {
     staticClass: "alert alert-info"
-  }, [_vm._v("\n           OAK Technology has Assign you Complaint at (" + _vm._s(_vm.complaint.complaint.complaint_assign_to_lab_enggs[0].start_time) + " )\n            " + _vm._s(_vm.complaint.complaint.complaint_assign_to_lab_enggs[0].end_time == null ? "And Still Waiting..." : "And Completed at ".concat(_vm.complaint.complaint.complaint_assign_to_lab_enggs[0].end_time)) + "\n          ")])]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n           OAK Technology has Assign you Complaint at (" + _vm._s(_vm.complaint.start_time) + " )\n            " + _vm._s(_vm.complaint.end_time == null ? "And Still Waiting..." : "And Completed at ".concat(_vm.complaint.end_time)) + "\n          ")])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "d-flex flex-wrap mb-4"
   }, [_c("div", {
     staticClass: "ml-auto"
-  }, [_vm.complaint.complaint.complaint_completed_date == null ? _c("button", {
+  }, [_vm.complaint.complaint.out_source_complaint_completed == 0 ? _c("button", {
     staticClass: "alert alert-success mr-1",
     attrs: {
       type: "submit"

@@ -816,7 +816,7 @@
               this.show_modal = true;
   
               this.$on("submit", function() {
-                  // this.processing = true;
+                  this.processing = true;
                   var formData = new FormData();
                   formData.append("access_token", window.settings.access_token);
                   formData.append("lab_staff_remark", this.lab_staff_remark);

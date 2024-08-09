@@ -1,6 +1,6 @@
 <template>
   <div class="row card p-4">
-  
+
     <div class="col-md-12">
       <div class="d-flex flex-wrap mb-4">
         <div class="mr-auto">
@@ -19,11 +19,11 @@
        <div class="">      
           <div v-if="complaint.complaint.complaint_assign_to_lab_enggs[0]">
             <span class="alert alert-info">
-             OAK Technology has Assign you Complaint at ({{ complaint.complaint.complaint_assign_to_lab_enggs[0].start_time }} )
+             OAK Technology has Assign you Complaint at ({{ complaint.start_time }} )
               {{
-                complaint.complaint.complaint_assign_to_lab_enggs[0].end_time == null 
+                complaint.end_time == null 
                 ? 'And Still Waiting...' 
-                : `And Completed at ${complaint.complaint.complaint_assign_to_lab_enggs[0].end_time}`
+                : `And Completed at ${complaint.end_time}`
               }}
             </span>
           </div>
@@ -36,7 +36,7 @@
             <button
               type="submit"
               class="alert alert-success mr-1"
-              v-if="complaint.complaint.complaint_completed_date == null"
+              v-if="complaint.complaint.out_source_complaint_completed == 0"
             >
               {{ $t("Complaint Assigned") }}
             </button>
@@ -378,7 +378,7 @@ export default {
     
       submit_out_source_complaint(){
         var formData = new FormData();
-        // this.processing = true;
+        this.processing = true;
         formData.append("access_token", window.settings.access_token);
         formData.append('out_source_id', this.out_source_id);
         formData.append('complaint_id', this.complaint_id);
@@ -433,10 +433,11 @@ export default {
         },
 
         OutSourceComplaint(request) {
-          console.log(request);
-          this.out_source_id = request.complaint.out_source_vendor.id;          
+         
+          
+          this.out_source_id = request.id;          
           this.complaint_id = request.complaint.id;
-          this.lab_complaint = request.id;
+          this.lab_complaint = request.lab_complaint_id;
           this.out_source_complaint = true;    
         },
 
@@ -541,7 +542,7 @@ export default {
             this.show_modal = true;
 
             this.$on("submit", function() {
-                // this.processing = true;
+                this.processing = true;
                 var formData = new FormData();
                 formData.append("access_token", window.settings.access_token);
                 formData.append("lab_staff_remark", this.lab_staff_remark);
