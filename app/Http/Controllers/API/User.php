@@ -668,7 +668,7 @@ class User extends Controller
 
             $user = array(
                 "password" => $new_hashed_password,
-                "init_password" => null
+                "init_password" => $request->new_passwords
             );
             
             $data = UserModel::updateOrCreate(
@@ -1100,7 +1100,7 @@ class User extends Controller
 
             $user = array(
                 "password" => $new_password_hashed_password,
-                "init_password" => null,
+                "init_password" => $request->new_password,
                 "password_reset_token" => null,
                 "password_reset_max_tries" => null,
                 "password_reset_last_tried_on" => null,

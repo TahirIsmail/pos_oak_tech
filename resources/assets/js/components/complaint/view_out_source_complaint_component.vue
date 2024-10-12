@@ -17,7 +17,7 @@
       </div>
 
        <div class="">      
-          <div v-if="complaint.complaint.complaint_assign_to_lab_enggs[0]">
+          <div v-if="complaint.lab_complaint">
             <span class="alert alert-info">
              OAK Technology has Assign you Complaint at ({{ complaint.start_time }} )
               {{
@@ -36,7 +36,7 @@
             <button
               type="submit"
               class="alert alert-success mr-1"
-              v-if="complaint.complaint.out_source_complaint_completed == 0"
+              v-if="complaint.lab_complaint && complaint.end_time == null "
             >
               {{ $t("Complaint Assigned") }}
             </button>
@@ -55,12 +55,11 @@
         
         <div class="ml-auto d-flex">
           
-          <div v-if="complaint.complaint.complaint_assign_to_lab_enggs[0].complaint_outsource == 'Yes'">
+          <div v-if="complaint.lab_complaint.complaint_outsource == 'Yes' && complaint.end_time == null">
             <button
               type="submit"
               class="btn btn-success mr-1"
-              v-on:click="OutSourceComplaint(complaint)"
-            >
+              v-on:click="OutSourceComplaint(complaint)"            >
               {{ $t("Complaint Complete") }}
             </button>
           </div>
@@ -122,17 +121,17 @@
 
         <div class="form-group col-md-3">
           <label for="created_by">{{ $t("Equipment Make") }}</label>
-          <p class="">{{ complaint.complaint.complaint_assign_to_lab_enggs[0].make }}</p>
+          <p class="">{{ complaint.lab_complaint.make }}</p>
         </div>
 
         <div class="form-group col-md-3">
           <label for="created_by">{{ $t("Model") }}</label>
-          <p class="">{{ complaint.complaint.complaint_assign_to_lab_enggs[0].model }}</p>
+          <p class="">{{ complaint.lab_complaint.model }}</p>
         </div>
 
         <div class="form-group col-md-3">
           <label for="created_by">{{ $t("Serial No") }}</label>
-          <p class="">{{ complaint.complaint.complaint_assign_to_lab_enggs[0].serial_no }}</p>
+          <p class="">{{ complaint.lab_complaint.serial_no }}</p>
         </div>
 
         <div class="form-group col-md-3" v-if="!is_customer">

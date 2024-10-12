@@ -59,6 +59,43 @@ class Complaints{
         });
     }
 
+    load_customer_side_complaint_listing_table(){
+       
+        "use strict";
+       console.log("processing");
+        var table = $('#customer_side_complaint').DataTable({
+           
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/api/side_complaint',
+                type : 'POST',
+                data : {
+                    access_token : window.settings.access_token
+                }               
+            },           
+            
+            columns: [                
+                {
+                    data: 'ticket'
+                },                
+                {
+                    data: 'date'
+                },
+                {
+                    data:'user_name'
+                },
+                {
+                    data: 'c_status'
+                },
+                {
+                    data: 'action'
+                }              
+               
+            ]
+        });
+    }
+
     load_complaints_listing_table(){
         "use strict";
        console.log("processing");
@@ -99,6 +136,7 @@ class Complaints{
             ]
         });
     }
+
     load_lab_complaints_listing_table(){
         "use strict";
         var table = $('#lab_complaints_listing').DataTable({

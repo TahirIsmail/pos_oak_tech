@@ -468,6 +468,7 @@ Route::group(['middleware' => ['token_auth']], function () {
 
     //Customer Complaints
     Route::post('/customer_complaints', 'API\Complaints@index');
+    Route::post('/side_complaint', 'API\Complaints@side_complaints');
     Route::post('/complaints', 'API\Complaints@complaints');
     Route::post('/lab_complaints_listing', 'API\Complaints@lab_complaints_listing');
     Route::post('/out_source_complaints_listing', 'API\Complaints@out_source_complaints_listing');
@@ -475,11 +476,15 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/customer_orders', 'API\Complaints@customer_orders');
     Route::post('/customer_orders_products', 'API\Complaints@customer_orders_products');
     Route::post('/submit_customer_complaint','API\Complaints@store');
+    Route::post('/submit_customer_side_complaint','API\Complaints@customer_side_complaint_store');
     Route::post('/update_customer_complaint/{slack}','API\Complaints@store');
 
     Route::post('/delete_complaint/{slack}','API\Complaints@delete_complaint');
 
     Route::post('/assign_complaint_to_technician','API\Complaints@assign_complaint_to_technician');
+
+    Route::post('/complaint_assign_to_field_engg','API\Complaints@complaint_assign_to_field_engg');
+
 
 
 
@@ -488,6 +493,11 @@ Route::group(['middleware' => ['token_auth']], function () {
 
 
     Route::post('/out_source_complaint_complete','API\Complaints@out_source_complaint_complete');
+
+
+    Route::post('/edit_complaint_product', 'API\Complaints@edit_complaint_product');
+    Route::post('/re_assign_complaint_product', 'API\Complaints@re_assign_complaint_product');
+    Route::post('/update_no_of_devices', 'API\Complaints@update_no_of_devices');
 
 
 

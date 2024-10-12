@@ -80,7 +80,7 @@ class Invoice extends Controller
             })
 
 
-            ->when($request->logged_user_role_id == 3, function ($query) use ($request) {
+            ->when($request->logged_user_role_id == 2, function ($query) use ($request) {
                 $query->where('invoices.created_by', $request->logged_user_id);
                 $query->orWhere('invoices.bill_to_id', $request->supplier_id);
             })

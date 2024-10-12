@@ -222,6 +222,7 @@ Vue.component('generatestaffpayroll', require('./components/staff_payroll/genera
 Vue.component('addexpensecomponent',require('./components/expense/add_exp_component.vue').default);
 
 Vue.component('add-customer-complaint-component', require('./components/complaint/add_customer_complaint_component.vue').default);
+Vue.component('add-customer-side-complaint-component', require('./components/complaint/add_customer_side_complaint_component.vue').default);
 Vue.component('viewcustomercomplaint', require('./components/complaint/view_customer_complaint_component.vue').default);
 Vue.component('viewrequeststore', require('./components/complaint/view_request_store_component.vue').default);
 Vue.component('viewcomplaint', require('./components/complaint/view_complaint_component.vue').default);

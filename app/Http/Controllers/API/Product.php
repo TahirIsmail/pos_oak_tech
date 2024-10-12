@@ -2,51 +2,46 @@
 
 namespace App\Http\Controllers\API;
 
-use Exception;
-use Validator;
-
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\API\Product as ProductAPI;
+use App\Http\Controllers\API\StockTransfer as StockTransferAPI;
 use App\Http\Controllers\Controller;
-use App\Models\SubCategory;
-use Illuminate\Support\Facades\Config;
-use DataTables;
-use App\Models\Product as ProductModel;
-use App\Models\Supplier as SupplierModel;
+use App\Http\Resources\AddonGroupResource;
+use App\Http\Resources\Collections\ProductCollection;
+use App\Http\Resources\ProductResource;
+use App\Models\AddonGroup as AddonGroupModel;
 use App\Models\Category as CategoryModel;
-use App\Models\Taxcode as TaxcodeModel;
-use App\Models\Discountcode as DiscountcodeModel;
+use App\Models\CategorySpecificationDetails;
+use App\Models\Customer as CustomerModel;
+use App\Models\GstOnProduct;
 use App\Models\MasterStatus;
+use App\Models\MeasurementUnit as MeasurementUnitModel;
+use App\Models\ProductAddonGroup as ProductAddonGroupModel;
+use App\Models\Product as ProductModel;
+use App\Models\ProductImages as ProductImagesModel;
+use App\Models\ProductIngredient as ProductIngredientModel;
+use App\Models\ProductSpecifications;
+use App\Models\ProductVariant as ProductVariantModel;
 use App\Models\StockTransfer as StockTransferModel;
 use App\Models\StockTransferProduct as StockTransferProductModel;
-use App\Models\ProductImages as ProductImagesModel;
-use App\Models\MeasurementUnit as MeasurementUnitModel;
-use App\Models\ProductIngredient as ProductIngredientModel;
-use App\Models\AddonGroup as AddonGroupModel;
-use App\Models\ProductAddonGroup as ProductAddonGroupModel;
 use App\Models\Store as StoreModel;
+use App\Models\Supplier as SupplierModel;
+use App\Models\Taxcode as TaxcodeModel;
 use App\Models\User as UserModel;
-use App\Models\ProductVariant as ProductVariantModel;
-use App\Models\VariantOption as VariantOptionModel;
-use App\Models\Customer as CustomerModel;
 // use App\Models\ProductSpecifications;
 
-use App\Http\Controllers\API\StockTransfer as StockTransferAPI;
-use App\Http\Controllers\API\Product as ProductAPI;
-
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\AddonGroupResource;
-
-use App\Http\Resources\Collections\ProductCollection;
-use App\Models\CategorySpecificationDetails;
-use App\Models\GstOnProduct;
-use App\Models\ProductSpecifications;
-use Mpdf\Mpdf;
-use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Facades\Storage;
+use App\Models\VariantOption as VariantOptionModel;
 use Carbon\Carbon;
+use DataTables;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\ImageManagerStatic as Image;
+use Mpdf\Mpdf;
+use Validator;
 
 class Product extends Controller
 {
@@ -69,7 +64,7 @@ class Product extends Controller
                 $product_filter = (isset($request->product_filter)) ? $request->product_filter : 'billing_products';
 
                 $data = ProductModel::with('supplier', 'category', 'subcategory', 'tax_code', 'discount_code', 'User', 'gst_on_product', 'product_specifications')
-                  
+
                     ->where('quantity', '>', 0)
                     ->orderBy('id', 'desc')
                     ->get();
@@ -86,37 +81,36 @@ class Product extends Controller
                         $modelSpec = $row['product_specifications']->firstWhere('specification_label', 'Model');
                         return $modelSpec ? $modelSpec['specification_details'] : '';
                     })
-                    // ->addColumn('category', function ($row) {
-                    //     return $row['category']->label . '(' . $row['category']->category_code . ')';
-                    // })
+                // ->addColumn('category', function ($row) {
+                //     return $row['category']->label . '(' . $row['category']->category_code . ')';
+                // })
                     ->addColumn('sale_price_percentage', function ($row) {
                         if (isset($row['sale_price_percentage'])) {
-                            return $row['sale_price_percentage'] .'% ';
+                            return $row['sale_price_percentage'] . '% ';
                         } else {
                             return '--';
                         }
                     })
-                  
 
-                    // ->addColumn('gst_paid_for_product', function ($row) {
-                    //     if ($row['gst_paid_for_product'] == 1) {
-                    //         return $row['gst_on_product'][0]->gst_percentage . '%';
-                    //     } else {
-                    //         return '--';
-                    //     }
-                    // })
+                // ->addColumn('gst_paid_for_product', function ($row) {
+                //     if ($row['gst_paid_for_product'] == 1) {
+                //         return $row['gst_on_product'][0]->gst_percentage . '%';
+                //     } else {
+                //         return '--';
+                //     }
+                // })
 
-                    // ->addColumn('status', function ($row) {
-                    //     if ($row['status'] == 1) {
-                    //         return 'Active';
-                    //     } else {
-                    //         return 'InActive';
-                    //     }
-                    // })
+                // ->addColumn('status', function ($row) {
+                //     if ($row['status'] == 1) {
+                //         return 'Active';
+                //     } else {
+                //         return 'InActive';
+                //     }
+                // })
 
-                    // ->addColumn('created_by', function ($row) {
-                    //     return $row['user']['fullname'] . ' (' . $row['user']['email'] . ')';
-                    // })                   
+                // ->addColumn('created_by', function ($row) {
+                //     return $row['user']['fullname'] . ' (' . $row['user']['email'] . ')';
+                // })
 
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;
@@ -126,9 +120,6 @@ class Product extends Controller
                     ->rawColumns(['supplier_id', 'model', 'action'])
                     ->make(true);
             }
-
-
-
 
             $item_array = array();
 
@@ -140,7 +131,7 @@ class Product extends Controller
 
             $order_by = $request->order[0]["column"];
             $order_direction = $request->order[0]["dir"];
-            $order_by_column =  $request->columns[$order_by]['name'];
+            $order_by_column = $request->columns[$order_by]['name'];
 
             $filter_string = $request->search['value'];
             $filter_columns = array_filter(data_get($request->columns, '*.name'));
@@ -216,7 +207,7 @@ class Product extends Controller
                 'draw' => $draw,
                 'recordsTotal' => $total_count,
                 'recordsFiltered' => $total_count,
-                'data' => $item_array
+                'data' => $item_array,
             ];
 
             return response()->json($response);
@@ -224,7 +215,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -236,8 +227,7 @@ class Product extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-    }
+    {}
 
     /**
      * Store a newly created resource in storage.
@@ -249,13 +239,9 @@ class Product extends Controller
     {
         try {
 
-           
-
             if (!check_access(['A_ADD_PRODUCT'], true)) {
                 throw new Exception("Invalid request", 400);
             }
-
-
 
             $this->validate_request($request);
 
@@ -267,12 +253,6 @@ class Product extends Controller
                 $name = $request->product_name;
             }
 
-
-
-
-
-
-
             $product_data_exists = ProductModel::select('id')
                 ->where('product_code', '=', trim($request->product_code))
                 ->first();
@@ -280,16 +260,13 @@ class Product extends Controller
                 throw new Exception("Product code already assigned to a product", 400);
             }
 
-
-
             $supplier_data = SupplierModel::select('id')
                 ->where('slack', '=', trim($request->supplier))
-                //->active()
+            //->active()
                 ->first();
             if (empty($supplier_data)) {
                 throw new Exception("Supplier not found or inactive in the system", 400);
             }
-
 
             // $sale_price = 0;
             // $sale_amount_including_tax = 0;
@@ -317,8 +294,7 @@ class Product extends Controller
             //     $sale_price = $request->sale_price;
             // }
 
-
-            $discount_code_id = NULL;
+            $discount_code_id = null;
             // if (isset($request->discount_code)) {
             //     $discount_code_data = DiscountcodeModel::select('id')
             //         ->where('slack', '=', trim($request->discount_code))
@@ -329,7 +305,7 @@ class Product extends Controller
             //     }
             //     $discount_code_id = $discount_code_data->id;
             // }
-                
+
             if (isset($request->stock_transfer_product_slack) && $request->stock_transfer_product_slack != '') {
                 $stock_transfer_api = new StockTransferAPI();
                 $validate_response = $stock_transfer_api->validate_verify_stock_transfer($request, $request->stock_transfer_product_slack, $request->quantity);
@@ -365,12 +341,12 @@ class Product extends Controller
                 "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
                 "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
                 "status" => $request->status,
-                "created_by" => $request->logged_user_id
+                "created_by" => $request->logged_user_id,
             ];
             // dd($request->input_type);
 
             $product_id = ProductModel::create($product)->id;
-            if($product_id && $request->gst_cash == 'GST'){
+            if ($product_id && $request->gst_cash == 'GST') {
                 $gst_on_product = [
                     'product_id' => $product_id,
                     'gst_percentage' => $request->gst_paid_for_product,
@@ -387,7 +363,7 @@ class Product extends Controller
 
                     $productSpec->save();
                 }
-            }            
+            }
 
             $this->add_ingredients($request, $product['slack']);
 
@@ -438,8 +414,8 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product created successfully",
-                    "data"    => $product['slack'],
-                    "link"    => $forward_link
+                    "data" => $product['slack'],
+                    "link" => $forward_link,
                 ),
                 'SUCCESS'
             ));
@@ -447,7 +423,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -476,7 +452,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product loaded successfully",
-                    "data"    => $item_data
+                    "data" => $item_data,
                 ),
                 'SUCCESS'
             ));
@@ -484,7 +460,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -505,12 +481,12 @@ class Product extends Controller
             }
 
             $list = new ProductCollection(ProductModel::select('*')
-                ->orderBy('created_at', 'desc')->paginate());
+                    ->orderBy('created_at', 'desc')->paginate());
 
             return response()->json($this->generate_response(
                 array(
                     "message" => "Products loaded successfully",
-                    "data"    => $list
+                    "data" => $list,
                 ),
                 'SUCCESS'
             ));
@@ -518,7 +494,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -545,8 +521,7 @@ class Product extends Controller
             // if (is_numeric($request->product_name)) {
             //     $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
             //     $check_condition = true;
-            // }   
-
+            // }
 
             if (is_numeric($request->product_name)) {
                 $product_name = CategorySpecificationDetails::select('values')->where('id', $request->product_name)->first();
@@ -568,7 +543,7 @@ class Product extends Controller
 
             $supplier_data = SupplierModel::select('id')
                 ->where('slack', '=', trim($request->supplier))
-                //->active()
+            //->active()
                 ->first();
             if (empty($supplier_data)) {
                 throw new Exception("Supplier not found or inactive in the system", 400);
@@ -576,7 +551,6 @@ class Product extends Controller
 
             $sale_price = 0;
             $sale_amount_including_tax = 0;
-
 
             // if (isset($request->tax_code)) {
             //     $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
@@ -602,7 +576,7 @@ class Product extends Controller
             //     $sale_price = $request->sale_price;
             // }
 
-            $discount_code_id = NULL;
+            $discount_code_id = null;
             // if (isset($request->discount_code)) {
             //     $discount_code_data = DiscountcodeModel::select('id')
             //         ->where('slack', '=', trim($request->discount_code))
@@ -614,9 +588,7 @@ class Product extends Controller
             //     $discount_code_id = $discount_code_data->id;
             // }
 
-
-
-            DB::beginTransaction();          
+            DB::beginTransaction();
 
             $product = [
                 "name" => $name,
@@ -640,9 +612,8 @@ class Product extends Controller
                 "is_ingredient" => ($request->is_ingredient == true) ? 1 : 0,
                 "is_addon_product" => ($request->is_addon_product == true) ? 1 : 0,
                 "status" => $request->status,
-                "updated_by" => $request->logged_user_id
+                "updated_by" => $request->logged_user_id,
             ];
-
 
             // dd($product);
 
@@ -673,10 +644,10 @@ class Product extends Controller
 
             if ($action_response) {
                 $productModel = ProductModel::where('slack', $slack)->first();
-            
+
                 if ($productModel && $request->gst_cash == 'GST') {
                     $gst_on_product = GstOnProduct::where('product_id', $productModel->id)->first();
-            
+
                     if ($gst_on_product) {
                         $gst_on_product->gst_paid_for_product = $request->gst_paid_for_product;
                         $gst_on_product->save();
@@ -684,14 +655,11 @@ class Product extends Controller
                         // If GstOnProduct doesn't exist, create a new one
                         GstOnProduct::create([
                             'product_id' => $productModel->id,
-                            'gst_paid_for_product' => $request->gst_paid_for_product
+                            'gst_paid_for_product' => $request->gst_paid_for_product,
                         ]);
                     }
                 }
             }
-            
-
-            
 
             if ($action_response) {
                 $p_specifications = [];
@@ -741,8 +709,6 @@ class Product extends Controller
                 }
             }
 
-
-
             $this->add_ingredients($request, $slack);
 
             $this->add_addon_groups($request, $slack);
@@ -756,7 +722,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product updated successfully",
-                    "data"    => $slack
+                    "data" => $slack,
                 ),
                 'SUCCESS'
             ));
@@ -764,7 +730,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -787,7 +753,7 @@ class Product extends Controller
             'category' => $this->get_validation_rules("slack", true),
             'description' => $this->get_validation_rules("text", false),
             'status' => $this->get_validation_rules("status", true),
-            'product_images.*' => $this->get_validation_rules("product_image", false)
+            'product_images.*' => $this->get_validation_rules("product_image", false),
         ];
 
         if ($request->tax_code != null) {
@@ -815,7 +781,6 @@ class Product extends Controller
         }
     }
 
-
     public function update_validate_request($request)
     {
         $request->merge(['ingredients' => json_decode($request->ingredients, true)]);
@@ -832,7 +797,7 @@ class Product extends Controller
             'category' => $this->get_validation_rules("slack", true),
             'description' => $this->get_validation_rules("text", false),
             'status' => $this->get_validation_rules("status", true),
-            'product_images.*' => $this->get_validation_rules("product_image", false)
+            'product_images.*' => $this->get_validation_rules("product_image", false),
         ];
 
         if ($request->tax_code) {
@@ -866,116 +831,235 @@ class Product extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function get_product(Request $request)
+    // {
+    //     try {
+
+    //         $product_code = $request->barcode;
+    //         $product_title = $request->product_title;
+    //         $product_category = $request->product_category;
+    //         $customer_slack = $request->customer_slack;
+
+    //         $query = ProductModel::with('subcategory')->select('products.*')
+    //             ->supplierJoin()
+    //             // ->taxcodeJoin()
+    //             // ->discountcodeJoin()
+    //             ->supplierActive()
+    //             // ->taxcodeActive()
+    //             ->quantityCheck()
+    //             ->active()
+    //             ->mainProduct();
+
+    //         if (isset($product_code) && $product_code != '') {
+    //             $query->where([
+    //                 ['products.product_code', 'like', '%' . trim($product_code) . '%']
+    //             ]);
+    //         }
+
+    //         if (isset($product_title) && !empty($product_title)) {
+    //             $query->whereHas('product_specifications.category_specification_details', function ($query) use ($product_title) {
+    //                 $query->where('specification_label', 'Model')
+    //                       ->where('specification_details', 'like', '%' . trim($product_title) . '%');
+    //             });
+    //         }
+
+    //         if (isset($product_category) && $product_category != '') {
+
+    //             // Explode the string into an array
+    //             $slackArray = explode(',', $product_category);
+
+    //             // Now you have an array of Slack values
+    //             // You can use these values to fetch the corresponding category IDs
+    //             $categoryIds = CategoryModel::whereIn('slack', $slackArray)->pluck('id')->toArray();
+
+    //             // Assuming you have the category IDs, you can fetch their subcategories' IDs
+    //             $subcategoriesIds = CategoryModel::whereIn('id', $categoryIds)
+    //                 ->with('subcategories') // Retrieve only subcategory IDs
+    //                 ->get()
+    //                 ->pluck('subcategories.*.id')
+    //                 ->flatten()
+    //                 ->toArray();
+
+    //             $query->whereIn('products.sub_category_id', $subcategoriesIds);
+    //         }
+    //         if ($product_code == '' && $product_title == '' && $product_category == '' && $customer_slack == '') {
+    //             $query->orderProduct()
+    //                 ->orderJoin()
+    //                 ->where('orders.status', 1) //closed orders
+    //                 ->orderBy('order_products.quantity', 'DESC')
+    //                 ->groupBy('product_code')
+    //                 ->limit(10);
+    //         }
+    //         if ($customer_slack != '') {
+
+    //             $customer = CustomerModel::select('id')->where('customers.slack', $customer_slack)
+    //                 ->first();
+
+    //             $query->orderProduct()
+    //                 ->orderJoin()
+    //                 ->where('orders.customer_id', '=', $customer->id)
+    //                 ->where('orders.status', 1) //closed orders
+    //                 ->orderBy('order_products.quantity', 'DESC')
+    //                 ->groupBy('product_code')
+    //                 ->limit(10);
+    //         }
+
+    //         $product_data = $query->get();
+
+    //         // dd($product_data);
+
+    //         $request->skip_products = true;
+    //         $product_data = ProductResource::collection($product_data);
+
+    //         if (empty($product_data)) {
+    //             throw new Exception("Product not available", 400);
+    //         }
+
+    //         return response()->json($this->generate_response(
+    //             array(
+    //                 "message" => "Product listed successfully",
+    //                 "data"    => $product_data
+    //             ),
+    //             'SUCCESS'
+    //         ));
+    //     } catch (Exception $e) {
+    //         return response()->json($this->generate_response(
+    //             array(
+    //                 "message" => $e->getMessage(),
+    //                 "status_code" => $e->getCode()
+    //             )
+    //         ));
+    //     }
+    // }
+
     public function get_product(Request $request)
     {
         try {
-
+            // Retrieve filters from the request
             $product_code = $request->barcode;
-            $product_title = $request->product_title;
+            $product_title = trim($request->product_title);
             $product_category = $request->product_category;
             $customer_slack = $request->customer_slack;
+            $input_type = trim($request->generic_search);
+            // Pagination parameters
+            $page = $request->page ?? 1; // Default to page 1 if not provided
+            $perPage = $request->per_page ?? 10; // Default to 10 products per page
 
+            // Initialize query
+            $query = ProductModel::query()
+                ->with(['subcategory', 'product_specifications.category_specification_details', 'discountCode', 'taxCode'])
+                ->active(); // Assuming `active()` is a local scope method
 
-
-
-
-            $query = ProductModel::with('subcategory')->select('products.*')
-                ->supplierJoin()
-                // ->taxcodeJoin()
-                // ->discountcodeJoin()
-                ->supplierActive()
-                // ->taxcodeActive()
-                ->quantityCheck()
-                ->active()
-                ->mainProduct();
-            
-            
-
-            if (isset($product_code) && $product_code != '') {
-                $query->where([
-                    ['products.product_code', 'like', '%' . trim($product_code) . '%']
-                ]);
+            // Apply filters
+            if (!empty($product_code)) {
+                $query->where('products.product_code', 'like', '%' . trim($product_code) . '%');
             }
-            // if (isset($product_title) && $product_title != '') {
-            //     $query->where([
-            //         ['products.name', 'like', '%' . trim($product_title) . '%']
-            //     ]);
-            // }
-            if (isset($product_title) && $product_title != '') {
-                $query->whereHas('product_specifications', function ($query) use ($product_title) {
-                    $query->where('specification_label', 'Model');
-                    $query->where('specification_details', 'like', '%' . trim($product_title) . '%');
+
+            if (!empty($product_title)) {
+                $query->whereHas('product_specifications', function ($subQuery) use ($product_title) {
+                    $subQuery->where('specification_label', 'Model')
+                        ->where('specification_details', 'like', '%' . $product_title . '%');
                 });
             }
-            
-            if (isset($product_category) && $product_category != '') {
 
+            if (!empty($input_type)) {
+                // dd('working');
+                $query->where(function ($query) use ($input_type) {
+                    // Search within product_specifications
+                    $query->whereHas('product_specifications', function ($subQuery) use ($input_type) {
+                        $subQuery->where('specification_details', 'like', '%' . $input_type . '%');
+                    })
+                    // Search within category_specification_details
+                    ->orWhereHas('product_specifications.category_specification_details', function ($subQuery) use ($input_type) {
+                        $subQuery->where('values', 'like', '%' . $input_type . '%');
+                    });
+                });
+            }
 
+            // $sql = $query->toSql();
+            // $bindings = $query->getBindings();
+            // dd(vsprintf(str_replace('?', '%s', $sql), array_map(function ($binding) {
+            //     return is_numeric($binding) ? $binding : "'{$binding}'";
+            // }, $bindings)));
 
-
-                // Explode the string into an array
+            if (!empty($product_category)) {
+                // Process categories
                 $slackArray = explode(',', $product_category);
-
-                // Now you have an array of Slack values
-                // You can use these values to fetch the corresponding category IDs
                 $categoryIds = CategoryModel::whereIn('slack', $slackArray)->pluck('id')->toArray();
-
-                // Assuming you have the category IDs, you can fetch their subcategories' IDs
+    
+                // Fetch subcategory IDs from selected categories
                 $subcategoriesIds = CategoryModel::whereIn('id', $categoryIds)
-                    ->with('subcategories') // Retrieve only subcategory IDs
+                    ->with('subcategories') // Optimize query by selecting only needed columns
                     ->get()
                     ->pluck('subcategories.*.id')
                     ->flatten()
                     ->toArray();
-
+    
+                // Apply filter by subcategory IDs
                 $query->whereIn('products.sub_category_id', $subcategoriesIds);
-            }
-            if ($product_code == '' && $product_title == '' && $product_category == '' && $customer_slack == '') {
-                $query->orderProduct()
-                    ->orderJoin()
-                    ->where('orders.status', 1) //closed orders
-                    ->orderBy('order_products.quantity', 'DESC')
-                    ->groupBy('product_code')
-                    ->limit(10);
-            }
-            if ($customer_slack != '') {
-
-                $customer = CustomerModel::select('id')->where('customers.slack', $customer_slack)
-                    ->first();
-
-                $query->orderProduct()
-                    ->orderJoin()
-                    ->where('orders.customer_id', '=', $customer->id)
-                    ->where('orders.status', 1) //closed orders
-                    ->orderBy('order_products.quantity', 'DESC')
-                    ->groupBy('product_code')
-                    ->limit(10);
+            } else {
+                // If no categories are selected, return an empty response
+                // return response()->json($this->generate_response(
+                //     [
+                //         "message" => "No categories selected.",
+                //         'pagination' => [
+                //             'current_page' => $page,
+                //             'last_page' => 0,
+                //             'total' => 0,
+                //             'per_page' => $perPage,
+                //         ],
+                //         "data" => [],
+                //     ],
+                //     'SUCCESS'
+                // ));
             }
 
-            $product_data = $query->get();
+            if (!empty($customer_slack)) {
+                // Filter by customer
+                $customer = CustomerModel::select('id')->where('customers.slack', $customer_slack)->first();
 
-            // dd($product_data);
+                if ($customer) {
+                    $query->whereHas('orders', function ($orderQuery) use ($customer) {
+                        $orderQuery->where('orders.customer_id', '=', $customer->id)
+                            ->where('orders.status', 1) // Only closed orders
+                            ->orderBy('order_products.quantity', 'DESC');
+                    });
+                }
+            }
 
-            $request->skip_products = true;
-            $product_data = ProductResource::collection($product_data);
+            // Apply pagination
 
-            if (empty($product_data)) {
+            $products = $query->paginate($perPage, ['*'], 'page', $page);
+
+            // Handle case where no products are found
+            if ($products->isEmpty()) {
                 throw new Exception("Product not available", 400);
             }
 
+            // Transform products using resource
+            $product_data = ProductResource::collection($products);
+
+            // Return success response with pagination info
             return response()->json($this->generate_response(
-                array(
-                    "message" => "Product listed successfully",
-                    "data"    => $product_data
-                ),
+                [
+                    "message" => "Product listed.",
+                    'pagination' => [
+                        'current_page' => $products->currentPage(),
+                        'last_page' => $products->lastPage(),
+                        'total' => $products->total(),
+                        'per_page' => $products->perPage(),
+                    ],
+                    "data" => $product_data,
+                ],
                 'SUCCESS'
             ));
         } catch (Exception $e) {
+            // Handle exceptions and return error response
             return response()->json($this->generate_response(
-                array(
+                [
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
-                )
+                    "status_code" => $e->getCode(),
+                ]
             ));
         }
     }
@@ -999,14 +1083,14 @@ class Product extends Controller
             $upload_folder = Config::get('constants.upload.barcode.dir');
             $upload_path = Config::get('constants.upload.barcode.upload_path');
             $view_path = Config::get('constants.upload.barcode.view_path');
-            $generator  = new \Picqer\Barcode\BarcodeGeneratorJPG();
+            $generator = new \Picqer\Barcode\BarcodeGeneratorJPG();
             $barcode_type = $generator::TYPE_CODE_128;
 
             $barcode_array = [];
             $remove_file_array = [];
             $download_link = '';
 
-            if (empty((array)$product_array)) {
+            if (empty((array) $product_array)) {
                 throw new Exception("Product list should not be empty", 400);
             }
 
@@ -1060,15 +1144,15 @@ class Product extends Controller
                 set_time_limit(180);
 
                 $mpdf_config = [
-                    'mode'          => 'utf-8',
-                    'format'        => 'A4',
-                    'orientation'   => 'L',
-                    'margin_left'   => 0,
-                    'margin_right'  => 0,
-                    'margin_top'    => 0,
+                    'mode' => 'utf-8',
+                    'format' => 'A4',
+                    'orientation' => 'L',
+                    'margin_left' => 0,
+                    'margin_right' => 0,
+                    'margin_top' => 0,
                     'margin_bottom' => 0,
                     'margin_footer' => 1,
-                    'tempDir' => storage_path() . "/pdf_temp"
+                    'tempDir' => storage_path() . "/pdf_temp",
                 ];
 
                 $css_file = 'css/barcode_print.css';
@@ -1088,7 +1172,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Barcodes generated successfully",
-                    'link' => ($download_link != '') ? $download_link : ''
+                    'link' => ($download_link != '') ? $download_link : '',
                 ),
                 'SUCCESS'
             ));
@@ -1096,7 +1180,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1126,13 +1210,13 @@ class Product extends Controller
                     $query->where('products.product_code', 'like', $keywords . '%')
                         ->orWhere('products.name', 'like', $keywords . '%');
                 });
-                
+
             $product_data = $query->get();
-                // dd($product_data);
+            // dd($product_data);
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product listed successfully",
-                    "data"    => $product_data
+                    "data" => $product_data,
                 ),
                 'SUCCESS'
             ));
@@ -1140,12 +1224,11 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
     }
-
 
     public function fetch_products(Request $request)
     {
@@ -1183,7 +1266,6 @@ class Product extends Controller
             ])
             ->get();
 
-
         // dd($products);
 
         $specification = [];
@@ -1195,12 +1277,12 @@ class Product extends Controller
                 ];
             }
             $outputArray = array_column($specification, 'value', 'Label');
-            $resultString = implode(', ', array_map(fn ($key, $value) => "$key: $value", array_keys($outputArray), $outputArray));
+            $resultString = implode(', ', array_map(fn($key, $value) => "$key: $value", array_keys($outputArray), $outputArray));
 
             return [
                 'product_slack' => $product->slack,
                 'product_code' => $product->product_code,
-                'label' => $product->name  . ' (' . $resultString . ' )',
+                'label' => $product->name . ' (' . $resultString . ' )',
                 'quantity' => $product->quantity,
                 'purchase_amount_excluding_tax' => $product->sale_amount_excluding_tax,
                 'tax_percentage' => optional($product->taxCode)->total_tax_percentage,
@@ -1209,17 +1291,13 @@ class Product extends Controller
             ];
         });
 
-
         //    dd($main_products);
-
-
-
 
         if ($main_products) {
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product listed successfully",
-                    "data"    => $main_products
+                    "data" => $main_products,
                 ),
                 'SUCCESS'
             ));
@@ -1248,7 +1326,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product listed successfully",
-                    "data"    => $product_data
+                    "data" => $product_data,
                 ),
                 'SUCCESS'
             ));
@@ -1256,7 +1334,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1300,7 +1378,7 @@ class Product extends Controller
                         "product_id" => $product_id,
                         "filename" => $file_name,
                         "status" => $status_data->value,
-                        "created_by" => $request->logged_user_id
+                        "created_by" => $request->logged_user_id,
                     ];
 
                     $product_image_id = ProductImagesModel::create($product_image_array)->id;
@@ -1329,7 +1407,7 @@ class Product extends Controller
                 Storage::disk('product')->delete(
                     [
                         $product_image_data->filename,
-                        'thumb_' . $product_image_data->filename
+                        'thumb_' . $product_image_data->filename,
                     ]
                 );
             }
@@ -1337,7 +1415,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product image deleted successfully",
-                    "data"    => $image_slack
+                    "data" => $image_slack,
                 ),
                 'SUCCESS'
             ));
@@ -1345,7 +1423,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1381,7 +1459,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Ingredient list loaded successfully",
-                    "data"    => $product_data
+                    "data" => $product_data,
                 ),
                 'SUCCESS'
             ));
@@ -1389,7 +1467,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1444,7 +1522,7 @@ class Product extends Controller
                             "ingredient_product_id" => $ingredient_data->id,
                             "quantity" => $ingredient['quantity'],
                             "measurement_unit_id" => (isset($measurement_unit_data)) ? $measurement_unit_data->id : '',
-                            "created_by" => $request->logged_user_id
+                            "created_by" => $request->logged_user_id,
                         ];
 
                         $individual_sale_price = ($ingredient['quantity'] * $ingredient_data->sale_amount_excluding_tax);
@@ -1467,7 +1545,7 @@ class Product extends Controller
                     $product = [
                         "sale_amount_excluding_tax" => $item_sale_price,
                         "purchase_amount_excluding_tax" => $item_purchase_price,
-                        "is_ingredient_price" => 1
+                        "is_ingredient_price" => 1,
                     ];
                     ProductModel::where('id', $product_data->id)
                         ->update($product);
@@ -1476,7 +1554,7 @@ class Product extends Controller
                 ProductIngredientModel::where('product_id', $product_data->id)->delete();
                 ProductAddonGroupModel::where('product_id', $product_data->id)->delete();
                 $product = [
-                    "is_ingredient_price" => 0
+                    "is_ingredient_price" => 0,
                 ];
                 ProductModel::where('id', $product_data->id)
                     ->update($product);
@@ -1486,7 +1564,7 @@ class Product extends Controller
 
             $product = [
                 "is_ingredient" => 0,
-                "is_ingredient_price" => 0
+                "is_ingredient_price" => 0,
             ];
             ProductModel::where('id', $product_data->id)
                 ->update($product);
@@ -1516,7 +1594,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Product listed successfully",
-                    "data"    => $product_data
+                    "data" => $product_data,
                 ),
                 'SUCCESS'
             ));
@@ -1524,7 +1602,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1551,7 +1629,6 @@ class Product extends Controller
 
                 foreach ($addon_group_data_array as $key => $addon_group_data_array_item) {
 
-
                     if (!empty($addon_group_data_array_item['slack'])) {
 
                         $addon_group_data = AddonGroupModel::select('id')
@@ -1566,7 +1643,7 @@ class Product extends Controller
                         $product_addon_group_array[] = [
                             "product_id" => $product_data->id,
                             "addon_group_id" => $addon_group_data->id,
-                            "created_by" => $request->logged_user_id
+                            "created_by" => $request->logged_user_id,
                         ];
                     }
                 }
@@ -1619,7 +1696,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Add-on group listed successfully",
-                    "data"    => $addon_groups
+                    "data" => $addon_groups,
                 ),
                 'SUCCESS'
             ));
@@ -1627,7 +1704,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1671,7 +1748,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1702,7 +1779,7 @@ class Product extends Controller
 
             if (isset($current_product) && $current_product != '') {
                 $query->where([
-                    ['products.slack', '!=', trim($current_product)]
+                    ['products.slack', '!=', trim($current_product)],
                 ]);
             }
 
@@ -1717,7 +1794,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Vairant product list loaded successfully",
-                    "data"    => $product_data
+                    "data" => $product_data,
                 ),
                 'SUCCESS'
             ));
@@ -1725,7 +1802,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1782,10 +1859,10 @@ class Product extends Controller
                     }
 
                     $variant_product_array[] = [
-                        "variant_code"      => $product_variant_code,
-                        "product_id"        => $variant_product_data->id,
+                        "variant_code" => $product_variant_code,
+                        "product_id" => $variant_product_data->id,
                         "variant_option_id" => $variant_option_data->id,
-                        "created_by"        => $request->logged_user_id
+                        "created_by" => $request->logged_user_id,
                     ];
                 }
 
@@ -1797,10 +1874,10 @@ class Product extends Controller
                         ->first();
 
                     $variant_product_array[] = [
-                        "variant_code"      => $product_variant_code,
-                        "product_id"        => $product_data->id,
+                        "variant_code" => $product_variant_code,
+                        "product_id" => $product_data->id,
                         "variant_option_id" => $parent_variant_option_data->id,
-                        "created_by"        => $request->logged_user_id
+                        "created_by" => $request->logged_user_id,
                     ];
                     foreach ($variant_product_array as $variant_product_array_item) {
                         $variant_product_array_item['slack'] = $this->generate_slack("product_variants");
@@ -1841,10 +1918,10 @@ class Product extends Controller
                     ->first();
 
                 $variant_product_array[] = [
-                    "variant_code"      => $product_variant_code,
-                    "product_id"        => $variant_product_data->id,
+                    "variant_code" => $product_variant_code,
+                    "product_id" => $variant_product_data->id,
                     "variant_option_id" => $variant_option_data->id,
-                    "created_by"        => $request->logged_user_id
+                    "created_by" => $request->logged_user_id,
                 ];
 
                 $remove_product_array[] = $variant_product_data->id;
@@ -1873,7 +1950,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => "Vairant removed successfully",
-                    "data"    => $variant_slack
+                    "data" => $variant_slack,
                 ),
                 'SUCCESS'
             ));
@@ -1881,7 +1958,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }
@@ -1918,7 +1995,7 @@ class Product extends Controller
 
             $update_array = [
                 'sale_amount_excluding_tax' => $sale_amount_excluding_tax,
-                'sale_amount_including_tax' => $sale_amount_including_tax
+                'sale_amount_including_tax' => $sale_amount_including_tax,
             ];
 
             ProductModel::where('id', $product->id)
@@ -1962,7 +2039,7 @@ class Product extends Controller
                 array(
                     "message" => "Product deleted successfully",
                     "data" => $slack,
-                    "link" => $forward_link
+                    "link" => $forward_link,
                 ),
                 'SUCCESS'
             ));
@@ -1970,7 +2047,7 @@ class Product extends Controller
             return response()->json($this->generate_response(
                 array(
                     "message" => $e->getMessage(),
-                    "status_code" => $e->getCode()
+                    "status_code" => $e->getCode(),
                 )
             ));
         }

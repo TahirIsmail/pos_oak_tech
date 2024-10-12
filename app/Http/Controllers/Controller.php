@@ -108,6 +108,9 @@ class Controller extends BaseController
             'data'   => (isset($response_array['data']))?$response_array['data']:"",
             'status_code' => (isset($response_array['status_code']))?$response_array['status_code']:$status_code
         );
+        if (isset($response_array['pagination'])) {
+            $response['pagination'] = $response_array['pagination'];
+        }
         if(isset($response_array['link'])){
             $response = array_merge($response, array("link" => $response_array['link']));
         }

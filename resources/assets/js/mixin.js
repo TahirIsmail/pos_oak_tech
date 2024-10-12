@@ -15,7 +15,7 @@ export var mixin = {
         },
 
         show_response_message(message, title = '', duration = 90000){
-            
+           
             Vue.notify({
                 group: 'notification_bar',
                 title: title,
@@ -28,6 +28,23 @@ export var mixin = {
             });
             
         },
+
+        show_errors_response_message(message, title = '', duration = 90000){
+           
+            Vue.notify({
+                group: 'notification_bar',
+                title: title,
+                text: message,
+                duration: duration,
+                closeOnClick: false,
+                type: 'custom',
+                backgroundColor: '#f10a21 ',
+                textColor: 'white',
+                customClass: 'custom-error-class'
+            });
+           
+        },
+
 
         play_beep(){
             if(typeof this.pos_order != 'undefined' && this.pos_order == true){

@@ -401,11 +401,11 @@ footer{
 
 .vue-notification-group{
   margin-top: 5rem !important;
-  z-index: 50001 !important;
+  z-index: 99999999999999999999 !important;
 }
 
 .vue-notification-template {
-  background: #E5EFF5 !important;
+  background: #003455 !important;
 }
 
 .n-light {

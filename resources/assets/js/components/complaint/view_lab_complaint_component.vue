@@ -101,28 +101,38 @@
   
             <p>{{ complaint.ticket }}</p>
           </div>
-  
+
+
           <div class="form-group col-md-3">
-            <label for="label">{{ $t("Date") }}</label>
+            <label for="category_code">{{ $t("Product Name") }}</label>
   
-            <p>{{ complaint.date }}</p>
+            <p>{{ complaint.complaint_assign_to_lab_enggs[0].product_name }}</p>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="category_code">{{ $t("Serial NO") }}</label>
+  
+            <p>{{ complaint.complaint_assign_to_lab_enggs[0].serial_no }}</p>
+          </div>
+  
+
+          <div class="form-group col-md-3">
+            <label for="category_code">{{ $t("Model") }}</label>  
+            <p>{{ complaint.complaint_assign_to_lab_enggs[0].model }}</p>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="category_code">{{ $t("Make") }}</label>  
+            <p>{{ complaint.complaint_assign_to_lab_enggs[0].make }}</p>
           </div>
   
           <div class="form-group col-md-3">
-            <label for="label">{{ $t("Time") }}</label>
-  
-            <p>{{ complaint.time }}</p>
-          </div>
-  
-          <div class="form-group col-md-3">
-            <label for="label">{{ $t("Customer Name") }}</label>
-  
+            <label for="label">{{ $t("Customer Name") }}</label>  
             <p>{{ complaint.user_name }}</p>
           </div>
   
           <div class="form-group col-md-3">
-            <label for="label">{{ $t("Complaint Status") }}</label>
-  
+            <label for="label">{{ $t("Complaint Status") }}</label>  
             <p class="alert alert-success w-50">
               {{ complaint.c_status }}
             </p>

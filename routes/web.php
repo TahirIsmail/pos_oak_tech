@@ -128,6 +128,9 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     // out source vendor 
     Route::get('/add_out_source_vendor', "Supplier@add_out_source_vendor")->name('add_out_source_vendor');
 
+    // customer side complaints 
+    Route::get('/customer_side_complaints', "ComplaintsController@customer_side_complaints")->name('customer_side_complaints');
+
     //tax code
     Route::get('/tax_codes', "Taxcode@index")->name('tax_codes');
     Route::get('/gst_on_product', "Taxcode@gst_on_product")->name('gst_on_product');
@@ -344,6 +347,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     //Complaints Modules
     Route::get('/customer_complaints','ComplaintsController@index')->name('customer_complaints');
     Route::get('/add_complaints', "ComplaintsController@add_complaints")->name('add_complaints');
+    Route::get('/add_customer_side_complaints', "ComplaintsController@add_customer_side_complaints")->name('add_customer_side_complaints');
     Route::get('/edit_customer_complaint/{slack?}', "ComplaintsController@add_complaints")->name('edit_customer_complaint');
     Route::get('/view_customer_complaint/{slack?}', "ComplaintsController@view_complaints")->name('view_customer_complaint');
     Route::get('/view_complaint/{slack?}', "ComplaintsController@open_complaint")->name('view_complaint');

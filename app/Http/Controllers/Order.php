@@ -318,7 +318,7 @@ class Order extends Controller
         foreach ($data['order_data']['transactions'] as $transactions){
 
             
-            $total_received_amount += (int) $transactions['received_amount'];
+            $total_received_amount += (float) $transactions['received_amount'];
             
         }
 
@@ -380,7 +380,7 @@ class Order extends Controller
         foreach ($record['order_data']['transactions'] as $transactions){
 
             
-            $total_received_amount += (int) $transactions['received_amount'];
+            $total_received_amount += (float) $transactions['received_amount'];
             
         }
         // dd($total_received_amount);

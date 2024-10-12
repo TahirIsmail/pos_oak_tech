@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+        
         <div class="col-md-12">
             <div class="card p-4">
 
@@ -14,8 +15,8 @@
                     </div>
                     <div class="">
                         <!-- <span v-if="order_basic.restaurant_mode == 1 && order_basic.kitchen_status != null" v-bind:class="order_basic.kitchen_status.color" class="mr-2">{{ order_basic.kitchen_status.label }}</span> -->
-                        <span v-if="order_basic.payment_status != null" v-bind:class="order_basic.payment_status.color" class="mr-2">{{ order_basic.payment_status.label }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</span>
-                        <button v-if="order_basic.payment_status.value == 0" style="padding:6px 16px!important" @click="pending_payment()" class="btn btn-primary mr-2">{{ $t("Pay Remaining Amount") }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</button>
+                        <span v-if="order_basic.payment_status.value == '0.00' || order_basic.payment_status.value == '0.0'" v-bind:class="order_basic.payment_status.color" class="mr-2">{{ order_basic.payment_status.label }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</span>
+                        <button v-if="order_basic.payment_status.value == '0.00' || order_basic.payment_status.value == '0.0'" style="padding:6px 16px!important" @click="pending_payment()" class="btn btn-primary mr-2">{{ $t("Pay Remaining Amount") }}  ({{(order_basic.payment_status.value == 0) ?  (order_basic.total_order_amount - total_received_amount) : ''}})</button>
                         <span v-bind:class="order_basic.status.color">{{ order_basic.status.label }}</span>
                     </div>
                 </div>

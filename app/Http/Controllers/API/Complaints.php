@@ -33,6 +33,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Validator;
+use Exception;
+
 class Complaints extends Controller
 {
     /**
@@ -63,6 +66,29 @@ class Complaints extends Controller
                 ->addColumn('action', function ($row) {
                     $data['row'] = $row;
                     return view('complaints.layouts.complaints_actions', $data)->render();
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function side_complaints(Request $request)
+    {       
+
+        if ($request->ajax()) {
+            if ($request->logged_user_role_id == 2) {
+                $data = ModelsComplaints::with('customer')->where('customer_id', $request->logged_user_customer_id)->get();
+            } else {
+                $data = ModelsComplaints::with('customer')->get();
+            }
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $data['row'] = $row;
+                    // return '';
+
+                    return view('complaints.layouts.customer_complaints_actions', $data)->render();
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -272,7 +298,7 @@ class Complaints extends Controller
             DB::beginTransaction();
 
             $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
-            
+
             if (isset($request->assigned_to) && $request->assigned_to != null) {
                 $assigned_to = User::select('id', 'email')->where('slack', $request->assigned_to)->get();
             } else {
@@ -304,7 +330,7 @@ class Complaints extends Controller
                     "assign_to" => $request->assign_to ?? null,
                     "customer_id" => $customer_id[0]->id,
                     "user_name" => $customer_id[0]->name,
-                    "equipment_type" => $request->equipment_type,                   
+                    "equipment_type" => $request->equipment_type,
                     "complaint_details" => $request->complaint_details,
                     "end_user_details" => $request->end_user_details,
                     "service_required" => $request->service_required,
@@ -424,6 +450,195 @@ class Complaints extends Controller
             ));
         }
     }
+
+
+    public function customer_side_complaint_store(Request $request, $slack = null)
+    {
+        try {
+
+
+            DB::beginTransaction();
+
+            $customer_id = Customer::select('id', 'name')->where('slack', $request->customer_slack)->get();
+
+
+            $ticket = $this->generate_ticket("complaints");
+            $currentTime = Carbon::now('Asia/Karachi');
+            $time = $currentTime->format('H:i:s');
+            $date = $currentTime->format('d-m-Y');
+
+            if ($slack == null) {
+                $customer_complaints = [
+                    "slack" => $this->generate_slack("complaints"),
+                    "store_id" => $request->logged_user_store_id,
+                    'invoice_po_number' => $request->invoice_po_number ?? '',
+                    'mode_of_complaint' => $request->mode_of_complaint ?? '',
+                    "ticket" => $ticket,
+                    "date" => $date,
+                    "time" => $time,
+                    "customer_id" => $customer_id[0]->id,
+                    "user_name" => $customer_id[0]->name,
+                    "equipment_type" => $request->equipment_type,
+                    "complaint_details" => $request->complaint_details,
+                    "end_user_details" => $request->end_user_details,
+                    "service_required" => $request->service_required,
+                    "type_of_service" => $request->service_type,
+                    "poc_name" => $request->poc_name,
+
+                ];
+
+                $complaints = ModelsComplaints::create($customer_complaints);
+
+                if ($complaints) {
+
+                    
+
+
+                    DB::commit();
+
+                    return response()->json($this->generate_response(
+                        array(
+                            "message" => "Complaints Submit successfully",
+                            "data" => $complaints,
+                            'msg' => 'success',
+                        ),
+                        'SUCCESS'
+                    ));
+                }
+            } else {
+                $customer_complaints = [
+                    'no_of_devices' => $request->no_of_devices ?? '',
+                    'invoice_po_number' => $request->invoice_po_number ?? '',
+                    'mode_of_complaint' => $request->mode_of_complaint ?? '',
+                    "assign_to" => $request->assign_to ?? null,
+                    "customer_id" => $customer_id[0]->id ?? null,
+                    "user_name" => $customer_id[0]->name ?? null,
+                    "equipment_type" => $request->equipment_type ?? null,
+                    "equipment_make" => $request->equipment_make ?? null,
+                    "model" => $request->model ?? null,
+                    "serial_no" => $request->serial_no ?? null,
+                    "complaint_details" => $request->complaint_details ?? null,
+                    "end_user_details" => $request->end_user_details ?? null,
+                    "service_required" => $request->service_required ?? null,
+                    "type_of_service" => $request->service_type,
+                    "assign_to_lab_staff_id" => $assigned_to[0]->id ?? null,
+                    "assign_to_field_staff_id" => $assigned_to_field_enng[0]->id ?? null,
+                    "poc_name" => $request->poc_name ?? null,
+                    "c_status" => $request->complaint_status ?? null,
+                ];
+
+                $conditions = [
+                    "slack" => $slack,
+                ];
+
+                $customer_complaint = ModelsComplaints::updateOrCreate($conditions, $customer_complaints);
+
+                DB::commit();
+
+                return response()->json($this->generate_response(
+                    [
+                        "message" => "Customer Complaints Updated successfully",
+                        "data" => $customer_complaint,
+                        'msg' => 'success',
+                    ],
+                    'SUCCESS'
+                ));
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode(),
+                )
+            ));
+        }
+    }
+
+    public function complaint_assign_to_field_engg(Request $request)
+    {
+        try {
+         
+           
+            // Fetch the main complaint
+            $main_complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+            if (!$main_complaint) {
+                throw new Exception('Complaint not found', 404);
+            }
+
+            // Fetch assigned field engineer
+            $assigned_to_field_enng = User::select('id', 'email')
+                ->where('slack', $request->assigned_to_field_enng)
+                ->first();
+
+            if (!$assigned_to_field_enng) {
+                throw new Exception('Assigned technician not found', 404);
+            }
+
+            // Begin transaction to ensure all data is saved properly
+            DB::beginTransaction();
+
+            // Assign field engineer and update complaint details
+            $main_complaint->assign_to_field_staff_id = $assigned_to_field_enng->id;
+            $main_complaint->assign_to_field_engg = 1;
+            $main_complaint->c_status = $request->complaint_status;
+            $main_complaint->mode_of_complaint = $request->mode_of_complaint ?? '';
+            $main_complaint->service_required = $request->service_required;
+
+            // Save updated complaint
+            $main_complaint->save();
+
+            if ($main_complaint) {
+
+                $complaint_assign_to_lab_enggs = [
+                    'complaint_id' => $main_complaint->id,
+                    'engg_id' => $assigned_to_field_enng->id,
+                    'assign_complaint_time' => now()->setTimezone('Asia/Karachi'),
+                ];
+                $save_assign_to_lab_eng_table = ComplaintAssignToFieldEngg::create($complaint_assign_to_lab_enggs);
+
+
+
+                $notification = [
+                    "slack" => $this->generate_slack("notifications"),
+                    "user_id" => isset($assigned_to_field_enng) ? $assigned_to_field_enng->id : '',
+                    "notification_text" => 'Field Complaint Assigned You Please Check Port to View Details',
+                    "created_by" => $request->logged_user_id,
+                    "created_at" => now()->setTimezone('Asia/Karachi'),
+                ];
+
+
+                $notification_id = Notification::create($notification)->id;
+
+                $data['message'] = "Please Check Your Port For New Complaints Which is Assigned to you";
+                Mail::to($assigned_to_field_enng->email)->send(new ComplaintMailToEngineer($main_complaint, $data['message']));
+             }
+
+            // Commit the transaction after successful save
+            DB::commit();
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => "Customer Complaint Assigned to Field Technician Successfully",
+                    "data" => '',
+                    'msg' => 'success',
+                ),
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            // Rollback in case of error during DB transaction
+            DB::rollBack();
+
+            return response()->json($this->generate_response(
+                array(
+                    "message" => $e->getMessage(),
+                    "status_code" => $e->getCode() ?: 400, // Default to 400 if no code provided
+                )
+            ));
+        }
+    }
+
 
     public function customer_orders(Request $request)
     {
@@ -742,11 +957,11 @@ class Complaints extends Controller
 
             if ($complaint && $labComplaint) {
 
-                    $labComplaint->assign_complaint_complete_time = $current_time;
-                    $labComplaint->complaint_complete = 'Yes';
-                    $labComplaint->complaint_status = '2';
-                    $labComplaint->remarks = $request->final_lab_staff_remark;
-                    $labComplaint->save();
+                $labComplaint->assign_complaint_complete_time = $current_time;
+                $labComplaint->complaint_complete = 'Yes';
+                $labComplaint->complaint_status = '2';
+                $labComplaint->remarks = $request->final_lab_staff_remark;
+                $labComplaint->save();
             }
 
             return response()->json($this->generate_response(
@@ -1726,6 +1941,170 @@ class Complaints extends Controller
             ));
         }
     }
+
+
+    public function validate_request($request)
+    {
+        $validation_array = [
+            'complaint_product_id' => 'required|integer|exists:compaint_assign_to_lab_enggs,id',
+            'complaint_product_name' => 'required|string|max:255',
+            'complaint_product_make' => 'required|string|max:255',
+            'complaint_product_model' => 'required|string|max:255',
+            'complaint_product_serial_no' => 'required|string|max:255',
+        ];
+
+        $validator = Validator::make($request->all(), $validation_array);
+        if ($validator->fails()) {
+            throw new Exception($validator->errors()->first());
+        }
+    }
+
+    public function edit_complaint_product(Request $request)
+    {
+        try {
+            // Step 1: Validate the request
+            $this->validate_request($request);
+
+            // Step 2: Find and update the complaint product
+            $complaintProduct = CompaintAssignToLabEngg::findOrFail($request->complaint_product_id);
+            $complaintProduct->update([
+                'product_name' => $request->complaint_product_name,
+                'make' => $request->complaint_product_make,
+                'model' => $request->complaint_product_model,
+                'serial_no' => $request->complaint_product_serial_no,
+            ]);
+
+            // Step 3: Prepare the response data
+            $data = [
+                'complaint_product_id' => $complaintProduct->id,
+                'complaint_product_name' => $complaintProduct->product_name,
+                'complaint_product_make' => $complaintProduct->make,
+                'complaint_product_model' => $complaintProduct->model,
+                'complaint_product_serial_no' => $complaintProduct->serial_no,
+            ];
+
+            // Step 4: Return a JSON response
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Complaint product updated successfully",
+                    "data" => $data,
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            // Handle any errors and return a JSON response with the error message
+            return response()->json([
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ], 400);
+        }
+    }
+
+
+    public function update_no_of_devices(Request $request)
+    {
+        try {
+
+
+
+            $complaint = ModelsComplaints::where('slack', $request->complaint_slack)->first();
+
+
+            if (!$complaint) {
+                return response()->json($this->generate_response(
+                    [
+                        "message" => "Complaint Not Found!",
+                        "data" => '',
+                        'msg' => 'error',
+                    ],
+                    'ERROR'
+                ), 400);
+            }
+
+            // if ($request->no_of_devices < $complaint->no_of_devices) {
+            //     return response()->json($this->generate_response(
+            //         [
+            //             "message" => "The number of devices cannot be reduced!",
+            //             "data" => '',
+            //             'msg' => 'error',
+            //         ],
+            //         'ERROR'
+            //     ), 400);
+            // }
+
+            $complaint->no_of_devices = $request->no_of_devices;
+            $complaint->save();
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Complaint No of Devices  update Successfully!",
+                    "data" => $complaint,
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            // Handle any errors and return a JSON response with the error message
+            return response()->json([
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ], 400);
+        }
+    }
+
+
+    public function re_assign_complaint_product(Request $request)
+    {
+        try {
+            $validation_array = [
+                're_assign_complaint_product_id' => 'required',
+                'select_complaint_product' => 'required'
+            ];
+
+            $validator = Validator::make($request->all(), $validation_array);
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first());
+            }
+
+            $complaint = ModelsComplaints::with('complaint_assign_to_lab_enggs')->where('slack', $request->select_complaint_product)->first();
+
+            $complaintProduct = CompaintAssignToLabEngg::findOrFail($request->re_assign_complaint_product_id);
+
+
+            if ($complaint['no_of_devices'] == count($complaint['complaint_assign_to_lab_enggs'])) {
+                return response()->json($this->generate_response(
+                    [
+                        "message" => "Please Increase No of Devices complaint( " . $complaint['ticket'] . " ) and then Assign that product to complaint.",
+                        "data" => '',
+                        'msg' => 'error',
+                    ],
+                    'ERROR'
+                ), 400);
+            }
+
+
+            $complaintProduct->complaint_id = $complaint['id'];
+            $complaintProduct->save();
+
+
+            return response()->json($this->generate_response(
+                [
+                    "message" => "Product Re Assign Successfully!",
+                    "data" => $complaint,
+                    'msg' => 'success',
+                ],
+                'SUCCESS'
+            ));
+        } catch (Exception $e) {
+            // Handle any errors and return a JSON response with the error message
+            return response()->json([
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ], 400);
+        }
+    }
+
 
     /**
      * Display the specified resource.

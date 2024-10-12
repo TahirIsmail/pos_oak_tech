@@ -1,5 +1,6 @@
 <template>
     <div class="row card p-4">
+
       <div class="col-md-12">
         <div class="d-flex flex-wrap mb-4">
           <div class="mr-auto">
@@ -10,12 +11,10 @@
                 </span>
               </div>
             </div>
-          </div>
-          
+          </div>          
         </div>
 
-        <div class="">
-                    
+        <div class="">                    
             <div v-if="complaint.assign_to_field_engg == '1'">
               <span class="alert alert-info">
                   Complaint Assign To Field Engineer ({{complaint.field_user.fullname }} ({{ complaint.field_user.email }})) at 
@@ -29,10 +28,7 @@
                   }}
               </span>
             </div>
-
-            <br />
-            
-
+            <br />          
             <div v-if="complaint.assign_to_lab_engg == '1'">
               <span class="alert alert-info">
                 Complaint Assign To Lab Engineer at ({{ complaint.user.fullname }} ({{ complaint.user.email }})) 
@@ -49,7 +45,7 @@
             </span>
             </div>
 
-            <div v-if="complaint.complaint_assign_to_lab_enggs.length > 1">
+            <div v-if="complaint.complaint_assign_to_lab_enggs.length > 0">
               <span class="alert alert-info">
                Devices Assign To Lab Engineers
             </span>
@@ -116,12 +112,26 @@
           <p v-html="server_errors" v-bind:class="[error_class]"></p>
           
           <div class="ml-auto d-flex">
-            <div class="d-flex" v-if="assign_access">
-              <div v-if="complaint.picked_for_workshop == 'Yes' && complaint.complaint_assign_to_lab_enggs.length < 1">
+            <div class="d-flex" >
+              <div v-if="complaint.assign_to_field_staff_id == null && complaint.assign_to_lab_staff_id == null">
                 <button  
                   type="submit"
-                  class="btn btn-success mr-1"
-                  v-if="complaint.assign_to_lab_staff_id == null || complaint.assign_to_lab_staff_id == 0"
+                  class="btn btn-success mr-1"                 
+                  v-on:click="assign_to_field_Engg()"
+                  v-bind:disabled="assign_processing == true"
+                >
+                  <i
+                    class="fa fa-circle-notch fa-spin"
+                    v-if="assign_processing == true"
+                  ></i>
+                  {{ $t("Assign To Field Engg") }}
+                </button>
+              </div>
+
+              <div v-if="complaint.picked_for_workshop == 'Yes'">
+                <button  
+                  type="submit"
+                  class="btn btn-success mr-1"                 
                   v-on:click="assigncomplaint_to_labtachnician()"
                   v-bind:disabled="assign_processing == true"
                 >
@@ -288,9 +298,19 @@
 
 
           <div class="form-group col-md-3">
-            <label for="category_code">{{ $t("No of Devices") }}</label>
-  
-            <p>{{ complaint.no_of_devices }}</p>
+            <label for="category_code">{{ $t("No of Devices") }}</label>  
+            <input 
+              type="number"
+              ref="noOfDevicesInput"
+              :value="no_of_devices" 
+              :readonly="isReadonly" 
+              @input="updateNoOfDevices($event)"
+            >
+            <i 
+              :class="isReadonly ? 'fa fa-edit' : 'fa fa-check'" 
+              @click="toggleEdit"
+              style="cursor: pointer;"
+            ></i>
           </div>
   
           <div class="form-group col-md-3">
@@ -464,8 +484,7 @@
           <table class="table table-striped display nowrap text-nowrap w-100">
             <thead>
               <tr>
-                <th scope="col">#</th>
-  
+                <th scope="col">#</th>  
                 <th scope="col">{{ $t("Complaint Ticket") }}</th>  
                 <th scope="col">{{ $t("Device Name") }}</th>
                 <th scope="col">{{ $t("Model") }}</th>
@@ -475,6 +494,7 @@
                 <th scope="col">{{ $t("Assigned To") }}</th>  
                 <th scope="col">{{ $t("Complaint Complete") }}</th>
                 <th scope="col">{{ $t("Status") }}</th>  
+                <th scope="col">{{ $t("Action") }}</th>  
               </tr>
             </thead>
   
@@ -512,6 +532,13 @@
                 </td>
                 <td v-else-if="comp.complaint_status == '3'">
                   <div class="alert alert-success">OutSource To Vendor...</div>
+                </td>
+                
+                <td>
+                  <div v-if="comp.complaint_status != '2'">
+                    <button type="button" class="btn btn-success" @click="editProduct(comp)">{{ $t("Edit") }}</button>
+                    <button type="button" class="btn btn-primary" @click="reAssign(comp)">{{ $t("Re-Assign") }}</button>
+                  </div>                 
                 </td>
               </tr>
             </tbody>
@@ -1002,6 +1029,83 @@
           </button>
         </template>
       </modalcomponent>
+
+      <modalcomponent
+        v-if="assign_field_engg == true"
+        v-on:close="assign_field_engg = false"
+        :modal_width="'modal-container-xl'"
+      >
+        <template v-slot:modal-header>
+          Assign Complaint To Field Lab Technician
+        </template>
+        <template v-slot:modal-body>
+          <div>          
+              
+              <div class="form-group col-sm-12 col-md-12">
+                <label for="field_engg">{{ $t("Assigned To Field Technician") }}</label>
+                <select v-model="field_engg" name="field_engg" class="form-control form-control-custom" >
+
+                  <option value="" disabled>Choose Lab Technician..</option>
+                  <option v-for="(technician, index) in labusers" :value="technician.slack" :key="index">
+                    {{ technician.fullname }} - {{ technician.email }} - ({{ technician.assign_complaints_count }})
+                  </option>
+                </select>
+               
+              </div>
+
+              <div class="form-group col-sm-12 col-md-12">
+                        <label for="complaint_status">{{ $t("Choose Status") }}</label>
+                        <select name="complaint_status" v-model="complaint_status" class="form-control form-control-custom">
+                            <option value="" disabled>Select Status...</option>
+                            <option value="Complaint Logged">Complaint Logged</option>
+                            <option value="Complaint Assigned">Complaint Assigned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Complete">Complete</option>
+                            <option value="Approval Pending">Approval Pending</option>
+                            <option value="Not Repairable">Not Repairable</option>
+                            <option value="Other">Other</option>                       
+                        </select>
+                      </div>   
+
+                      <div class="form-group col-sm-12 col-md-12">
+                        <label for="service_required">{{ $t("Choose Service Required") }}</label>
+                        <select name="service_required" v-model="service_required" class="form-control form-control-custom">
+                            <option value="" disabled>Select Service Required...</option>
+                            <option value="On-Site">On-Site</option>
+                            <option value="Pickup for Workshop">Pickup for Workshop</option>
+                            <option value="Deliver by Customer">Deliver by Customer</option>                       
+                        </select>
+                        
+                    </div>
+                    <div class="form-group col-sm-12 col-md-12">
+                        <label for="mode_of_complaint">{{ $t("Mode of Complaint") }}</label>
+                        <select name="mode_of_complaint" v-model="mode_of_complaint" class="form-control form-control-custom">
+                            <option value="" disabled selected>Select Mode of Complaint...</option>
+                            <option value="Phone Call">Phone Call</option>
+                            <option value="Whatsapp">Whatsapp</option>
+                            <option value="Email">Email</option>
+                            <option value="Others">Others</option>                           
+                        </select>                        
+                    </div>
+            
+          </div>
+          
+        </template>
+        <template v-slot:modal-footer>
+          <button type="button" class="btn btn-light" @click="cancel_complaint">
+            Cancel
+          </button>
+  
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="assign_complaint_to_fieldtechnician"
+          >            
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
+
   
       <modalcomponent
         v-if="complaint_complete == true"
@@ -1799,7 +1903,7 @@
             @click="$emit('submit')"
             v-bind:disabled="processing == true"
           >
-            <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
+          
             Continue
           </button>
         </template>
@@ -1957,6 +2061,137 @@
           </button>
         </template>
       </modalcomponent>
+
+
+
+      <modalcomponent
+        v-if="edit_complaint_product"
+        v-on:close="edit_complaint_product = false"
+        :modal_width="'modal-container-xl'"
+      >
+        <template v-slot:modal-header>
+          {{ $t("Edit Complaint Product") }}
+        </template>
+        <template v-slot:modal-body>
+          <div class="form-row mb-2">
+            <input type="hidden" name="complaint_product_id" v-model="complaint_product_id" />
+
+            <div class="form-group col-12">
+              <label for="complaint_product_name">{{ $t("Product Name") }}</label>
+              <input
+                  type="text"
+                    name="complaint_product_name"
+                    v-model="complaint_product_name"
+                    v-validate="'required'"
+                    class="form-control form-control-custom"
+                  >
+            </div>
+
+            <div class="form-group col-12">
+              <label for="complaint_product_name">{{ $t("Product Make") }}</label>
+              <input
+                  type="text"
+                    name="complaint_product_make"
+                    v-model="complaint_product_make"
+                    v-validate="'required'"
+                    class="form-control form-control-custom"
+                  >
+            </div>
+
+            <div class="form-group col-12">
+              <label for="complaint_product_model">{{ $t("Product Model") }}</label>
+              <input
+                    type="text"
+                    name="complaint_product_model"
+                    v-model="complaint_product_model"
+                    v-validate="'required'"
+                    class="form-control form-control-custom"
+                  >
+            </div>
+
+            <div class="form-group col-12">
+              <label for="complaint_product_serial_no">{{ $t("Product Serial No") }}</label>
+              <input
+                    type="text"
+                    name="complaint_product_serial_no"
+                    v-model="complaint_product_serial_no"
+                    v-validate="'required'"
+                    class="form-control form-control-custom"
+                  >
+            </div>
+           
+            
+          </div>
+        </template>
+        <template v-slot:modal-footer>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            @click="submit_complaint_product()"
+             v-bind:disabled="processing == true"
+          >
+          <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
+
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
+
+
+      <modalcomponent
+        v-if="re_assign_complaint_product"
+        v-on:close="re_assign_complaint_product = false"
+        :modal_width="'modal-container-xl'"
+      >
+        <template v-slot:modal-header>
+          {{ $t("Re Assign Complaint Product") }}
+        </template>
+        <template v-slot:modal-body>
+          <div class="form-row mb-2">
+            <input type="hidden" name="re_assign_complaint_product_id" v-model="re_assign_complaint_product_id" />
+
+            <div class="form-group col-12">
+              <label for="select_complaint_product">{{ $t("Select Complaint") }}</label>
+              <select
+                 
+                    name="select_complaint_product"
+                    v-model="select_complaint_product"
+                    v-validate="'required'"
+                    class="form-control form-control-custom"
+                  >
+                  <option selected disabled>Choose Complaint..</option>
+  
+                <option
+                  v-for="(re_assign_complaint, index) in re_assign_complaints"
+                  v-bind:value="re_assign_complaint.slack"
+                  v-bind:key="index"
+                >
+                  {{re_assign_complaint.ticket }}
+                </option>
+                  
+            </select>  
+            </div>
+
+          
+           
+            
+          </div>
+        </template>
+        <template v-slot:modal-footer>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            @click="submit_re_assgin_complaint_product()"
+             v-bind:disabled="processing == true"
+          >
+          <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
+
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
+
+
     </div>
   </template>
   
@@ -1978,6 +2213,14 @@
           serial_no: '',
           labtechnician: ''
         },],
+
+
+
+
+              field_engg: '',
+              complaint_status: '',
+              service_required: '',
+              mode_of_complaint: '',
 
               complaint_ticket: (this.complaint.ticket) ? this.complaint.ticket : '',
               no_of_devices: (this.complaint.no_of_devices) ? this.complaint.no_of_devices : '',
@@ -2003,6 +2246,7 @@
               show_modal: false,
               show_assign_complaint: false,
               out_source_complaint: false,
+              edit_complaint_product: false,
               complaint_complete: false,
               delete_access: true,
               assign_processing: false,
@@ -2076,6 +2320,18 @@
               request_to_store_id: '',
               out_source_vendor: '',
               formSubmitted: false,
+              assign_field_engg: false,
+
+              complaint_product_id: '',
+              complaint_product_name: '',
+              complaint_product_model: '',
+              complaint_product_serial_no: '',
+              complaint_product_make: '',
+              select_complaint_product: '',
+              re_assign_complaint_product_id: '',
+              re_assign_complaint_product: false,
+              isReadonly: true,
+              previousValue: (this.complaint.complaint_assign_to_lab_enggs) ? this.complaint.complaint_assign_to_lab_enggs.length : 0,
           }
       },
       props: {
@@ -2088,7 +2344,8 @@
           is_lab_tech: Boolean,
           out_source_items: [Array, Object],
           is_customer: Boolean,
-          out_source_vendors: [Array, Object]
+          out_source_vendors: [Array, Object],
+          re_assign_complaints: [Array, Object]
       },
       mounted() {
           console.log('Category detail page loaded');
@@ -2105,8 +2362,79 @@
         }
       },
       methods: {
+        toggleEdit() {
+          if (this.isReadonly) {
+            this.isReadonly = false;
+            this.$nextTick(() => {
+              this.$refs.noOfDevicesInput.focus();
+            });
+          } else {
+            this.isReadonly = true;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append("complaint_slack", this.complaint_slack);
+            formData.append("no_of_devices", this.no_of_devices);
+
+            console.log(...formData);
+
+            axios.post('/api/update_no_of_devices', formData)
+                  .then((response) => {
+                      if (response.status == 200) {
+                        
+                          this.show_response_message(response.data.msg, 'Success');
+                          location.reload();
+                      } else {
+                          this.processing = false;
+                          try {
+                              var error_json = JSON.parse(response.data.msg);
+                              this.loop_api_errors(error_json);
+                          } catch (err) {
+                              this.server_errors = response.data.msg;
+                          }
+                          this.error_class = 'error';
+                      }
+                  })
+                  .catch((error) => {
+                      if (error.response && error.response.status === 400) {
+                          this.show_errors_response_message(error.response.data.msg, 'Error');
+                      } else {
+                          alert('Please fill all fields');
+                      }
+                  });
+          }
+        },
+        updateNoOfDevices(event) {
+          const value = event.target.value;
+
+          // Prevent "e" or any non-numeric input
+          if (isNaN(value) || value.includes('e')) {
+            event.target.value = this.complaint.no_of_devices; // Revert to previous value
+            return;
+          }
+
+          // Convert value to a number and check against previous value
+          const numericValue = Number(value);
+          if (numericValue < this.previousValue) {
+            event.target.value = this.no_of_devices; // Revert to previous value
+          } else {
+            this.no_of_devices = numericValue;
+          }
+        },
+        reAssign(product){
+          this.re_assign_complaint_product_id = product.id
+          this.re_assign_complaint_product = true;
+        },
+        editProduct(product){
+          
+          this.complaint_product_id = product.id;
+          this.complaint_product_name = product.product_name;
+          this.complaint_product_make = product.make;
+          this.complaint_product_model = product.model;
+          this.complaint_product_serial_no = product.serial_no;
+          this.edit_complaint_product = true;
+        },
         addFormRow() {
-          if (this.forms.length < this.no_of_devices) {
+          if (this.forms.length < this.no_of_devices - this.previousValue) {
             this.forms.push({
               complaint_ticket: this.complaint_ticket,
               device_name: '',
@@ -2125,7 +2453,7 @@
           this.engineer_id = request.engineer_id;
           this.complaint_id = request.complaint_id;
           this.request_detail = request.request;
-          this.request_text = 'OutSource Request for: ' + request.request;
+          this.request_text = 'Part Request for: ' + request.request;
           this.request_part_store = true;
         },
         OutSourceProduct(request){
@@ -2139,6 +2467,74 @@
           this.request_text = 'Engineer Request for: ' + request.request;
           this.out_source_product_model = true;
         },
+        submit_re_assgin_complaint_product(){
+          var formData = new FormData();
+          formData.append("access_token", window.settings.access_token);
+          formData.append("re_assign_complaint_product_id", this.re_assign_complaint_product_id);
+          formData.append("select_complaint_product", this.select_complaint_product);
+
+          axios.post('/api/re_assign_complaint_product', formData)
+                .then((response) => {
+                    if (response.status == 200) {
+                      
+                        this.show_response_message(response.data.msg, 'Success');
+                        location.reload();
+                    } else {
+                        this.processing = false;
+                        try {
+                            var error_json = JSON.parse(response.data.msg);
+                            this.loop_api_errors(error_json);
+                        } catch (err) {
+                            this.server_errors = response.data.msg;
+                        }
+                        this.error_class = 'error';
+                    }
+                })
+                .catch((error) => {
+                    if (error.response && error.response.status === 400) {
+                        this.show_errors_response_message(error.response.data.msg, 'Error');
+                    } else {
+                        alert('Please fill all fields');
+                    }
+                });
+
+        },
+        submit_complaint_product() {
+          this.processing = true;
+            var formData = new FormData();
+            formData.append("access_token", window.settings.access_token);
+            formData.append("complaint_product_id", this.complaint_product_id);
+            formData.append('complaint_product_name', this.complaint_product_name);
+            formData.append('complaint_product_make', this.complaint_product_make);
+            formData.append('complaint_product_model', this.complaint_product_model);
+            formData.append('complaint_product_serial_no', this.complaint_product_serial_no);
+
+            axios.post('/api/edit_complaint_product', formData)
+                .then((response) => {
+                    if (response.status == 200) {
+                      
+                        this.show_response_message(response.data.msg, 'Success');
+                        location.reload();
+                    } else {
+                        this.processing = false;
+                        try {
+                            var error_json = JSON.parse(response.data.msg);
+                            this.loop_api_errors(error_json);
+                        } catch (err) {
+                            this.server_errors = response.data.msg;
+                        }
+                        this.error_class = 'error';
+                    }
+                })
+                .catch((error) => {
+                    if (error.response && error.response.status === 400) {
+                        this.show_errors_response_message(error.response.data.msg, 'Error');
+                    } else {
+                        alert('Please fill all fields');
+                    }
+                });
+        },
+
         submit_out_source_product(){
           var formData = new FormData();
           this.processing = true;
@@ -2684,7 +3080,18 @@
               });
           },
           assigncomplaint_to_labtachnician() {
-              this.show_assign_complaint = true;
+
+              if(this.no_of_devices > this.previousValue){
+                this.show_assign_complaint = true;
+              }
+              else{
+                this.show_errors_response_message('To Add Product Please Increase No of Devices First.', 'Error');
+              }
+              
+
+          },
+          assign_to_field_Engg(){
+            this.assign_field_engg = true;
           },
   
           cancel_complaint() {
@@ -2893,8 +3300,53 @@
               });
               //     }
               // });
-          }
+          },
+          assign_complaint_to_fieldtechnician() {
+           
+                
+                    
+                        this.processing = true;
+                        const formData = new FormData();
+                        formData.append("access_token", window.settings.access_token);
+                        formData.append('complaint_slack', this.complaint_slack);
+                        formData.append("service_required", this.service_required);
+                        formData.append("assigned_to_field_enng", this.field_engg);
+                        formData.append("complaint_status", this.complaint_status);
+                        formData.append('mode_of_complaint', this.mode_of_complaint);
+                        // formData.append("customer_feedback", this.customer_feedback);
+                        console.log(...formData);
+                        axios
+                            .post('/api/complaint_assign_to_field_engg', formData)
+                            .then((response) => {
+                                if (response.data.status_code == 200) {
+                                    this.show_response_message(response.data.msg, "Success");
+
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 1000);
+                                } else {
+                                    this.show_modal = false;
+                                    this.processing = false;
+                                    try {
+                                        var error_json = JSON.parse(response.data.msg);
+                                        this.loop_api_errors(error_json);
+                                    } catch (err) {
+                                        this.server_errors = response.data.msg;
+                                    }
+                                    this.error_class = "error";
+                                }
+                            })
+                            .catch((error) => {
+                                console.log("error");
+                                console.log(error);
+                            });
+                   
+                
+        },
+
       }
   }
   </script>
+
+  
   

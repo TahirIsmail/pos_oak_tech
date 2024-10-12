@@ -33,6 +33,14 @@ class ComplaintsController extends Controller
         return view('complaints.customer_complaints', $data);
     }
 
+
+    public function customer_side_complaints(Request $request){
+        $data['menu_key'] = 'MM_COMPLAIN';
+        $data['sub_menu_key'] = 'SM_CUSTOMER_SIDE_COMPLAINTS';
+        check_access(array($data['menu_key'], $data['sub_menu_key']));
+        return view('complaints.customer_side_complaints', $data);
+    }
+
     public function complaints(Request $request)
     {
         $data['menu_key'] = 'MM_COMPLAIN';
@@ -142,6 +150,79 @@ class ComplaintsController extends Controller
 
     }
 
+
+    public function add_customer_side_complaints(Request $request, $slack = null)
+    {
+        $data['menu_key'] = 'MM_COMPLAIN';
+        $data['sub_menu_key'] = 'SM_CUSTOMER_SIDE_COMPLAINTS';
+
+        $categories = Category::pluck('label')->unique()->toArray();
+        $subcategories = SubCategory::pluck('sub_category_name')->unique()->toArray();
+        $childCategories = ChildCategory::pluck('child_category')->unique()->toArray();
+
+        $allValues = array_merge($categories, $subcategories, $childCategories);
+        $allValues = array_filter($allValues);
+        $allValues = array_values($allValues);
+
+        $data['equipment_types'] = $allValues;
+
+        $data['complaints_data'] = [];
+        $lab_engg_role = Role::where('label', 'Lab Engineer')->first();
+    
+        $users = UserModel::withCount(['assignComplaints' => function ($query) {
+            $query->where('complaint_status', '!=', 'Completed Complaint');
+        }])->whereNotIn('role_id', [1, 2, 3])->where('customer_child_id', null)->where('role_id', $lab_engg_role->id)->get();
+        $data['lab_engineers'] = $users;
+
+        if ($request->customer_id || $request->customer_child_id) {
+            if ($request->customer_id) {
+                $data['customer_slack'] = $request->logged_user_slack;
+            }
+            if ($request->customer_child_id) {
+                $child_customer = CustomerModel::where('id', $request->customer_child_id)->first();
+                $customer = CustomerModel::where('id', $child_customer->parent_id)->first();
+
+                $data['customer_slack'] = $customer->slack;
+
+            }
+            $data['is_customer'] = true;
+
+        } else {
+            $data['is_customer'] = false;
+            $data['customer_slack'] = '';
+
+        }
+
+
+        $data['assign_type'] = $request->input('type');
+
+        if ($slack) {
+
+            $complaint = ComplaintModel::with('customer', 'user', 'order', 'field_user')->where('slack', '=', $slack)->first();
+            if (empty($complaint)) {
+                abort(404);
+            }
+
+            $data['complaints_data'] = $complaint;
+            $data['assign_type'] = $complaint['assign_type'];
+        }
+        
+        
+
+        if ($request->logged_user_role_id == 2) {
+            $customers = User::where('id', $request->logged_user_id)->get();
+        } else {
+            $customers = User::where('role_id', 2)->get();
+        }
+
+        $data['customers_list'] = $customers;
+       
+        
+
+        return view('complaints.add_customer_side_complaint', $data);
+
+    }
+
     public function view_complaints(Request $request, $slack = null)
     {
         $data['menu_key'] = 'MM_COMPLAIN';
@@ -174,7 +255,7 @@ class ComplaintsController extends Controller
             $data['out_source_vendors'] = [];
         }
 
-        $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs.users', 'complaint_assign_to_lab_enggs.part_requests.engineer', 'complaint_assign_to_field_enggs', 'part_requests.engineer', 'complaint_assign_to_lab_enggs.part_requests.request_to_store.store_assign_products_on_reqeusts', 'out_source_vendor.vendor')->where('slack', '=', $slack)->first();
+        $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs.users', 'complaint_assign_to_lab_enggs.part_requests.engineer', 'complaint_assign_to_field_enggs', 'part_requests.engineer', 'part_requests.request_to_store',  'complaint_assign_to_lab_enggs.part_requests.request_to_store.store_assign_products_on_reqeusts', 'out_source_vendor.vendor')->where('slack', '=', $slack)->first();
         $data['complaint'] = $complaint;
 
 
@@ -224,6 +305,13 @@ class ComplaintsController extends Controller
             $data['delete_access'] = true;
         }
 
+        $reAssignComplaints = ComplaintModel::select('slack', 'ticket')
+        ->where('picked_for_workshop', 'Yes')
+        ->where('slack', '!=', $slack)
+        ->get();
+
+        $data['re_assign_complaints'] = $reAssignComplaints;
+
         return view('complaints.view_customer_complaint', $data);
     }
 
@@ -271,8 +359,8 @@ class ComplaintsController extends Controller
         check_access(array($data['action_key']));
         try {
             
-            $outsourceComplaint = OutSourceComplaint::with('complaint.customer', 'complaint.complaint_assign_to_lab_enggs', 'complaint.out_source_vendor')->where('id', $id)->first();
-            // dd($outsourceComplaint);
+            $outsourceComplaint = OutSourceComplaint::with('complaint.customer', 'complaint.complaint_assign_to_lab_enggs', 'complaint.out_source_vendor', 'lab_complaint')->where('id', $id)->first();
+            // dd($outsourceComplaint['complaint']);
             // $complaint = ComplaintModel::with('customer', 'order', 'product', 'user', 'field_user', 'complaint_assign_to_lab_enggs', 'complaint_assign_to_field_enggs', 'part_requests.engineer', 'out_source_vendor')->where('id', '=', $outsourceComplaint->complaint_id)->first();
             $data['complaint'] = $outsourceComplaint;
 
@@ -284,7 +372,7 @@ class ComplaintsController extends Controller
     }
 
     public function open_complaint(Request $request, $slack = null)
-    {
+    {        
         $data['menu_key'] = 'MM_COMPLAIN';
         $data['sub_menu_key'] = 'SM_COMPLAINTS';
         $data['action_key'] = 'VIEW_COMPLAINT_DATA';
@@ -325,12 +413,16 @@ class ComplaintsController extends Controller
             $data['is_customer'] = false;
         }
 
+
+
         $data['Customer_complaint_make_invoice_key'] = 'A_CUSTOMER_COMPLAINT_MAKE_INVOICE';
         if (check_access(array($data['Customer_complaint_make_invoice_key']), true) == false) {
 
         } else {
             $data['Customer_complaint_make_invoice'] = true;
         }
+
+        // dd($data);
 
         return view('complaints.view_complaint', $data);
     }
@@ -353,7 +445,7 @@ class ComplaintsController extends Controller
 
         // dd($compaint_assign_to_lab_enggs[0]['complaint']['slack']);
 
-
+        // dd($compaint_assign_to_lab_enggs);
 
 
         $users = UserModel::withCount(['assignComplaints' => function ($query) {
@@ -436,7 +528,7 @@ class ComplaintsController extends Controller
             $data['delete_access'] = true;
         }
        
-
+        // dd($data);
         return view('complaints.view_lab_complaint', $data);
     }
 

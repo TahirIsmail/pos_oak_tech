@@ -301,78 +301,78 @@
             this.load_favourite_products();
         },
         methods: {
-            load_recent_orders(page){
+            // load_recent_orders(page){
 
-                if (typeof page === 'undefined') {
-                    page = 1;
-                }
+            //     if (typeof page === 'undefined') {
+            //         page = 1;
+            //     }
 
-                this.processing = true;
+            //     this.processing = true;
 
-                var formData = new FormData();
-                formData.append("access_token", window.settings.access_token);
-                formData.append("customer_slack", this.customer.slack);
+            //     var formData = new FormData();
+            //     formData.append("access_token", window.settings.access_token);
+            //     formData.append("customer_slack", this.customer.slack);
                 
-                axios.post('/api/order_list?page='+page, formData)
-                .then((response) => {
-                    this.processing = false;
-                    if(response.data.status_code === 200) {
-                        var recent_order_list = response.data.data.data;
-                        if(page == 1){
-                            this.recent_orders_list = [];
-                        }
-                        recent_order_list.forEach((item) => {
-                            this.recent_orders_list.push(item);
-                        });
+            //     axios.post('/api/order_list?page='+page, formData)
+            //     .then((response) => {
+            //         this.processing = false;
+            //         if(response.data.status_code === 200) {
+            //             var recent_order_list = response.data.data.data;
+            //             if(page == 1){
+            //                 this.recent_orders_list = [];
+            //             }
+            //             recent_order_list.forEach((item) => {
+            //                 this.recent_orders_list.push(item);
+            //             });
 
-                        this.has_more_items = response.data.data.links.has_more_items;
-                        this.current_page = response.data.data.links.current_page;
-                        this.next_page = (response.data.data.links.has_more_items == true)?response.data.data.links.current_page+1:1;
-                    }else{
-                        this.processing = false;
-                        try{
-                            var error_json = JSON.parse(response.data.msg);
-                            this.loop_api_errors(error_json);
-                        }catch(err){
-                            this.server_errors = response.data.msg;
-                        }
-                        this.error_class = 'error';
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            },
+            //             this.has_more_items = response.data.data.links.has_more_items;
+            //             this.current_page = response.data.data.links.current_page;
+            //             this.next_page = (response.data.data.links.has_more_items == true)?response.data.data.links.current_page+1:1;
+            //         }else{
+            //             this.processing = false;
+            //             try{
+            //                 var error_json = JSON.parse(response.data.msg);
+            //                 this.loop_api_errors(error_json);
+            //             }catch(err){
+            //                 this.server_errors = response.data.msg;
+            //             }
+            //             this.error_class = 'error';
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         console.log(error);
+            //     });
+            // },
 
-            load_favourite_products(){
+            // load_favourite_products(){
 
-                this.favourite_processing = true;
+            //     this.favourite_processing = true;
 
-                var formData = new FormData();
-                formData.append("access_token", window.settings.access_token);
-                formData.append("customer_slack", this.customer.slack);
+            //     var formData = new FormData();
+            //     formData.append("access_token", window.settings.access_token);
+            //     formData.append("customer_slack", this.customer.slack);
                 
-                axios.post('/api/get_product', formData)
-                .then((response) => {
-                    this.favourite_processing = false;
-                    if(response.data.status_code === 200) {
-                        let favourite_product = response.data.data;
-                        this.favourite_product_list = favourite_product;
-                    }else{
-                        this.favourite_processing = false;
-                        try{
-                            var error_json = JSON.parse(response.data.msg);
-                            this.loop_api_errors(error_json);
-                        }catch(err){
-                            this.server_errors = response.data.msg;
-                        }
-                        this.error_class = 'error';
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            },
+            //     axios.post('/api/get_product', formData)
+            //     .then((response) => {
+            //         this.favourite_processing = false;
+            //         if(response.data.status_code === 200) {
+            //             let favourite_product = response.data.data;
+            //             this.favourite_product_list = favourite_product;
+            //         }else{
+            //             this.favourite_processing = false;
+            //             try{
+            //                 var error_json = JSON.parse(response.data.msg);
+            //                 this.loop_api_errors(error_json);
+            //             }catch(err){
+            //                 this.server_errors = response.data.msg;
+            //             }
+            //             this.error_class = 'error';
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         console.log(error);
+            //     });
+            // },
 
             delete_customer(){
                 this.$off("submit");
@@ -387,7 +387,6 @@
                     formData.append("access_token", window.settings.access_token);
 
                     axios.post(this.delete_customer_api_link, formData).then((response) => {
-
                         if(response.data.status_code == 200) {
                             this.show_response_message(response.data.msg, 'Success');
                             if(response.data.link != ""){
