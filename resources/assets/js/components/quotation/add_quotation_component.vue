@@ -640,9 +640,9 @@ export default {
         fetchProducts(){
 
            if(this.category != '' || this.sub_category != '' || this.brand_name != ''){
+            
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
-
             formData.append("category_id", (this.category != '') ? this.category : null);
             formData.append("sub_category_id", (this.sub_category != '') ? this.sub_category : null);
             formData.append("child_category_id", (this.child_category_id != '') ? this.child_category_id : null);

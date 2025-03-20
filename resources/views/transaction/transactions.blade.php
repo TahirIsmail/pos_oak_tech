@@ -10,12 +10,12 @@
                     <div class="mr-auto">
                         <span class="text-title">{{ __('Transactions') }}</span>
                     </div>
-                    <div class="">
+                    {{-- <div class="">
                         @if (check_access(['A_ADD_TRANSACTION'], true))
                             <a href="{{ route('add_transaction') }}" role="button"
                                 class="btn btn-primary">{{ __('New Transaction') }}</a>
                         @endif
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="my-4">

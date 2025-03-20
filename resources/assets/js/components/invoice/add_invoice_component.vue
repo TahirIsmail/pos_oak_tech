@@ -34,14 +34,16 @@
                         </cool-select>
                         <span v-bind:class="{ 'error' : errors.has('bill_to_slack') }">{{ errors.first('bill_to_slack') }}</span> 
                     </div>
-                </div>
 
-                <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="invoice_reference">{{ $t("Invoice Reference #") }}</label>
                         <input type="text" name="invoice_reference" v-model="invoice_reference" v-validate="'max:30'" class="form-control form-control-custom" :placeholder="$t('Please enter Invoice Reference #')"  autocomplete="off">
                         <span v-bind:class="{ 'error' : errors.has('invoice_reference') }">{{ errors.first('invoice_reference') }}</span> 
                     </div>
+                </div>
+
+                <div class="form-row mb-2">
+                    
                     <div class="form-group col-md-3">
                         <label for="invoice_date">{{ $t("Invoice Date") }}</label>
                         <date-picker :format="date.format" :lang='date.lang' v-model="invoice_date" v-validate="'required|date_format:yyyy-MM-dd'" input-class="form-control form-control-custom bg-white" ref="invoice_date" name="invoice_date" :placeholder="$t('Please enter Invoice Date')" autocomplete="off"></date-picker>
@@ -52,8 +54,6 @@
                         <date-picker :format="date.format" :lang='date.lang' v-model="invoice_due_date" :disabled-date="not_before_order_date" name="invoice_due_date" v-validate="'required|date_format:yyyy-MM-dd'" input-class="form-control form-control-custom bg-white" :placeholder="$t('Please enter Invoice Due Date')" autocomplete="off"></date-picker>
                         <span v-bind:class="{ 'error' : errors.has('invoice_due_date') }">{{ errors.first('invoice_due_date') }}</span> 
                     </div>
-                </div>
-                <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="currency">{{ $t("Currency") }}</label>
                         <select name="currency" v-model="currency" v-validate="'required'" class="form-control form-control-custom custom-select">
@@ -64,7 +64,10 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('currency') }">{{ errors.first('currency') }}</span> 
                     </div>
-                    <div class="form-group col-md-3" v-if="invoice_type == 'gst'">
+                </div>
+                <div class="form-row mb-2">
+                    
+                    <!-- <div class="form-group col-md-3" v-if="invoice_type == 'gst'">
                         <label for="tax_option">{{ $t("Tax Option") }}</label>
                         <select name="tax_option" v-model="tax_option" v-validate="''" class="form-control form-control-custom custom-select">
                             <option value="">Choose Tax Option..</option>
@@ -73,7 +76,8 @@
                             </option>
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('tax_option') }">{{ errors.first('tax_option') }}</span> 
-                    </div>
+                    </div> -->
+
                 </div>
 
                 <div class="form-row mb-2">
@@ -88,8 +92,7 @@
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Products") }}</span>
                     </div>
-                    <div class="">
-                        
+                    <div class="">                        
                     </div>
                 </div>
 
@@ -178,6 +181,7 @@
                         <span v-bind:class="{ 'error' : errors.has('shipping_charge') }">{{ errors.first('shipping_charge') }}</span>
                     </div>
                 </div>
+
                 <!-- <div class="form-row mb-3">
                     <div class="col-md-2 offset-md-7 text-right">
                         <span class="align-text-top">{{ $t("Packing Charges") }}</span>
@@ -187,6 +191,7 @@
                         <span v-bind:class="{ 'error' : errors.has('packing_charge') }">{{ errors.first('packing_charge') }}</span>
                     </div>
                 </div> -->
+                
                 <div class="form-row  mb-3">
                     <div class="col-md-2 offset-md-7 text-right">
                         {{ $t("Total") }}
@@ -374,10 +379,11 @@
             },
 
             load_products (keywords) {
+               
                 if(typeof keywords != 'undefined'){
                     var supplier = (this.bill_to == 'SUPPLIER')?this.bill_to_slack:this.supplier;
-                    if (keywords.length > 0 && supplier != '') {
-                        // alert('working');
+                    if (keywords.length > 0) {
+                        
                         var formData = new FormData();
                         formData.append("access_token", window.settings.access_token);
                         formData.append("keywords", keywords);

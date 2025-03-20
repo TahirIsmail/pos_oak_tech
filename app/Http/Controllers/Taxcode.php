@@ -37,8 +37,9 @@ class Taxcode extends Controller
         $total_gst_paid = 0;
         $total_gst_unpaid = 0;
 
+        // dd($gst_paid_on_product);
         foreach ($gst_paid_on_product as $gst_item) {
-            $purchase_amount_excluding_tax = $gst_item->product->purchase_amount_excluding_tax;
+            $purchase_amount_excluding_tax = isset($gst_item->product->purchase_amount_excluding_tax) ? $gst_item->product->purchase_amount_excluding_tax : 0;
             $gst_percentage = $gst_item->gst_percentage ?? 0;
         
             $total_gst += ($gst_item->gst_percentage === null) ? $gst_item->gst_paid_for_product : ($purchase_amount_excluding_tax * $gst_percentage / 100);

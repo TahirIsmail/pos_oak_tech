@@ -81,9 +81,9 @@ class Product extends Controller
                         $modelSpec = $row['product_specifications']->firstWhere('specification_label', 'Model');
                         return $modelSpec ? $modelSpec['specification_details'] : '';
                     })
-                // ->addColumn('category', function ($row) {
-                //     return $row['category']->label . '(' . $row['category']->category_code . ')';
-                // })
+                    // ->addColumn('category', function ($row) {
+                    //     return $row['category']->label . '(' . $row['category']->category_code . ')';
+                    // })
                     ->addColumn('sale_price_percentage', function ($row) {
                         if (isset($row['sale_price_percentage'])) {
                             return $row['sale_price_percentage'] . '% ';
@@ -92,25 +92,25 @@ class Product extends Controller
                         }
                     })
 
-                // ->addColumn('gst_paid_for_product', function ($row) {
-                //     if ($row['gst_paid_for_product'] == 1) {
-                //         return $row['gst_on_product'][0]->gst_percentage . '%';
-                //     } else {
-                //         return '--';
-                //     }
-                // })
+                    // ->addColumn('gst_paid_for_product', function ($row) {
+                    //     if ($row['gst_paid_for_product'] == 1) {
+                    //         return $row['gst_on_product'][0]->gst_percentage . '%';
+                    //     } else {
+                    //         return '--';
+                    //     }
+                    // })
 
-                // ->addColumn('status', function ($row) {
-                //     if ($row['status'] == 1) {
-                //         return 'Active';
-                //     } else {
-                //         return 'InActive';
-                //     }
-                // })
+                    // ->addColumn('status', function ($row) {
+                    //     if ($row['status'] == 1) {
+                    //         return 'Active';
+                    //     } else {
+                    //         return 'InActive';
+                    //     }
+                    // })
 
-                // ->addColumn('created_by', function ($row) {
-                //     return $row['user']['fullname'] . ' (' . $row['user']['email'] . ')';
-                // })
+                    // ->addColumn('created_by', function ($row) {
+                    //     return $row['user']['fullname'] . ' (' . $row['user']['email'] . ')';
+                    // })
 
                     ->addColumn('action', function ($row) {
                         $data['product'] = $row;
@@ -226,8 +226,7 @@ class Product extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {}
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -262,7 +261,7 @@ class Product extends Controller
 
             $supplier_data = SupplierModel::select('id')
                 ->where('slack', '=', trim($request->supplier))
-            //->active()
+                //->active()
                 ->first();
             if (empty($supplier_data)) {
                 throw new Exception("Supplier not found or inactive in the system", 400);
@@ -481,7 +480,7 @@ class Product extends Controller
             }
 
             $list = new ProductCollection(ProductModel::select('*')
-                    ->orderBy('created_at', 'desc')->paginate());
+                ->orderBy('created_at', 'desc')->paginate());
 
             return response()->json($this->generate_response(
                 array(
@@ -543,7 +542,7 @@ class Product extends Controller
 
             $supplier_data = SupplierModel::select('id')
                 ->where('slack', '=', trim($request->supplier))
-            //->active()
+                //->active()
                 ->first();
             if (empty($supplier_data)) {
                 throw new Exception("Supplier not found or inactive in the system", 400);
@@ -969,10 +968,10 @@ class Product extends Controller
                     $query->whereHas('product_specifications', function ($subQuery) use ($input_type) {
                         $subQuery->where('specification_details', 'like', '%' . $input_type . '%');
                     })
-                    // Search within category_specification_details
-                    ->orWhereHas('product_specifications.category_specification_details', function ($subQuery) use ($input_type) {
-                        $subQuery->where('values', 'like', '%' . $input_type . '%');
-                    });
+                        // Search within category_specification_details
+                        ->orWhereHas('product_specifications.category_specification_details', function ($subQuery) use ($input_type) {
+                            $subQuery->where('values', 'like', '%' . $input_type . '%');
+                        });
                 });
             }
 
@@ -986,7 +985,7 @@ class Product extends Controller
                 // Process categories
                 $slackArray = explode(',', $product_category);
                 $categoryIds = CategoryModel::whereIn('slack', $slackArray)->pluck('id')->toArray();
-    
+
                 // Fetch subcategory IDs from selected categories
                 $subcategoriesIds = CategoryModel::whereIn('id', $categoryIds)
                     ->with('subcategories') // Optimize query by selecting only needed columns
@@ -994,7 +993,7 @@ class Product extends Controller
                     ->pluck('subcategories.*.id')
                     ->flatten()
                     ->toArray();
-    
+
                 // Apply filter by subcategory IDs
                 $query->whereIn('products.sub_category_id', $subcategoriesIds);
             } else {
@@ -1195,40 +1194,75 @@ class Product extends Controller
     public function load_product_for_po(Request $request)
     {
         try {
-
             $keywords = $request->keywords;
             $supplier_slack = $request->supplier;
 
-            $query = ProductModel::with('subcategory')->select('products.slack as product_slack', 'products.quantity', 'products.product_code as product_code', 'products.name as label', 'products.sale_amount_excluding_tax', 'tax_codes.total_tax_percentage as tax_percentage', 'tax_codes.tax_type as tax_type', 'discount_codes.discount_percentage as discount_percentage')
-                ->supplierJoin()
-                ->taxcodeJoin()
-                ->discountcodeJoin()
+            $query = ProductModel::with(
+                'subcategory',
+                'product_specifications.category_specification_details',
+                'discountCode',
+                'taxCode',
+                )
+                ->select([
+                    'products.*',  // Explicitly select all product fields
+                    'suppliers.name as supplier_name' // Rename supplier's name field
+                ])
+                ->supplierJoin()               
                 ->supplierActive()
-                ->where('quantity', '!=', 0)
-                ->where('suppliers.slack', $supplier_slack)
-                ->where(function ($query) use ($keywords) {
-                    $query->where('products.product_code', 'like', $keywords . '%')
-                        ->orWhere('products.name', 'like', $keywords . '%');
-                });
+                ->where('quantity', '!=', 0);
 
-            $product_data = $query->get();
-            // dd($product_data);
+            // Supplier condition agar supplier_slack mojood ho
+            if (!empty($supplier_slack)) {
+                $query->where('suppliers.slack', $supplier_slack);
+            }
+
+            $query->where(function ($query) use ($keywords) {
+                $query->where('products.product_code', 'like', $keywords . '%')
+                    ->orWhere('products.name', 'like', $keywords . '%');
+            });
+
+            $products = $query->get();
+            // dd($products[0]);
+            $specification = [];
+            $product_data = $products->map(function ($product) {
+                foreach ($product->product_specifications as $spec) {
+                    $specification[] = [
+                        "Label" => $spec->specification_label,
+                        "value" => $spec->category_specification_details ? $spec->category_specification_details->values : $spec->specification_details,
+                    ];
+                }
+                $outputArray = array_column($specification, 'value', 'Label');
+                $resultString = implode(', ', array_map(fn($key, $value) => "$key: $value", array_keys($outputArray), $outputArray));
+
+                return [
+                    'product_slack' => $product->slack,
+                    'product_code' => $product->product_code,
+                    'label' => $product->name . ' (' . $resultString . ' )',
+                    'quantity' => $product->quantity,
+                    'sale_amount_excluding_tax' => $product->sale_amount_excluding_tax,
+                    'tax_percentage' => optional($product->taxCode)->total_tax_percentage,
+                    'tax_type' => optional($product->taxCode)->tax_type,
+                    'discount_percentage' => optional($product->discountCode)->discount_percentage,
+                ];
+            });
+
             return response()->json($this->generate_response(
-                array(
+                [
                     "message" => "Product listed successfully",
                     "data" => $product_data,
-                ),
+                ],
                 'SUCCESS'
             ));
         } catch (Exception $e) {
             return response()->json($this->generate_response(
-                array(
+                [
                     "message" => $e->getMessage(),
                     "status_code" => $e->getCode(),
-                )
+                ]
             ));
         }
     }
+
 
     public function fetch_products(Request $request)
     {

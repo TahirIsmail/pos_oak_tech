@@ -27,6 +27,8 @@
                     <a class="btn btn-outline-primary mr-1" v-bind:href="'/print_purchase_order/'+slack" target="_blank">{{ $t("PDF") }}</a>
 
                     <span v-if="po_basic.status.label == 'Approved' && po_basic.po_from_customer == 1 && !is_customer">
+                        <button type="button" class="btn btn-outline-primary mr-1"  > <i class='fa fa-circle-notch fa-spin' ></i> {{ $t("Delivery Challan") }}</button>
+
                         <button type="button" class="btn btn-outline-primary mr-1"  v-if="create_invoice_from_po_access == true" v-on:click="generate_invoice()" v-bind:disabled="generate_invoice_processing == true"> <i class='fa fa-circle-notch fa-spin' v-if="generate_invoice_processing == true"></i> {{ $t("Generate Invoice") }}</button>
                     </span>
                     <span v-if="po_basic.status.label == 'Approved' && po_basic.po_from_customer == 0 && is_supplier">

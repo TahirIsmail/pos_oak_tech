@@ -82,7 +82,11 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
 
     Route::post('/staff/update_payroll', 'StaffPayrollController@updatePayroll')->name('staff.updatePayroll');
-
+    
+    Route::get('/staff/selection', 'StaffPayrollController@staffSelection')->name('staff.selection');
+    Route::get('/selection/form', 'StaffPayrollController@selectionForm')->name('selection.form');
+    Route::post('/submit-interview', 'StaffPayrollController@submitInterview')->name('submit.interview');
+    Route::post('/selection-toggleSelection', 'StaffPayrollController@toggleSelection')->name('selection.toggleSelection');
 
 
 

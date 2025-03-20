@@ -29075,8 +29075,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
       if (typeof keywords != 'undefined') {
         var supplier = this.bill_to == 'SUPPLIER' ? this.bill_to_slack : this.supplier;
-        if (keywords.length > 0 && supplier != '') {
-          // alert('working');
+        if (keywords.length > 0) {
           var formData = new FormData();
           formData.append("access_token", window.settings.access_token);
           formData.append("keywords", keywords);
@@ -60534,9 +60533,7 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("bill_to_slack")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("bill_to_slack")))])], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "form-row mb-2"
-  }, [_c("div", {
+  }, [_vm._v(_vm._s(_vm.errors.first("bill_to_slack")))])], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -60574,7 +60571,9 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("invoice_reference")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("invoice_reference")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.errors.first("invoice_reference")))])])]), _vm._v(" "), _c("div", {
+    staticClass: "form-row mb-2"
+  }, [_c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -60640,9 +60639,7 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("invoice_due_date")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("invoice_due_date")))])], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "form-row mb-2"
-  }, [_c("div", {
+  }, [_vm._v(_vm._s(_vm.errors.first("invoice_due_date")))])], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -60690,55 +60687,9 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("currency")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("currency")))])]), _vm._v(" "), _vm.invoice_type == "gst" ? _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "tax_option"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Tax Option")))]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.tax_option,
-      expression: "tax_option"
-    }, {
-      name: "validate",
-      rawName: "v-validate",
-      value: "",
-      expression: "''"
-    }],
-    staticClass: "form-control form-control-custom custom-select",
-    attrs: {
-      name: "tax_option"
-    },
-    on: {
-      change: function change($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.tax_option = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-      }
-    }
-  }, [_c("option", {
-    attrs: {
-      value: ""
-    }
-  }, [_vm._v("Choose Tax Option..")]), _vm._v(" "), _vm._l(_vm.tax_options, function (tax_option, index) {
-    return _c("option", {
-      key: index,
-      domProps: {
-        value: tax_option.tax_option_constant
-      }
-    }, [_vm._v("\n                                " + _vm._s(tax_option.label) + "\n                            ")]);
-  })], 2), _vm._v(" "), _c("span", {
-    "class": {
-      error: _vm.errors.has("tax_option")
-    }
-  }, [_vm._v(_vm._s(_vm.errors.first("tax_option")))])]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.errors.first("currency")))])])]), _vm._v(" "), _c("div", {
+    staticClass: "form-row mb-2"
+  }), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-2"
   }, [_c("div", {
     staticClass: "form-group col-md-6"
@@ -74232,7 +74183,14 @@ var render = function render() {
       href: "/print_purchase_order/" + _vm.slack,
       target: "_blank"
     }
-  }, [_vm._v(_vm._s(_vm.$t("PDF")))]), _vm._v(" "), _vm.po_basic.status.label == "Approved" && _vm.po_basic.po_from_customer == 1 && !_vm.is_customer ? _c("span", [_vm.create_invoice_from_po_access == true ? _c("button", {
+  }, [_vm._v(_vm._s(_vm.$t("PDF")))]), _vm._v(" "), _vm.po_basic.status.label == "Approved" && _vm.po_basic.po_from_customer == 1 && !_vm.is_customer ? _c("span", [_c("button", {
+    staticClass: "btn btn-outline-primary mr-1",
+    attrs: {
+      type: "button"
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-circle-notch fa-spin"
+  }), _vm._v(" " + _vm._s(_vm.$t("Delivery Challan")))]), _vm._v(" "), _vm.create_invoice_from_po_access == true ? _c("button", {
     staticClass: "btn btn-outline-primary mr-1",
     attrs: {
       type: "button",

@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\InterviewDetail;
+use App\Models\OfficeUse;
 
 class StaffPayrollController extends Controller
 {
@@ -126,7 +128,7 @@ class StaffPayrollController extends Controller
 
             if ($action_response) {
                 $payment_date = $request->payment_date;
-                $month = date("m", strtotime($payment_date)); 
+                $month = date("m", strtotime($payment_date));
                 $year = date("Y", strtotime($payment_date));
                 $monthText = date("F", strtotime("2023-$month-01"));
                 $staff = [
@@ -160,22 +162,22 @@ class StaffPayrollController extends Controller
             ->where('id', '=', trim($staff_detail['staff_id']))
             ->active()
             ->first();
-            
-            if (empty($user_data)) {
-                throw new Exception("Invalid user selected", 400);
+
+        if (empty($user_data)) {
+            throw new Exception("Invalid user selected", 400);
         }
-        
-        
-        
+
+
+
         $payment_method_data = PaymentMethodModel::select('id', 'label')
-        ->where('label', '=', trim($staff_detail['payment_mode']))
-        ->first();
-        
+            ->where('label', '=', trim($staff_detail['payment_mode']))
+            ->first();
+
         $bill_to_id = $user_data->id;
         $bill_to_name = $user_data->fullname;
         $bill_to_contact = implode(', ', [$user_data->phone, $user_data->email]);
         $bill_to_address = '';
-        
+
         // dd($staff_detail);
         DB::beginTransaction();
 
@@ -217,7 +219,6 @@ class StaffPayrollController extends Controller
         } else {
             return false;
         }
-
     }
 
     public function revert_staff_payroll(Request $request)
@@ -294,5 +295,125 @@ class StaffPayrollController extends Controller
         //  dd($data['profile_image']);
 
         return view('staff_payroll.generate_staff_payroll', $data);
+    }
+
+
+    public function staffSelection(Request $request)
+    {
+        $data['menu_key'] = 'MM_HR';
+        $data['sub_menu_key'] = 'SM_STAFF_SELECTION';
+        check_access(array($data['menu_key'], $data['sub_menu_key']));
+
+        // Get interview details along with related office use records
+        $interviewDetails = InterviewDetail::with('officeUse')->get();
+
+        // Pass data to the view
+        $data['interviewDetails'] = $interviewDetails;
+
+
+        // dd($data['interviewDetails']);
+
+        return view('staff_selection.index', $data);
+    }
+
+    public function selectionForm(Request $request)
+    {
+        $data['menu_key'] = 'MM_HR';
+        $data['sub_menu_key'] = 'SM_STAFF_SELECTION';
+        check_access(array($data['menu_key'], $data['sub_menu_key']));
+
+
+        return view('staff_selection.form', $data);
+    }
+
+
+
+    public function submitInterview(Request $request)
+    {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'position' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'experience' => 'required|string|in:good,fair',
+            'personality' => 'required|string|in:good,fair,poor',
+            'jobStability' => 'required|string|in:yes,no',
+            'willingness' => 'required|string|in:high,medium,low',
+            'familyBackground' => 'required|string|in:yes,no',
+            'conveyance' => 'required|string|in:yes,no',
+            'documentAttached' => 'required|string|in:a,b',
+            'grading' => 'required|string|in:gradingA,gradingB,gradingC',
+            'lastSalary' => 'nullable|numeric',
+            'salaryAgreed' => 'nullable|numeric',
+            'interviewTaken' => 'required|string|in:high,medium,low',
+            'approval' => 'required|string|max:255',
+            'salary' => 'nullable|numeric',
+            'joiningDate' => 'nullable|date',
+            'probationPeriod' => 'nullable|string|max:255',
+            'incrementProbation' => 'nullable|string|max:255',
+        ]);
+
+        try {
+            // Start a transaction to ensure both tables are updated successfully
+            \DB::beginTransaction();
+
+            // Save the data in interview_details table
+            $interviewDetail = InterviewDetail::create([
+                'position' => $request->input('position'),
+                'name' => $request->input('name'),
+                'experience' => $request->input('experience'),
+                'personality' => $request->input('personality'),
+                'job_stability' => $request->input('jobStability') === 'yes',
+                'willingness' => $request->input('willingness'),
+                'family_background' => $request->input('familyBackground') === 'yes',
+                'conveyance' => $request->input('conveyance') === 'yes',
+                'documents_attached' => $request->input('documentAttached') === 'a',
+                'grading' => $request->input('grading'),
+                'last_salary' => $request->input('lastSalary'),
+                'salary_agreed' => $request->input('salaryAgreed'),
+                'interview_taken' => $request->input('interviewTaken'),
+            ]);
+
+            // Save the data in office_use table
+            OfficeUse::create([
+                'interview_detail_id' => $interviewDetail->id,
+                'approved_by' => $request->input('approval'),
+                'salary' => $request->input('salary'),
+                'joining_date' => $request->input('joiningDate'),
+                'probation_period' => $request->input('probationPeriod'),
+                'increment_probation' => $request->input('incrementProbation'),
+            ]);
+
+            // Commit the transaction
+            \DB::commit();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            // Rollback in case of error
+            \DB::rollBack();
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
+
+    public function toggleSelection(Request $request)
+    {
+        // Validate input
+        $validated = $request->validate([
+            'interview_detail_id' => 'required|exists:interview_details,id',
+            'selected' => 'required|boolean',
+        ]);
+
+        try {
+            // Find the interview detail and update the selected field
+            $interviewDetail = InterviewDetail::find($request->interview_detail_id);
+            $interviewDetail->selected = $request->selected;
+            $interviewDetail->save();
+
+            // Return a success response
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            // Return an error response in case of failure
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
 }

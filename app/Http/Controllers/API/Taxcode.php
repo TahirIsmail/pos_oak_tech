@@ -119,7 +119,7 @@ class Taxcode extends Controller
             if ($request->ajax()) {
 
                 $data = GstOnProduct::with('product')->where('receiving_from_customer', 0)->get();
-
+                
                 return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function ($row) {
