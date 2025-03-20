@@ -383,6 +383,11 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     // account routes 
     Route::get('/expenses','ExpensesController@index')->name('expenses');
     Route::get('/add_expense','ExpensesController@add_expense')->name('add_expense');
+
+    Route::get('/patty_cash','ExpensesController@patty_cash')->name('patty_cash');
+    Route::post('/patty-cash', 'PattyCashController@store')->name('patty_cash.store');
+
+    
     Route::get('/edit_expenses/{slack?}','ExpensesController@add_expense')->name('edit_expenses');
     Route::get('/view_expenses/{slack?}','ExpensesController@view_expense')->name('view_expenses');
 

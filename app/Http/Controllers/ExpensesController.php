@@ -8,8 +8,10 @@ use App\Http\Requests\UpdateExpensesRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\MasterExpenseCategory as ExpenseCategoryModel;
 use Illuminate\Support\Facades\DB;
-use App\Models\MasterStatus;  
+use App\Models\MasterStatus;
 use App\Http\Resources\ExpenseResource;
+use App\Models\PattyCash;
+
 class ExpensesController extends Controller
 {
     /**
@@ -23,13 +25,32 @@ class ExpensesController extends Controller
         $data['menu_key'] = 'MM_ACCOUNTS';
         $data['sub_menu_key'] = 'SM_EXPENSES';
 
-        check_access(array($data['menu_key'],$data['sub_menu_key']));
-        $data['travel_expense'] = DB::table('transactions')->where('transaction_type',2)->where('bill_to','TRAVEL')->sum('received_amount');; 
-        $data['staff_expense'] = DB::table('transactions')->where('transaction_type',2)->where('bill_to','STAFF')->sum('received_amount');
-        $data['total_expense'] = DB::table('transactions')->where('transaction_type',2)->sum('received_amount');
+        check_access(array($data['menu_key'], $data['sub_menu_key']));
+        $data['travel_expense'] = DB::table('transactions')->where('transaction_type', 2)->where('bill_to', 'TRAVEL')->sum('received_amount');;
+        $data['staff_expense'] = DB::table('transactions')->where('transaction_type', 2)->where('bill_to', 'STAFF')->sum('received_amount');
+        $data['total_expense'] = DB::table('transactions')->where('transaction_type', 2)->sum('received_amount');
 
-        
-       return view('expenses.index', $data);
+
+
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        // Get the total expenses for the current month and year
+        $data['totalExpenses'] = ExpenseModel::whereMonth('expense_date', $currentMonth)
+            ->whereYear('expense_date', $currentYear)
+            ->sum('amount');
+
+        // Get the patty cash for the current month and year
+        $data['pattyCash'] = PattyCash::where('month', $currentMonth)
+            ->where('year', $currentYear)
+            ->first();
+
+        // If there's no patty cash data for this month, set it to 0
+        $data['pattyCashAmount'] = $data['pattyCash'] ? $data['pattyCash']->amount : 0;
+
+
+
+        return view('expenses.index', $data);
     }
 
     /**
@@ -97,53 +118,63 @@ class ExpensesController extends Controller
     {
         //
     }
-    public function add_expense(Request $request,$slack = null){
-       
+    public function add_expense(Request $request, $slack = null)
+    {
+
         $data['menu_key'] = 'MM_ACCOUNTS';
         $data['sub_menu_key'] = 'SM_EXPENSES';
-        $data['action_key'] = ($slack == null)?'A_ADD_EXPENSES':'A_EDIT_EXPENSES';
+        $data['action_key'] = ($slack == null) ? 'A_ADD_EXPENSES' : 'A_EDIT_EXPENSES';
         check_access(array($data['action_key']));
 
-       
+
         $data['expenses_data'] = null;
         $data['selectedExpenseCatId'] = '';
         $data['statuses'] = MasterStatus::select('value', 'label')->filterByKey('EXPENSE_APPROVAL_STATUS')->active()->sortValueAsc()->get();
-        
-        if(!is_null($slack)){
-            
-            $expense = ExpenseModel::with('createdUser','updatedUser','expenseCategory')->where('slack', '=', $slack)->first();
+
+        if (!is_null($slack)) {
+
+            $expense = ExpenseModel::with('createdUser', 'updatedUser', 'expenseCategory')->where('slack', '=', $slack)->first();
             if (empty($expense)) {
                 abort(404);
             }
             $data['selectedExpenseCatId'] = $expense->expenseCategory->id;
             $data['expenses_data'] = $expense;
-            
         }
-        
+
         $data['expenseCategories'] = ExpenseCategoryModel::all();
-       
-     
+
 
        
-        
         return view('expenses.add_expense', $data);
     }
 
-    public function view_expense(Request $request,$slack = null)
+
+
+    public function patty_cash(Request $request)
+    {
+        $data['menu_key'] = 'MM_ACCOUNTS';
+        $data['sub_menu_key'] = 'SM_EXPENSES';
+
+        $data['patty_cash'] = PattyCash::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get();
+        return view('expenses.add_patty_cash', $data);
+    }
+
+    public function view_expense(Request $request, $slack = null)
     {
         $data['menu_key'] = 'MM_ACCOUNTS';
         $data['sub_menu_key'] = 'SM_EXPENSES';
         $data['action_key'] = 'A_DETAIL_EXPENSE';
-        $current_expense  = ExpenseModel::where('slack',$slack)->with('createdUser','updatedUser','expenseCategory','transaction')->StatusJoin()->get();
+        $current_expense  = ExpenseModel::where('slack', $slack)->with('createdUser', 'updatedUser', 'expenseCategory', 'transaction')->StatusJoin()->get();
         if (empty($current_expense)) {
             abort(404);
         }
-       
-        
+
+
         $data['expense_data'] = $current_expense;
 
         $data['delete_access'] = check_access(['A_DETAIL_EXPENSE'], true);
         return view('expenses.expense_detail', $data);
     }
-    
 }

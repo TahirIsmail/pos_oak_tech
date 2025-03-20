@@ -1,7 +1,6 @@
 @extends('layouts.layout')
 
 @section('content')
-    
     <div class="row card p-4">
         <div class="col-md-12">
 
@@ -14,10 +13,15 @@
                     <a href="{{ route('add_expense') }}" role="button" class="btn btn-primary">{{ __('New Expense') }}</a>
                     {{-- @endif --}}
                 </div>
-                {{-- <div class=""> --}}
-                    {{-- @if (check_access(['A_ADD_EXPENSE_CATEGORY'], true)) --}}
-                    {{-- <a href="" role="button" class="btn btn-primary">{{ __('New Expense Category') }}</a> --}}
+                <div class="">
+                    {{-- @if (check_access(['A_ADD_EXPENSE'], true)) --}}
+                    <a href="{{ route('patty_cash') }}" role="button" class="btn btn-primary">{{ __('Patty Cash') }}</a>
                     {{-- @endif --}}
+                </div>
+                {{-- <div class=""> --}}
+                {{-- @if (check_access(['A_ADD_EXPENSE_CATEGORY'], true)) --}}
+                {{-- <a href="" role="button" class="btn btn-primary">{{ __('New Expense Category') }}</a> --}}
+                {{-- @endif --}}
                 {{-- </div> --}}
             </div>
 
@@ -32,7 +36,7 @@
                             <th>{{ __('Expense Category ') }}</th>
                             <th>{{ __('Amount') }}</th>
                             <th>{{ __('Notes') }}</th>
-                            <th>{{ __('Status')}} </th>
+                            <th>{{ __('Status') }} </th>
                             <th>{{ __('Created On') }}</th>
                             <th>{{ __('Updated On') }}</th>
                             <th>{{ __('Created By') }}</th>
@@ -41,6 +45,17 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total Patty Cash</strong></td>
+                            <td><strong><?php echo number_format($pattyCashAmount, 2); ?></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Expenses</strong></td>
+                            <td><strong><?php echo number_format($totalExpenses, 2); ?></strong></td>
+                        </tr>
+                        
+                    </tfoot>
                 </table>
             </div>
 
