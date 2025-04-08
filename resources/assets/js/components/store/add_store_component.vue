@@ -87,16 +87,16 @@
                 </div>
                 <hr>
 
-                <div class="d-flex flex-wrap mb-1">
+                <!-- <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Restaurant Mode") }}</span>
                     </div>
                     <div class="">
                         
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-row mb-2">
+                <!-- <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="restaurant_mode">{{ $t("Enable Restaurant Mode") }}</label>
                         <select name="restaurant_mode" v-model="restaurant_mode" v-validate="'required|numeric'" class="form-control form-control-custom custom-select">
@@ -142,18 +142,18 @@
                     </div>
 
                     
-                </div>
+                </div> -->
 
-                <div class="d-flex flex-wrap mb-1">
+                <!-- <div class="d-flex flex-wrap mb-1">
                     <div class="mr-auto">
                         <span class="text-subhead">{{ $t("Digital Menu Settings") }}</span>
                     </div>
                     <div class="">
                         
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-row mb-2">
+                <!-- <div class="form-row mb-2">
                     <div class="form-group col-md-6">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="digital_menu_enabled" v-model="digital_menu_enabled">
@@ -161,9 +161,9 @@
                             <small class="form-text text-muted">{{ $t("Enable or Disable digital QR menu link") }}</small>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-row mb-2">
+                <!-- <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="menu_open_time">{{ $t("Menu Open Time") }}</label>
                         <date-picker :format="time.format" :lang='time.lang' value-type="format" type="time" v-model="menu_open_time" v-validate="'date_format:hh:mm a'" input-class="form-control form-control-custom bg-white" ref="menu_open_time" name="menu_open_time" :placeholder="$t('Please choose Open Time')" autocomplete="off"></date-picker> 
@@ -174,9 +174,9 @@
                         <date-picker :format="time.format" :lang='time.lang' value-type="format" type="time" v-model="menu_close_time" v-validate="'date_format:hh:mm a'" input-class="form-control form-control-custom bg-white" ref="menu_close_time" name="menu_close_time" :placeholder="$t('Please choose Close Time')" autocomplete="off"></date-picker> 
                         <span v-bind:class="{ 'error' : errors.has('menu_close_time') }">{{ errors.first('menu_close_time') }}</span> 
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-row mb-2">
+                <!-- <div class="form-row mb-2">
                     <div class="form-group col-md-3">
                         <label for="enable_digital_menu_otp_verification">{{ $t("Digital Menu OTP Verification") }}</label>
                         <select name="enable_digital_menu_otp_verification" v-model="enable_digital_menu_otp_verification" v-validate="''" class="form-control form-control-custom custom-select">
@@ -209,7 +209,7 @@
                         </select>
                         <span v-bind:class="{ 'error' : errors.has('menu_language') }">{{ errors.first('menu_language') }}</span> 
                     </div>
-                </div>
+                </div> -->
                 <hr>
 
                 <div>
