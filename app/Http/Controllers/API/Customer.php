@@ -195,6 +195,7 @@ class Customer extends Controller
                 // dd($request);
                 $customer = [
                     "slack" => $this->generate_slack("customers"),
+                    "store_id" => $request->logged_user_store_id,
                     'customer_type' => 'CUSTOM',
                     'customer_id' => $customer_code,
                     "name" => $request->name,

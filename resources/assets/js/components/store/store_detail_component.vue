@@ -82,7 +82,7 @@
             </div>
             <hr>
 
-            <div class="mb-2">
+            <!-- <div class="mb-2">
                 <span class="text-subhead">{{ $t("Restaurant Mode Information") }}</span>
             </div>
             <div class="form-row mb-2">
@@ -102,8 +102,9 @@
                     <label for="restaurant_chef_role">{{ $t("Role for Chef") }}</label>
                     <p>{{ (store.restaurant_chef_role != null)?store.restaurant_chef_role.role_code+' - '+store.restaurant_chef_role.label:'-' }}</p>
                 </div>
-            </div>
-            <div class="mb-2">
+            </div> -->
+
+            <!-- <div class="mb-2">
                 <span class="text-subhead">{{ $t("Digital Menu Settings") }}</span>
             </div>
             <div class="form-row mb-2">
@@ -127,7 +128,7 @@
                     <label for="restaurant_chef_role">{{ $t("Digital Menu Language") }}</label>
                     <p>{{ (store.menu_language != null)?store.menu_language.language:'-' }}</p>
                 </div>
-            </div>
+            </div> -->
             <hr>
 
             <div class="mb-3">

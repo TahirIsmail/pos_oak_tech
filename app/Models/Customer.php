@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Scopes\StoreScope;
 
 class Customer extends Model
 {
@@ -15,6 +16,14 @@ class Customer extends Model
     // protected $hidden = ['id'];
     // protected $fillable = ['slack','customer_type', 'customer_id', 'password', 'init_password', 'name', 'email', 'phone', 'address', 'city', 'country' , 'dob', 'father_name', 'gender', 'cnic', 'status','user_id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
     protected $guarded = [];
+    
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new StoreScope);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 1);
