@@ -208,19 +208,26 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     Route::get('/add_invoice', "Invoice@add_invoice")->name('add_invoice');
     Route::get('/edit_invoice/{slack?}', "Invoice@add_invoice")->name('edit_invoice');
     Route::get('/print_invoice/{slack}', "Invoice@print_invoice")->name('print_invoice');
-
-    //quotation
+    
+    //Delivery Challan
+    Route::get('/delivery_challan', "DeliveryChallan@index")->name('delivery_challan');
+    Route::get('/delivery_challan/{slack}', "DeliveryChallan@detail")->name('delivery_challan_detail');
+    Route::get('/add_delivery_challan', "DeliveryChallan@add_delivery_challan")->name('add_delivery_challan');
+    Route::get('/edit_delivery_challan/{slack?}', "DeliveryChallan@add_delivery_challan")->name('edit_delivery_challan');
+    Route::get('/print_delivery_challan/{slack}', "DeliveryChallan@print_delivery_challan")->name('print_delivery_challan');
+    
+    //Quotation
     Route::get('/quotations', "Quotation@index")->name('quotations');
     Route::get('/quotation/{slack}', "Quotation@detail")->name('quotation_detail');
     Route::get('/add_quotation', "Quotation@add_quotation")->name('add_quotation');
     Route::get('/edit_quotation/{slack?}', "Quotation@add_quotation")->name('edit_quotation');
     Route::get('/print_quotation/{slack}', "Quotation@print_quotation")->name('print_quotation');
 
-    //demands 
+    //Demands 
     Route::get('/Demands', "DemandController@index")->name('Demands');
     Route::get('/add_demand_form', "DemandController@add_demand_form")->name('add_demand_form');
 
-    // quotation request 
+    //Quotation request 
 
     Route::get('/quotation_request', "DemandController@quotation_request")->name('quotation_request');
     Route::get('/add_quotation_request', "DemandController@add_quotation_request")->name('add_quotation_request');

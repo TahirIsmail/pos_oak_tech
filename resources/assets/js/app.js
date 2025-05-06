@@ -139,6 +139,17 @@ Vue.component('editsmssettingcomponent', require('./components/setting/sms/edit_
 Vue.component('addinvoicecomponent', require('./components/invoice/add_invoice_component.vue').default);
 Vue.component('invoicedetailcomponent', require('./components/invoice/invoice_detail_component.vue').default);
 
+
+/**
+ * Delivery Challan Components
+ * 
+ */
+
+
+Vue.component('adddeliverychallancomponent', require('./components/delivery_challan/add_delivery_challan_component.vue').default);
+Vue.component('deliverychallandetailcomponent', require('./components/delivery_challan/delivery_challan_detail_component.vue').default);
+
+// end component delivery challan
 Vue.component('addquotationcomponent', require('./components/quotation/add_quotation_component.vue').default);
 Vue.component('quotationdetailcomponent', require('./components/quotation/quotation_detail_component.vue').default);
 

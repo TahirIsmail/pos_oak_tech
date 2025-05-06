@@ -309,6 +309,17 @@ Route::group(['middleware' => ['token_auth']], function () {
     Route::post('/invoice/{slack}', 'API\Invoice@show');
     Route::post('/invoice_list', 'API\Invoice@list');
 
+
+    //invoice
+    Route::post('/delivery-challans', 'API\DeliveryChallan@index');
+    Route::post('/add_delivery_challan', 'API\DeliveryChallan@store');
+    Route::post('/update_delivery_challan/{slack}', 'API\DeliveryChallan@update');
+    Route::post('/update_delivery_status/{slack}', 'API\DeliveryChallan@update_delivery_status');
+    Route::post('/get_bill_to_list', 'API\DeliveryChallan@load_bill_to_list');
+    Route::post('/delete_delivery_challan/{slack}', 'API\DeliveryChallan@destroy');
+    Route::post('/get_invoice_pending_payment_data/{slack}', 'API\DeliveryChallan@get_invoice_pending_payment_data');
+    Route::post('/delivery_challan/{slack}', 'API\DeliveryChallan@show');
+    Route::post('/delivery_challan_list', 'API\DelieveryChallan@list');
     //quotation
     Route::post('/quotations', 'API\Quotation@index');
     Route::post('/add_quotation', 'API\Quotation@store');
