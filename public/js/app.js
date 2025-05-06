@@ -231112,6 +231112,7 @@ Vue.component('invoicedetailcomponent', (__webpack_require__(/*! ./components/in
  */
 
 Vue.component('adddeliverychallancomponent', (__webpack_require__(/*! ./components/delivery_challan/add_delivery_challan_component.vue */ "./resources/assets/js/components/delivery_challan/add_delivery_challan_component.vue")["default"]));
+//resources\assets\js\components\delivery_challan\delivery_challan_detail_component.vue
 Vue.component('deliverychallandetailcomponent', (__webpack_require__(/*! ./components/delivery_challan/delivery_challan_detail_component.vue */ "./resources/assets/js/components/delivery_challan/delivery_challan_detail_component.vue")["default"]));
 
 // end component delivery challan

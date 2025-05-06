@@ -147,6 +147,7 @@ Vue.component('invoicedetailcomponent', require('./components/invoice/invoice_de
 
 
 Vue.component('adddeliverychallancomponent', require('./components/delivery_challan/add_delivery_challan_component.vue').default);
+//resources\assets\js\components\delivery_challan\delivery_challan_detail_component.vue
 Vue.component('deliverychallandetailcomponent', require('./components/delivery_challan/delivery_challan_detail_component.vue').default);
 
 // end component delivery challan

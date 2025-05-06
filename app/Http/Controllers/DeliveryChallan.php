@@ -116,8 +116,8 @@ class DeliveryChallan extends Controller
         ])
         ->active()
         ->first();
-
-        $invoice_data = new DeliveryChallanModel($invoice);
+        // dd($invoice);
+        $invoice_data = new DeliveryChallanResource($invoice);
         
         $data['invoice_data'] = $invoice_data;
         
