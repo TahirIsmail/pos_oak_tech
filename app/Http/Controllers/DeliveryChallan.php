@@ -1,0 +1,250 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\MasterStatus;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+
+use App\Models\Invoice as InvoiceModel;
+use App\Models\DeliveryChallan as DeliveryChallanModel;
+use App\Models\Country as CountryModel;
+use App\Models\MasterStatus as MasterStatusModel;
+use App\Models\MasterTransactionType as MasterTransactionTypeModel;
+use App\Models\Account as AccountModel;
+use App\Models\PaymentMethod as PaymentMethodModel;
+use App\Models\Store as StoreModel;
+use App\Models\MasterTaxOption as MasterTaxOptionModel;
+use App\Models\DeliveryChallanProduct as DeliveryChallanProductModel;
+use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\DeliveryChallanResource;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Config;
+use App\Models\User;
+
+use Mpdf\Mpdf;
+
+class DeliveryChallan extends Controller
+{
+    //This is the function that loads the listing page
+    public function index(Request $request){
+        //check access
+        $data['menu_key'] = 'MM_ORDERS';
+        $data['sub_menu_key'] = 'SM_DELIVERY_CHALLAN';
+        check_access(array($data['menu_key'],$data['sub_menu_key']));
+        
+        return view('delivery_challan.delivery_challan', $data);
+    }
+
+    //This is the function that loads the add/edit page
+    public function add_delivery_challan(Request $request, $slack = null){
+        //check access
+        $data['menu_key'] = 'MM_ORDERS';
+        $data['sub_menu_key'] = 'SM_DELIVERY_CHALLAN';
+        $data['action_key'] = ($slack == null) ? 'A_ADD_DELIVERY_CHALLAN':'A_EDIT_DELIVERY_CHALLAN';
+        check_access(array($data['action_key']));
+
+        $data['currency_list'] = CountryModel::select('currency_code', 'currency_name')
+        ->where('currency_code', '!=', '')
+        ->whereNotNull('currency_code')
+        ->active()
+        ->groupBy('currency_code')
+        ->get();
+
+        $data['tax_options'] = MasterTaxOptionModel::select('tax_option_constant', 'label')
+        ->active()
+        ->get();
+
+        $data['delivery_challan_data'] = null;
+        if(isset($slack)){
+            
+            $invoice = DeliveryChallan::where('slack', '=', $slack)->first();
+            if (empty($invoice)) {
+                abort(404);
+            }
+            
+            $invoice_data = new DeliveryChallanResource($invoice);
+            $data['delivery_challan_data'] = $invoice_data;
+        }
+
+        $data['challan_type'] = $request->input('type');
+
+        return view('delivery_challan.add_delivery_challan', $data);
+    }
+
+    //This is the function that loads the detail page
+    public function detail(Request $request, $slack){
+        $data['menu_key'] = 'MM_ORDERS';
+        $data['sub_menu_key'] = 'SM_DELIVERY_CHALLAN';
+        $data['action_key'] = 'A_DETAIL_DELIVERY_CHALLAN';
+        check_access([$data['action_key']]);
+
+        $invoice = DeliveryChallanModel::where('slack', '=', $slack)->first();
+        
+        if (empty($invoice)) {
+            abort(404);
+        }
+
+        $data['transaction_type'] = MasterTransactionTypeModel::select('transaction_type_constant', 'label')
+        ->active()
+        ->get();
+
+        $income_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+        ->where('transaction_type_constant', '=', trim('INCOME'))
+        ->first();
+
+        $expense_transaction_type_data = MasterTransactionTypeModel::select('transaction_type_constant')
+        ->where('transaction_type_constant', '=', trim('EXPENSE'))
+        ->first();
+
+        $data['default_transaction_type'] = (isset($invoice->parent_po_id) && $invoice->parent_po_id != '')?$expense_transaction_type_data->transaction_type_constant:$income_transaction_type_data->transaction_type_constant;
+
+        $data['accounts'] = AccountModel::select('accounts.slack', 'accounts.label', 'master_account_type.label as account_type_label')
+        ->masterAccountTypeJoin()
+        ->active()
+        ->get();
+
+        $data['payment_methods'] = PaymentMethodModel::select('slack', 'label')
+        ->active()
+        ->skipPaymentGateway()
+        ->get();
+
+        $store_data = StoreModel::select('currency_name', 'currency_code', 'printnode_enabled')
+        ->where([
+            ['stores.id', '=', request()->logged_user_store_id]
+        ])
+        ->active()
+        ->first();
+
+        $invoice_data = new DeliveryChallanModel($invoice);
+        
+        $data['invoice_data'] = $invoice_data;
+        
+        $invoice_statuses = [];
+        
+        if(check_access(['A_EDIT_STATUS_DELIVERY_CHALLAN'] ,true)){
+            $invoice_statuses = MasterStatusModel::select('label','value_constant')->where([
+                ['value_constant', '!=', strtoupper('NEW')],
+                ['key', '=', 'DELIVERY_CHALLAN_STATUS'],
+                ['status', '=', '1']
+            ])->active()->orderBy('value', 'asc')->get();
+        }
+
+        $data['invoice_statuses'] = $invoice_statuses;
+
+        $data['currency_codes'] = [
+            'store_currency' => $store_data->currency_code,
+            'invoice_currency' => $invoice_data->currency_code
+        ];
+
+        $data['delete_invoice_access'] = check_access(['A_DELETE_DELIVERY_CHALLAN'] ,true);
+
+        $data['make_payment_access'] = check_access(['A_MAKE_PAYMENT_INVOICE'] ,true);
+
+        $data['printnode_enabled'] = (isset($store_data->printnode_enabled) && $store_data->printnode_enabled == 1)?true:false;
+
+        if($request->logged_user_role_id == 3){
+            $is_supplier = true;
+        }
+        else{
+            $is_supplier = false;
+        }
+
+        $data['is_supplier'] = $is_supplier;
+
+        $user = User::where('id', $invoice_data->created_by)->first();
+        if($user->supplier_id){
+            $created_by_supplier = true;
+        }
+        else{
+            $created_by_supplier = false;
+        }
+
+        $data['created_by_supplier'] = $created_by_supplier;
+        // dd($invoice_data);
+
+        if($request->logged_user_role_id == 2){
+            $is_customer = true;
+        }
+        else{
+            $is_customer = false;
+        }
+
+        $data['is_customer'] = $is_customer;
+
+
+        return view('delivery_challan.delivery_challan_detail', $data);
+    }
+
+    //This is the function that loads the print purchase order page
+    public function print_delivery_challan(Request $request, $slack, $type = 'INLINE', $full_path = false){
+        $data['menu_key'] = 'MM_ORDERS';
+        $data['sub_menu_key'] = 'SM_DELIVERY_CHALLAN';
+        check_access([$data['sub_menu_key']]);
+
+        $invoice = InvoiceModel::where('slack', '=', $slack)->first();
+        
+        if (empty($invoice)) {
+            abort(404);
+        }
+
+        $invoice_data = new InvoiceResource($invoice);
+
+        $print_logo_path = config("app.invoice_print_logo");
+
+        // dd($invoice_data->bill_to);
+
+        if($invoice_data->bill_to == "OAK TECHNOLOGY"){
+            $print_data = view('delivery_challan.delivery_challan.delivery_challan_from_supplier_print.', ['data' => json_encode($invoice_data), 'logo_path' => $print_logo_path])->render();
+
+        }
+        else{
+            $print_data = view('delivery_challan.delivery_challan.delivery_print', ['data' => json_encode($invoice_data), 'logo_path' => $print_logo_path])->render();
+
+        }
+       
+
+        $mpdf_config = [
+            'mode'          => 'utf-8',
+            'format'        => 'A4',
+            'orientation'   => 'P',
+            'margin_left'   => 7,
+            'margin_right'  => 7,
+            'margin_top'    => 7,
+            'margin_bottom' => 7,
+            'tempDir' => storage_path()."/pdf_temp" 
+        ];
+
+        $cache_params = '?='.uniqid();
+
+        $stylesheet = File::get(public_path('css/invoice_print_invoice.css'));
+        $mpdf = new Mpdf($mpdf_config);
+        $mpdf->SetDisplayMode('real');
+        $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->SetHTMLFooter('<div class="footer">Page: {PAGENO}/{nb}</div>');
+        $mpdf->WriteHTML($print_data);
+        header('Content-Type: application/pdf');
+
+        $filename = 'invoice_'.$invoice_data['invoice_number'].'.pdf';
+
+        Storage::disk('invoice')->delete(
+            [
+                $filename
+            ]
+        );
+
+        if($type == 'INLINE'){
+            $mpdf->Output($filename.$cache_params, \Mpdf\Output\Destination::INLINE);
+        }else{
+            $view_path = Config::get('constants.upload.invoice.view_path');
+            $upload_dir = Storage::disk('invoice')->getAdapter()->getPathPrefix();
+
+            $mpdf->Output($upload_dir.$filename, \Mpdf\Output\Destination::FILE);
+
+            $download_link = ($full_path == false)?$view_path.$filename.$cache_params:$upload_dir.$filename;
+            return $download_link; 
+        }
+    }
+    
+}
