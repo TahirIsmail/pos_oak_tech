@@ -179,17 +179,18 @@ class DeliveryChallan extends Controller
 
     //This is the function that loads the print purchase order page
     public function print_delivery_challan(Request $request, $slack, $type = 'INLINE', $full_path = false){
+       
         $data['menu_key'] = 'MM_ORDERS';
         $data['sub_menu_key'] = 'SM_DELIVERY_CHALLAN';
         check_access([$data['sub_menu_key']]);
 
-        $invoice = InvoiceModel::where('slack', '=', $slack)->first();
+        $invoice = DeliveryChallanModel::where('slack', '=', $slack)->first();
         
         if (empty($invoice)) {
             abort(404);
         }
 
-        $invoice_data = new InvoiceResource($invoice);
+        $invoice_data = new DeliveryChallanResource($invoice);
 
         $print_logo_path = config("app.invoice_print_logo");
 

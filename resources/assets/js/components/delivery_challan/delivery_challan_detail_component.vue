@@ -26,11 +26,11 @@
 
                         <a class="btn btn-outline-primary mr-1" v-bind:href="'/print_delivery_challan/'+slack" target="_blank">{{ $t("PDF") }}</a>
 
-                        <button type="submit" class="btn btn-danger mr-1" v-if="delete_challan_access == true" v-on:click="delete_challan()" v-bind:disabled="challan_delete_processing == true">
+                        <!-- <button type="submit" class="btn btn-danger mr-1" v-if="delete_challan_access == true" v-on:click="delete_challan()" v-bind:disabled="challan_delete_processing == true">
                             <i class='fa fa-circle-notch fa-spin' v-if="challan_delete_processing == true"></i> {{ $t("Delete Challan") }}
-                        </button>
+                        </button> -->
 
-                        <div class="dropdown d-inline" v-if="challan_statuses != ''">
+                        <!-- <div class="dropdown d-inline" v-if="challan_statuses != ''">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="challan_action" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ $t("Change Status") }}
                             </button>
@@ -39,7 +39,7 @@
                                     Mark as {{ challan_status.label }}
                                 </button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <hr>

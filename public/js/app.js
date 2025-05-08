@@ -59209,50 +59209,7 @@ var render = function render() {
       href: "/print_delivery_challan/" + _vm.slack,
       target: "_blank"
     }
-  }, [_vm._v(_vm._s(_vm.$t("PDF")))]), _vm._v(" "), _vm.delete_challan_access == true ? _c("button", {
-    staticClass: "btn btn-danger mr-1",
-    attrs: {
-      type: "submit",
-      disabled: _vm.challan_delete_processing == true
-    },
-    on: {
-      click: function click($event) {
-        return _vm.delete_challan();
-      }
-    }
-  }, [_vm.challan_delete_processing == true ? _c("i", {
-    staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.$t("Delete Challan")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.challan_statuses != "" ? _c("div", {
-    staticClass: "dropdown d-inline"
-  }, [_c("button", {
-    staticClass: "btn btn-primary dropdown-toggle",
-    attrs: {
-      type: "button",
-      id: "challan_action",
-      "data-toggle": "dropdown",
-      "aria-haspopup": "true",
-      "aria-expanded": "false"
-    }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("Change Status")) + "\n                        ")]), _vm._v(" "), _c("div", {
-    staticClass: "dropdown-menu dropdown-menu-right",
-    attrs: {
-      "aria-labelledby": "challan_action"
-    }
-  }, _vm._l(_vm.challan_statuses, function (challan_status, key, index) {
-    return _c("button", {
-      key: index,
-      staticClass: "dropdown-item",
-      attrs: {
-        type: "button",
-        value: challan_status.value_constant
-      },
-      on: {
-        click: function click($event) {
-          return _vm.change_challan_status(challan_status.value_constant);
-        }
-      }
-    }, [_vm._v("\n                                Mark as " + _vm._s(challan_status.label) + "\n                            ")]);
-  }), 0)]) : _vm._e()])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("PDF")))])])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "mb-2"
   }, [_c("span", {
     staticClass: "text-subhead"
