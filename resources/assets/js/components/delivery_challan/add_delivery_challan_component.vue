@@ -198,12 +198,18 @@
             </modalcomponent>
 
         </div>
+        <ToastNotification 
+        v-if="showToast"
+        :message="toastMessage"
+            :type="toastType"
+        />
     </div>
 </template>
 
 <script>
     'use strict';
-    
+    import ToastNotification from '../notification/ToastNotification.vue';
+
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
     import moment from "moment";
@@ -213,7 +219,8 @@
     export default {
         components: {
             DatePicker,
-            CoolSelect
+            CoolSelect,
+            ToastNotification,
         },
         data(){
             return{
@@ -227,7 +234,9 @@
                 modal         : false,
                 show_modal    : false,
                 api_link      : (this.delivery_challan_data == null)?'/api/add_delivery_challan':'/api/update_delivery_challan/'+this.delivery_challan_data.slack,
-
+                showToast: false,
+                toastMessage: '',
+                toastType: '',
                 bill_to_master_list: ['CUSTOMER'],
                 bill_to_list: [],
                 product_list: [],
@@ -487,15 +496,16 @@
                 });
             },
 
-            show_response_message(msg, type){
-                if(type == 'SUCCESS'){
-                    this.processing = false;
-                    toastr.success(msg);
-                }else if(type == 'ERROR'){
-                    this.processing = false;
-                    toastr.error(msg);
-                }
-            }
+            show_response_message(msg, type) {
+            this.processing = false;
+            this.toastMessage = msg;
+            this.toastType = type;
+            this.showToast = true;
+            
+            setTimeout(() => {
+                this.showToast = false;
+            }, 3000);
+        }
         }
     }
 </script>
