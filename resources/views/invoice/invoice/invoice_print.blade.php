@@ -11,94 +11,51 @@
 
 <head>
     <title>Invoice #{{ $data->invoice_number }}</title>
+    <style>
+        @media print {
+            @page {
+
+                size: auto;
+            }
+
+            /* Hide browser-added headers and footers */
+            body {
+                margin: 0;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
 
-
-
-    <div class='mb-1rem'>
-        <table class='w-100'>
-            <tr>
-                <td class='left'>
-                    @if ($logo_path != '')
-                        <img src="{{ $logo_path }}" class='h-50px' />
-                    @endif
-                </td>
-                <td class="right">
-                    <table class='w-50'>
-                        <tr>
-                            <td>
-                                <div class='display-block left'>Invoice No:</div>
-
-                            </td>
-                            <td>
-                                <div class="bold">
-                                    {{ $data->invoice_number }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class='display-block'>Reference No:</div>
-
-                            </td>
-                            <td>
-                                <div class="bold"> {{ $data->invoice_reference }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class='display-block'>Invoice Date:</div>
-
-                            </td>
-                            <td class="bold">
-                                {{ $data->invoice_date }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class='display-block'>Invoice Due Date:</div>
-
-                            </td>
-                            <td>
-                                <div class="bold"> {{ $data->invoice_due_date }}</div>
-                            </td>
-                        </tr>
-
-                    </table>
-
-                </td>
-
-            </tr>
-        </table>
+    <div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
 
-    <table class='w-100 mb-1rem'>
+
+
+    <table class='w-100 mb-1rem '>
         <tr>
             <td class='v-top w-50 pr-20px'>
                 <div class='bold display-block'>Invoice From </div>
-                <div class='display-block'>{{ $data->store->name }}</div>
-                <div>
-                    {{ $data->store->address }}
-                    @if ($data->store->pincode != '')
-                        Pincode: {{ $data->store->pincode }}
-                    @endif
-                </div>
+
+
                 @if ($data->store->tax_number != '')
                     <div>GST: {{ $data->store->tax_number }}</div>
                 @endif
-                @if ($data->store->primary_email != '')
-                    <div>Email: {{ $data->store->primary_email }}</div>
-                @endif
-                @if ($data->store->secondary_email != '')
-                    <div>Email: {{ $data->store->secondary_email }}</div>
-                @endif
-                @if ($data->store->primary_contact != '')
-                    <div>Contact No 1: {{ $data->store->primary_contact }}</div>
-                @endif
-                @if ($data->store->secondary_contact != '')
-                    <div>Contact No 2: {{ $data->store->secondary_contact }}</div>
-                @endif
+                <div>Invoice No: {{ $data->invoice_number }}</div>
+                <div>Reference No: {{ $data->invoice_reference }}</div>
+                <div>Invoice Date: {{ $data->invoice_date }}</div>
+                <div>Invoice Due Date: {{ $data->invoice_due_date }}</div>
+
                 </div>
             </td>
             <td class='v-top w-50 pr-20px'>
@@ -120,13 +77,14 @@
         </tr>
     </table>
     <div class="invoice-head center">
-        <h2> 
+        <h2>
             @if (isset($data->tax_option_data) && count($data->tax_option_data->component_array) > 0)
                 @foreach ($data->tax_option_data->component_array as $component_array_key => $component_array_item)
-                   {{ strtoupper($component_array_item) }}
+                    {{ strtoupper($component_array_item) }}
                 @endforeach
             @endif
-                INVOICE</h2>
+            INVOICE
+        </h2>
     </div>
 
     <div class="mb-1rem">
@@ -180,22 +138,22 @@
                     <td colspan="{{ $colspan }}" class="right">Sub Total (EXCL Tax)</td>
                     <td class="right">{{ $data->subtotal_excluding_tax }}</td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <td colspan="{{ $colspan }}" class="right">Total Discount</td>
                     <td class="right">{{ $data->total_discount_amount }}</td>
                 </tr>
                 <tr>
                     <td colspan="{{ $colspan }}" class="right">Total After Discount</td>
                     <td class="right">{{ $data->total_after_discount }}</td>
-                </tr>
+                </tr> --}}
                 {{-- <tr>
                     <td colspan="{{ $colspan }}" class="right">Total GST</td>
                     <td class="right">{{ $data->total_tax_amount }}</td>
                 </tr> --}}
-                <tr>
+                {{-- <tr>
                     <td colspan="{{ $colspan }}" class="right">Other Charge</td>
                     <td class="right">{{ $data->shipping_charge }}</td>
-                </tr>
+                </tr> --}}
                 {{-- <tr>
                     <td colspan="{{ $colspan }}" class="right">Packaging Charge</td>
                     <td class="right">{{ $data->packing_charge }}</td>
@@ -206,19 +164,21 @@
                 </tr>
             </tbody>
         </table>
-        @if ($data->currency_code != '')
+        {{-- @if ($data->currency_code != '')
             <div>
                 <small>All prices are in {{ $data->currency_name }} ({{ $data->currency_code }})</small>
             </div>
-        @endif
+        @endif --}}
     </div>
 
     @if ($data->words != '')
         <div class="mb-1rem">
             <div class='bold display-block'>In Words: </div>
-            <pre>{{ $data->words }} only/-</pre>
+            <pre>{{ \Illuminate\Support\Str::title($data->words) }} Only/-</pre>
         </div>
     @endif
+
+
 
     @if ($data->terms != '')
         <div class="mb-1rem">
@@ -226,31 +186,22 @@
             <pre>{{ $data->terms }}</pre>
         </div>
     @endif
-    <div class="col6 bold">
-        <h3>Recieved By:</h3>
-        <hr>
-
-        <div>
-            <h3>Name:</h3>
-            <div>
-                <hr>
-            </div>
-        </div>
-
-
-
-
-
-        <div>
-            <h3>Signature:</h3>
-            <div>
-                <hr>
-            </div>
-        </div>
+    <table>
+        <tr>
+            <td style="padding-right: 40px;">
+                <h3>Received By: __________________</h3>
+            </td>
+            <td style="padding-right: 40px;">
+                <h3>Name: __________________</h3>
+            </td>
+            <td>
+                <h3>Signature: __________________</h3>
+            </td>
+        </tr>
+    </table>
 
 
 
-    </div>
 
 
 

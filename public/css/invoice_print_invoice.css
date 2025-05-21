@@ -1,70 +1,75 @@
-body{
+body {
     font-family: 'Verdana';
     font-size: 12px;
 }
 
-.w-100{
+.w-100 {
     width: 100% !important;
 }
 
-.w-50{
+.w-50 {
     width: 50% !important;
 }
 
-.small{
+.small {
     font-size: 7px;
 }
 
-table{
+table {
     font-size: 11px;
     line-height: 15px;
 }
 
-td{
+td {
     padding-bottom: 1rem;
 }
 
-.pt-1rem{
+.pt-1rem {
     padding-top: 1rem;
 }
 
-.pb-1rem{
+.pb-1rem {
     padding-bottom: 1rem;
 }
 
-.pr-20px{
+.pr-20px {
     padding-right: 20px !important;
 }
 
-.pr-100px{
-    padding-right:100px !important;
+.pr-100px {
+    padding-right: 100px !important;
 }
 
-.mb-1rem{
+.mb-1rem {
     margin-bottom: 1rem !important;
 }
 
-.pb-0{
+.mt-20rem {
+    scroll-margin-top: 20rem !important;
+}
+
+
+.pb-0 {
     padding-bottom: 0;
 }
 
-.display-block{
+.display-block {
     display: inline-block;
 }
 
-.center{
+.center {
     text-align: center;
 }
 
-.right{
+.right {
     text-align: right;
 }
 
-.bold{
+.bold {
     font-weight: bold;
 }
 
-.border-bottom-dashed{
+.border-bottom-dashed {
     border-bottom: 0.3px dashed #000;
 }
 
@@ -72,30 +77,44 @@ td{
     border-collapse: collapse;
 }
 
-.product-table th{
+.product-table th {
     background: #ddd;
 }
-  
-.product-table, .product-table th, .product-table td {
+
+.product-table,
+.product-table th,
+.product-table td {
     padding: 5px;
     border: 0.5px solid #ddd;
 }
 
-.footer{
+.footer {
     text-align: center;
 }
 
-.v-top{
+.v-top {
     vertical-align: top !important;
 }
 
-.h-50px{
+.h-50px {
     height: 50px;
 }
-.col6 {width:50%;float:right;}
-.col12 {width:100%;float:right;}
-.col3{width:25%;float:right;}
 
-pre{
+.col6 {
+    width: 50%;
+    float: right;
+}
+
+.col12 {
+    width: 100%;
+    float: right;
+}
+
+.col3 {
+    width: 25%;
+    float: right;
+}
+
+pre {
     font-family: 'Verdana';
 }
