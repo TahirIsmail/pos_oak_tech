@@ -1,5 +1,62 @@
 <template>
   <div class="row">
+     <div class="form-row mb-2">
+    <div class="form-group col-md-3">
+      <label for="add_mode">{{ $t("Product Add Mode") }}</label>
+      <select 
+        v-model="add_mode" 
+        class="form-control form-control-custom custom-select"
+        @change="handleModeChange"
+      >
+        <option value="single">Single Product</option>
+        <option value="multiple">Multiple Products</option>
+      </select>
+    </div>
+    
+    <div class="form-group col-md-3" v-if="add_mode === 'multiple'">
+      <label for="quantity_count">{{ $t("Number of Items") }}</label>
+      <input 
+        type="number" 
+        v-model="quantity_count"
+        class="form-control form-control-custom"
+        min="1"
+        @change="generateSerialNumbers"
+      />
+    </div>
+  </div>
+
+  <!-- Add this for multiple mode -->
+  <div v-if="add_mode === 'multiple' && serialNumbers.length > 0" class="form-row mb-2">
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Serial Number</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(serial, index) in serialNumbers" :key="index">
+              <td>{{ index + 1 }}</td>
+              <td>
+                <input 
+                  type="text" 
+                  v-model="serial.number"
+                  class="form-control form-control-custom"
+                  readonly
+                />
+              </td>
+              <td>
+                <span class="badge badge-primary">Pending</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
     <div class="col-md-12">
       <div class="card shadow">
       <form @submit.prevent="submit_form" class="mb-3">
@@ -151,12 +208,12 @@
 
         <div class="form-row mb-2">
           
-          <div class="form-group col-md-3">
+            <div class="form-group col-md-3" v-if="add_mode === 'single'">
             <label for="product_code">{{ $t("Product Code / Serial NO#") }}</label>
             <input
               type="text"
               name="product_code"
-              v-model="product_code"
+              v-model="product_code" 
               v-validate="'required|alpha_dash|min:6'"
               class="form-control form-control-custom"
               :placeholder="$t('Please enter product code')"
@@ -165,7 +222,7 @@
             <span v-bind:class="{ error: errors.has('product_code') }">{{
               errors.first("product_code")
             }}</span>
-          </div>
+            </div>
           <div class="form-group col-md-3">
             <label for="supplier">{{ $t("Supplier") }}</label>
             <select
@@ -857,7 +914,10 @@ export default {
         typeof this.taxcode_percentage != "undefined"
           ? this.taxcode_percentage
           : 0,
-
+      add_mode: 'single',
+      quantity_count: 1,
+      serialNumbers: [],
+      base_product_code: '',
          
     };
   },
@@ -997,6 +1057,37 @@ export default {
               });
 
     },
+    handleModeChange() {
+      if (this.add_mode === 'single') {
+        this.quantity_count = 1;
+        this.serialNumbers = [];
+      } else {
+        this.base_product_code = this.product_code;
+        this.generateSerialNumbers();
+      }
+    },
+
+    generateSerialNumbers() {
+      this.serialNumbers = [];
+      const count = parseInt(this.quantity_count);
+      
+      if (count > 0) {
+        for (let i = 0; i < count; i++) {
+          this.serialNumbers.push({
+            number: this.generateUniqueSerial(),
+            status: 'pending'
+          });
+        }
+      }
+    },
+
+    generateUniqueSerial() {
+      const timestamp = Date.now().toString().slice(-4);
+      const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+      const base = this.base_product_code || 'PROD';
+      return `${base}-${timestamp}${random}`;
+    },
+
     submit_form() {
       this.$off("submit");
       this.$off("close");
@@ -1004,20 +1095,52 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           this.show_modal = true;
-          this.$on("submit", function () {
-            // this.processing = true;
+          this.$on("submit", async () => {
+            this.processing = true;
 
-
-
-            const selectedProductName = this.product_names.find(p_name => p_name.id === this.product_name_id);
+            if (this.add_mode === 'multiple') {
+              // Handle multiple products
+              for (let serial of this.serialNumbers) {
+                const formData = this.prepareFormData();
+                formData.append('product_code', serial.number);
+                
+                try {
+                  await axios.post(this.api_link, formData);
+                  serial.status = 'success';
+                } catch (error) {
+                  serial.status = 'error';
+                  console.error(error);
+                }
+              }
+              
+              this.show_response_message('Products added successfully', 'SUCCESS');
+              setTimeout(() => location.reload(), 1000);
+            } else {
+              // Existing single product logic
+                const selectedProductName = this.product_names.find(p_name => p_name.id === this.product_name_id);
       if (selectedProductName) {
         this.productNameLabel = selectedProductName.product_name;
       }
-
-
-
-
-            var formData = new FormData();
+              const formData = this.prepareFormData();
+              try {
+                const response = await axios.post(this.api_link, formData);
+                if (response.data.status_code == 200) {
+                  this.handleSuccessResponse(response);
+                } else {
+                  this.handleErrorResponse(response);
+                }
+              } catch (error) {
+                console.error(error);
+              }
+            }
+            
+            this.processing = false;
+          });
+        }
+      });
+    },
+    prepareFormData(){
+       var formData = new FormData();
 
             for (var i = 0; i < this.$refs.product_image.files.length; i++) {
               let file = this.$refs.product_image.files[i];
@@ -1125,58 +1248,34 @@ export default {
 
             if (this.input_type) {
   
-  for (const key in this.input_type) {
-    formData.append(`input_type[${key}]`, this.input_type[key]);
-  }
-}
-            console.log(...formData);
-            axios
-              .post(this.api_link, formData)
-              .then((response) => {
-                if (response.data.status_code == 200) {
-                  this.show_response_message(response.data.msg, "Success");
-
-                  if (
-                    typeof response.data.link != "undefined" &&
-                    response.data.link != ""
-                  ) {
-                    if (response.data.new_tab == true) {
-                      window.open(response.data.link, "_blank");
-                    } else {
-                      window.location.href = response.data.link;
-                    }
-
-                    setTimeout(function () {
-                      location.reload();
-                    }, 1000);
-                  } else {
-                    setTimeout(function () {
-                      location.reload();
-                    }, 1000);
-                  }
-                } else {
-                  this.show_modal = false;
-                  this.processing = false;
-                  try {
-                    var error_json = JSON.parse(response.data.msg);
-                    this.loop_api_errors(error_json);
-                  } catch (err) {
-                    this.server_errors = response.data.msg;
-                  }
-                  this.error_class = "error";
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          });
-          this.$on("close", function () {
-            this.show_modal = false;
-          });
+      for (const key in this.input_type) {
+            formData.append(`input_type[${key}]`, this.input_type[key]);
         }
-      });
+      }
+      return formData;
+    },
+    handleSuccessResponse(response) {
+      this.show_response_message(response.data.msg, 'SUCCESS');
+      if (response.data.link) {
+        if (response.data.new_tab) {
+          window.open(response.data.link, '_blank');
+        } else {
+          window.location.href = response.data.link;
+        }
+      }
+      setTimeout(() => location.reload(), 1000);
     },
 
+    handleErrorResponse(response) {
+      this.show_modal = false;
+      try {
+        const error_json = JSON.parse(response.data.msg);
+        this.loop_api_errors(error_json);
+      } catch (err) {
+        this.server_errors = response.data.msg;
+      }
+      this.error_class = 'error';
+    },
     set_product_quantity_validation() {
       if (
         typeof this.stock_transfer_product_slack != "undefined" &&
@@ -1520,6 +1619,14 @@ export default {
       }
     },
   },
+  watch: {
+    product_code(newValue) {
+      if (this.add_mode === 'multiple' && !this.base_product_code) {
+        this.base_product_code = newValue;
+        this.generateSerialNumbers();
+      }
+    }
+  }
 };
 </script>
 <style scoped>
@@ -1580,5 +1687,30 @@ hr {
 .text-muted {
     margin-left:10px;
     color: #6c757d!important;
+}
+
+/* Add these styles */
+.table-responsive {
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.badge {
+  padding: 0.5em 1em;
+}
+
+.badge-primary {
+  background-color: #007bff;
+}
+
+.badge-success {
+  background-color: #28a745;
+}
+
+.badge-danger {
+  background-color: #dc3545;
 }
 </style>
