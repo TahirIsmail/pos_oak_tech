@@ -152,9 +152,9 @@ class User extends Controller
         $store_data = StoreResource::collection($store);
 
         $data['user_data'] = collect($user_data)->union(collect(['stores' => $store_data]));
-
-        $data['show_init_password'] = (($request->logged_user_role_id == 1 && $user_data->init_password !='') || ($user_data->role_id === 17))?true:false;
-
+            
+        $data['show_init_password'] = (($request->logged_user_role_id == 1 && $user_data->init_password !='') || ($request->logged_user_role_id === 17))?true:false;
+            
         return view('user.user_detail', $data);
     }
 
