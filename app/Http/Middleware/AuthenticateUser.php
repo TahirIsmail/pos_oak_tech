@@ -60,7 +60,7 @@ class AuthenticateUser
                 $request->logged_user_role_id   = $user_exists->role_id;
                 $request->is_super_admin        = ($user_exists->role_id == 1)?true:false;
                 
-                $menus = $this->get_user_menu($request, $user_id);
+                $menus = $this->get_user_menu($request, $user_id , $user_exists->role_id);
                 $request->logged_user_menus = $menus;
                 
                 $user_stores = $this->get_available_stores($request, $user_id);
@@ -141,7 +141,7 @@ class AuthenticateUser
         }
     }
 
-    public function get_user_menu($request, $user_id){
+    public function get_user_menu($request, $user_id ,$role_id){
         $menus = [];
         if($request->logged_user_role_id == 1){
             $menus = MenuModel::select('id')

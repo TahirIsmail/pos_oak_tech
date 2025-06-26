@@ -72715,9 +72715,45 @@ var render = function render() {
   return _c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "card shadow"
+  }, [_c("form", {
+    staticClass: "mb-3",
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submit_form.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "card-header d-flex flex-wrap mb-4"
+  }, [_c("div", {
+    staticClass: "mr-auto"
+  }, [typeof _vm.stock_transfer_product_slack == "undefined" || _vm.stock_transfer_product_slack == "" ? _c("div", [_vm.product_slack == "" ? _c("span", {
+    staticClass: "text-title"
+  }, [_vm._v(_vm._s(_vm.$t("Add Product")))]) : _c("span", {
+    staticClass: "text-title"
+  }, [_vm._v(_vm._s(_vm.$t("Edit Product")))])]) : _c("div", [_c("span", {
+    staticClass: "text-title"
+  }, [_vm._v(_vm._s(_vm.$t("Add Stock Transfer Product")))])])]), _vm._v(" "), _c("div", {}, [_c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "submit",
+      disabled: _vm.processing == true
+    }
+  }, [_vm.processing == true ? _c("i", {
+    staticClass: "fa fa-circle-notch fa-spin"
+  }) : _vm._e(), _vm._v("\n              " + _vm._s(_vm.$t("Save")) + "\n            ")])])]), _vm._v(" "), _c("div", [_c("div", {
+    staticClass: "d-flex flex-wrap mb-1"
+  }, [_c("div", {
+    staticClass: "mr-auto"
+  }, [_c("span", {
+    staticClass: "text-subhead"
+  }, [_vm._v(_vm._s(_vm.$t("Product Adding Configuration")))])]), _vm._v(" "), _c("div", {})]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-2"
   }, [_c("div", {
-    staticClass: "form-group col-md-3"
+    staticClass: "form-group col-md-4"
   }, [_c("label", {
     attrs: {
       "for": "add_mode"
@@ -72750,7 +72786,7 @@ var render = function render() {
       value: "multiple"
     }
   }, [_vm._v("Multiple Products")])])]), _vm._v(" "), _vm.add_mode === "multiple" ? _c("div", {
-    staticClass: "form-group col-md-3"
+    staticClass: "form-group col-md-4"
   }, [_c("label", {
     attrs: {
       "for": "quantity_count"
@@ -72810,37 +72846,7 @@ var render = function render() {
         }
       }
     })]), _vm._v(" "), _vm._m(1, true)]);
-  }), 0)])])])]) : _vm._e(), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("div", {
-    staticClass: "card shadow"
-  }, [_c("form", {
-    staticClass: "mb-3",
-    on: {
-      submit: function submit($event) {
-        $event.preventDefault();
-        return _vm.submit_form.apply(null, arguments);
-      }
-    }
-  }, [_c("div", {
-    staticClass: "card-header d-flex flex-wrap mb-4"
-  }, [_c("div", {
-    staticClass: "mr-auto"
-  }, [typeof _vm.stock_transfer_product_slack == "undefined" || _vm.stock_transfer_product_slack == "" ? _c("div", [_vm.product_slack == "" ? _c("span", {
-    staticClass: "text-title"
-  }, [_vm._v(_vm._s(_vm.$t("Add Product")))]) : _c("span", {
-    staticClass: "text-title"
-  }, [_vm._v(_vm._s(_vm.$t("Edit Product")))])]) : _c("div", [_c("span", {
-    staticClass: "text-title"
-  }, [_vm._v(_vm._s(_vm.$t("Add Stock Transfer Product")))])])]), _vm._v(" "), _c("div", {}, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "submit",
-      disabled: _vm.processing == true
-    }
-  }, [_vm.processing == true ? _c("i", {
-    staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v("\n              " + _vm._s(_vm.$t("Save")) + "\n            ")])])]), _vm._v(" "), _c("p", {
+  }), 0)])])])]) : _vm._e()]), _vm._v(" "), _c("p", {
     "class": [_vm.error_class],
     domProps: {
       innerHTML: _vm._s(_vm.server_errors)
@@ -72853,7 +72859,7 @@ var render = function render() {
     staticClass: "text-subhead"
   }, [_vm._v(_vm._s(_vm.$t("Product Information")))])]), _vm._v(" "), _c("div", {})]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-2"
-  }, [_vm.add_mode === "single" ? _c("div", {
+  }, [_c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -72891,7 +72897,7 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("product_code")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("product_code")))])]) : _vm._e(), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.errors.first("product_code")))])]), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -72983,7 +72989,7 @@ var render = function render() {
       domProps: {
         value: category.id
       }
-    }, [_vm._v("\n                  " + _vm._s(category.label) + "\n                ")]);
+    }, [_vm._v("\n                " + _vm._s(category.label) + "\n              ")]);
   })], 2), _vm._v(" "), _c("span", {
     "class": {
       error: _vm.errors.has("category")
@@ -73032,7 +73038,7 @@ var render = function render() {
       domProps: {
         value: s_category.id
       }
-    }, [_vm._v("\n                  " + _vm._s(s_category.sub_category_name) + "\n                ")]);
+    }, [_vm._v("\n                " + _vm._s(s_category.sub_category_name) + "\n              ")]);
   })], 2), _vm._v(" "), _c("span", {
     "class": {
       error: _vm.errors.has("Sub Category")
@@ -73078,7 +73084,7 @@ var render = function render() {
       domProps: {
         value: childcategory.id
       }
-    }, [_vm._v("\n              " + _vm._s(childcategory.child_category) + "\n            ")]);
+    }, [_vm._v("\n                " + _vm._s(childcategory.child_category) + "\n              ")]);
   })], 2)]) : _vm._e()]), _vm._v(" "), _vm.category_specifications.length > 0 ? _c("div", {
     staticClass: "form-row mb-2"
   }, _vm._l(_vm.category_specifications, function (spec) {
@@ -107296,7 +107302,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.card-header[data-v-7a510a68] {\n        padding: 0.75rem 1.25rem;\n        margin-bottom: 0;\n        background-color: rgba(0, 0, 0, .03);\n        border-bottom: 1px solid rgba(0, 0, 0, .125);\n}\n.card[data-v-7a510a68] {\n        position: relative;\n        display: flex;\n        flex-direction: column;\n        min-width: 0;\n        word-wrap: break-word;\n        background-color: #fff;\n        background-clip: border-box;\n        border: 1px solid rgba(0, 0, 0, .125);\n        border-radius: 0.25rem;\n}\n.page-item.active .page-link[data-v-7a510a68] {\n    z-index: 3;\n    color: #fff;\n    background-color: #007bff;\n    border-color: #007bff;\n    margin-left:18px;\n}\n.mb-1[data-v-7a510a68],.my-1[data-v-7a510a68] {\n  margin-bottom: 0.25rem !important;\n  margin-left: 10px;\n}\n.mb-2[data-v-7a510a68],.my-2[data-v-7a510a68] {\n  margin-bottom: 0.5rem !important;\n  margin-left: 10px;\n}\n.form-row[data-v-7a510a68] {\n  display: flex;\n  flex-wrap: wrap;\n  margin-right: 10px;\n  margin-left: 10px;\n}\nhr[data-v-7a510a68] {\n    margin-left: 30px;\n    margin-right: 30px;\n    border-top: 0.5px solid rgba(0,0,0,.1);\n}\n.text-muted[data-v-7a510a68] {\n    margin-left:10px;\n    color: #6c757d!important;\n}\n\n/* Add these styles */\n.table-responsive[data-v-7a510a68] {\n  margin: 1rem;\n  padding: 1rem;\n  background-color: #fff;\n  border-radius: 0.25rem;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12);\n}\n.badge[data-v-7a510a68] {\n  padding: 0.5em 1em;\n}\n.badge-primary[data-v-7a510a68] {\n  background-color: #007bff;\n}\n.badge-success[data-v-7a510a68] {\n  background-color: #28a745;\n}\n.badge-danger[data-v-7a510a68] {\n  background-color: #dc3545;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.card-header[data-v-7a510a68] {\r\n  padding: 0.75rem 1.25rem;\r\n  margin-bottom: 0;\r\n  background-color: rgba(0, 0, 0, .03);\r\n  border-bottom: 1px solid rgba(0, 0, 0, .125);\n}\n.card[data-v-7a510a68] {\r\n  position: relative;\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-width: 0;\r\n  word-wrap: break-word;\r\n  background-color: #fff;\r\n  background-clip: border-box;\r\n  border: 1px solid rgba(0, 0, 0, .125);\r\n  border-radius: 0.25rem;\n}\n.page-item.active .page-link[data-v-7a510a68] {\r\n  z-index: 3;\r\n  color: #fff;\r\n  background-color: #007bff;\r\n  border-color: #007bff;\r\n  margin-left: 18px;\n}\n.mb-1[data-v-7a510a68],\r\n.my-1[data-v-7a510a68] {\r\n  margin-bottom: 0.25rem !important;\r\n  margin-left: 10px;\n}\n.mb-2[data-v-7a510a68],\r\n.my-2[data-v-7a510a68] {\r\n  margin-bottom: 0.5rem !important;\r\n  margin-left: 10px;\n}\n.form-row[data-v-7a510a68] {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  margin-right: 10px;\r\n  margin-left: 10px;\n}\nhr[data-v-7a510a68] {\r\n  margin-left: 30px;\r\n  margin-right: 30px;\r\n  border-top: 0.5px solid rgba(0, 0, 0, .1);\n}\n.text-muted[data-v-7a510a68] {\r\n  margin-left: 10px;\r\n  color: #6c757d !important;\n}\r\n\r\n/* Add these styles */\n.table-responsive[data-v-7a510a68] {\r\n  margin: 1rem;\r\n  padding: 1rem;\r\n  background-color: #fff;\r\n  border-radius: 0.25rem;\r\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);\n}\n.badge[data-v-7a510a68] {\r\n  padding: 0.5em 1em;\n}\n.badge-primary[data-v-7a510a68] {\r\n  background-color: #007bff;\n}\n.badge-success[data-v-7a510a68] {\r\n  background-color: #28a745;\n}\n.badge-danger[data-v-7a510a68] {\r\n  background-color: #dc3545;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

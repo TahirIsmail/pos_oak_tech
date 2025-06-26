@@ -1,102 +1,92 @@
 <template>
   <div class="row">
-     <div class="form-row mb-2">
-    <div class="form-group col-md-3">
-      <label for="add_mode">{{ $t("Product Add Mode") }}</label>
-      <select 
-        v-model="add_mode" 
-        class="form-control form-control-custom custom-select"
-        @change="handleModeChange"
-      >
-        <option value="single">Single Product</option>
-        <option value="multiple">Multiple Products</option>
-      </select>
-    </div>
-    
-    <div class="form-group col-md-3" v-if="add_mode === 'multiple'">
-      <label for="quantity_count">{{ $t("Number of Items") }}</label>
-      <input 
-        type="number" 
-        v-model="quantity_count"
-        class="form-control form-control-custom"
-        min="1"
-        @change="generateSerialNumbers"
-      />
-    </div>
-  </div>
 
-  <!-- Add this for multiple mode -->
-  <div v-if="add_mode === 'multiple' && serialNumbers.length > 0" class="form-row mb-2">
-    <div class="col-md-12">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Serial Number</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(serial, index) in serialNumbers" :key="index">
-              <td>{{ index + 1 }}</td>
-              <td>
-                <input 
-                  type="text" 
-                  v-model="serial.number"
-                  class="form-control form-control-custom"
-                  readonly
-                />
-              </td>
-              <td>
-                <span class="badge badge-primary">Pending</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+
     <div class="col-md-12">
       <div class="card shadow">
-      <form @submit.prevent="submit_form" class="mb-3">
-        <div class="card-header  d-flex flex-wrap mb-4">
-          <div class="mr-auto">
-            <div
-              v-if="
+        <form @submit.prevent="submit_form" class="mb-3">
+          <div class="card-header  d-flex flex-wrap mb-4">
+            <div class="mr-auto">
+              <div v-if="
                 typeof stock_transfer_product_slack == 'undefined' ||
                 stock_transfer_product_slack == ''
-              "
-            >
-              <span class="text-title" v-if="product_slack == ''">{{
-                $t("Add Product")
-              }}</span>
-              <span class="text-title" v-else>{{ $t("Edit Product") }}</span>
+              ">
+                <span class="text-title" v-if="product_slack == ''">{{
+                  $t("Add Product")
+                }}</span>
+                <span class="text-title" v-else>{{ $t("Edit Product") }}</span>
+              </div>
+              <div v-else>
+                <span class="text-title">{{
+                  $t("Add Stock Transfer Product")
+                }}</span>
+              </div>
             </div>
-            <div v-else>
-              <span class="text-title">{{
-                $t("Add Stock Transfer Product")
-              }}</span>
+            <div class="">
+              <button type="submit" class="btn btn-primary" v-bind:disabled="processing == true">
+                <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
+                {{ $t("Save") }}
+              </button>
             </div>
           </div>
-          <div class="">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              v-bind:disabled="processing == true"
-            >
-              <i
-                class="fa fa-circle-notch fa-spin"
-                v-if="processing == true"
-              ></i>
-              {{ $t("Save") }}
-            </button>
+          <div >
+            <div class="d-flex flex-wrap mb-1">
+              <div class="mr-auto">
+                <span class="text-subhead">{{ $t("Product Adding Configuration") }}</span>
+              </div>
+              <div class=""></div>
+            </div>
+            <div class="form-row mb-2">
+
+              <div class="form-group col-md-4">
+                <label for="add_mode">{{ $t("Product Add Mode") }}</label>
+                <select v-model="add_mode" class="form-control form-control-custom custom-select"
+                  @change="handleModeChange">
+                  <option value="single">Single Product</option>
+                  <option value="multiple">Multiple Products</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-4" v-if="add_mode === 'multiple'">
+                <label for="quantity_count">{{ $t("Number of Items") }}</label>
+                <input type="number" v-model="quantity_count" class="form-control form-control-custom" min="1"
+                  @change="generateSerialNumbers" />
+              </div>
+            </div>
+
+            <!-- Add this for multiple mode -->
+            <div v-if="add_mode === 'multiple' && serialNumbers.length > 0" class="form-row mb-2">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Serial Number</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(serial, index) in serialNumbers" :key="index">
+                        <td>{{ index + 1 }}</td>
+                        <td>
+                          <input type="text" v-model="serial.number" class="form-control form-control-custom"
+                            readonly />
+                        </td>
+                        <td>
+                          <span class="badge badge-primary">Pending</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <p v-html="server_errors" v-bind:class="[error_class]"></p>
+          <p v-html="server_errors" v-bind:class="[error_class]"></p>
 
-        <!-- <div
+          <!-- <div
           v-if="
             typeof stock_transfer_product_slack != 'undefined' &&
             stock_transfer_product_slack != ''
@@ -142,7 +132,7 @@
           </div>
         </div> -->
 
-        <!-- <div class="d-flex flex-wrap mb-1">
+          <!-- <div class="d-flex flex-wrap mb-1">
           <div class="mr-auto">
             <span class="text-subhead">{{
               $t("Product Identifier Information (Optional)")
@@ -150,7 +140,7 @@
           </div>
           <div class=""></div>
         </div> -->
-<!-- 
+          <!-- 
         <div class="form-row mb-2">
           <div class="form-group col-md-6">
             <div class="custom-control custom-switch ml-1">
@@ -199,123 +189,84 @@
 
         <hr /> -->
 
-        <div class="d-flex flex-wrap mb-1">
-          <div class="mr-auto">
-            <span class="text-subhead">{{ $t("Product Information") }}</span>
-          </div>
-          <div class=""></div>
-        </div>
-
-        <div class="form-row mb-2">
-          
-            <div class="form-group col-md-3" v-if="add_mode === 'single'">
-            <label for="product_code">{{ $t("Product Code / Serial NO#") }}</label>
-            <input
-              type="text"
-              name="product_code"
-              v-model="product_code" 
-              v-validate="'required|alpha_dash|min:6'"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter product code')"
-              autocomplete="off"
-            />
-            <span v-bind:class="{ error: errors.has('product_code') }">{{
-              errors.first("product_code")
-            }}</span>
+          <div class="d-flex flex-wrap mb-1">
+            <div class="mr-auto">
+              <span class="text-subhead">{{ $t("Product Information") }}</span>
             </div>
-          <div class="form-group col-md-3">
-            <label for="supplier">{{ $t("Supplier") }}</label>
-            <select
-              name="supplier"
-              v-model="supplier"
-              class="form-control form-control-custom custom-select"
-            >
-              <option value="">Choose Supplier..</option>
-              <option
-                v-for="(supplier, index) in suppliers"
-                v-bind:value="supplier.slack"
-                v-bind:key="index"
-              >
-                {{ supplier.name }}
-              </option>
-            </select>
-            <span v-bind:class="{ error: errors.has('supplier') }">{{
-              errors.first("supplier")
-            }}</span>
+            <div class=""></div>
           </div>
-          <div class="form-group col-md-3">
-            <label for="category">{{ $t("Category") }}</label>
-            <select
-              name="category"
-              v-model="category"
-              @change="fetchSubCategorires()"
-              v-validate="'required'"
-              class="form-control form-control-custom custom-select"
-            >
-              <option value="" disabled>Select Category...</option>              
-                <option
-                v-for="(category, index) in categories"
-                :label="category.label"
-                :key="index"
-                :value="category.id"
-               
-                >
+
+          <div class="form-row mb-2">
+
+            <div class="form-group col-md-3">
+              <label for="product_code">{{ $t("Product Code / Serial NO#") }}</label>
+              <input type="text" name="product_code" v-model="product_code" v-validate="'required|alpha_dash|min:6'"
+                class="form-control form-control-custom" :placeholder="$t('Please enter product code')"
+                autocomplete="off" />
+              <span v-bind:class="{ error: errors.has('product_code') }">{{
+                errors.first("product_code")
+              }}</span>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="supplier">{{ $t("Supplier") }}</label>
+              <select name="supplier" v-model="supplier" class="form-control form-control-custom custom-select">
+                <option value="">Choose Supplier..</option>
+                <option v-for="(supplier, index) in suppliers" v-bind:value="supplier.slack" v-bind:key="index">
+                  {{ supplier.name }}
+                </option>
+              </select>
+              <span v-bind:class="{ error: errors.has('supplier') }">{{
+                errors.first("supplier")
+              }}</span>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="category">{{ $t("Category") }}</label>
+              <select name="category" v-model="category" @change="fetchSubCategorires()" v-validate="'required'"
+                class="form-control form-control-custom custom-select">
+                <option value="" disabled>Select Category...</option>
+                <option v-for="(category, index) in categories" :label="category.label" :key="index"
+                  :value="category.id">
                   {{ category.label }}
                 </option>
-             
-            </select>
-            <span v-bind:class="{ error: errors.has('category') }">{{
-              errors.first("category")
-            }}</span>
-          </div>
+
+              </select>
+              <span v-bind:class="{ error: errors.has('category') }">{{
+                errors.first("category")
+              }}</span>
+            </div>
 
 
-          <div class="form-group col-md-3">
-            <label for="sub_category_id">{{ $t("Sub Category") }}</label>
-            <select
-              name="Sub Category"
-              v-model="sub_category_id"
-              @change="fetchCompanies()"     
-              class="form-control form-control-custom custom-select"
-            >
-              <option value="" disabled>Select Sub Category...</option>              
-                <option
-                v-for="(s_category, index) in subCategories"
-                :label="s_category.sub_category_name"
-                :key="index"
-                :value="s_category.id"
-               
-                >
+            <div class="form-group col-md-3">
+              <label for="sub_category_id">{{ $t("Sub Category") }}</label>
+              <select name="Sub Category" v-model="sub_category_id" @change="fetchCompanies()"
+                class="form-control form-control-custom custom-select">
+                <option value="" disabled>Select Sub Category...</option>
+                <option v-for="(s_category, index) in subCategories" :label="s_category.sub_category_name" :key="index"
+                  :value="s_category.id">
                   {{ s_category.sub_category_name }}
                 </option>
-             
-            </select>
-            <span v-bind:class="{ error: errors.has('Sub Category') }">{{
-              errors.first("Sub Category")
-            }}</span>
-          </div>
+
+              </select>
+              <span v-bind:class="{ error: errors.has('Sub Category') }">{{
+                errors.first("Sub Category")
+              }}</span>
+            </div>
 
 
 
-          <div class="form-group col-md-3" v-if="childCategories.length > 0">
-            <label for="child_category_id">{{ $t("Child Category") }}</label>
-            <select
-              name="Child Category"
-              v-model="child_category_id" 
-              @change="fetch_category_specification()"
-              class="form-control form-control-custom custom-select"
-            >
-              <option value="" disabled>Select Child Category...</option>    
-              <option
-              v-for="childcategory in childCategories" :key="childcategory.id" :value="childcategory.id"
-              >
-              {{ childcategory.child_category }}
-            </option>              
-            </select>
-         
-          </div>
+            <div class="form-group col-md-3" v-if="childCategories.length > 0">
+              <label for="child_category_id">{{ $t("Child Category") }}</label>
+              <select name="Child Category" v-model="child_category_id" @change="fetch_category_specification()"
+                class="form-control form-control-custom custom-select">
+                <option value="" disabled>Select Child Category...</option>
+                <option v-for="childcategory in childCategories" :key="childcategory.id" :value="childcategory.id">
+                  {{ childcategory.child_category }}
+                </option>
+              </select>
 
-          <!-- <div class="form-group col-md-3">
+            </div>
+
+            <!-- <div class="form-group col-md-3">
             <label for="sub_category_id">{{ $t("Brand Name") }}</label>
             <select
               name="Company Name"
@@ -341,7 +292,7 @@
           </div> -->
 
 
-          <!-- <div class="form-group col-md-3">
+            <!-- <div class="form-group col-md-3">
             <label for="name">{{ $t("Product Name") }}</label>
             
 
@@ -375,7 +326,7 @@
             
           </div> -->
 
-          <!-- <div class="form-group col-md-3">
+            <!-- <div class="form-group col-md-3">
             <label for="status">{{ $t("Status") }}</label>
             <select
               name="status"
@@ -397,39 +348,39 @@
             }}</span>
           </div> -->
 
-        </div>
-
-        <div class="form-row mb-2" v-if="category_specifications.length > 0">
-    <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
-      <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
-      <input :type="(spec.category_specification_label == 'Quantity') ? 'number' : 'text'" v-if="spec.category_specification_details.length == 0" v-model="input_type[spec.category_specification_label]" class="form-control" @change="add_product_name()">
-      <select
-      v-else
-      v-model="input_type[spec.category_specification_label]"
-      class="form-control form-control-custom custom-select"
-      @change="add_product_name()"
-      >
-      <option selected disabled>Please Select {{ spec.category_specification_label }}</option>
-      <option v-for="details in spec.category_specification_details" :key="details.id" :value="details.id">{{ details.values }}</option>
-      </select>
-    </div>
-  </div>
-
-       
-        <hr />
-        <div class="d-flex flex-wrap mb-1">
-          <div class="mr-auto">
-            <span class="text-subhead">{{
-              // $t("Tax & Discount Information")
-              $t("")
-            }}</span>
           </div>
-          <div class=""></div>
-        </div>
 
-        <div class="form-row mb-2">
+          <div class="form-row mb-2" v-if="category_specifications.length > 0">
+            <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
+              <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
+              <input :type="(spec.category_specification_label == 'Quantity') ? 'number' : 'text'"
+                v-if="spec.category_specification_details.length == 0"
+                v-model="input_type[spec.category_specification_label]" class="form-control"
+                @change="add_product_name()">
+              <select v-else v-model="input_type[spec.category_specification_label]"
+                class="form-control form-control-custom custom-select" @change="add_product_name()">
+                <option selected disabled>Please Select {{ spec.category_specification_label }}</option>
+                <option v-for="details in spec.category_specification_details" :key="details.id" :value="details.id">{{
+                  details.values }}</option>
+              </select>
+            </div>
+          </div>
 
-          <!-- <div class="form-group col-md-3">
+
+          <hr />
+          <div class="d-flex flex-wrap mb-1">
+            <div class="mr-auto">
+              <span class="text-subhead">{{
+                // $t("Tax & Discount Information")
+                $t("")
+              }}</span>
+            </div>
+            <div class=""></div>
+          </div>
+
+          <div class="form-row mb-2">
+
+            <!-- <div class="form-group col-md-3">
             <label for="tax_code">{{ $t("Add Tax (Optional)") }}</label>
             <select
               name="tax_code"
@@ -451,18 +402,14 @@
             </select>           
           </div> -->
 
-          <div>
-            <label for="gst_cash">{{ $t("Select Cash OR GST") }}</label>
-            <select 
-             name="gst_cash"
-             v-model="gst_cash"
-             class="form-control form-control-custom custom-select"
-             >
-             <option value="Cash">Cash</option>
-             <option value="GST">GST</option>
-            </select>
-          </div>
-          <!-- <div class="form-group col-md-3">
+            <div>
+              <label for="gst_cash">{{ $t("Select Cash OR GST") }}</label>
+              <select name="gst_cash" v-model="gst_cash" class="form-control form-control-custom custom-select">
+                <option value="Cash">Cash</option>
+                <option value="GST">GST</option>
+              </select>
+            </div>
+            <!-- <div class="form-group col-md-3">
             <label for="discount_code">{{ $t("Discount Code") }}</label>
             <select
               name="discount_code"
@@ -482,213 +429,130 @@
               errors.first("discount_code")
             }}</span>
           </div> -->
-        </div>
-
-        <hr />
-
-        <div class="d-flex flex-wrap mb-1">
-          <div class="mr-auto">
-            <span class="text-subhead">{{
-              $t("Price & Quantity Information")
-            }}</span>
           </div>
-          <div class=""></div>
-        </div>
-        <div class="form-row mb-2">
-          <div class="form-group col-md-3">
-            <label for="purchase_price"
-              >{{ $t("Purchase Price Excluding Tax") }} ({{
+
+          <hr />
+
+          <div class="d-flex flex-wrap mb-1">
+            <div class="mr-auto">
+              <span class="text-subhead">{{
+                $t("Price & Quantity Information")
+              }}</span>
+            </div>
+            <div class=""></div>
+          </div>
+          <div class="form-row mb-2">
+            <div class="form-group col-md-3">
+              <label for="purchase_price">{{ $t("Purchase Price Excluding Tax") }} ({{
                 currency_code
-              }})</label
-            >
-            <input
-              type="number"
-              name="purchase_price"
-              v-model="purchase_price"
-              v-validate="'required|decimal'"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter purchase price excluding tax')"
-              autocomplete="off"
-              step="0.01"
-              min="0"
-            />
-            <span v-bind:class="{ error: errors.has('purchase_price') }">{{
-              errors.first("purchase_price")
-            }}</span>
-          </div>
-          <div class="form-group col-md-3" v-if="gst_cash == 'GST'">
-            <label for="tax_code">{{ $t("GST PAID FOR PRODUCT % ") }}</label>
-            <input
-              type="number"
-              name="gst_paid_for_product"
-              v-model="gst_paid_for_product"
-              class="form-control form-control-custom"
-              placeholder="Please Enter GST (In %)"
-            />         
-          </div>
-          <div class="form-group col-md-3">
-            <label for="sale_price"
-              >{{ $t("Sale Price Excluding Tax (%)") }}</label
-            >
-            <input
-              type="number"
-              name="sale_price"
-              v-model="sale_price"
-              v-validate="'required|decimal'"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter sale price excluding tax')"
-              autocomplete="off"
-              step="1"
-              min="0"
-              v-on:input="calculate_sale_prices"
-              :readonly="is_taxcode_inclusive == true"
-            />
-            <span v-bind:class="{ error: errors.has('sale_price') }">{{
-              errors.first("sale_price")
-            }}</span>
-          </div>
-          <div class="form-group col-md-3">
-            <label for="sale_price"
-              >{{ $t("Total Sale Price Per Unit") }} ({{ currency_code }})</label
-            >
-            <input
-              type="number"
-              name="sale_price_including_tax"
-              v-model="sale_price_including_tax"
-              v-validate="{ required: is_taxcode_inclusive, decimal: true }"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter total sale price')"
-              autocomplete="off"
-              step="1"
-              min="0"
-              v-on:input="calculate_sale_prices"
-              :readonly="is_taxcode_inclusive == false"
-            />
-            <span
-              v-bind:class="{ error: errors.has('sale_price_including_tax') }"
-              >{{ errors.first("sale_price_including_tax") }}</span
-            >
+              }})</label>
+              <input type="number" name="purchase_price" v-model="purchase_price" v-validate="'required|decimal'"
+                class="form-control form-control-custom" :placeholder="$t('Please enter purchase price excluding tax')"
+                autocomplete="off" step="0.01" min="0" />
+              <span v-bind:class="{ error: errors.has('purchase_price') }">{{
+                errors.first("purchase_price")
+              }}</span>
+            </div>
+            <div class="form-group col-md-3" v-if="gst_cash == 'GST'">
+              <label for="tax_code">{{ $t("GST PAID FOR PRODUCT % ") }}</label>
+              <input type="number" name="gst_paid_for_product" v-model="gst_paid_for_product"
+                class="form-control form-control-custom" placeholder="Please Enter GST (In %)" />
+            </div>
+            <div class="form-group col-md-3">
+              <label for="sale_price">{{ $t("Sale Price Excluding Tax (%)") }}</label>
+              <input type="number" name="sale_price" v-model="sale_price" v-validate="'required|decimal'"
+                class="form-control form-control-custom" :placeholder="$t('Please enter sale price excluding tax')"
+                autocomplete="off" step="1" min="0" v-on:input="calculate_sale_prices"
+                :readonly="is_taxcode_inclusive == true" />
+              <span v-bind:class="{ error: errors.has('sale_price') }">{{
+                errors.first("sale_price")
+              }}</span>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="sale_price">{{ $t("Total Sale Price Per Unit") }} ({{ currency_code }})</label>
+              <input type="number" name="sale_price_including_tax" v-model="sale_price_including_tax"
+                v-validate="{ required: is_taxcode_inclusive, decimal: true }" class="form-control form-control-custom"
+                :placeholder="$t('Please enter total sale price')" autocomplete="off" step="1" min="0"
+                v-on:input="calculate_sale_prices" :readonly="is_taxcode_inclusive == false" />
+              <span v-bind:class="{ error: errors.has('sale_price_including_tax') }">{{
+                errors.first("sale_price_including_tax") }}</span>
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="total_sale_price_including_tax">{{ $t("Total Price") }} ({{ currency_code }})</label>
+              <input type="number" name="total_sale_price_including_tax" v-model="total_sale_price_including_tax"
+                class="form-control form-control-custom" :placeholder="$t('Please enter total sale price')"
+                autocomplete="off" step="1" min="0" v-on:input="calculate_sale_prices"
+                :readonly="is_taxcode_inclusive == false" />
+
+            </div>
           </div>
 
-          <div class="form-group col-md-3">            
-            <label for="total_sale_price_including_tax"
-           >{{ $t("Total Price") }} ({{ currency_code }})</label
-            >
-            <input
-              type="number"
-              name="total_sale_price_including_tax"
-              v-model="total_sale_price_including_tax"
-              class="form-control form-control-custom"
-              :placeholder="$t('Please enter total sale price')"
-              autocomplete="off"
-              step="1"
-              min="0"
-              v-on:input="calculate_sale_prices"
-              :readonly="is_taxcode_inclusive == false"
-            />
-           
+          <div class="form-row mb-2">
+            <div class="form-group col-md-3">
+              <label for="description">{{ $t("Description") }}</label>
+              <textarea name="description" v-model="description" v-validate="'max:65535'"
+                class="form-control form-control-custom" rows="5" :placeholder="$t('Enter description')"></textarea>
+              <span v-bind:class="{ error: errors.has('description') }">{{
+                errors.first("description")
+              }}</span>
+            </div>
           </div>
-        </div>
-       
-        <div class="form-row mb-2">
-          <div class="form-group col-md-3">
-            <label for="description">{{ $t("Description") }}</label>
-            <textarea
-              name="description"
-              v-model="description"
-              v-validate="'max:65535'"
-              class="form-control form-control-custom"
-              rows="5"
-              :placeholder="$t('Enter description')"
-            ></textarea>
-            <span v-bind:class="{ error: errors.has('description') }">{{
-              errors.first("description")
-            }}</span>
+          <div class="form-row mb-2">
+            <div class="form-group col-md-3">
+              <label for="product_image">{{
+                $t("Product Image") + " (jpeg, jpg, png, webp)"
+              }}</label>
+              <input type="file" class="form-control-file form-control form-control-custom file-input"
+                name="product_image" ref="product_image" accept="image/x-png,image/jpeg,image/webp"
+                v-validate="'ext:jpg,jpeg,png,webp|size:1500'" multiple="multiple" />
+              <small class="form-text text-muted mb-1">Allowed file size per file is 1.5 MB</small>
+              <small class="form-text text-muted">Hold down CTRL or Command for choosing multiple files</small>
+              <span v-bind:class="{ error: errors.has('product_image') }">{{
+                errors.first("product_image")
+              }}</span>
+            </div>
           </div>
-        </div>
-        <div class="form-row mb-2">
-          <div class="form-group col-md-3">
-            <label for="product_image">{{
-              $t("Product Image") + " (jpeg, jpg, png, webp)"
-            }}</label>
-            <input
-              type="file"
-              class="form-control-file form-control form-control-custom file-input"
-              name="product_image"
-              ref="product_image"
-              accept="image/x-png,image/jpeg,image/webp"
-              v-validate="'ext:jpg,jpeg,png,webp|size:1500'"
-              multiple="multiple"
-            />
-            <small class="form-text text-muted mb-1"
-              >Allowed file size per file is 1.5 MB</small
-            >
-            <small class="form-text text-muted"
-              >Hold down CTRL or Command for choosing multiple files</small
-            >
-            <span v-bind:class="{ error: errors.has('product_image') }">{{
-              errors.first("product_image")
-            }}</span>
-          </div>
-        </div>
 
-        <div class="mb-2">
-          <div class="d-flex flex-row flex-wrap">
-            <div
-              class=""
-              v-for="(image, index) in images"
-              v-bind:value="image.slack"
-              v-bind:key="index"
-            >
-              <div v-if="image.filename != ''">
-                <button
-                  type="button"
-                  aria-label="Close"
-                  class="close bg-light image-remove"
-                  v-on:click="remove_image(image.slack)"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <img
-                  :src="image.thumbnail"
-                  alt=""
-                  class="rounded mr-3 mb-3"
-                  v-on:click="open_image(image.filename)"
-                />
+          <div class="mb-2">
+            <div class="d-flex flex-row flex-wrap">
+              <div class="" v-for="(image, index) in images" v-bind:value="image.slack" v-bind:key="index">
+                <div v-if="image.filename != ''">
+                  <button type="button" aria-label="Close" class="close bg-light image-remove"
+                    v-on:click="remove_image(image.slack)">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <img :src="image.thumbnail" alt="" class="rounded mr-3 mb-3"
+                    v-on:click="open_image(image.filename)" />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-       
-      </form>
+
+        </form>
+      </div>
+
+      <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
+        <template v-slot:modal-header>
+          {{ $t("Confirm") }}
+        </template>
+        <template v-slot:modal-body>
+          <p v-if="status == 0">Product status is inactive.</p>
+          {{ $t("Are you sure you want to proceed?") }}
+        </template>
+        <template v-slot:modal-footer>
+          <button type="button" class="btn btn-light" @click="$emit('close')">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" @click="$emit('submit')" v-bind:disabled="processing == true">
+            <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
+            Continue
+          </button>
+        </template>
+      </modalcomponent>
     </div>
-
-    <modalcomponent v-if="show_modal" v-on:close="show_modal = false">
-      <template v-slot:modal-header>
-        {{ $t("Confirm") }}
-      </template>
-      <template v-slot:modal-body>
-        <p v-if="status == 0">Product status is inactive.</p>
-        {{ $t("Are you sure you want to proceed?") }}
-      </template>
-      <template v-slot:modal-footer>
-        <button type="button" class="btn btn-light" @click="$emit('close')">
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          @click="$emit('submit')"
-          v-bind:disabled="processing == true"
-        >
-          <i class="fa fa-circle-notch fa-spin" v-if="processing == true"></i>
-          Continue
-        </button>
-      </template>
-    </modalcomponent>
   </div>
-</div>
 </template>
 
 <script>
@@ -705,46 +569,46 @@ export default {
   data() {
     return {
       quantity_from_spec: false,
-      total_sale_price_including_tax: this.product_data == null 
-        ? 0 
+      total_sale_price_including_tax: this.product_data == null
+        ? 0
         : this.product_data.total_sale_price_including_tax,
-      gst_cash: this.product_data == null 
-         ? 'Cash' 
-         : this.product_data.gst_paid_for_product == 1
-         ? 'GST'
-         : 'Cash',
+      gst_cash: this.product_data == null
+        ? 'Cash'
+        : this.product_data.gst_paid_for_product == 1
+          ? 'GST'
+          : 'Cash',
       subCategories: [],
       childCategories: [],
       child_category_id: this.product_data == null
-          ? ""
-          : this.product_data.child_category_id == null
+        ? ""
+        : this.product_data.child_category_id == null
           ? ""
           : this.product_data.child_category_id,
 
       category_specifications: [],
       sub_category_id: this.product_data == null
-          ? ""
-          : this.product_data.subcategory == null
+        ? ""
+        : this.product_data.subcategory == null
           ? ""
           : this.product_data.subcategory.id,
-      
+
       product_name_id: this.product_data == null
-          ? ""
-          : this.product_data.product_name_id > 0
+        ? ""
+        : this.product_data.product_name_id > 0
           ? this.product_data.product_name_id
           : '',
       productNameLabel: this.product_data == null
-          ? ""
-          : this.product_data.product_name_id > 0
+        ? ""
+        : this.product_data.product_name_id > 0
           ? ""
           : this.product_data.name,
 
       categoryLabel: '',
       companyNameLabel: '',
-      input_type:{},
+      input_type: {},
       company_id: this.product_data == null
-          ? ""
-          : this.product_data.category_company == null
+        ? ""
+        : this.product_data.category_company == null
           ? ""
           : this.product_data.category_company.id,
       companies_name: [],
@@ -770,35 +634,35 @@ export default {
         this.product_data == null
           ? ""
           : this.product_data.supplier == null
-          ? ""
-          : this.product_data.supplier.slack,
+            ? ""
+            : this.product_data.supplier.slack,
       category:
         this.product_data == null
           ? ""
           : this.product_data.category == null
-          ? ""
-          : this.product_data.category.id,
+            ? ""
+            : this.product_data.category.id,
       tax_code:
         this.product_data == null
           ? ""
           : this.product_data.tax_code == null
-          ? ""
-          : this.product_data.tax_code.slack,
+            ? ""
+            : this.product_data.tax_code.slack,
       discount_code:
         this.product_data == null
           ? ""
           : this.product_data.discount_code == null
-          ? ""
-          : this.product_data.discount_code.slack,
-          gst_paid_for_product: this.product_data == null
-            ? ''
-            : this.product_data.gst_paid_for_product == 1
-                ? this.product_data.gst_on_product[0].gst_paid_for_product
-                : '',
+            ? ""
+            : this.product_data.discount_code.slack,
+      gst_paid_for_product: this.product_data == null
+        ? ''
+        : this.product_data.gst_paid_for_product == 1
+          ? this.product_data.gst_on_product[0].gst_paid_for_product
+          : '',
       quantity: this.product_data == null
-          ? 1
-          : this.product_data.quantity,
-      alert_quantity:1,
+        ? 1
+        : this.product_data.quantity,
+      alert_quantity: 1,
       sale_price:
         this.product_data == null
           ? ""
@@ -839,10 +703,10 @@ export default {
         this.product_data == null
           ? false
           : this.product_data.is_ingredient != null
-          ? this.product_data.is_ingredient == 1
-            ? true
-            : false
-          : false,
+            ? this.product_data.is_ingredient == 1
+              ? true
+              : false
+            : false,
 
       ingredient_list: [],
       search_ingredients: "",
@@ -868,19 +732,19 @@ export default {
         this.product_data == null
           ? false
           : this.product_data.is_ingredient_price != null
-          ? this.product_data.is_ingredient_price == 1
-            ? true
-            : false
-          : false,
+            ? this.product_data.is_ingredient_price == 1
+              ? true
+              : false
+            : false,
 
       is_addon_product:
         this.product_data == null
           ? false
           : this.product_data.is_addon_product != null
-          ? this.product_data.is_addon_product == 1
-            ? true
-            : false
-          : false,
+            ? this.product_data.is_addon_product == 1
+              ? true
+              : false
+            : false,
 
       addon_group_values: [],
 
@@ -918,7 +782,7 @@ export default {
       quantity_count: 1,
       serialNumbers: [],
       base_product_code: '',
-         
+
     };
   },
   props: {
@@ -938,22 +802,22 @@ export default {
   },
   mounted() {
 
-    if(this.product_data != null && this.product_data.product_specifications.length > 0){
-      
+    if (this.product_data != null && this.product_data.product_specifications.length > 0) {
+
       this.product_data.product_specifications.forEach(item => {
-        this.input_type[item.specification_label+'_'+item.id] = item.id;
+        this.input_type[item.specification_label + '_' + item.id] = item.id;
         this.input_type[item.specification_label] = item.specification_details;
-      });  
-      }
+      });
+    }
     if (this.product_data != null) {
       this.fetchSubCategorires();
     }
-    if(this.product_data != null && this.product_data.subcategory.id > 0){
+    if (this.product_data != null && this.product_data.subcategory.id > 0) {
       this.fetchCompanies();
-    }    
-    if(this.product_data != null && this.product_data.child_category_id > 0){
+    }
+    if (this.product_data != null && this.product_data.child_category_id > 0) {
       this.fetch_category_specification();
-    }    
+    }
   },
   created() {
     this.set_product_quantity_validation();
@@ -964,7 +828,7 @@ export default {
     this.update_variant_list(this.product_variant_list);
   },
   methods: {
-    fetchCompanies(){
+    fetchCompanies() {
       this.companies_name = [];
       this.product_names = [];
       this.category_specifications = [];
@@ -974,63 +838,63 @@ export default {
       formData.append("access_token", window.settings.access_token);
       formData.append("sub_category_id", this.sub_category_id);
       axios
-              .post("/api/fetchCompanies", formData)
-              .then((response) => {
-                if (response.data.status_code == 200) {
-                 
-                  this.companies_name = response.data.data.companies;
-                  this.category_specifications = response.data.data.specifications;
-                  this.product_names = response.data.data.product_names;
-                  this.childCategories = response.data.data.child_categories;
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+        .post("/api/fetchCompanies", formData)
+        .then((response) => {
+          if (response.data.status_code == 200) {
+
+            this.companies_name = response.data.data.companies;
+            this.category_specifications = response.data.data.specifications;
+            this.product_names = response.data.data.product_names;
+            this.childCategories = response.data.data.child_categories;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
-    fetch_category_specification(){
+    fetch_category_specification() {
       this.category_specifications = [];
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
       formData.append("child_category_id", this.child_category_id);
       axios
-              .post("/api/fetchCategorySpecifications", formData)
-              .then((response) => {
-                if (response.data.status_code == 200) {
-                  this.category_specifications = response.data.data.specifications;
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+        .post("/api/fetchCategorySpecifications", formData)
+        .then((response) => {
+          if (response.data.status_code == 200) {
+            this.category_specifications = response.data.data.specifications;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
-    setProductName(){
-     
+    setProductName() {
+
       const selectedCompany = this.companies_name.find(company => company.id === this.company_id);
       if (selectedCompany) {
         this.companyNameLabel = selectedCompany.category_company_name;
       }
 
-      if(this.categoryLabel != null && this.companyNameLabel != null && this.product_names.length === 0){
-        this.product_name = this.companyNameLabel +','+ this.categoryLabel;
+      if (this.categoryLabel != null && this.companyNameLabel != null && this.product_names.length === 0) {
+        this.product_name = this.companyNameLabel + ',' + this.categoryLabel;
       };
     },
 
-    add_product_name(){
-      if(this.input_type["Product Name"]){
+    add_product_name() {
+      if (this.input_type["Product Name"]) {
         this.product_name = this.input_type["Product Name"];
       }
-      if(this.input_type["Quantity"]){
+      if (this.input_type["Quantity"]) {
 
         this.quantity_from_spec = true;
         this.quantity = this.input_type["Quantity"];
       }
     },
 
-    fetchSubCategorires(){
-     
+    fetchSubCategorires() {
+
       this.subCategories = [];
       this.childCategories = [];
       this.category_specifications = [];
@@ -1042,19 +906,19 @@ export default {
       formData.append("access_token", window.settings.access_token);
       formData.append("category_id", this.category);
       axios
-              .post("/api/fetchSubCategories", formData)
-              .then((response) => {
-                console.log(response.data.data.subCategories);
-                if (response.data.status_code == 200) {
-                  
-                  this.subCategories = response.data.data.subCategories;
-                  this.category_specifications = response.data.data.specifications;
+        .post("/api/fetchSubCategories", formData)
+        .then((response) => {
+          console.log(response.data.data.subCategories);
+          if (response.data.status_code == 200) {
 
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+            this.subCategories = response.data.data.subCategories;
+            this.category_specifications = response.data.data.specifications;
+
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
     },
     handleModeChange() {
@@ -1070,7 +934,7 @@ export default {
     generateSerialNumbers() {
       this.serialNumbers = [];
       const count = parseInt(this.quantity_count);
-      
+
       if (count > 0) {
         for (let i = 0; i < count; i++) {
           this.serialNumbers.push({
@@ -1103,7 +967,7 @@ export default {
               for (let serial of this.serialNumbers) {
                 const formData = this.prepareFormData();
                 formData.append('product_code', serial.number);
-                
+
                 try {
                   await axios.post(this.api_link, formData);
                   serial.status = 'success';
@@ -1112,15 +976,15 @@ export default {
                   console.error(error);
                 }
               }
-              
+
               this.show_response_message('Products added successfully', 'SUCCESS');
               setTimeout(() => location.reload(), 1000);
             } else {
               // Existing single product logic
-                const selectedProductName = this.product_names.find(p_name => p_name.id === this.product_name_id);
-      if (selectedProductName) {
-        this.productNameLabel = selectedProductName.product_name;
-      }
+              const selectedProductName = this.product_names.find(p_name => p_name.id === this.product_name_id);
+              if (selectedProductName) {
+                this.productNameLabel = selectedProductName.product_name;
+              }
               const formData = this.prepareFormData();
               try {
                 const response = await axios.post(this.api_link, formData);
@@ -1133,123 +997,123 @@ export default {
                 console.error(error);
               }
             }
-            
+
             this.processing = false;
           });
         }
       });
     },
-    prepareFormData(){
-       var formData = new FormData();
+    prepareFormData() {
+      var formData = new FormData();
 
-            for (var i = 0; i < this.$refs.product_image.files.length; i++) {
-              let file = this.$refs.product_image.files[i];
-              formData.append("product_images[" + i + "]", file);
-            }
+      for (var i = 0; i < this.$refs.product_image.files.length; i++) {
+        let file = this.$refs.product_image.files[i];
+        formData.append("product_images[" + i + "]", file);
+      }
 
-            formData.append("access_token", window.settings.access_token);
-            formData.append(
-              "product_name",
-              this.product_name
-            );
-            formData.append(
-              "product_code",
-              this.product_code == null ? "" : this.product_code
-            );
-            formData.append(
-              "supplier",
-              this.supplier == null ? "" : this.supplier
-            );
-            
-            formData.append(
-              "tax_code",
-              this.tax_code == null ? "" : this.tax_code
-            );
-            formData.append(
-              "discount_code",
-              this.discount_code == null ? "" : this.discount_code
-            );
-            formData.append("status", this.status == null ? "" : this.status);
-            formData.append(
-              "quantity",
-              this.quantity == null ? "" : this.quantity
-            );
-            formData.append(
-              "alert_quantity",
-              this.alert_quantity == null ? "" : this.alert_quantity
-            );
-            formData.append(
-              "sale_price",
-              this.sale_price == null ? "" : this.sale_price
-            );
-            formData.append(
-              "sale_amount_including_tax",
-              this.sale_price_including_tax == null
-                ? ""
-                : this.sale_price_including_tax
-            );
-            formData.append(
-              "purchase_price",
-              this.purchase_price == null ? "" : this.purchase_price
-            );
-            formData.append(
-              "description",
-              this.description == null ? "" : this.description
-            );
-            formData.append(
-              "is_ingredient",
-              this.is_ingredient == true ? 1 : 0
-            );
-            formData.append(
-              "ingredients",
-              this.is_ingredient == false
-                ? JSON.stringify(this.ingredients)
-                : []
-            );
-            formData.append(
-              "is_ingredient_price",
-              this.is_ingredient_price == true ? 1 : 0
-            );
-            formData.append(
-              "stock_transfer_product_slack",
-              this.stock_transfer_product_data == null
-                ? ""
-                : this.stock_transfer_product_data.slack
-            );
-            formData.append(
-              "is_addon_product",
-              this.is_addon_product == true ? 1 : 0
-            );
-            formData.append(
-              "addon_group_values",
-              this.addon_group_values.length == 0
-                ? []
-                : JSON.stringify(this.addon_group_values)
-            );
-            formData.append(
-              "variants",
-              this.variants.length == 0 ? [] : JSON.stringify(this.variants)
-            );
-            formData.append(
-              "parent_variant_option",
-              this.parent_variant_option == null
-                ? ""
-                : this.parent_variant_option
-            );
-            
-            formData.append('category', this.category);
-            formData.append("sub_category", this.sub_category_id == null ? null : this.sub_category_id);
-            formData.append("child_category_id", this.child_category_id);
-            formData.append('category_company_id', this.company_id);
-            formData.append('product_name_id', (this.product_name_id) ? this.product_name_id : null);
-            formData.append('gst_paid_for_product', this.gst_paid_for_product);
-            formData.append('gst_cash', this.gst_cash);
-            formData.append('total_sale_price_including_tax', this.total_sale_price_including_tax);
+      formData.append("access_token", window.settings.access_token);
+      formData.append(
+        "product_name",
+        this.product_name
+      );
+      formData.append(
+        "product_code",
+        this.product_code == null ? "" : this.product_code
+      );
+      formData.append(
+        "supplier",
+        this.supplier == null ? "" : this.supplier
+      );
 
-            if (this.input_type) {
-  
-      for (const key in this.input_type) {
-            formData.append(`input_type[${key}]`, this.input_type[key]);
+      formData.append(
+        "tax_code",
+        this.tax_code == null ? "" : this.tax_code
+      );
+      formData.append(
+        "discount_code",
+        this.discount_code == null ? "" : this.discount_code
+      );
+      formData.append("status", this.status == null ? "" : this.status);
+      formData.append(
+        "quantity",
+        this.quantity == null ? "" : this.quantity
+      );
+      formData.append(
+        "alert_quantity",
+        this.alert_quantity == null ? "" : this.alert_quantity
+      );
+      formData.append(
+        "sale_price",
+        this.sale_price == null ? "" : this.sale_price
+      );
+      formData.append(
+        "sale_amount_including_tax",
+        this.sale_price_including_tax == null
+          ? ""
+          : this.sale_price_including_tax
+      );
+      formData.append(
+        "purchase_price",
+        this.purchase_price == null ? "" : this.purchase_price
+      );
+      formData.append(
+        "description",
+        this.description == null ? "" : this.description
+      );
+      formData.append(
+        "is_ingredient",
+        this.is_ingredient == true ? 1 : 0
+      );
+      formData.append(
+        "ingredients",
+        this.is_ingredient == false
+          ? JSON.stringify(this.ingredients)
+          : []
+      );
+      formData.append(
+        "is_ingredient_price",
+        this.is_ingredient_price == true ? 1 : 0
+      );
+      formData.append(
+        "stock_transfer_product_slack",
+        this.stock_transfer_product_data == null
+          ? ""
+          : this.stock_transfer_product_data.slack
+      );
+      formData.append(
+        "is_addon_product",
+        this.is_addon_product == true ? 1 : 0
+      );
+      formData.append(
+        "addon_group_values",
+        this.addon_group_values.length == 0
+          ? []
+          : JSON.stringify(this.addon_group_values)
+      );
+      formData.append(
+        "variants",
+        this.variants.length == 0 ? [] : JSON.stringify(this.variants)
+      );
+      formData.append(
+        "parent_variant_option",
+        this.parent_variant_option == null
+          ? ""
+          : this.parent_variant_option
+      );
+
+      formData.append('category', this.category);
+      formData.append("sub_category", this.sub_category_id == null ? null : this.sub_category_id);
+      formData.append("child_category_id", this.child_category_id);
+      formData.append('category_company_id', this.company_id);
+      formData.append('product_name_id', (this.product_name_id) ? this.product_name_id : null);
+      formData.append('gst_paid_for_product', this.gst_paid_for_product);
+      formData.append('gst_cash', this.gst_cash);
+      formData.append('total_sale_price_including_tax', this.total_sale_price_including_tax);
+
+      if (this.input_type) {
+
+        for (const key in this.input_type) {
+          formData.append(`input_type[${key}]`, this.input_type[key]);
         }
       }
       return formData;
@@ -1630,43 +1494,46 @@ export default {
 };
 </script>
 <style scoped>
-    .card-header {
-        padding: 0.75rem 1.25rem;
-        margin-bottom: 0;
-        background-color: rgba(0, 0, 0, .03);
-        border-bottom: 1px solid rgba(0, 0, 0, .125);
-    }
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, .03);
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
 
 
-    .card {
-        position: relative;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        min-width: 0;
-        word-wrap: break-word;
-        background-color: #fff;
-        background-clip: border-box;
-        border: 1px solid rgba(0, 0, 0, .125);
-        border-radius: 0.25rem;
-    }
-    .page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    margin-left:18px;
+.card {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: 0.25rem;
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  margin-left: 18px;
 }
 
 
 
-.mb-1,.my-1 {
+.mb-1,
+.my-1 {
   margin-bottom: 0.25rem !important;
   margin-left: 10px;
 }
 
-.mb-2,.my-2 {
+.mb-2,
+.my-2 {
   margin-bottom: 0.5rem !important;
   margin-left: 10px;
 }
@@ -1679,14 +1546,16 @@ export default {
   margin-right: 10px;
   margin-left: 10px;
 }
+
 hr {
-    margin-left: 30px;
-    margin-right: 30px;
-    border-top: 0.5px solid rgba(0,0,0,.1);
+  margin-left: 30px;
+  margin-right: 30px;
+  border-top: 0.5px solid rgba(0, 0, 0, .1);
 }
+
 .text-muted {
-    margin-left:10px;
-    color: #6c757d!important;
+  margin-left: 10px;
+  color: #6c757d !important;
 }
 
 /* Add these styles */
@@ -1695,7 +1564,7 @@ hr {
   padding: 1rem;
   background-color: #fff;
   border-radius: 0.25rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .badge {
