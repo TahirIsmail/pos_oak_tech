@@ -88,6 +88,21 @@
                             <input type="file" name="upload_file" ref="upload_file" v-on:change="on_file_select" class="form-control-file" v-validate="'required|ext:xls,xlsx'">
                             <span v-bind:class="{ 'error' : errors.has('upload_file') }">{{ errors.first('upload_file') }}</span> 
                         </div>
+                        <div class="form-row mb-2" v-if="category_specifications.length > 0">
+                            <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
+                            <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
+                            <input :type="(spec.category_specification_label == 'Quantity') ? 'number' : 'text'"
+                                v-if="spec.category_specification_details.length == 0"
+                                v-model="input_type[spec.category_specification_label]" class="form-control"
+                                @change="add_product_name()">
+                            <select v-else v-model="input_type[spec.category_specification_label]"
+                                class="form-control form-control-custom custom-select" @change="add_product_name()">
+                                <option selected disabled>Please Select {{ spec.category_specification_label }}</option>
+                                <option v-for="details in spec.category_specification_details" :key="details.id" :value="details.id">{{
+                                details.values }}</option>
+                            </select>
+                            </div>
+                        </div>
                         <!-- Add more dependency fields as needed -->
                 </div>
             </form>
@@ -163,6 +178,8 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
                 childCategories: [],
                 child_category_id: '',
                 category_specifications: [],
+                companies_name: [],
+                product_names: [],
             }
         },
         props: {
@@ -243,6 +260,28 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
         .catch((error) => {
           console.log(error);
         });
+    },
+    setProductName() {
+
+      const selectedCompany = this.companies_name.find(company => company.id === this.company_id);
+      if (selectedCompany) {
+        this.companyNameLabel = selectedCompany.category_company_name;
+      }
+
+      if (this.categoryLabel != null && this.companyNameLabel != null && this.product_names.length === 0) {
+        this.product_name = this.companyNameLabel + ',' + this.categoryLabel;
+      };
+    },
+
+    add_product_name() {
+      if (this.input_type["Product Name"]) {
+        this.product_name = this.input_type["Product Name"];
+      }
+      if (this.input_type["Quantity"]) {
+
+        this.quantity_from_spec = true;
+        this.quantity = this.input_type["Quantity"];
+      }
     },
             submit_form(){
 

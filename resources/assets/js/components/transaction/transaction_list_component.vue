@@ -41,7 +41,7 @@
                         </td>
                         <td v-if="!to_supplier">{{ transaction.account.label }}</td>
                         <td>{{ transaction.payment_method }}</td>
-                        <td class="text-right">{{ transaction.amount }}</td>
+                        <td class="text-right">{{ transaction.received_amount }}</td>
                         <!-- <td class="text-center"  v-if="!to_supplier">{{ transaction.received_amount }}</td> -->
                         <td>{{ transaction.created_at_label }}</td>
                         <td>{{ (transaction.created_by != null)?transaction.created_by.fullname:'-' }}</td>

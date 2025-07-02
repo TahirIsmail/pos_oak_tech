@@ -29276,7 +29276,9 @@ __webpack_require__.r(__webpack_exports__);
       subCategories: [],
       childCategories: [],
       child_category_id: '',
-      category_specifications: []
+      category_specifications: [],
+      companies_name: [],
+      product_names: []
     };
   },
   props: {
@@ -29356,15 +29358,37 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    submit_form: function submit_form() {
+    setProductName: function setProductName() {
       var _this3 = this;
+      var selectedCompany = this.companies_name.find(function (company) {
+        return company.id === _this3.company_id;
+      });
+      if (selectedCompany) {
+        this.companyNameLabel = selectedCompany.category_company_name;
+      }
+      if (this.categoryLabel != null && this.companyNameLabel != null && this.product_names.length === 0) {
+        this.product_name = this.companyNameLabel + ',' + this.categoryLabel;
+      }
+      ;
+    },
+    add_product_name: function add_product_name() {
+      if (this.input_type["Product Name"]) {
+        this.product_name = this.input_type["Product Name"];
+      }
+      if (this.input_type["Quantity"]) {
+        this.quantity_from_spec = true;
+        this.quantity = this.input_type["Quantity"];
+      }
+    },
+    submit_form: function submit_form() {
+      var _this4 = this;
       this.$off("submit");
       this.$off("close");
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this3.show_modal = true;
-          _this3.$on("submit", function () {
-            var _this4 = this;
+          _this4.show_modal = true;
+          _this4.$on("submit", function () {
+            var _this5 = this;
             this.processing = true;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
@@ -29373,38 +29397,38 @@ __webpack_require__.r(__webpack_exports__);
             axios.post(this.api_link, formData).then(function (response) {
               if (response.data.status_code == 200) {
                 if (response.data.data.import_status) {
-                  _this4.show_response_message(response.data.msg, 'Success');
+                  _this5.show_response_message(response.data.msg, 'Success');
                   setTimeout(function () {
                     location.reload();
                   }, 1000);
                 } else {
-                  _this4.import_errors = response.data.data.errors;
-                  _this4.show_modal = false;
-                  _this4.processing = false;
+                  _this5.import_errors = response.data.data.errors;
+                  _this5.show_modal = false;
+                  _this5.processing = false;
                 }
               } else {
-                _this4.show_modal = false;
-                _this4.processing = false;
+                _this5.show_modal = false;
+                _this5.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this4.loop_api_errors(error_json);
+                  _this5.loop_api_errors(error_json);
                 } catch (err) {
-                  _this4.server_errors = response.data.msg;
+                  _this5.server_errors = response.data.msg;
                 }
-                _this4.error_class = 'error';
+                _this5.error_class = 'error';
               }
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this3.$on("close", function () {
+          _this4.$on("close", function () {
             this.show_modal = false;
           });
         }
       });
     },
     download_reference_sheet: function download_reference_sheet() {
-      var _this5 = this;
+      var _this6 = this;
       this.reference_processing = true;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
@@ -29418,13 +29442,13 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
-            _this5.loop_api_errors(error_json);
+            _this6.loop_api_errors(error_json);
           } catch (err) {
-            _this5.server_errors = response.data.msg;
+            _this6.server_errors = response.data.msg;
           }
-          _this5.error_class = 'error';
+          _this6.error_class = 'error';
         }
-        _this5.reference_processing = false;
+        _this6.reference_processing = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -62354,7 +62378,129 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("upload_file")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("upload_file")))])])]) : _vm._e()]), _vm._v(" "), _vm.import_errors.length != 0 ? _c("div", [_c("p", {
+  }, [_vm._v(_vm._s(_vm.errors.first("upload_file")))])]), _vm._v(" "), _vm.category_specifications.length > 0 ? _c("div", {
+    staticClass: "form-row mb-2"
+  }, _vm._l(_vm.category_specifications, function (spec) {
+    return _c("div", {
+      key: spec.id,
+      staticClass: "form-group col-md-3"
+    }, [_c("label", {
+      attrs: {
+        "for": spec.category_specification_label
+      }
+    }, [_vm._v(_vm._s(spec.category_specification_label))]), _vm._v(" "), (spec.category_specification_label == "Quantity" ? "number" : "text") === "checkbox" && spec.category_specification_details.length == 0 ? _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.input_type[spec.category_specification_label],
+        expression: "input_type[spec.category_specification_label]"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "checkbox"
+      },
+      domProps: {
+        checked: Array.isArray(_vm.input_type[spec.category_specification_label]) ? _vm._i(_vm.input_type[spec.category_specification_label], null) > -1 : _vm.input_type[spec.category_specification_label]
+      },
+      on: {
+        change: [function ($event) {
+          var $$a = _vm.input_type[spec.category_specification_label],
+            $$el = $event.target,
+            $$c = $$el.checked ? true : false;
+          if (Array.isArray($$a)) {
+            var $$v = null,
+              $$i = _vm._i($$a, $$v);
+            if ($$el.checked) {
+              $$i < 0 && _vm.$set(_vm.input_type, spec.category_specification_label, $$a.concat([$$v]));
+            } else {
+              $$i > -1 && _vm.$set(_vm.input_type, spec.category_specification_label, $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            }
+          } else {
+            _vm.$set(_vm.input_type, spec.category_specification_label, $$c);
+          }
+        }, function ($event) {
+          return _vm.add_product_name();
+        }]
+      }
+    }) : (spec.category_specification_label == "Quantity" ? "number" : "text") === "radio" && spec.category_specification_details.length == 0 ? _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.input_type[spec.category_specification_label],
+        expression: "input_type[spec.category_specification_label]"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "radio"
+      },
+      domProps: {
+        checked: _vm._q(_vm.input_type[spec.category_specification_label], null)
+      },
+      on: {
+        change: [function ($event) {
+          return _vm.$set(_vm.input_type, spec.category_specification_label, null);
+        }, function ($event) {
+          return _vm.add_product_name();
+        }]
+      }
+    }) : spec.category_specification_details.length == 0 ? _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.input_type[spec.category_specification_label],
+        expression: "input_type[spec.category_specification_label]"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: spec.category_specification_label == "Quantity" ? "number" : "text"
+      },
+      domProps: {
+        value: _vm.input_type[spec.category_specification_label]
+      },
+      on: {
+        change: function change($event) {
+          return _vm.add_product_name();
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.input_type, spec.category_specification_label, $event.target.value);
+        }
+      }
+    }) : _c("select", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.input_type[spec.category_specification_label],
+        expression: "input_type[spec.category_specification_label]"
+      }],
+      staticClass: "form-control form-control-custom custom-select",
+      on: {
+        change: [function ($event) {
+          var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+            return o.selected;
+          }).map(function (o) {
+            var val = "_value" in o ? o._value : o.value;
+            return val;
+          });
+          _vm.$set(_vm.input_type, spec.category_specification_label, $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+        }, function ($event) {
+          return _vm.add_product_name();
+        }]
+      }
+    }, [_c("option", {
+      attrs: {
+        selected: "",
+        disabled: ""
+      }
+    }, [_vm._v("Please Select " + _vm._s(spec.category_specification_label))]), _vm._v(" "), _vm._l(spec.category_specification_details, function (details) {
+      return _c("option", {
+        key: details.id,
+        domProps: {
+          value: details.id
+        }
+      }, [_vm._v(_vm._s(details.values))]);
+    })], 2)]);
+  }), 0) : _vm._e()]) : _vm._e()]), _vm._v(" "), _vm.import_errors.length != 0 ? _c("div", [_c("p", {
     staticClass: "error"
   }, [_vm._v("There are some errors in the file. Please correct the following errors and upload the file again.")]), _vm._v(" "), _c("table", {
     staticClass: "table table-sm"
@@ -70884,10 +71030,10 @@ var render = function render() {
     staticClass: "d-flex"
   }, [_c("div", [_c("span", {
     staticClass: "text-title"
-  }, [_vm._v(" " + _vm._s(_vm.$t("Order")) + " #" + _vm._s(_vm.order_basic.order_number) + " ")])])])]), _vm._v(" "), _c("div", {}, [_vm.order_basic.payment_status.value == "0.00" || _vm.order_basic.payment_status.value == "0.0" ? _c("span", {
+  }, [_vm._v(" " + _vm._s(_vm.$t("Order")) + " #" + _vm._s(_vm.order_basic.order_number) + " ")])])])]), _vm._v(" "), _c("div", {}, [_vm.order_basic.payment_status.value != "0.00" || _vm.order_basic.payment_status.value != "0.0" ? _c("span", {
     staticClass: "mr-2",
     "class": _vm.order_basic.payment_status.color
-  }, [_vm._v(_vm._s(_vm.order_basic.payment_status.label) + "  (" + _vm._s(_vm.order_basic.payment_status.value == 0 ? _vm.order_basic.total_order_amount - _vm.total_received_amount : "") + ")")]) : _vm._e(), _vm._v(" "), _vm.order_basic.payment_status.value == "0.00" || _vm.order_basic.payment_status.value == "0.0" ? _c("button", {
+  }, [_vm._v(_vm._s(_vm.order_basic.payment_status.label) + "  (" + _vm._s(_vm.order_basic.payment_status.value == 0 ? _vm.order_basic.total_order_amount - _vm.total_received_amount : "") + ")")]) : _vm._e(), _vm._v(" "), _vm.order_basic.payment_status.value != "0.00" || _vm.order_basic.payment_status.value != "0.0" ? _c("button", {
     staticClass: "btn btn-primary mr-2",
     staticStyle: {
       padding: "6px 16px!important"
@@ -94539,7 +94685,7 @@ var render = function render() {
       }
     }, [_vm._v(_vm._s(key + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.transaction_code))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.transaction_date))]), _vm._v(" "), _vm.is_customer ? _c("td", [transaction.transaction_from_customer == 1 ? _c("span", [_vm._v("Expense/Debit")]) : _c("span", [_vm._v(_vm._s(transaction.transaction_type_data.label))])]) : _c("td", [_vm.is_supplier && transaction.invoice_created_by_supplier == 1 ? _c("span", [_vm._v("\n                        Income/Credit\n                        ")]) : _c("span", [_vm._v("\n                            " + _vm._s(transaction.transaction_type_data.label) + " \n                        ")])]), _vm._v(" "), !_vm.to_supplier ? _c("td", [_vm._v(_vm._s(transaction.account.label))]) : _vm._e(), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.payment_method))]), _vm._v(" "), _c("td", {
       staticClass: "text-right"
-    }, [_vm._v(_vm._s(transaction.amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.created_at_label))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.created_by != null ? transaction.created_by.fullname : "-"))]), _vm._v(" "), _c("td", [_c("div", {
+    }, [_vm._v(_vm._s(transaction.received_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.created_at_label))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(transaction.created_by != null ? transaction.created_by.fullname : "-"))]), _vm._v(" "), _c("td", [_c("div", {
       directives: [{
         name: "show",
         rawName: "v-show",
