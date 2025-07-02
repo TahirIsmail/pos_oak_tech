@@ -477,7 +477,8 @@ class Customer extends Controller
                     "phone" => $request->phone,                   
                     "address" => $request->address,  
                     "dob" => $request->dob,     
-                    "created_by" => $request->logged_user_id,           
+                    "created_by" => $request->logged_user_id,
+                    "store_id" => $request->logged_user_store_id,           
                 ];
 
                 $customer_id = CustomerModel::create($customer)->id;

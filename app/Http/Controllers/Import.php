@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Config;
-
+use App\Models\Supplier as SupplierModel;
+use App\Models\Category as CategoryModel;
 class Import extends Controller
 {
     public function index(Request $request)
@@ -115,4 +116,29 @@ class Import extends Controller
         $data['templates'] = $templates;
         return view('import.update_data', $data);
     }
+
+    public function product_import_data()
+{
+    //check access
+    $data['menu_key'] = 'MM_IMPORT';
+    $data['sub_menu_key'] = 'SM_PRODUCT_IMPORT';
+    check_access(array($data['menu_key'],$data['sub_menu_key']));
+     
+    $options = [];
+    $templates = [];
+    if(check_access(['A_UPLOAD_PRODUCT'], true)){
+        $options[] = [ 'key' => 'PRODUCT', 'value' => 'Products'];
+        $format_file = Config::get('constants.upload.imports.product_format');
+        $templates[] = ['template_link' =>  asset($format_file), 'template_label' => 'Product'];
+    }
+
+    $data['upload_options'] = $options;
+    $data['templates'] = $templates;
+    $data['suppliers'] = SupplierModel::select('slack', 'supplier_code', 'name')->sortNameAsc()->active()->get();
+
+    $data['categories'] = CategoryModel::with('subcategories')->orderBy('id', 'asc')->active()->get()->toArray();
+    
+   
+    return view('import.product_import_data', $data);
+}
 }

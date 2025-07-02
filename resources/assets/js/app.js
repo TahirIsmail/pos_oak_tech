@@ -114,7 +114,7 @@ Vue.component('discountcodedetailcomponent', require('./components/discount_code
 
 Vue.component('importcomponent', require('./components/import/import_component.vue').default);
 Vue.component('updatedatacomponent', require('./components/import/update_data_component.vue').default);
-
+Vue.component('productimportcomponent', require('./components/import/product_import_component.vue').default);
 Vue.component('addpaymentmethodcomponent', require('./components/payment_method/add_payment_method_component.vue').default);
 Vue.component('paymentmethoddetailcomponent', require('./components/payment_method/payment_method_detail_component.vue').default);
 

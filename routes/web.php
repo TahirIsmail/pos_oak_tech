@@ -162,7 +162,7 @@ Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
     //uploads
     Route::get('/import_data', "Import@index")->name('import_data');
     Route::get('/update_data', "Import@update_data")->name('update_data');
-
+    Route::get('/product_import_data', "Import@product_import_data")->name('product_import_data');
     //discount code
     Route::get('/discount_codes', "Discountcode@index")->name('discount_codes');
     Route::get('/discount_code/{slack}', "Discountcode@detail")->name('discount_code');
