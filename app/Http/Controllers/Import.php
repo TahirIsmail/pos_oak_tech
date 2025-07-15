@@ -136,9 +136,21 @@ class Import extends Controller
     $data['templates'] = $templates;
     $data['suppliers'] = SupplierModel::select('slack', 'supplier_code', 'name')->sortNameAsc()->active()->get();
 
-    $data['categories'] = CategoryModel::with('subcategories')->orderBy('id', 'asc')->active()->get()->toArray();
     
+    $categories = CategoryModel::with(['subcategories' => function($query) {
+        $query->orderBy('id', 'asc');
+    }])->orderBy('id', 'asc')->active()->take(2)->get();
+
+    // Skip the first subcategory in PHP
+    foreach ($categories as $category) {
+    $category->subcategories = $category->subcategories->filter(function($sub) {
+        return $sub->sub_category_name !== 'Accessories';
+    })->values();
+}
+    $data['categories'] = $categories;
    
     return view('import.product_import_data', $data);
 }
+
+
 }

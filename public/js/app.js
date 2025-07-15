@@ -29262,7 +29262,7 @@ __webpack_require__.r(__webpack_exports__);
       modal: false,
       show_modal: false,
       reference_processing: false,
-      api_link: '/api/import_data',
+      api_link: '/api/update_data',
       reference_sheet_api_link: 'api/download_reference_sheet',
       upload_type: '',
       upload_file: '',
@@ -29278,7 +29278,13 @@ __webpack_require__.r(__webpack_exports__);
       child_category_id: '',
       category_specifications: [],
       companies_name: [],
-      product_names: []
+      product_names: [],
+      categoryLabel: '',
+      companyNameLabel: '',
+      input_type: {},
+      quantity_from_spec: false,
+      quantity: '',
+      product_name: ''
     };
   },
   props: {
@@ -29286,6 +29292,13 @@ __webpack_require__.r(__webpack_exports__);
     templates: Array,
     categories: Array,
     suppliers: Array
+  },
+  computed: {
+    filteredSubCategories: function filteredSubCategories() {
+      return this.subCategories.filter(function (sub) {
+        return sub.sub_category_name !== 'Accessories';
+      });
+    }
   },
   watch: {
     fixed_category: function fixed_category(newVal) {
@@ -29380,15 +29393,44 @@ __webpack_require__.r(__webpack_exports__);
         this.quantity = this.input_type["Quantity"];
       }
     },
-    submit_form: function submit_form() {
+    getCategoryLabel: function getCategoryLabel(categoryId) {
+      var cat = this.categories.find(function (c) {
+        return c.id === categoryId;
+      });
+      return cat ? cat.label : '';
+    },
+    downloadCategoryTemplate: function downloadCategoryTemplate() {
       var _this4 = this;
+      // You can use a mapping or API endpoint that returns the template for the selected category
+      // Example: /api/download_template?category_id=...
+      var categoryId = this.fixed_category;
+      if (!categoryId) return;
+      this.reference_processing = true;
+      var formData = new FormData();
+      formData.append("access_token", window.settings.access_token);
+      formData.append("category_id", categoryId);
+      axios.post('/api/download_category_template', formData).then(function (response) {
+        if (response.data.status_code == 200 && response.data.link) {
+          window.open(response.data.link, '_blank');
+        } else {
+          _this4.server_errors = response.data.msg;
+          _this4.error_class = 'error';
+        }
+        _this4.reference_processing = false;
+      })["catch"](function (error) {
+        _this4.reference_processing = false;
+        console.log(error);
+      });
+    },
+    submit_form: function submit_form() {
+      var _this5 = this;
       this.$off("submit");
       this.$off("close");
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this4.show_modal = true;
-          _this4.$on("submit", function () {
-            var _this5 = this;
+          _this5.show_modal = true;
+          _this5.$on("submit", function () {
+            var _this6 = this;
             this.processing = true;
             var formData = new FormData();
             formData.append("access_token", window.settings.access_token);
@@ -29397,38 +29439,38 @@ __webpack_require__.r(__webpack_exports__);
             axios.post(this.api_link, formData).then(function (response) {
               if (response.data.status_code == 200) {
                 if (response.data.data.import_status) {
-                  _this5.show_response_message(response.data.msg, 'Success');
+                  _this6.show_response_message(response.data.msg, 'Success');
                   setTimeout(function () {
                     location.reload();
                   }, 1000);
                 } else {
-                  _this5.import_errors = response.data.data.errors;
-                  _this5.show_modal = false;
-                  _this5.processing = false;
+                  _this6.import_errors = response.data.data.errors;
+                  _this6.show_modal = false;
+                  _this6.processing = false;
                 }
               } else {
-                _this5.show_modal = false;
-                _this5.processing = false;
+                _this6.show_modal = false;
+                _this6.processing = false;
                 try {
                   var error_json = JSON.parse(response.data.msg);
-                  _this5.loop_api_errors(error_json);
+                  _this6.loop_api_errors(error_json);
                 } catch (err) {
-                  _this5.server_errors = response.data.msg;
+                  _this6.server_errors = response.data.msg;
                 }
-                _this5.error_class = 'error';
+                _this6.error_class = 'error';
               }
             })["catch"](function (error) {
               console.log(error);
             });
           });
-          _this4.$on("close", function () {
+          _this5.$on("close", function () {
             this.show_modal = false;
           });
         }
       });
     },
     download_reference_sheet: function download_reference_sheet() {
-      var _this6 = this;
+      var _this7 = this;
       this.reference_processing = true;
       var formData = new FormData();
       formData.append("access_token", window.settings.access_token);
@@ -29442,13 +29484,13 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           try {
             var error_json = JSON.parse(response.data.msg);
-            _this6.loop_api_errors(error_json);
+            _this7.loop_api_errors(error_json);
           } catch (err) {
-            _this6.server_errors = response.data.msg;
+            _this7.server_errors = response.data.msg;
           }
-          _this6.error_class = 'error';
+          _this7.error_class = 'error';
         }
-        _this6.reference_processing = false;
+        _this7.reference_processing = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -62118,7 +62160,7 @@ var render = function render() {
     }
   }, [_vm.reference_processing == true ? _c("i", {
     staticClass: "fa fa-circle-notch fa-spin"
-  }) : _vm._e(), _vm._v("\n                        " + _vm._s(_vm.$t("Download Reference Sheet")) + "\n                    ")]), _vm._v(" "), _vm.templates.length != 0 ? _c("div", {
+  }) : _vm._e(), _vm._v("\n                        " + _vm._s(_vm.$t("Download Reference Sheet")) + "\n                    ")]), _vm._v(" "), _vm.fixed_category ? _c("div", {
     staticClass: "dropdown mr-1"
   }, [_c("button", {
     staticClass: "btn btn-outline-primary dropdown-toggle",
@@ -62129,20 +62171,20 @@ var render = function render() {
       "aria-haspopup": "true",
       "aria-expanded": "false"
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("Download Templates")) + "\n                        ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                            " + _vm._s(_vm.$t("Download Template")) + "\n                        ")]), _vm._v(" "), _c("div", {
     staticClass: "dropdown-menu dropdown-menu-right",
     attrs: {
       "aria-labelledby": "dropdown"
     }
-  }, _vm._l(_vm.templates, function (template, index) {
-    return _c("a", {
-      key: index,
-      staticClass: "dropdown-item",
-      attrs: {
-        href: template.template_link
+  }, [_c("a", {
+    staticClass: "dropdown-item",
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.downloadCategoryTemplate.apply(null, arguments);
       }
-    }, [_vm._v(_vm._s(template.template_label) + " Template")]);
-  }), 0)]) : _vm._e(), _vm._v(" "), _c("button", {
+    }
+  }, [_vm._v("\n                                " + _vm._s(_vm.getCategoryLabel(_vm.fixed_category)) + " " + _vm._s(_vm.$t("Template")) + "\n                            ")])])]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "submit",
@@ -62305,7 +62347,7 @@ var render = function render() {
     attrs: {
       value: ""
     }
-  }, [_vm._v("Select Sub Category...")]), _vm._v(" "), _vm._l(_vm.subCategories, function (sub, index) {
+  }, [_vm._v("Select Sub Category...")]), _vm._v(" "), _vm._l(_vm.filteredSubCategories, function (sub, index) {
     return _c("option", {
       key: index,
       domProps: {
@@ -62352,33 +62394,7 @@ var render = function render() {
         value: childcategory.id
       }
     }, [_vm._v("\n                        " + _vm._s(childcategory.child_category) + "\n                        ")]);
-  })], 2)]) : _vm._e(), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "upload_file"
-    }
-  }, [_vm._v(_vm._s(_vm.$t("Product Import File")))]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "validate",
-      rawName: "v-validate",
-      value: "required|ext:xls,xlsx",
-      expression: "'required|ext:xls,xlsx'"
-    }],
-    ref: "upload_file",
-    staticClass: "form-control-file",
-    attrs: {
-      type: "file",
-      name: "upload_file"
-    },
-    on: {
-      change: _vm.on_file_select
-    }
-  }), _vm._v(" "), _c("span", {
-    "class": {
-      error: _vm.errors.has("upload_file")
-    }
-  }, [_vm._v(_vm._s(_vm.errors.first("upload_file")))])]), _vm._v(" "), _vm.category_specifications.length > 0 ? _c("div", {
+  })], 2)]) : _vm._e(), _vm._v(" "), _vm.category_specifications.length > 0 ? _c("div", {
     staticClass: "form-row mb-2"
   }, _vm._l(_vm.category_specifications, function (spec) {
     return _c("div", {
@@ -62500,7 +62516,33 @@ var render = function render() {
         }
       }, [_vm._v(_vm._s(details.values))]);
     })], 2)]);
-  }), 0) : _vm._e()]) : _vm._e()]), _vm._v(" "), _vm.import_errors.length != 0 ? _c("div", [_c("p", {
+  }), 0) : _vm._e(), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "upload_file"
+    }
+  }, [_vm._v(_vm._s(_vm.$t("Product Import File")))]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "validate",
+      rawName: "v-validate",
+      value: "required|ext:xls,xlsx,csv",
+      expression: "'required|ext:xls,xlsx,csv'"
+    }],
+    ref: "upload_file",
+    staticClass: "form-control-file",
+    attrs: {
+      type: "file",
+      name: "upload_file"
+    },
+    on: {
+      change: _vm.on_file_select
+    }
+  }), _vm._v(" "), _c("span", {
+    "class": {
+      error: _vm.errors.has("upload_file")
+    }
+  }, [_vm._v(_vm._s(_vm.errors.first("upload_file")))])])]) : _vm._e()]), _vm._v(" "), _vm.import_errors.length != 0 ? _c("div", [_c("p", {
     staticClass: "error"
   }, [_vm._v("There are some errors in the file. Please correct the following errors and upload the file again.")]), _vm._v(" "), _c("table", {
     staticClass: "table table-sm"
@@ -73607,7 +73649,7 @@ var render = function render() {
     staticClass: "text-subhead"
   }, [_vm._v(_vm._s(_vm.$t("Product Information")))])]), _vm._v(" "), _c("div", {})]), _vm._v(" "), _c("div", {
     staticClass: "form-row mb-2"
-  }, [_c("div", {
+  }, [_vm.add_mode == "single" ? _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {
@@ -73645,7 +73687,7 @@ var render = function render() {
     "class": {
       error: _vm.errors.has("product_code")
     }
-  }, [_vm._v(_vm._s(_vm.errors.first("product_code")))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.errors.first("product_code")))])]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-3"
   }, [_c("label", {
     attrs: {

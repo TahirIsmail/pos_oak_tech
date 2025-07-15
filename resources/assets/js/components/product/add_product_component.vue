@@ -198,7 +198,8 @@
 
           <div class="form-row mb-2">
 
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-3" v-if = "add_mode == 'single'">
+              
               <label for="product_code">{{ $t("Product Code / Serial NO#") }}</label>
               <input type="text" name="product_code" v-model="product_code" v-validate="'required|alpha_dash|min:6'"
                 class="form-control form-control-custom" :placeholder="$t('Please enter product code')"
@@ -206,6 +207,7 @@
               <span v-bind:class="{ error: errors.has('product_code') }">{{
                 errors.first("product_code")
               }}</span>
+              
             </div>
             <div class="form-group col-md-3">
               <label for="supplier">{{ $t("Supplier") }}</label>

@@ -28,7 +28,8 @@ return [
             'store_format' => 'excel_formats/import/store_format.xls',
             'supplier_format' => 'excel_formats/import/supplier_format.xls',
             'category_format' => 'excel_formats/import/category_format.xls',
-            'product_format' => 'excel_formats/import/product_format.xls',
+            'laptops_format' => 'excel_formats/import/laptops_format.xls',
+            'computers_format' => 'excel_formats/import/computers_format.xls',
             'ingredient_format' => 'excel_formats/import/ingredient_format.xls',
             'addon_product_format' => 'excel_formats/import/addon_product_format.xls'
         ],

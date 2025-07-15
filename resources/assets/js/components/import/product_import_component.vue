@@ -16,12 +16,17 @@
                             {{ $t("Download Reference Sheet") }}
                         </button>
 
-                        <div class="dropdown mr-1" v-if="templates.length != 0">
+                        <div class="dropdown mr-1" v-if="fixed_category">
                             <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{ $t("Download Templates") }}
+                                {{ $t("Download Template") }}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown">
-                                <a :href="template.template_link" class="dropdown-item" v-for="(template, index) in templates" :key="index" >{{ template.template_label }} Template</a>
+                                <a
+                                    class="dropdown-item"
+                                    @click.prevent="downloadCategoryTemplate"
+                                >
+                                    {{ getCategoryLabel(fixed_category) }} {{ $t("Template") }}
+                                </a>
                             </div>
                         </div>
 
@@ -68,7 +73,7 @@
                             <label>{{ $t("Sub Category") }}</label>
                             <select v-model="fixed_sub_category" class="form-control form-control-custom custom-select" required>
                                 <option value="">Select Sub Category...</option>
-                                <option v-for="(sub, index) in subCategories" :value="sub.id" :key="index">
+                                <option v-for="(sub, index) in filteredSubCategories" :value="sub.id" :key="index">
                                     {{ sub.sub_category_name }}
                                 </option>
                             </select>
@@ -83,11 +88,7 @@
                             </option>
                         </select>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="upload_file">{{ $t("Product Import File") }}</label>
-                            <input type="file" name="upload_file" ref="upload_file" v-on:change="on_file_select" class="form-control-file" v-validate="'required|ext:xls,xlsx'">
-                            <span v-bind:class="{ 'error' : errors.has('upload_file') }">{{ errors.first('upload_file') }}</span> 
-                        </div>
+                       
                         <div class="form-row mb-2" v-if="category_specifications.length > 0">
                             <div class="form-group col-md-3" v-for="spec in category_specifications" :key="spec.id">
                             <label :for="spec.category_specification_label">{{ spec.category_specification_label }}</label>
@@ -102,6 +103,11 @@
                                 details.values }}</option>
                             </select>
                             </div>
+                        </div>
+                         <div class="form-group col-md-3">
+                            <label for="upload_file">{{ $t("Product Import File") }}</label>
+                            <input type="file" name="upload_file" ref="upload_file" v-on:change="on_file_select" class="form-control-file" v-validate="'required|ext:xls,xlsx,csv'">
+                            <span v-bind:class="{ 'error' : errors.has('upload_file') }">{{ errors.first('upload_file') }}</span> 
                         </div>
                         <!-- Add more dependency fields as needed -->
                 </div>
@@ -162,7 +168,7 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
                 modal           : false,
                 show_modal      : false,
                 reference_processing : false,
-                api_link        : '/api/import_data',
+                api_link        : '/api/update_data',
                 reference_sheet_api_link : 'api/download_reference_sheet',
 
                 upload_type     : '',
@@ -180,6 +186,12 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
                 category_specifications: [],
                 companies_name: [],
                 product_names: [],
+                categoryLabel: '',
+                companyNameLabel: '',
+                input_type: {},
+                quantity_from_spec: false,
+                quantity: '',
+                product_name: '',
             }
         },
         props: {
@@ -188,6 +200,11 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
             categories: Array,
             suppliers: Array,
         },
+        computed: {
+    filteredSubCategories() {
+        return this.subCategories.filter(sub => sub.sub_category_name !== 'Accessories');
+    }
+    },
         watch: {
         fixed_category(newVal) {
       // ...existing code for subCategories...
@@ -201,6 +218,7 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
       this.childCategories = [];
       this.child_category_id = '';
       this.category_specifications = [];
+      
     },
     fixed_sub_category(newVal) {
       // Fetch child categories and specifications when subcategory changes
@@ -282,6 +300,34 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
         this.quantity_from_spec = true;
         this.quantity = this.input_type["Quantity"];
       }
+    },
+    getCategoryLabel(categoryId) {
+        const cat = this.categories.find(c => c.id === categoryId);
+        return cat ? cat.label : '';
+    },
+    downloadCategoryTemplate() {
+        // You can use a mapping or API endpoint that returns the template for the selected category
+        // Example: /api/download_template?category_id=...
+        const categoryId = this.fixed_category;
+        if (!categoryId) return;
+        this.reference_processing = true;
+        var formData = new FormData();
+        formData.append("access_token", window.settings.access_token);
+        formData.append("category_id", categoryId);
+        axios.post('/api/download_category_template', formData)
+            .then((response) => {
+                if (response.data.status_code == 200 && response.data.link) {
+                    window.open(response.data.link, '_blank');
+                } else {
+                    this.server_errors = response.data.msg;
+                    this.error_class = 'error';
+                }
+                this.reference_processing = false;
+            })
+            .catch((error) => {
+                this.reference_processing = false;
+                console.log(error);
+            });
     },
             submit_form(){
 

@@ -1057,6 +1057,7 @@ class Import extends Controller
     */
 
     public function update_data(Request $request){
+        dd($request->all());
         try {
             
             $update_type = $request->upload_type;
@@ -2613,5 +2614,26 @@ class Import extends Controller
                 )
             ));
         }
+    }
+
+    public function import_product_data(Request $request)
+        {
+            dd($request->all(), $request->file('upload_file'));
+            // Validate and process the uploaded file
+            $this->validate($request, [
+                'upload_file' => 'required|file|mimes:xls,xlsx,csv|max:2048', // Adjust the max size as needed
+            ]);
+
+            $file = $request->file('upload_file');
+            if (!$file->isValid()) {
+                return response()->json(['error' => 'Invalid file upload'], 400);
+            }
+            // Process the file and import product data
+            // ...
+
+            return response()->json(['message' => 'Product data imported successfully']);
+        }
+    public function download_category_template(Request $request){
+        dd($request->all());
     }
 }

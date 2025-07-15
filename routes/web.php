@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Log;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,6 +28,8 @@
 Route::group(['middleware' => ['token_auth', 'user_menu']], function () {
 
     //search 
+
+    
     Route::get('/search', "Search@index")->name('search');
 
     //dashboard
