@@ -268,31 +268,6 @@ class Product extends Controller
                 throw new Exception("Supplier not found or inactive in the system", 400);
             }
 
-            // $sale_price = 0;
-            // $sale_amount_including_tax = 0;
-            // $taxcode_data = [];
-            // if (isset($request->tax_code)) {
-            //     $taxcode_data = TaxcodeModel::select('id', 'tax_type', 'total_tax_percentage')
-            //         ->where('slack', '=', trim($request->tax_code))
-            //         //->active()
-            //         ->first();
-            //     if (empty($taxcode_data)) {
-            //         throw new Exception("Taxcode not found or inactive in the system", 400);
-            //     } else {
-            //         if ($taxcode_data->tax_type == 'INCLUSIVE') {
-            //             $sale_amount_including_tax = $request->sale_amount_including_tax;
-            //             $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_amount_including_tax);
-            //             $sale_price = $request->sale_amount_including_tax - $tax_amount;
-            //         } else {
-            //             $sale_price = $request->sale_price;
-            //             $tax_amount = calculate_tax($taxcode_data->total_tax_percentage, $sale_price);
-            //             $sale_amount_including_tax = $sale_price + $tax_amount;
-            //         }
-            //     }
-            // } else {
-            //     $taxcode_data = [];
-            //     $sale_price = $request->sale_price;
-            // }
 
             $discount_code_id = null;
             // if (isset($request->discount_code)) {
@@ -738,9 +713,9 @@ class Product extends Controller
 
     public function validate_request($request)
     {
-        $request->merge(['ingredients' => json_decode($request->ingredients, true)]);
-        $request->merge(['addon_group_values' => json_decode($request->addon_group_values, true)]);
-        $request->merge(['variants' => json_decode($request->variants, true)]);
+        // $request->merge(['ingredients' => json_decode($request->ingredients, true)]);
+        // $request->merge(['addon_group_values' => json_decode($request->addon_group_values, true)]);
+        // $request->merge(['variants' => json_decode($request->variants, true)]);
 
         $validation_array = [
             'product_name' => 'required',

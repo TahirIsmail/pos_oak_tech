@@ -971,16 +971,21 @@ export default {
                 formData.append('product_code', serial.number);
 
                 try {
-                  await axios.post(this.api_link, formData);
-                  serial.status = 'success';
+                 const response = await axios.post(this.api_link, formData);
+                  if (response.data.status_code == 200) {
+                  this.handleSuccessResponse(response);
+                } else {
+                  this.handleErrorResponse(response);
+                }
                 } catch (error) {
                   serial.status = 'error';
                   console.error(error);
                 }
               }
+              this.processing = false;
 
-              this.show_response_message('Products added successfully', 'SUCCESS');
-              setTimeout(() => location.reload(), 1000);
+              //this.show_response_message('Products added successfully', 'SUCCESS');
+              //setTimeout(() => location.reload(), 1000);
             } else {
               // Existing single product logic
               const selectedProductName = this.product_names.find(p_name => p_name.id === this.product_name_id);
