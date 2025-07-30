@@ -223,6 +223,8 @@ Route::group(['middleware' => ['token_auth']], function () {
     //import
     Route::post('/import_data', 'API\Import@index');
     Route::post('/update_data', 'API\Import@update_data');
+    Route::post('/download_category_template', 'API\Import@download_category_template');
+    Route::get('/download_category_helper_sheet', 'API\Import@downloadCategoryHelperSheet');
     Route::post('/download_reference_sheet', 'API\Import@generate_reference_sheet');
 
     //discount code

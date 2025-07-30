@@ -76,6 +76,7 @@
                                 <div class="" v-for="(action_item, index) in submenu_item.actions" v-bind:key="index">
                                     
                                     <label class="" v-bind:for="action_item.menu_key">
+                                       
                                         <span v-if="menu_selected.includes(action_item.menu_key)"><i class="fas fa-check-square text-success"></i></span> {{ $t(action_item.label) }}
                                     </label>
                                 </div>

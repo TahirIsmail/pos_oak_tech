@@ -236,6 +236,7 @@ class Product extends Controller
      */
     public function store(Request $request)
     {
+
         try {
 
             if (!check_access(['A_ADD_PRODUCT'], true)) {
